@@ -26,6 +26,26 @@ const PAGES = [
 for (const p of PAGES) {
   test(`a11y: ${p.name} (${p.path})`, async ({ page }) => {
     await page.goto(p.path, { waitUntil: "domcontentloaded" });
+    // Stabilise entrance animations for the whole settle window. Reveal
+    // sections (e.g. PricingTierV2's staggered fade: 1.5s IntersectionObserver
+    // fallback + 0.6s opacity transition) otherwise straddle the 2s settle, so
+    // axe composites an element's mid-fade opacity and reports fully-AA text as
+    // a transient false-positive contrast failure (flaky 0/8/19 nodes on Home).
+    // Zeroing animation/transition duration makes every reveal snap to its
+    // settled state instantly, so contrast (WCAG 1.4.3) is measured on the text
+    // as read, not mid-transition. Injected before the settle wait so no
+    // sampling window can catch a fade in flight. Same technique
+    // tests/visual.spec.ts uses for deterministic screenshots.
+    await page.addStyleTag({
+      content: `
+        *, *::before, *::after {
+          animation-duration: 0s !important;
+          animation-delay: 0s !important;
+          transition-duration: 0s !important;
+          transition-delay: 0s !important;
+        }
+      `,
+    });
     // /signin has long-polling auth retry that never reaches networkidle;
     // 2s settle window is reliable across all 8 pages.
     await page.waitForTimeout(2000);

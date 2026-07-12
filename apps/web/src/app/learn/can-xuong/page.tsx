@@ -10,7 +10,7 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import {
   CanXuongFrame,
   CanXuongDepth,
@@ -79,6 +79,14 @@ const FAQS = [
     q: 'Có nên tin tuyệt đối vào cân xương không?',
     a: 'Không nên. Cân xương là một phương pháp rất thô, hàng triệu người trùng kết quả, và bản văn phổ biến chỉ định hình ở đời sau như một di sản dân gian. Hãy xem nó như một trò đọc cho vui, mang tính động viên — hieu.asia trình bày để bạn tham khảo, không phán số mệnh và không dùng nó để hù doạ hay bán lễ.',
   },
+  {
+    q: 'Vì sao hai người cùng "cân nặng" mà cuộc đời lại khác nhau?',
+    a: 'Vì cân xương nén cả ngày–giờ sinh về MỘT con số tổng — độ phân giải rất thấp, chỉ vài chục mức cho tất cả mọi người. Cùng một tổng không có nghĩa là cùng một cuộc đời: hai người trùng số vẫn sống hai đời hoàn toàn khác nhau, vì tổng ấy không mang đủ thông tin để phân biệt. Đây chính là lý do nên xem cân xương như một lát cắt tham khảo cho vui và nhanh; muốn phân tích cá nhân thật sự thì cần Bát Tự hoặc Tử Vi.',
+  },
+  {
+    q: 'Bảng trọng lượng của công cụ lấy từ đâu, có phải "bản chuẩn" không?',
+    a: 'Cân xương lưu truyền trong dân gian với nhiều dị bản — các bảng số lạng, thậm chí lời thơ, có khác biệt giữa các bản, và một số bản còn tách riêng thơ cho nam và nữ. Không có bằng chứng bản nào là "gốc chuẩn duy nhất". Công cụ hieu.asia chọn một bản nhất quán để tính, và nói rõ đây là một trong các dị bản chứ không tự nhận là bản đúng tuyệt đối. Vì thế trang học này giải thích cơ chế thay vì in một bảng số như thể nó là con số duy nhất đúng.',
+  },
 ];
 
 const JSONLD = [
@@ -94,6 +102,12 @@ const JSONLD = [
     { name: 'Cân Xương Đoán Số', url: '/learn/can-xuong' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Cân Xương Đoán Số — cách tính & ý nghĩa',
+    description:
+      'Cân Xương Đoán Số: gán trọng lượng cho 4 yếu tố năm–tháng–ngày–giờ sinh âm lịch, cộng thành tổng "cân nặng xương", tra bài thơ đoán vận. Góc nhìn tham khảo.',
+    url: '/learn/can-xuong',
+  }),
 ];
 
 export default function LearnCanXuongPage() {
@@ -247,6 +261,103 @@ export default function LearnCanXuongPage() {
               <p className="text-sm text-foreground/70">
                 Bạn không cần tự tra bảng: công cụ cân xương tự tính khi bạn nhập ngày giờ sinh âm lịch,
                 rồi hiện luôn bài thơ tương ứng để bạn đọc tham khảo.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'di-mot-vong',
+          tocLabel: 'Đi một vòng ví dụ',
+          heading: 'Đi một vòng cho thấy cơ chế',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Cách gọn nhất để thấy phép cân chạy ra sao là đi một vòng ví dụ. Giả sử một người
+                sinh vào <strong>năm can–chi A</strong>, <strong>tháng B</strong>,{' '}
+                <strong>ngày C</strong>, <strong>giờ D</strong> theo âm lịch — ta không cần một năm
+                sinh thật, chỉ cần thấy các bước.
+              </p>
+              <div className="space-y-3">
+                <p>
+                  <strong>Bước 1 — Tra bốn bảng.</strong> Năm A tra ra một trọng lượng; tháng B, ngày
+                  C, giờ D mỗi thứ tra ra một trọng lượng riêng. Con số cụ thể của từng ô nằm trong
+                  bảng truyền thống — mục ngay dưới nói vì sao ở đây không in chúng.
+                </p>
+                <p>
+                  <strong>Bước 2 — Cộng lại.</strong> Bốn trọng lượng cộng thành tổng “cân nặng
+                  xương”, rơi vào một mức nào đó trong khoảng <strong>2 lạng 1 đến chừng 7 lạng 1</strong>.
+                </p>
+                <p>
+                  <strong>Bước 3 — Đối chiếu bài thơ.</strong> Mức tổng ấy ứng đúng một bài thơ đoán
+                  vận đã soạn sẵn. Đọc bài thơ đó như một lời động viên, không phải kết luận về đời
+                  người.
+                </p>
+              </div>
+              <p>
+                Toàn bộ chỗ “khó” chỉ là đổi ngày dương sang ngày âm rồi tra bảng — và công cụ làm
+                hết. Bảng số cụ thể có nhiều dị bản, nên công cụ dùng một bản nhất quán để mọi lần
+                tra đều ra cùng kết quả.{' '}
+                <Link
+                  href="/can-xuong"
+                  className="text-gold-700 underline-offset-4 hover:underline"
+                >
+                  Thử đi một vòng bằng ngày sinh của bạn →
+                </Link>
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'vi-sao-khong-in-bang',
+          tocLabel: 'Vì sao không in bảng',
+          heading: 'Vì sao trang này không in bảng số lạng',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Bạn có thể thắc mắc: sao không in luôn bảng số lạng để tự tra cho tiện? Có một lý do
+                trung thực đằng sau.
+              </p>
+              <p>
+                Cân xương lưu truyền trong dân gian với <strong>nhiều dị bản</strong>. Các bảng số —
+                và cả lời thơ — khác nhau giữa các bản. In đúng một bảng ở đây dễ khiến người đọc
+                tưởng đó là “bản chuẩn”, rồi khi gặp bản khác lại tranh cãi “trang kia in sai bảng”.
+              </p>
+              <p>
+                Cách trình bày trung thực hơn: nói rõ có nhiều dị bản, giải thích cơ chế (bốn yếu tố
+                → tổng → bài thơ), và để công cụ dùng <strong>một bản nhất quán</strong> cho ổn định.
+                Công cụ không tự nhận bản mình dùng là bản đúng tuyệt đối — nó chỉ chọn một bản và
+                giữ nguyên để mọi lần tra đều nhất quán.
+              </p>
+              <p className="text-sm text-foreground/70">
+                Đây là điểm cộng chứ không phải né tránh: thay vì phát tán một bảng như thể nó là con
+                số duy nhất đúng, trang chọn nói thật rằng đây là một di sản có nhiều phiên bản.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'ban-nam-nu',
+          tocLabel: 'Bản nam / bản nữ',
+          heading: 'Bản nam – bản nữ: một dạng dị bản',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Một dạng dị bản đáng nói riêng: nhiều bản cân xương lưu truyền tách <strong>riêng
+                bài thơ cho nam và cho nữ</strong> ở cùng một mức tổng, trong khi một số bản khác lại
+                dùng chung một bài cho cả hai.
+              </p>
+              <p>
+                Đây cũng là lý do nhiều công cụ cân xương — kể cả công cụ ở đây — hỏi giới tính khi
+                nhập liệu: để chọn đúng nhánh thơ theo bản mà công cụ dùng.
+              </p>
+              <p>
+                Cần nói cho đúng: <strong>không có bằng chứng</strong> bản nào (tách hay dùng chung,
+                bản thơ nam nào, bản thơ nữ nào) là “gốc chuẩn”. Đó là đặc điểm của một văn bản dân
+                gian được bồi đắp qua nhiều đời, không phải một công thức có tác giả duy nhất.
+              </p>
+              <p className="text-sm text-foreground/70">
+                Vì thế, nếu bạn thấy nơi khác cho bài thơ hơi khác so với ở đây dù cùng “cân nặng”,
+                rất có thể chỉ là khác dị bản — không phải nơi nào “tính sai”.
               </p>
             </div>
           ),

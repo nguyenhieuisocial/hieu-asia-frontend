@@ -10,7 +10,7 @@
     "ui-guard": "node scripts/ui-guard.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:a11y": "playwright test tests/a11y.spec.ts",
+    "test:a11y": "playwright test tests/a11y.spec.ts tests/a11y-dark.spec.ts",
     "test:visual": "playwright test tests/visual.spec.ts",
     "test:visual:update": "playwright test tests/visual.spec.ts --update-snapshots",
     "lhci": "lhci autorun",

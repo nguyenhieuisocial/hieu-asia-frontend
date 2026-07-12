@@ -101,9 +101,14 @@ export function SocialProofQuiet() {
               <p className="mt-5 font-mono text-editorial-caption uppercase tracking-[0.12em] text-muted-foreground">
                 — Ví dụ minh hoạ · câu hỏi về {q.topic}
               </p>
+              {/* Decorative index numeral. aria-hidden, but sighted low-vision
+                  users still see it, so use full `text-muted-foreground` (the
+                  quiet meta tone) rather than a faint /30 fade that sat at
+                  ~1.5:1 — clears WCAG AA on the bg-card/40 surface in both
+                  themes while staying visually subordinate to the quote. */}
               <p
                 aria-hidden
-                className="absolute right-card top-card font-mono text-eyebrow uppercase tracking-[0.12em] text-primary/30 md:right-10 md:top-10"
+                className="absolute right-card top-card font-mono text-eyebrow uppercase tracking-[0.12em] text-muted-foreground md:right-10 md:top-10"
               >
                 0{i + 1} / 0{QUOTES.length}
               </p>

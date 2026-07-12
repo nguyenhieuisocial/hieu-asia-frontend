@@ -1,11 +1,17 @@
 /**
  * Nội dung "học chủ động" cho trang /learn/palm — Xem chỉ tay (chiromancy).
  *
- * TẤT CẢ grounded từ chính bài viết Xem chỉ tay (7 đường chính, ba đường trục —
- * tâm đạo / trí đạo / sinh đạo, gò & hình dáng bàn tay, và các ngộ nhận phổ biến
- * trong FAQ: sinh đạo ngắn ≠ sống ngắn, trí đạo dài ≠ thông minh hơn, đếm vạch
- * hôn nhân, đường "sức khoẻ" ≠ chẩn bệnh). KHÔNG thêm dữ kiện mới. Giữ giọng
+ * TẤT CẢ grounded từ chính bài viết Xem chỉ tay (7 đường: 3 trục — tâm đạo /
+ * trí đạo / sinh đạo — cộng 4 đường phụ số mệnh / mặt trời / thuỷ tinh / hôn
+ * nhân; các gò; hình dáng bàn tay; quy ước tay thuận – tay không thuận) và tài
+ * liệu nguồn nhan-tuong.md (PHẦN B chỉ tay). Các ngộ nhận đính chính trong FAQ:
+ * sinh đạo ngắn ≠ sống ngắn, trí đạo dài ≠ thông minh hơn, đếm vạch hôn nhân,
+ * đường "sức khoẻ" ≠ chẩn bệnh, không có đường số mệnh ≠ vô định. Giữ giọng
  * "bàn tay là bản đồ sống — tham khảo / góc nhìn, không phán định số mệnh".
+ *
+ * ⚠️ 5 lằn ranh cấm của môn này (nhan-tuong.md d.21-26): không phán bệnh tật,
+ * thọ yểu, giàu nghèo, nhân quả báo ứng; không bán giải hạn. Mọi câu ở đây đã
+ * tự soát theo 5 lằn ranh đó.
  */
 
 import * as React from 'react';
@@ -65,62 +71,174 @@ export function PalmFrame() {
 
 export function PalmDepth() {
   return (
-    <DepthTabs
-      topicId="palm"
-      concept="Vì sao không đọc độ dài đơn lẻ — đọc “tổ hợp” của một đường"
-      levels={[
-        {
-          id: 'eli5',
-          label: 'Trẻ 5 tuổi',
-          content: (
-            <p>
-              Đừng chê một cái cây chỉ vì nó thấp. Một đường trên bàn tay cũng vậy: thấy đường{' '}
-              {strong('ngắn')} rồi kết luận vội là sai. Phải nhìn cả {strong('hình dáng')} — đậm hay
-              mờ, cong hay thẳng, có nhánh, bắt đầu từ đâu — mới ra bức tranh thật.
-            </p>
-          ),
-        },
-        {
-          id: 'eli14',
-          label: 'Người 14 tuổi',
-          content: (
-            <>
+    <div className="space-y-4">
+      <DepthTabs
+        topicId="palm"
+        concept="Vì sao không đọc độ dài đơn lẻ — đọc “tổ hợp” của một đường"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Mỗi đường phải đọc theo {strong('tổ hợp')}: hình dạng + độ rõ + nhánh phụ + chỗ bắt
-                đầu — cả bốn yếu tố cộng lại mới có nghĩa, không phải riêng độ dài.
+                Đừng chê một cái cây chỉ vì nó thấp. Một đường trên bàn tay cũng vậy: thấy đường{' '}
+                {strong('ngắn')} rồi kết luận vội là sai. Phải nhìn cả {strong('hình dáng')} — đậm
+                hay mờ, cong hay thẳng, có nhánh, bắt đầu từ đâu — mới ra nghĩa thật.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Mỗi đường phải đọc theo {strong('tổ hợp')}: hình dạng + độ rõ + nhánh phụ + chỗ bắt
+                  đầu — cả bốn yếu tố cộng lại mới có nghĩa, không phải riêng độ dài.
+                </p>
+                <p>
+                  Ví dụ {strong('sinh đạo ngắn')} không có nghĩa “sống ngắn”, mà có thể chỉ năng
+                  lượng tập trung; {strong('trí đạo ngắn')} không phải “kém thông minh”, mà là quyết
+                  nhanh, đi thẳng vào việc. Đoạn đứt hay nhánh được truyền thống đọc là giai đoạn
+                  chuyển biến, chứ không phải tai hoạ.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Trình tự đọc có cơ sở: trước hết định "khung" bằng {strong('gò')} (đọc theo độ đầy
+                  đặn — gò nổi gợi năng lượng vùng đó trội, gò lép gợi khuynh hướng nhẹ, không phải
+                  “thiếu sót”) và {strong('hình dáng bàn tay')}; rồi mới luận từng đường theo tổ hợp
+                  hình dạng / độ rõ / nhánh / gốc; thường {strong('xem cả hai tay')} — tay không
+                  thuận cho tiềm năng bẩm sinh, tay thuận cho con người đang trở thành.
+                </p>
+                <p>
+                  Lưu ý ranh giới hệ thống: hình dáng bàn tay có hai hệ{' '}
+                  {strong('không tương ứng 1-1')} — hệ phương Tây bốn yếu tố (Đất – Khí – Lửa – Nước)
+                  và hệ Đông Á Ngũ hành thủ năm loại — không nên trộn lẫn. Và vì gò khó thấy chính xác
+                  qua ảnh phẳng, chỉ nên nhận xét khi gò rõ ràng nổi hoặc lép.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="palm"
+        concept="Gò trên bàn tay là gì, và đọc “đầy – lép” chứ không đọc “có – không”"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Ví dụ {strong('sinh đạo ngắn')} không có nghĩa “sống ngắn”, mà có thể chỉ năng lượng
-                tập trung; {strong('trí đạo ngắn')} không phải “kém thông minh”, mà là quyết nhanh, đi
-                thẳng vào việc. Đoạn đứt hay nhánh được truyền thống đọc là giai đoạn chuyển biến, chứ
-                không phải tai hoạ.
+                Gò là những chỗ thịt hơi {strong('nổi lên')} ở lòng bàn tay, mỗi chỗ có một cái tên
+                riêng. Chỗ nào nổi đầy hơn thì phần tính cách đó “rõ” hơn một chút; chỗ nào lép hơn
+                thì nhẹ hơn — chứ không phải bị thiếu.
               </p>
-            </>
-          ),
-        },
-        {
-          id: 'expert',
-          label: 'Chuyên gia',
-          content: (
-            <>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Các gò là vùng thịt nổi dưới mỗi ngón và quanh lòng tay, đặt theo tên hành tinh
+                  trong hệ phương Tây. Ví dụ gò {strong('Kim Tinh')} quanh gốc ngón cái gắn với nhiệt
+                  tình và sự ấm áp; gò {strong('Mộc Tinh')} dưới ngón trỏ gắn với tham vọng, lãnh đạo;
+                  gò {strong('Thổ Tinh')} dưới ngón giữa gắn với kỷ luật, chiều sâu.
+                </p>
+                <p>
+                  Cách đọc là theo {strong('độ đầy đặn')}: gò nổi đầy gợi năng lượng vùng đó trội, gò
+                  lép gợi khuynh hướng nhẹ hơn. Đọc “đầy – lép”, không đọc “có – không”.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Hệ phương Tây kể tám vùng: {strong('Kim Tinh')} (Venus), {strong('Mộc Tinh')}{' '}
+                  (Jupiter), {strong('Thổ Tinh')} (Saturn), {strong('Thái Dương')} (Apollo),{' '}
+                  {strong('Thủy Tinh')} (Mercury), {strong('Mặt Trăng')} (Luna, còn gọi Thái Âm), và{' '}
+                  {strong('hai gò Hoả Tinh')} (Mars, hai vùng ở giữa lòng tay). Mỗi gò một nhóm
+                  khuynh hướng, đọc theo độ nổi so với phần còn lại của bàn tay.
+                </p>
+                <p>
+                  Kỷ luật quan trọng nhất ở đây là {strong('không over-read')}: gò rất khó thấy chính
+                  xác qua ảnh phẳng vì phụ thuộc góc chụp và ánh sáng, nên chỉ nhận xét khi một gò rõ
+                  ràng nổi hẳn hoặc lép hẳn; còn lại thì bỏ qua, đừng đoán mò.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="palm"
+        concept="Tay thuận và tay không thuận đọc điều gì — và vì sao đây chỉ là quy ước"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Trình tự đọc có cơ sở: trước hết định "khung" bằng {strong('gò')} (đọc theo độ đầy
-                đặn — gò nổi gợi năng lượng vùng đó trội, gò lép gợi khuynh hướng nhẹ, không phải
-                “thiếu sót”) và {strong('hình dáng bàn tay')}; rồi mới luận từng đường theo tổ hợp
-                hình dạng / độ rõ / nhánh / gốc; thường {strong('xem cả hai tay')} — tay không thuận
-                cho tiềm năng bẩm sinh, tay thuận cho con người đang trở thành.
+                Bạn hay dùng tay nào để viết? Tay {strong('ít dùng')} giống như bức ảnh lúc bạn mới
+                sinh ra; tay {strong('hay dùng')} giống bức ảnh bây giờ, sau bao nhiêu là chọn lựa và
+                thói quen. Nhìn cả hai để so cho vui.
               </p>
-              <p>
-                Lưu ý ranh giới hệ thống: hình dáng bàn tay có hai hệ{' '}
-                {strong('không tương ứng 1-1')} — hệ phương Tây bốn yếu tố (Đất – Khí – Lửa – Nước)
-                và hệ Đông Á Ngũ hành thủ năm loại — không nên trộn lẫn. Và vì gò khó thấy chính xác
-                qua ảnh phẳng, chỉ nên nhận xét khi gò rõ ràng nổi hoặc lép.
-              </p>
-            </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Theo quy ước phổ biến: tay {strong('không thuận')} phản ánh tiềm năng bẩm sinh; tay{' '}
+                  {strong('thuận')} phản ánh con người bạn đang trở thành, đã chịu tác động của lựa
+                  chọn và môi trường. Lý tưởng là xem cả hai để so sánh.
+                </p>
+                <p>
+                  Chính {strong('khoảng chênh')} giữa hai tay mới là chỗ đáng chú ý: nó cho thấy bạn
+                  đã đi xa tới đâu so với điểm xuất phát.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Cần nói thẳng: đây là {strong('quy ước phổ biến, không phải luật cứng')}. Các
+                  trường phái không hoàn toàn thống nhất tay nào mang “trọng số” nào, nên khi luận
+                  phải nêu là quy ước, không khẳng định một chiều.
+                </p>
+                <p>
+                  Ghép với điểm nền của cả môn: đường nhỏ đổi theo thói quen, sức khoẻ, căng thẳng;
+                  đường chính ổn định hơn nhưng vẫn đậm – nhạt theo thời gian. Vì thế “tay thuận =
+                  con người đang trở thành” chỉ càng khẳng định bàn tay là {strong('bản đồ sống')},
+                  không phải bản án đóng đinh.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -193,6 +311,48 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Bàn tay không có đường số mệnh (đường Vận mệnh / Fate) thì nói lên điều gì?',
+    choices: [
+      {
+        text: 'Đường đời linh hoạt, tự định hướng — nhiều người vốn không có đường này',
+        correct: true,
+        note: 'Đúng — không có đường số mệnh nghĩa là đường đời tự định, không phải “vô định”.',
+      },
+      { text: 'Chắc chắn là người vô định, không có tương lai rõ ràng', note: 'Sai — đây là ngộ nhận; không có đường này là chuyện bình thường.' },
+      { text: 'Bàn tay bị khuyết một bộ phận cần thiết', note: 'Không — đường phụ có thể không xuất hiện mà vẫn hoàn toàn bình thường.' },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'mcq',
+    prompt: 'Đường Mặt Trời (Sun line) trên tay chủ về điều gì?',
+    choices: [
+      { text: 'Chắc chắn sẽ nổi tiếng và giàu có', note: 'Sai — xem chỉ tay không phán giàu nghèo hay danh tiếng.' },
+      {
+        text: 'Niềm vui sáng tạo, sự được công nhận và sức hút cá nhân',
+        correct: true,
+        note: 'Đúng — chỉ là khuynh hướng, không phải lời hứa về tiền tài hay tên tuổi.',
+      },
+      { text: 'Đo được mức thu nhập của một người', note: 'Không — không đường nào đo được của cải; đó là lằn ranh phải giữ.' },
+    ],
+  },
+  {
+    id: 'q8',
+    type: 'open',
+    prompt:
+      'Theo quy ước phổ biến, tay thuận và tay không thuận đọc khác nhau ra sao? Mọi trường phái có thống nhất về điều này không?',
+    answer: (
+      <>
+        Quy ước phổ biến: tay {strong('không thuận')} phản ánh tiềm năng bẩm sinh, tay{' '}
+        {strong('thuận')} phản ánh con người đang trở thành (đã chịu tác động của lựa chọn, môi
+        trường). Nhưng đây là {strong('quy ước, không phải luật cứng')} — các trường phái không hoàn
+        toàn thống nhất tay nào mang trọng số nào, nên khi luận cần nêu rõ là quy ước.
+      </>
+    ),
+  },
 ];
 
 export function PalmRecall() {
@@ -209,6 +369,11 @@ const FACETS: UnderstandingFacet[] = [
     id: 'mechanism',
     facet: 'Cơ chế',
     can: 'Mô tả cách đọc: định “khung” bằng gò và hình dáng bàn tay → luận từng đường theo tổ hợp hình dạng / độ rõ / nhánh / chỗ bắt đầu → so sánh hai tay.',
+  },
+  {
+    id: 'components',
+    facet: 'Thành phần',
+    can: 'Kể được 7 đường — 3 trục chính (tâm đạo, trí đạo, sinh đạo) và 4 đường phụ (số mệnh, mặt trời, thuỷ tinh, hôn nhân) — và nói được đường phụ có thể KHÔNG có mà vẫn bình thường.',
   },
   {
     id: 'discrimination',
@@ -228,7 +393,12 @@ const FACETS: UnderstandingFacet[] = [
   {
     id: 'guard',
     facet: 'Tránh ngộ nhận',
-    can: 'Nói được vì sao sinh đạo ngắn không = sống ngắn, trí đạo dài không = thông minh hơn, đếm vạch không ra số lần kết hôn, đường “sức khoẻ” không chẩn bệnh.',
+    can: 'Nói được vì sao sinh đạo ngắn không = sống ngắn, trí đạo dài không = thông minh hơn, đếm vạch không ra số lần kết hôn, đường “sức khoẻ” không chẩn bệnh, không có đường số mệnh không = vô định.',
+  },
+  {
+    id: 'origin',
+    facet: 'Nguồn gốc',
+    can: 'Nói được xem chỉ tay xuất hiện độc lập ở nhiều nền văn hoá cổ (Ấn Độ, Trung Hoa, Hy Lạp) và hệ phương Tây hiện đại phổ biến từ thế kỷ 19.',
   },
   {
     id: 'teach-back',

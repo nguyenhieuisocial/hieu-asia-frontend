@@ -15,6 +15,7 @@
  */
 import { type NextRequest, NextResponse } from 'next/server';
 import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
+import { resolveLiveRole, decideEffectiveRole } from '@/lib/admin-user-store';
 
 // Edge runtime — eliminates Vercel serverless cold-start (5-15s) which was
 // the root cause of "signal is aborted without reason" in the admin UI.
@@ -105,6 +106,22 @@ async function forward(
   if (!session) {
     return NextResponse.json({ ok: false, error: 'unauthenticated' }, { status: 401 });
   }
+  // Instant revocation (2026-07-12 audit, step 3): the cookie's role is signed but
+  // may be STALE — a demoted/deleted admin keeps it until the 7-day TTL. Since this
+  // proxy injects the master token for every session, authorize off the LIVE role.
+  // Mutations (non-GET) are `privileged`: they skip the cache AND fail closed when
+  // the authority can't be confirmed, so neither the 15s cache window nor a gateway
+  // slowdown lets a just-demoted admin e.g. POST a new owner account. Reads fall
+  // back to the signed cookie role for availability. (decideEffectiveRole policy.)
+  const privileged = method !== 'GET';
+  const live = await resolveLiveRole(session.email, Date.now(), privileged);
+  const decision = decideEffectiveRole(live, session.role, privileged);
+  if ('deny' in decision) {
+    return decision.deny === 'revoked'
+      ? NextResponse.json({ ok: false, error: 'session_revoked' }, { status: 401 })
+      : NextResponse.json({ ok: false, error: 'role_unverifiable' }, { status: 503 });
+  }
+  const effectiveRole = decision.role;
   const { path } = await ctx.params;
   const segments = path ?? [];
   // Block path traversal / injection: each segment must be a clean slug.
@@ -114,7 +131,7 @@ async function forward(
   }
   // Per-user role gate (see ROLE_RANK note above). Without this, role is decorative
   // for everything routed through the generic proxy.
-  if (ROLE_RANK[session.role] < requiredRank(method, segments)) {
+  if (ROLE_RANK[effectiveRole] < requiredRank(method, segments)) {
     return NextResponse.json(
       { ok: false, error: 'forbidden: insufficient role for this action' },
       { status: 403 },

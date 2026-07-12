@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@hieu-asia/ui';
-import { ArrowRight, ArrowUp, ArrowDown, Layers, Scale, Briefcase } from 'lucide-react';
+import { ArrowRight, ArrowUp, ArrowDown, Layers, Scale, Briefcase, Activity } from 'lucide-react';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
@@ -183,6 +183,18 @@ export default async function BigFiveTraitPage({
         <p className="mt-3 text-xs text-muted-foreground">
           Đây là một <strong>dải liên tục</strong> — hầu hết mọi người nằm đâu đó ở giữa. Không đầu
           nào tốt hay xấu hơn; mỗi đầu là một thiên hướng hợp với những bối cảnh khác nhau.
+        </p>
+      </section>
+
+      {/* Dấu hiệu đời thường */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          <Activity className="h-5 w-5 text-gold" aria-hidden /> Dấu hiệu đời thường
+        </h2>
+        <p className="text-base leading-relaxed text-foreground/85">{d.everydaySigns}</p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Đây là ví dụ minh hoạ để dễ hình dung, không phải bài kiểm nhanh — hầu hết mọi người nằm đâu
+          đó ở giữa dải chứ không đúng khít một đầu.
         </p>
       </section>
 

@@ -18,6 +18,7 @@ import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 import { sbServer } from '@/lib/supabase-server';
 import { ADMIN_SESSION_COOKIE, verifySession } from '@/lib/auth';
+import { resolveLiveRole } from '@/lib/admin-user-store';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -51,6 +52,13 @@ export async function GET(req: NextRequest) {
       { ok: false, error: 'unauthenticated' },
       { status: 401 },
     );
+  }
+  // Instant revocation (2026-07-12 audit, step 3): this route reads service-role
+  // data with only a presence check, so mirror the middleware's live-revocation
+  // guard here too — a deleted admin must not reach it even if the middleware
+  // matcher ever regresses (the defense-in-depth reason this handler re-verifies).
+  if ((await resolveLiveRole(session.email)).status === 'revoked') {
+    return NextResponse.json({ ok: false, error: 'session_revoked' }, { status: 401 });
   }
 
   const url = new URL(req.url);

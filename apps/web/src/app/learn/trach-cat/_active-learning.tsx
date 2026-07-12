@@ -126,6 +126,127 @@ export function TrachCatDepth() {
   );
 }
 
+export function TrachCatDepthTruc() {
+  return (
+    <DepthTabs
+      topicId="trach-cat"
+      concept="Thập nhị Trực (12 Trực) là gì, và vì sao mỗi ngày lại “hợp” một loại việc khác nhau"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              12 Trực giống 12 kiểu ngày thay phiên nhau. Có ngày hợp “làm cho xong”, có ngày hợp
+              “dọn bỏ cái cũ”, có ngày hợp “mở ra cái mới”. Mỗi kiểu ngày {strong('giỏi một việc')},
+              không có kiểu ngày nào giỏi tất cả.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Mỗi ngày mang một trong 12 Trực xoay vòng theo thứ tự: Kiến, Trừ, Mãn, Bình, Định,
+                Chấp, Phá, Nguy, Thành, Thu, Khai, Bế. Tên trực gợi luôn tính chất ngày:{' '}
+                {strong('Định')} là ổn định (hợp ký kết, cưới hỏi), {strong('Khai')} là mở ra (hợp
+                khai trương), {strong('Bế')} là đóng lại (kỵ mở hàng, khởi sự mới).
+              </p>
+              <p>
+                Vì thế xem trực là cách đọc nhanh: ngày này nghiêng về {strong('khởi sự')} hay nên{' '}
+                {strong('kiêng')}. Nhưng không trực nào tốt cho mọi việc — nên trực chỉ là một lớp
+                trong nhiều lớp cùng xét.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                12 Trực (còn gọi “Kiến Trừ thập nhị khách”) gắn theo quan hệ giữa{' '}
+                {strong('địa chi của ngày và địa chi của tháng')}: mỗi tháng, trực Kiến rơi vào ngày
+                có chi trùng chi tháng, rồi 11 trực còn lại nối tiếp. Mỗi trực có bảng hợp/kỵ riêng
+                theo lịch pháp.
+              </p>
+              <p>
+                Cần biết là các bản lịch có {strong('dị bản nhỏ')}: tên gọi (“Thâu” hay “Thu”) và chi
+                tiết hợp/kỵ từng trực không phải lúc nào cũng khớp nhau. Vì vậy nên đọc trực như một
+                {' '}<strong>xu hướng tham khảo</strong>, chọn theo một bản lịch nhất quán thay vì so
+                nhiều nguồn rồi rối.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
+export function TrachCatDepthSaoGio() {
+  return (
+    <DepthTabs
+      topicId="trach-cat"
+      concept="Vì sao cùng một ngày lại có giờ tốt và giờ xấu"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Một ngày được chia thành 12 khung giờ, như 12 ô. Có {strong('6 ô sáng')} (giờ tốt) và
+              6 ô cần cẩn thận, xen kẽ nhau. Muốn làm việc quan trọng thì chọn một ô sáng — nhưng ô
+              nào sáng thì mỗi ngày lại khác.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                12 canh giờ trong ngày (Tý, Sửu, Dần… Hợi, mỗi canh hai tiếng) được gắn 12 sao thần
+                luân phiên: {strong('6 sao hoàng đạo')} (Thanh Long, Minh Đường, Kim Quỹ, Thiên Đức,
+                Ngọc Đường, Tư Mệnh) là giờ tốt; {strong('6 sao hắc đạo')} (Thiên Hình, Chu Tước, Bạch
+                Hổ, Thiên Lao, Huyền Vũ, Câu Trận) là giờ nên thận trọng.
+              </p>
+              <p>
+                Sao nào rơi vào giờ nào lại {strong('đổi theo địa chi của ngày')}. Đó là lý do giờ tốt
+                của hôm nay khác giờ tốt của ngày mai — và vì sao không có “giờ chết” cố định.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Cách xếp: mốc khởi sao Thanh Long đặt theo {strong('chi của ngày')} (bài quyết cổ “Dần
+                Thân gia Tý, Mão Dậu Dần, Thìn Tuất Thìn, Tỵ Hợi Ngọ, Tý Ngọ Thân, Sửu Mùi Tuất”), rồi
+                xếp vòng 12 sao cố định lên 12 canh. Vì vòng cố định là 6 tốt xen 6 xấu, mỗi ngày{' '}
+                {strong('luôn có đúng 6 giờ hoàng đạo')}.
+              </p>
+              <p>
+                Đây chính là phép mà công cụ giờ hoàng đạo của hieu.asia tính ra khi bạn nhập ngày.
+                Cùng hệ 12 sao thần này còn được dùng để định {strong('ngày')} hoàng đạo / hắc đạo (khi
+                đó mốc khởi đổi theo tháng) — nên bạn sẽ gặp lại đúng những tên sao ấy ở cả lớp ngày lẫn
+                lớp giờ.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
 const RECALL_QUESTIONS: RecallQuestion[] = [
   {
     id: 'q1',
@@ -214,6 +335,61 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Vì sao trong cùng một ngày lại có giờ tốt và giờ xấu?',
+    choices: [
+      {
+        text: 'Mỗi ngày, 12 canh giờ được gắn 12 sao thần luân phiên — 6 sao hoàng đạo (giờ tốt) xen 6 sao hắc đạo (giờ xấu); sao nào rơi giờ nào đổi theo địa chi của ngày',
+        correct: true,
+        note: 'Đúng — vòng 12 sao cố định là 6 tốt xen 6 xấu, nên mỗi ngày luôn có đúng 6 giờ hoàng đạo, và khung giờ tốt đổi theo chi ngày.',
+      },
+      {
+        text: 'Cứ ban ngày là giờ tốt, ban đêm là giờ xấu',
+        note: 'Không — sáu giờ hoàng đạo rải cả ngày lẫn đêm, suy theo địa chi của ngày chứ không theo sáng/tối.',
+      },
+      {
+        text: 'Giờ tốt cố định (ví dụ luôn là giờ Ngọ) cho mọi ngày',
+        note: 'Không — mốc khởi sao Thanh Long đổi theo chi ngày, nên giờ tốt hôm nay khác giờ tốt ngày mai.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'mcq',
+    prompt: 'Một ngày vừa là hoàng đạo, vừa mang trực “Thành” — vậy nó có tốt cho MỌI việc không?',
+    choices: [
+      {
+        text: 'Không — mỗi loại việc còn xét thêm sao ngày riêng: Thiên Hỷ hợp cưới hỏi, còn Đại/Tiểu Hao lại kỵ việc tiền bạc; một ngày hiếm khi tốt cho mọi việc',
+        correct: true,
+        note: 'Đúng — hoàng đạo và trực chỉ là hai lớp nền; sao ngày gắn với từng loại việc mới quyết định ngày đó hợp cưới, hợp khai trương hay không.',
+      },
+      {
+        text: 'Có — đã là hoàng đạo thì tốt cho tất cả',
+        note: 'Không — cùng một ngày có thể tốt cho việc này nhưng vướng sao xấu cho việc khác.',
+      },
+      {
+        text: 'Có, miễn là chọn thêm một giờ hoàng đạo trong ngày',
+        note: 'Không — giờ đẹp không xoá được sao xấu gắn với một loại việc cụ thể; vẫn phải xét sao ngày theo việc.',
+      },
+    ],
+  },
+  {
+    id: 'q8',
+    type: 'open',
+    prompt:
+      'Vận dụng: Vì lý do thực tế, bạn buộc phải khai trương vào một ngày bị coi là “xấu”. Điều đó có làm hỏng việc không, và nên nghĩ thế nào?',
+    answer: (
+      <>
+        Không tất định. Ngày “xấu” theo lịch pháp là {strong('lời nhắc thận trọng')} theo phong tục,
+        không phải bản án. Cái quyết định vẫn là sự chuẩn bị — hàng hoá, nhân sự, dịch vụ — chứ không
+        phải con số ngày. Bạn có thể chọn một {strong('giờ hoàng đạo')} trong ngày đó, chuẩn bị kỹ hơn
+        và giữ tâm thế bình tĩnh; đó mới là cách “hoá giải” thực tế, và cũng đúng tinh thần tham khảo,
+        không phán số mệnh.
+      </>
+    ),
+  },
 ];
 
 export function TrachCatRecall() {
@@ -242,6 +418,11 @@ const FACETS: UnderstandingFacet[] = [
     can: 'Kể được các hệ quy chiếu chính: ngày hoàng đạo/hắc đạo, 12 Trực, nhị thập bát tú, giờ hoàng đạo, thần sát.',
   },
   {
+    id: 'layers',
+    facet: 'Nhiều lớp sao',
+    can: 'Giải thích được các lớp chồng lên nhau khi xét một ngày (hoàng đạo/hắc đạo, 12 Trực, sao ngày theo việc, 12 sao giờ, nhị thập bát tú) — và vì sao một ngày hiếm khi tốt cho mọi việc.',
+  },
+  {
     id: 'discrimination',
     facet: 'Phân biệt',
     can: 'Phân biệt được ngày Tam Nương (3,7,13,18,22,27) với Nguyệt Kỵ (5,14,23), và biết chúng là quy ước phong tục.',
@@ -250,6 +431,11 @@ const FACETS: UnderstandingFacet[] = [
     id: 'boundary',
     facet: 'Ranh giới',
     can: 'Chỉ ra trạch cát giúp gì (đồng bộ nhịp sinh hoạt + tâm lý an tâm) và KHÔNG giúp gì (không đo nhân quả, không thay sự chuẩn bị).',
+  },
+  {
+    id: 'variants',
+    facet: 'Dị bản giữa các lịch',
+    can: 'Giải thích được vì sao hai bản lịch có thể nói cùng một ngày tốt/xấu khác nhau (dị bản giữa các sách lịch), và vì sao nên chọn một hệ nhất quán thay vì so nhiều nguồn rồi rối.',
   },
   {
     id: 'guard',

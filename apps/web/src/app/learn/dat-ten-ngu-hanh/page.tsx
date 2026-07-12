@@ -10,10 +10,11 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import {
   DatTenFrame,
   DatTenDepth,
+  DatTenDepthSinh,
   DatTenRecall,
   DatTenChecklist,
   DatTenWhys,
@@ -39,6 +40,95 @@ const HANH_BO_THU: {
   { hanh: 'Hỏa', bo: 'bộ Hỏa 火 / Nhật 日', chu: 'Huân, Dương, Minh', dot: 'bg-rose-500' },
   { hanh: 'Kim', bo: 'bộ Kim 金', chu: 'Ngân, Cẩm, Chung', dot: 'bg-amber-500' },
   { hanh: 'Thổ', bo: 'bộ Thổ 土 / Sơn 山', chu: 'Sơn, Khôn, Phong', dot: 'bg-yellow-700' },
+];
+
+// Kho tên gợi ý theo hành — tên + nghĩa COPY đúng từ engine NAME_SUGGESTIONS
+// (lib/dat-ten-ngu-hanh.ts) để trang học khớp công cụ. Nhãn rõ: xếp theo NGHĨA
+// là chính, có tính quy ước — KHÔNG khẳng định "tên này số tốt".
+type Gender = 'nam' | 'nu' | 'ca';
+const GENDER_LABEL: Record<Gender, string> = { nam: 'bé trai', nu: 'bé gái', ca: 'dùng chung' };
+
+const KHO_TEN: { hanh: string; dot: string; ten: { name: string; meaning: string; g: Gender }[] }[] = [
+  {
+    hanh: 'Kim',
+    dot: 'bg-amber-500',
+    ten: [
+      { name: 'Kim', meaning: 'vàng, kim loại quý', g: 'ca' },
+      { name: 'Ngân', meaning: 'bạc, trắng sáng', g: 'nu' },
+      { name: 'Ngọc', meaning: 'ngọc quý, trong sáng', g: 'ca' },
+      { name: 'Chung', meaning: 'chuông vàng, tiếng vang', g: 'ca' },
+      { name: 'Nghĩa', meaning: 'đạo lý, danh dự', g: 'nam' },
+      { name: 'Khánh', meaning: 'chuông khánh, phúc lành', g: 'ca' },
+      { name: 'Bạch', meaning: 'trắng trong, kim bạch', g: 'ca' },
+      { name: 'Thu', meaning: 'mùa thu (thuộc Kim)', g: 'nu' },
+      { name: 'Tuyết', meaning: 'tuyết trắng, tinh khôi', g: 'nu' },
+      { name: 'Tân', meaning: 'can Tân thuộc Kim, mới mẻ', g: 'ca' },
+    ],
+  },
+  {
+    hanh: 'Mộc',
+    dot: 'bg-emerald-500',
+    ten: [
+      { name: 'Lâm', meaning: 'rừng, rậm rạp', g: 'nam' },
+      { name: 'Tùng', meaning: 'cây tùng, kiên trung', g: 'nam' },
+      { name: 'Mai', meaning: 'hoa mai, thanh khiết', g: 'nu' },
+      { name: 'Trúc', meaning: 'cây trúc, cứng cỏi', g: 'ca' },
+      { name: 'Lan', meaning: 'hoa lan, quý phái', g: 'nu' },
+      { name: 'Xuân', meaning: 'mùa xuân, sinh trưởng', g: 'ca' },
+      { name: 'Nam', meaning: 'cây nam — gỗ quý, vững chãi', g: 'nam' },
+      { name: 'Bách', meaning: 'cây bách, trường thọ', g: 'nam' },
+      { name: 'Hương', meaning: 'hương thơm cây cỏ', g: 'nu' },
+      { name: 'Chi', meaning: 'cành lá, nảy nở', g: 'nu' },
+    ],
+  },
+  {
+    hanh: 'Thủy',
+    dot: 'bg-sky-500',
+    ten: [
+      { name: 'Hà', meaning: 'sông, dòng chảy', g: 'nu' },
+      { name: 'Giang', meaning: 'sông lớn, bao la', g: 'ca' },
+      { name: 'Hải', meaning: 'biển, rộng lớn', g: 'nam' },
+      { name: 'Vân', meaning: 'mây, bay bổng', g: 'nu' },
+      { name: 'Vũ', meaning: 'mưa, mát lành', g: 'nam' },
+      { name: 'Thủy', meaning: 'nước, thuần khiết', g: 'nu' },
+      { name: 'Khê', meaning: 'suối nhỏ, trong vắt', g: 'ca' },
+      { name: 'Thanh', meaning: 'trong xanh như nước', g: 'ca' },
+      { name: 'Bình', meaning: 'mặt nước phẳng lặng', g: 'ca' },
+      { name: 'Lam', meaning: 'xanh lam như nước', g: 'nu' },
+    ],
+  },
+  {
+    hanh: 'Hỏa',
+    dot: 'bg-rose-500',
+    ten: [
+      { name: 'Minh', meaning: 'sáng sủa, trí tuệ', g: 'ca' },
+      { name: 'Quang', meaning: 'ánh sáng, hào quang', g: 'nam' },
+      { name: 'Nhật', meaning: 'mặt trời, rực sáng', g: 'nam' },
+      { name: 'Đăng', meaning: 'ngọn đèn, soi đường', g: 'nam' },
+      { name: 'Ánh', meaning: 'ánh sáng, tươi sáng', g: 'nu' },
+      { name: 'Dương', meaning: 'mặt trời, dương khí', g: 'nam' },
+      { name: 'Hồng', meaning: 'đỏ tươi, rạng rỡ', g: 'nu' },
+      { name: 'Hạ', meaning: 'mùa hạ, nắng ấm', g: 'nu' },
+      { name: 'Hân', meaning: 'hân hoan, rạng rỡ', g: 'nu' },
+      { name: 'Huy', meaning: 'ánh sáng rực rỡ', g: 'nam' },
+    ],
+  },
+  {
+    hanh: 'Thổ',
+    dot: 'bg-yellow-700',
+    ten: [
+      { name: 'Sơn', meaning: 'núi, vững chắc', g: 'nam' },
+      { name: 'Thành', meaning: 'thành trì, kiên cố', g: 'nam' },
+      { name: 'Bảo', meaning: 'quý báu, trân trọng', g: 'ca' },
+      { name: 'An', meaning: 'bình an, vững như đất', g: 'ca' },
+      { name: 'Cát', meaning: 'may mắn, tốt lành', g: 'ca' },
+      { name: 'Kiên', meaning: 'kiên cường, bền vững', g: 'nam' },
+      { name: 'Khang', meaning: 'an khang, vững vàng', g: 'ca' },
+      { name: 'Trân', meaning: 'quý hiếm, trân trọng', g: 'nu' },
+      { name: 'Bích', meaning: 'ngọc bích xanh sáng', g: 'nu' },
+      { name: 'Hằng', meaning: 'bền vững, dài lâu', g: 'nu' },
+    ],
+  },
 ];
 
 // FAQ dùng chung cho CẢ FAQPage JSON-LD lẫn phần hiển thị (accordion) →
@@ -68,6 +158,18 @@ const FAQS = [
     q: 'Ngũ hành trong tên có quyết định vận mệnh hay hạnh phúc của bé không?',
     a: 'Không. Ngũ hành trong tên là một quan niệm văn hoá, không có bằng chứng quyết định vận mệnh hay hạnh phúc của một người. Đừng để áp lực "chọn đúng hành" lấn át ý nghĩa và sự thoải mái. hieu.asia gợi ý để bạn tham khảo, không phán — cái quyết định cuộc đời bé là tình yêu thương và cách nuôi dạy, không phải một chữ hợp hành.',
   },
+  {
+    q: 'Bổ hành có nhất thiết dùng đúng hành đang thiếu không?',
+    a: 'Không nhất thiết. Theo nguyên tắc tương sinh của ngũ hành (Mộc → Hỏa → Thổ → Kim → Thủy → Mộc), muốn bổ một hành, bạn có thể dùng chính hành đó (bổ thẳng), hoặc dùng hành SINH ra nó — kiểu "mẹ nuôi con". Ví dụ bé thiếu Hỏa: có thể chọn chữ hành Hỏa, hoặc chữ hành Mộc vì Mộc sinh Hỏa. Cách thứ hai bồi dưỡng hành thiếu nhẹ nhàng hơn. Các trường phái không hoàn toàn thống nhất nên xem như một hướng tham khảo, và vẫn ưu tiên nghĩa đẹp, âm hay.',
+  },
+  {
+    q: 'Vì sao nhiều nhà kiêng đặt tên con trùng tên ông bà, người bậc trên?',
+    a: 'Đó là tục kiêng huý — tránh dùng thẳng tên người bậc trên trong họ (ông bà, cha mẹ, người đã khuất), thời xưa còn kiêng cả tên vua quan. Nhiều gia đình tránh trùng tên để giữ tôn ti và tránh phạm huý. Đây là phong tục, không phải luật; nên tôn trọng nếp nhà, nhưng không cần lo sợ, và cứ để nghĩa đẹp cùng âm hay dẫn đường.',
+  },
+  {
+    q: 'Tam tài, tứ cách là gì, có cần theo không?',
+    a: 'Tam tài (Thiên – Địa – Nhân) và tứ cách (Thiên cách, Địa cách, Nhân cách, Tổng cách) là các hệ ĐẾM SỐ NÉT chữ Hán rồi luận cát – hung, phổ biến trong danh học Nhật – Hàn. Vì dựa trên số nét chữ Hán, chúng áp vào tên thuần Việt (viết bằng chữ Quốc ngữ) khá khập khiễng: một cái tên có thể đếm nét theo nhiều cách viết Hán khác nhau, và mỗi hệ cho kết quả khác nhau. Vì vậy hieu.asia xem đây là lớp tham khảo phụ, không đặt nặng — ưu tiên nghĩa, âm và hành như phần chính.',
+  },
 ];
 
 const JSONLD = [
@@ -83,6 +185,12 @@ const JSONLD = [
     { name: 'Đặt tên ngũ hành', url: '/learn/dat-ten-ngu-hanh' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Đặt Tên Theo Ngũ Hành cho con',
+    description:
+      'Đặt tên theo ngũ hành: chọn tên bổ hành đang thiếu trong Bát Tự của bé, nhận biết hành qua bộ thủ chữ Hán, nghĩa đẹp + âm hay. Góc tham khảo, không máy móc.',
+    url: '/learn/dat-ten-ngu-hanh',
+  }),
 ];
 
 export default function LearnDatTenNguHanhPage() {
@@ -190,6 +298,34 @@ export default function LearnDatTenNguHanhPage() {
           ),
         },
         {
+          id: 'nguyen-tac-tuong-sinh',
+          tocLabel: 'Tương sinh · bổ hành',
+          heading: 'Nguyên tắc tương sinh: bổ thông minh hơn bổ trực tiếp',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Biết hành cần bổ rồi, có một mẹo đáng nói. Ngũ hành xoay theo{' '}
+                <strong>vòng tương sinh</strong>: Mộc → Hỏa → Thổ → Kim → Thủy → Mộc — mỗi hành sinh ra,
+                nuôi dưỡng hành kế tiếp. Vì thế muốn bổ một hành, bạn có <strong>hai hướng</strong>:
+                dùng chính hành đó (bổ thẳng), hoặc dùng <strong>hành sinh ra nó</strong> — kiểu “mẹ
+                nuôi con”.
+              </p>
+              <p>
+                Ví dụ bé thiếu <strong>Hỏa</strong>: có thể chọn chữ hành Hỏa (Minh, Quang, Đăng…), mà
+                cũng có thể chọn chữ hành <strong>Mộc</strong> (Lâm, Tùng, Trúc…) — vì Mộc sinh Hỏa,
+                giống như “thêm củi cho lửa”. Cách thứ hai bồi dưỡng hành thiếu nhẹ nhàng hơn là dồn
+                thẳng, và mở rộng đáng kể số chữ đẹp bạn có thể chọn.
+              </p>
+              <p className="text-sm text-foreground/70">
+                Đây là kỹ thuật quen thuộc trong mệnh lý; các trường phái không hoàn toàn thống nhất
+                (có phái ưu tiên bổ thẳng), nên xem như một hướng tham khảo. Ba độ sâu dưới đây nói kỹ
+                hơn về nó:
+              </p>
+              <DatTenDepthSinh />
+            </div>
+          ),
+        },
+        {
           id: 'buoc-2-chon-chu',
           tocLabel: 'Bước 2 · Chọn chữ',
           heading: 'Bước 2: chọn chữ theo bộ thủ / nghĩa',
@@ -234,6 +370,49 @@ export default function LearnDatTenNguHanhPage() {
           ),
         },
         {
+          id: 'kho-ten-theo-hanh',
+          tocLabel: 'Kho tên theo hành',
+          heading: 'Kho tên gợi ý theo hành',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Để dễ hình dung, đây là một kho tên Việt thông dụng gom theo hành. Mỗi tên kèm nghĩa
+                ngắn để bạn thấy vì sao nó được xếp vào hành đó. Lưu ý cách xếp:{' '}
+                <strong>chủ yếu theo NGHĨA của chữ</strong> (và một phần theo bộ thủ), nên{' '}
+                <strong>có tính quy ước</strong> — đây là gợi ý theo lớp ngũ hành để tham khảo, không
+                phải khẳng định “tên này số tốt”.
+              </p>
+              <div className="space-y-4">
+                {KHO_TEN.map((k) => (
+                  <div key={k.hanh} className="rounded-xl border border-border bg-card/40 p-4">
+                    <div className="mb-3 flex items-center gap-2">
+                      <span aria-hidden="true" className={`h-2 w-2 rounded-full ${k.dot}`} />
+                      <span className="font-heading text-base font-semibold text-foreground">
+                        Hành {k.hanh}
+                      </span>
+                    </div>
+                    <ul className="grid gap-2 sm:grid-cols-2">
+                      {k.ten.map((t) => (
+                        <li key={t.name} className="text-sm leading-relaxed text-muted-foreground">
+                          <span className="font-medium text-foreground">{t.name}</span> — {t.meaning}{' '}
+                          <span className="text-xs text-muted-foreground/80">
+                            ({GENDER_LABEL[t.g]})
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-foreground/70">
+                Cùng một hành đã có nhiều chữ để chọn, nên bạn hoàn toàn có thể tìm ra một tên vừa hợp
+                hành vừa nghĩa đẹp, âm hay — không phải hy sinh cái nào. Và nhớ nguyên tắc tương sinh ở
+                trên: nếu hành cần bổ ít chữ ưng ý, hành “mẹ” sinh ra nó cũng là một kho để tìm.
+              </p>
+            </div>
+          ),
+        },
+        {
           id: 'buoc-3-ghep-ten-hay',
           tocLabel: 'Bước 3 · Ghép tên hay',
           heading: 'Bước 3: nghĩa + âm + phong tục',
@@ -266,6 +445,74 @@ export default function LearnDatTenNguHanhPage() {
           ),
         },
         {
+          id: 'vi-du-dat-ten',
+          tocLabel: 'Ví dụ end-to-end',
+          heading: 'Ví dụ end-to-end: một bé thiếu Thủy',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Ghép ba bước lại cho dễ theo. Đây là một <strong>ví dụ giả định</strong> để minh hoạ,
+                không phải hồ sơ thật của ai: giả sử Bát Tự của bé cho thấy{' '}
+                <strong>thiếu hành Thủy</strong>.
+              </p>
+              <ol className="list-decimal space-y-3 pl-5">
+                <li>
+                  <strong>Xác nhận hành cần bổ.</strong> Đừng đoán — lập Bát Tự để chắc bé thiếu Thủy,
+                  bằng công cụ{' '}
+                  <Link
+                    href="/dat-ten-ngu-hanh"
+                    className="text-gold-700 underline-offset-4 hover:underline"
+                  >
+                    gợi ý tên theo ngũ hành
+                  </Link>
+                  . Nhớ nguyên tắc tương sinh: ngoài chữ hành Thủy, chữ hành <strong>Kim</strong> cũng
+                  bổ được vì Kim sinh Thủy.
+                </li>
+                <li>
+                  <strong>Chọn 3 phương án tên.</strong> Từ kho tên hành Thủy, thử vài chữ nghĩa đẹp:{' '}
+                  <strong>Giang</strong> (sông lớn, bao la), <strong>Hà</strong> (sông, dòng chảy),{' '}
+                  <strong>Khê</strong> (suối nhỏ, trong vắt). Ghép cùng họ và tên đệm để thành 2–3
+                  phương án hoàn chỉnh.
+                </li>
+                <li>
+                  <strong>Kiểm nghĩa + âm + phong tục.</strong> Đọc to cả họ tên xem thanh điệu có xuôi
+                  tai không, nghĩa có rõ và đẹp không, dễ đọc dễ viết không; và{' '}
+                  <strong>không trùng tên</strong> ông bà, người bậc trên trong họ (tục kiêng huý). Loại
+                  dần cho tới khi còn một phương án ưng nhất.
+                </li>
+              </ol>
+              <p>
+                Chốt lại đúng thứ tự ưu tiên: ngũ hành là <strong>lớp tham khảo</strong> giúp thu hẹp
+                lựa chọn, còn <strong>nghĩa và âm mới là gốc</strong> của một cái tên hay. Nếu không có
+                chữ Thủy nào thật ưng, một cái tên nghĩa đẹp, âm hay mà “chưa đủ hành” vẫn hơn một chữ
+                đúng hành mà trúc trắc.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'kieng-huy',
+          tocLabel: 'Tục kiêng huý',
+          heading: 'Tục kiêng huý: vì sao có',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Ở bước kiểm phong tục vừa rồi có nhắc “kiêng huý”. Đây là{' '}
+                <strong>tục tránh dùng thẳng tên</strong> người bậc trên — ông bà, cha mẹ, người đã
+                khuất trong dòng họ. Thời xưa, việc kiêng còn rộng hơn: dân chúng kiêng cả{' '}
+                <strong>tên vua quan</strong>, đến mức phải đọc chệch hoặc viết tránh chữ huý.
+              </p>
+              <p>
+                Vì thế nhiều gia đình tránh đặt tên con trùng tên người trên trong họ, để giữ tôn ti và
+                tránh phạm huý. Cần gọi đúng tên: đây là <strong>phong tục</strong>, không phải luật —
+                nên tôn trọng nếp nhà và hỏi ý ông bà, nhưng không cần lo sợ. Nếu một cái tên đẹp tình
+                cờ trùng một chữ nào đó, cứ trao đổi trong nhà để chọn cách phù hợp, giữ nghĩa đẹp và âm
+                hay làm gốc.
+              </p>
+            </div>
+          ),
+        },
+        {
           id: 'can-bang-dung-may-moc',
           tocLabel: 'Cân bằng, đừng máy móc',
           heading: 'Cân bằng: đừng máy móc vì đủ hành',
@@ -287,6 +534,29 @@ export default function LearnDatTenNguHanhPage() {
                 <strong>góc gợi ý để tham khảo</strong>: nếu trong nhiều cái tên hay ngang nhau có một
                 cái tình cờ hợp hành cần bổ, đó là điểm cộng dễ thương. Nhưng đừng để quy tắc ngũ hành{' '}
                 <strong>lấn át</strong> nghĩa, âm và sự thoải mái của con.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'tam-tai-tu-cach',
+          tocLabel: 'Tam tài · tứ cách',
+          heading: 'Tam tài — tứ cách: lớp đếm nét chữ Hán',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Bạn có thể gặp cụm <strong>tam tài</strong> (Thiên – Địa – Nhân) và{' '}
+                <strong>tứ cách</strong> (Thiên cách, Địa cách, Nhân cách, Tổng cách) khi tìm hiểu đặt
+                tên. Đây là các <strong>hệ đếm số nét chữ Hán</strong>: người ta đếm số nét của từng
+                chữ trong họ tên, cộng theo công thức để ra các “cách”, rồi luận cát – hung. Hệ này
+                phổ biến trong danh học Nhật – Hàn.
+              </p>
+              <p>
+                Vấn đề khi áp vào tên <strong>thuần Việt</strong>: tên ta viết bằng chữ Quốc ngữ, không
+                có số nét chữ Hán cố định. Một chữ Việt có thể ứng nhiều chữ Hán khác nhau, mỗi chữ số
+                nét khác nhau, nên kết quả tam tài – tứ cách thành ra{' '}
+                <strong>tuỳ cách quy chữ</strong>, dễ mâu thuẫn. Vì lý do đó, hieu.asia không dùng lớp
+                này làm chính; nó chỉ là một lớp tham khảo phụ. Phần chính vẫn là hành, nghĩa và âm.
               </p>
             </div>
           ),

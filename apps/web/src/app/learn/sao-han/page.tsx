@@ -10,7 +10,7 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import { SAO_ORDER, SAO_INFO, TYPE_LABEL, type SaoType } from '@/lib/sao-han';
 import {
   SaoHanFrame,
@@ -32,6 +32,21 @@ const TYPE_DOT: Record<SaoType, string> = {
   trung: 'bg-amber-500',
   xau: 'bg-rose-500',
 };
+
+// Bảng tra nhanh: CHÉP ĐÚNG từ NAM_BY_MOD / NU_BY_MOD trong lib/sao-han.ts
+// (bảng đã đối chiếu 15 trường hợp, khoá — không tự tính lại, không sửa).
+// Thứ tự hàng theo phần dư 1→8 rồi 0 (0 = tuổi mụ chia hết cho 9: 9, 18, 27…).
+const QUICK_TABLE: { mod: string; nam: string; nu: string }[] = [
+  { mod: '1', nam: 'La Hầu', nu: 'Kế Đô' },
+  { mod: '2', nam: 'Thổ Tú', nu: 'Vân Hớn' },
+  { mod: '3', nam: 'Thủy Diệu', nu: 'Mộc Đức' },
+  { mod: '4', nam: 'Thái Bạch', nu: 'Thái Âm' },
+  { mod: '5', nam: 'Thái Dương', nu: 'Thổ Tú' },
+  { mod: '6', nam: 'Vân Hớn', nu: 'La Hầu' },
+  { mod: '7', nam: 'Kế Đô', nu: 'Thái Dương' },
+  { mod: '8', nam: 'Thái Âm', nu: 'Thái Bạch' },
+  { mod: '0 (chia hết cho 9)', nam: 'Mộc Đức', nu: 'Thủy Diệu' },
+];
 
 // FAQ dùng chung cho CẢ FAQPage JSON-LD lẫn phần hiển thị (accordion) →
 // chữ schema === chữ hiển thị (chống cloaking) + crawler/AI đọc được câu trả lời.
@@ -60,6 +75,14 @@ const FAQS = [
     q: 'Có cần cúng sao giải hạn không?',
     a: 'Tuỳ niềm tin mỗi người. Một số gia đình làm lễ dâng sao đầu năm để cầu an — đó là nét văn hoá tín ngưỡng. hieu.asia chỉ giúp bạn tra cứu để tham khảo, không phán số mệnh và không bán lễ giải hạn. Hiểu nguồn gốc rồi sẽ thấy không cần sợ, càng không cần tốn tiền để "giải" một giao điểm hình học.',
   },
+  {
+    q: 'Vì sao nam và nữ lại dùng hai bảng sao khác nhau — có cơ sở thiên văn không?',
+    a: 'Không có cơ sở thiên văn: vị trí thật của Mặt Trời, Mặt Trăng hay các hành tinh không phụ thuộc vào giới tính người xem. Hai bảng nam/nữ là quy ước dân gian được truyền lại qua các sách phong tục, và các tài liệu này không ghi lý do gốc vì sao chia như vậy. hieu.asia giữ đúng bảng truyền thống để bạn tra cứu phong tục, đồng thời nói rõ: đây là quy ước văn hoá, không phải quy luật tự nhiên.',
+  },
+  {
+    q: 'Sao hạn có liên quan gì đến Tử Vi không?',
+    a: 'Hai hệ khác nhau. Tử Vi Đẩu Số lập lá số theo đủ giờ – ngày – tháng – năm sinh với một hệ sao riêng, còn sao hạn Cửu Diệu là lớp phong tục dân gian riêng, chỉ cần năm sinh và giới tính. Một vài tên gọi trùng nhau (Thái Dương, Thái Âm cũng là tên sao trong Tử Vi) nhưng cách tính và vai trò khác hẳn, nên đừng trộn kết quả của hai hệ vào nhau.',
+  },
 ];
 
 const JSONLD = [
@@ -75,6 +98,12 @@ const JSONLD = [
     { name: 'Sao Hạn (Cửu Diệu)', url: '/learn/sao-han' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Sao Hạn Cửu Diệu — 9 sao chiếu mệnh theo tuổi',
+    description:
+      'Sao hạn Cửu Diệu: 9 sao chiếu mệnh theo tuổi và giới tính — La Hầu, Kế Đô, Thái Bạch, Thái Dương, Thái Âm… Góc nhìn tham khảo, không mê tín.',
+    url: '/learn/sao-han',
+  }),
 ];
 
 export default function LearnSaoHanPage() {
@@ -96,7 +125,7 @@ export default function LearnSaoHanPage() {
           tham khảo theo phong tục — không phải lời phán về số mệnh.
         </>
       }
-      readMeta="7 phút đọc · Cập nhật 2026"
+      readMeta="10 phút đọc · Cập nhật 2026"
       breadcrumb={[
         { label: 'Trang chủ', href: '/' },
         { label: 'Học huyền học', href: '/learn' },
@@ -192,6 +221,14 @@ export default function LearnSaoHanPage() {
                       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                         {s.summary}
                       </p>
+                      <details className="mt-3 border-t border-border pt-2">
+                        <summary className="cursor-pointer text-[13px] font-medium text-gold-700 hover:underline">
+                          Đọc sâu hơn về năm {s.name}
+                        </summary>
+                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                          {s.deepDive}
+                        </p>
+                      </details>
                     </div>
                   );
                 })}
@@ -236,6 +273,65 @@ export default function LearnSaoHanPage() {
           ),
         },
         {
+          id: 'bang-tra-nhanh',
+          tocLabel: 'Bảng tra nhanh',
+          heading: 'Bảng tra nhanh: phần dư → sao chiếu mệnh',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Đây là bảng ánh xạ đầy đủ mà công cụ dùng để tra: lấy <strong>tuổi mụ chia 9, giữ
+                phần dư</strong>, rồi đọc hàng tương ứng theo giới tính. Phần dư 0 nghĩa là tuổi mụ
+                chia hết cho 9 (tuổi 9, 18, 27, 36…).
+              </p>
+              <div className="overflow-x-auto rounded-xl border border-border">
+                <table className="w-full min-w-[420px] text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-border bg-card/60">
+                      <th scope="col" className="px-4 py-2.5 font-semibold text-foreground">
+                        Phần dư (tuổi mụ ÷ 9)
+                      </th>
+                      <th scope="col" className="px-4 py-2.5 font-semibold text-foreground">
+                        Nam
+                      </th>
+                      <th scope="col" className="px-4 py-2.5 font-semibold text-foreground">
+                        Nữ
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {QUICK_TABLE.map((row) => (
+                      <tr key={row.mod} className="border-b border-border/60 last:border-b-0">
+                        <td className="px-4 py-2 text-muted-foreground">{row.mod}</td>
+                        <td className="px-4 py-2 text-foreground">{row.nam}</td>
+                        <td className="px-4 py-2 text-foreground">{row.nu}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <h3 className="text-lg font-semibold text-foreground">Hai ví dụ tính thử</h3>
+              <ul className="list-disc space-y-2 pl-5">
+                <li>
+                  <strong>Sinh 1990, xem năm 2026:</strong> tuổi mụ = 2026 − 1990 + 1 = 37. Lấy 37
+                  chia 9 dư 1 → tra bảng: nam gặp <strong>La Hầu</strong>, nữ gặp{' '}
+                  <strong>Kế Đô</strong>. Cùng một năm sinh nhưng hai sao khác nhau — đúng điểm dễ gây
+                  bất ngờ của phong tục này.
+                </li>
+                <li>
+                  <strong>Sinh 1993, xem năm 2026:</strong> tuổi mụ = 2026 − 1993 + 1 = 34. Lấy 34
+                  chia 9 dư 7 → tra bảng: nam gặp <strong>Kế Đô</strong>, nữ gặp{' '}
+                  <strong>Thái Dương</strong>.
+                </li>
+              </ul>
+              <p className="text-sm text-foreground/70">
+                Bảng này trùng khớp với bảng bên trong công cụ (đã đối chiếu với nguồn tra cứu công
+                khai trên 15 trường hợp). Nếu kết quả bạn tra tay khác với công cụ, kiểm tra lại bước
+                tính tuổi mụ trước — đó là chỗ hay nhầm nhất.
+              </p>
+            </div>
+          ),
+        },
+        {
           id: 'tu-thien-van-den-phong-tuc',
           tocLabel: 'Nguồn gốc Cửu Diệu',
           heading: 'Từ thiên văn đến phong tục — Cửu Diệu là gì?',
@@ -248,6 +344,79 @@ export default function LearnSaoHanPage() {
                 (Thái Âm) và 5 hành tinh nhìn được bằng mắt thường — Kim tinh (Thái Bạch), Mộc tinh
                 (Mộc Đức), Thủy tinh (Thủy Diệu), Hỏa tinh (Vân Hớn), Thổ tinh (Thổ Tú).
               </p>
+              <p>
+                Đối chiếu từng "sao" với từng graha trong Navagraha, mọi thứ khớp một-một:
+              </p>
+              <div className="overflow-x-auto rounded-xl border border-border">
+                <table className="w-full min-w-[480px] text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-border bg-card/60">
+                      <th scope="col" className="px-4 py-2.5 font-semibold text-foreground">
+                        Sao Cửu Diệu
+                      </th>
+                      <th scope="col" className="px-4 py-2.5 font-semibold text-foreground">
+                        Graha (Navagraha)
+                      </th>
+                      <th scope="col" className="px-4 py-2.5 font-semibold text-foreground">
+                        Thực chất là gì
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-border/60">
+                      <td className="px-4 py-2 text-foreground">Thái Dương</td>
+                      <td className="px-4 py-2 text-muted-foreground">Surya</td>
+                      <td className="px-4 py-2 text-muted-foreground">Mặt Trời</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="px-4 py-2 text-foreground">Thái Âm</td>
+                      <td className="px-4 py-2 text-muted-foreground">Chandra</td>
+                      <td className="px-4 py-2 text-muted-foreground">Mặt Trăng</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="px-4 py-2 text-foreground">Mộc Đức</td>
+                      <td className="px-4 py-2 text-muted-foreground">Brihaspati</td>
+                      <td className="px-4 py-2 text-muted-foreground">Mộc tinh (sao Mộc)</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="px-4 py-2 text-foreground">Thổ Tú</td>
+                      <td className="px-4 py-2 text-muted-foreground">Shani</td>
+                      <td className="px-4 py-2 text-muted-foreground">Thổ tinh (sao Thổ)</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="px-4 py-2 text-foreground">Thủy Diệu</td>
+                      <td className="px-4 py-2 text-muted-foreground">Budha</td>
+                      <td className="px-4 py-2 text-muted-foreground">Thủy tinh (sao Thủy)</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="px-4 py-2 text-foreground">Vân Hớn</td>
+                      <td className="px-4 py-2 text-muted-foreground">Mangala</td>
+                      <td className="px-4 py-2 text-muted-foreground">Hỏa tinh (sao Hỏa)</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="px-4 py-2 text-foreground">Thái Bạch</td>
+                      <td className="px-4 py-2 text-muted-foreground">Shukra</td>
+                      <td className="px-4 py-2 text-muted-foreground">
+                        Kim tinh (sao Kim) lúc rạng sáng / chập tối
+                      </td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="px-4 py-2 text-foreground">La Hầu</td>
+                      <td className="px-4 py-2 text-muted-foreground">Rahu</td>
+                      <td className="px-4 py-2 text-muted-foreground">
+                        Không phải sao thật: giao điểm Bắc nơi quỹ đạo Mặt Trăng cắt hoàng đạo
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2 text-foreground">Kế Đô</td>
+                      <td className="px-4 py-2 text-muted-foreground">Ketu</td>
+                      <td className="px-4 py-2 text-muted-foreground">
+                        Không phải sao thật: giao điểm Nam, cặp đối xứng với La Hầu
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <p>
                 Điều thú vị nhất: <strong>La Hầu và Kế Đô không phải sao</strong>. Đó là hai giao điểm
                 nơi quỹ đạo Mặt Trăng cắt đường hoàng đạo — đúng vùng trời xảy ra nhật thực, nguyệt
@@ -295,6 +464,60 @@ export default function LearnSaoHanPage() {
                   không nên vì thế mà lo sợ hay ngưng những việc quan trọng của mình.
                 </li>
               </ul>
+            </div>
+          ),
+        },
+        {
+          id: 'han-tuoi-lien-quan',
+          tocLabel: 'Các hạn tuổi liên quan',
+          heading: 'Các hạn tuổi liên quan: Tam Tai, Kim Lâu',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Sao hạn Cửu Diệu không phải "hạn tuổi" duy nhất trong phong tục Việt. Người xưa còn
+                truyền lại vài hệ tra theo tuổi khác, mỗi hệ một cách tính và một mục đích riêng —
+                đừng gộp chung, vì kết quả của hệ này không suy ra hệ kia:
+              </p>
+              <ul className="list-disc space-y-2 pl-5">
+                <li>
+                  <strong>Tam Tai</strong>: hạn tính theo con giáp, kéo dài ba năm liên tiếp theo
+                  nhóm tuổi. Cách tính và các năm cụ thể có trang riêng:{' '}
+                  <Link
+                    href="/tam-tai"
+                    className="text-gold-700 underline-offset-4 hover:underline"
+                  >
+                    tra cứu Tam Tai
+                  </Link>
+                  .
+                </li>
+                <li>
+                  <strong>Kim Lâu</strong>: hạn tuổi thường được xem khi tính chuyện cưới hỏi, làm
+                  nhà. Cách tính khác hẳn sao hạn, xem tại:{' '}
+                  <Link
+                    href="/kim-lau"
+                    className="text-gold-700 underline-offset-4 hover:underline"
+                  >
+                    tra cứu Kim Lâu
+                  </Link>
+                  .
+                </li>
+                <li>
+                  <strong>Sao hạn Cửu Diệu</strong> (bài này): tra theo tuổi mụ và giới tính, chu kỳ
+                  9 năm. Muốn biết năm nay bạn gặp sao nào:{' '}
+                  <Link
+                    href="/sao-han"
+                    className="text-gold-700 underline-offset-4 hover:underline"
+                  >
+                    xem sao hạn của bạn
+                  </Link>
+                  .
+                </li>
+              </ul>
+              <p className="text-sm text-foreground/70">
+                Cả ba đều là phong tục để tham khảo, không phải phán quyết. Một năm có thể "dính"
+                hạn ở hệ này mà hoàn toàn bình thường ở hệ kia — thêm một lý do để đọc chúng như lời
+                nhắc cẩn trọng, thay vì cộng dồn nỗi lo.
+              </p>
             </div>
           ),
         },

@@ -22,6 +22,8 @@ interface DiscStyleRaw {
   workStyle: string;
   communication: string;
   underPressure: string;
+  collaboration: string; // phối hợp với 3 nhóm còn lại (mỗi nhóm 1 câu cụ thể)
+  misreads: string; // nhóm này hay bị hiểu lầm là gì, và sự thật là gì
   neighbors: string[]; // 2 nhóm liền kề trên vòng tròn (slug)
   opposite: string; // nhóm đối (slug)
 }
@@ -34,7 +36,7 @@ const STYLES: Record<string, DiscStyleRaw> = {
     focus: 'Tập trung vào việc',
     tagline: 'Quyết đoán, hướng kết quả, thích dẫn dắt và kiểm soát.',
     overview:
-      'Người nhóm D tập trung vào mục tiêu và kết quả, ra quyết định nhanh và sẵn sàng nhận thử thách. Họ thẳng thắn, tự tin và thích nắm quyền chủ động.',
+      'Người nhóm D lấy kết quả làm thước đo. Họ ra quyết định nhanh, nói thẳng vào việc và sẵn sàng nhận phần khó về mình. Đặt một mục tiêu rõ trước mặt, họ lao tới và ít bận tâm chuyện phải làm vừa lòng tất cả. Sức mạnh của họ là dám chịu trách nhiệm và đẩy việc qua điểm nghẽn; mặt trái là dễ sốt ruột với người cần thời gian và đôi khi quên hỏi ý người khác trước khi quyết. Trên hai trục DISC, nhóm D nằm ở góc nhanh và hướng việc — đó là gốc của cả điểm mạnh lẫn điểm cần để ý.',
     strengths: ['Quyết đoán, dám nhận rủi ro', 'Hướng kết quả, đẩy việc về đích', 'Tự tin, chủ động dẫn dắt'],
     growth: ['Kiên nhẫn và lắng nghe người khác', 'Mềm mỏng hơn khi giao tiếp', 'Cân nhắc chi tiết trước khi quyết'],
     workStyle:
@@ -42,6 +44,10 @@ const STYLES: Record<string, DiscStyleRaw> = {
     communication:
       'Thích trao đổi ngắn gọn, đi thẳng vào kết quả. Để làm việc với nhóm D: nói trọng tâm, đưa lựa chọn rõ ràng và tôn trọng thời gian của họ.',
     underPressure: 'Khi căng thẳng dễ nóng vội, áp đặt và thiếu kiên nhẫn với người làm chậm.',
+    collaboration:
+      'Với nhóm I, người D nên chừa chỗ cho sự hào hứng và ghi nhận công khai, thay vì chỉ chăm chăm chốt việc. Với nhóm S, D cần báo trước thay đổi và hạ nhịp, vì người S bị dồn gấp sẽ âm thầm rút lui. Với nhóm C, D nên đưa lý do và số liệu thay vì ra lệnh, vì người C phải thấy quy trình hợp lý mới yên tâm làm nhanh.',
+    misreads:
+      'Nhóm D hay bị đọc là lạnh lùng hoặc thích áp đặt. Thật ra phần lớn sự thẳng thừng đó đến từ việc họ đang dồn sức vào kết quả, không phải công kích cá nhân. Khi hiểu D coi thời gian là thứ quý, ta bớt thấy họ vô cảm và dễ phối hợp hơn.',
     neighbors: ['i', 'c'],
     opposite: 's',
   },
@@ -52,7 +58,7 @@ const STYLES: Record<string, DiscStyleRaw> = {
     focus: 'Tập trung vào người',
     tagline: 'Cởi mở, nhiệt tình, giỏi kết nối và truyền cảm hứng.',
     overview:
-      'Người nhóm I hướng về con người, thích giao tiếp, thuyết phục và tạo không khí tích cực. Họ lạc quan, hoạt ngôn và lan toả năng lượng cho tập thể.',
+      'Người nhóm I sống bằng kết nối. Họ thích trò chuyện, thuyết phục và kéo cả nhóm vào một tâm trạng tích cực. Ý tưởng đến nhanh, lời nói cũng nhanh, và họ giỏi làm người khác thấy được truyền cảm hứng. Điểm mạnh là mở ra quan hệ và giữ lửa cho tập thể; điểm cần để ý là dễ bỏ dở chi tiết và mệt với việc lặp đi lặp lại một mình. Trên hai trục DISC, nhóm I nằm ở góc nhanh và hướng người — cùng nhịp gấp với D nhưng dồn sự chú ý vào con người thay vì vào việc.',
     strengths: ['Cởi mở, dễ kết nối nhiều người', 'Nhiệt tình, tạo không khí tích cực', 'Thuyết phục và truyền cảm hứng'],
     growth: ['Chú ý chi tiết và theo việc đến cùng', 'Cân bằng cảm xúc khi ra quyết định', 'Lắng nghe nhiều hơn thay vì nói quá nhiều'],
     workStyle:
@@ -60,6 +66,10 @@ const STYLES: Record<string, DiscStyleRaw> = {
     communication:
       'Thích trò chuyện thân thiện và được ghi nhận. Để làm việc với nhóm I: cởi mở, dành chút thời gian hàn huyên và công nhận đóng góp của họ.',
     underPressure: 'Khi căng thẳng dễ sa đà cảm xúc, mất tập trung và né tránh việc đơn điệu.',
+    collaboration:
+      'Với nhóm D, người I nên gói năng lượng lại thành vài điểm chốt để không bị coi là nói lan man. Với nhóm S, I cần chậm lại và lắng nghe nhiều hơn, vì người S ngại bị cuốn theo nhịp quá dồn. Với nhóm C, I nên chuẩn bị dữ liệu và cam kết theo việc đến cùng, vì người C tin vào bằng chứng hơn là sự nhiệt tình.',
+    misreads:
+      'Nhóm I hay bị gắn nhãn hời hợt hoặc chỉ giỏi nói. Thật ra sự cởi mở đó là cách họ xây lòng tin và mở đường cho những việc khó nói. Khi có người lo phần chi tiết cùng, người I thường theo đuổi mục tiêu bền hơn ta tưởng.',
     neighbors: ['d', 's'],
     opposite: 'c',
   },
@@ -70,7 +80,7 @@ const STYLES: Record<string, DiscStyleRaw> = {
     focus: 'Tập trung vào người',
     tagline: 'Điềm đạm, kiên nhẫn, đáng tin và coi trọng hoà hợp.',
     overview:
-      'Người nhóm S coi trọng sự ổn định, hợp tác và nhịp làm việc đều đặn. Họ điềm tĩnh, lắng nghe tốt, trung thành và là chỗ dựa vững cho tập thể.',
+      'Người nhóm S giữ nhịp cho tập thể. Họ điềm đạm, kiên nhẫn, lắng nghe kỹ và trung thành với người và việc đã chọn. Thay vì phá cách, họ muốn mọi thứ chạy đều và hoà thuận, nên thường là chỗ dựa lặng lẽ mà ai cũng cần khi căng thẳng. Điểm mạnh là sự bền bỉ và đáng tin; điểm cần để ý là ngại thay đổi gấp và khó nói "không". Trên hai trục DISC, nhóm S nằm ở góc chậm và hướng người — cùng hướng người với I nhưng đi bằng nhịp ôn hoà thay vì sôi nổi.',
     strengths: ['Kiên nhẫn, điềm đạm, đáng tin', 'Lắng nghe và hỗ trợ người khác', 'Bền bỉ, giữ nhịp ổn định'],
     growth: ['Cởi mở hơn với thay đổi', 'Dám nói "không" và nêu chính kiến', 'Chủ động thay vì chờ đợi'],
     workStyle:
@@ -78,6 +88,10 @@ const STYLES: Record<string, DiscStyleRaw> = {
     communication:
       'Thích sự nhẹ nhàng, chân thành và được báo trước thay đổi. Để làm việc với nhóm S: kiên nhẫn, tạo cảm giác an toàn và tránh ép thay đổi gấp.',
     underPressure: 'Khi căng thẳng dễ thu mình, ngại va chạm và âm thầm chịu đựng.',
+    collaboration:
+      'Với nhóm D, người S cần được báo trước và nói rõ giới hạn của mình thay vì âm thầm chịu. Với nhóm I, S nên đón nhận sự sôi nổi nhưng vẫn giữ nhịp đều để việc không loãng. Với nhóm C, S dễ đồng điệu ở sự cẩn thận, chỉ cần cùng nhau dám quyết khi đã đủ dữ liệu thay vì trì hoãn mãi.',
+    misreads:
+      'Nhóm S hay bị hiểu là thụ động hoặc thiếu chính kiến. Thật ra họ có quan điểm rõ, chỉ đặt hoà khí lên trước nên ít phát biểu ồn ào. Khi thấy an toàn và được hỏi thẳng, người S nói ra điều rất đáng nghe.',
     neighbors: ['i', 'c'],
     opposite: 'd',
   },
@@ -88,7 +102,7 @@ const STYLES: Record<string, DiscStyleRaw> = {
     focus: 'Tập trung vào việc',
     tagline: 'Cẩn thận, chính xác, coi trọng chất lượng và quy chuẩn.',
     overview:
-      'Người nhóm C hướng tới sự chính xác, chất lượng và làm đúng quy trình. Họ phân tích kỹ, có hệ thống, coi trọng dữ liệu và đặt tiêu chuẩn cao.',
+      'Người nhóm C theo đuổi sự đúng. Họ phân tích kỹ, coi trọng dữ liệu, làm theo quy trình và đặt tiêu chuẩn cao cho chất lượng. Trước khi quyết, họ muốn hiểu rõ vì sao, nên đôi khi trông chậm nhưng ít khi sai vặt. Điểm mạnh là sự chính xác và tư duy hệ thống; điểm cần để ý là dễ cầu toàn và chần chừ khi dữ liệu chưa đủ. Trên hai trục DISC, nhóm C nằm ở góc chậm và hướng việc — cùng hướng việc với D nhưng đi bằng nhịp thận trọng thay vì quyết liệt.',
     strengths: ['Cẩn thận, chính xác, có hệ thống', 'Phân tích kỹ trước khi quyết', 'Tôn trọng quy trình và chất lượng'],
     growth: ['Quyết định cả khi dữ liệu chưa hoàn hảo', 'Bớt cầu toàn để kịp tiến độ', 'Cởi mở với góc nhìn cảm xúc của người khác'],
     workStyle:
@@ -96,6 +110,10 @@ const STYLES: Record<string, DiscStyleRaw> = {
     communication:
       'Thích thông tin rõ ràng, có dữ liệu, không vòng vo cảm xúc. Để làm việc với nhóm C: chuẩn bị kỹ, đưa số liệu và cho họ thời gian phân tích.',
     underPressure: 'Khi căng thẳng dễ cầu toàn quá mức, chần chừ và hay phê phán.',
+    collaboration:
+      'Với nhóm D, người C nên đưa kết luận trước rồi mới tới lý lẽ, vì D sốt ruột với phần dẫn dắt dài. Với nhóm I, C cần kiên nhẫn với sự ngẫu hứng và giúp biến ý tưởng thành kế hoạch cụ thể. Với nhóm S, C dễ hợp ở sự chỉn chu, chỉ cần cùng nhau tránh biến thận trọng thành trì hoãn.',
+    misreads:
+      'Nhóm C hay bị chê là khó tính hoặc bắt bẻ. Thật ra sự soi xét đó nhắm vào chất lượng công việc, không phải vào con người. Khi tiêu chí được nói rõ từ đầu, người C là hàng rào đáng quý chặn lỗi trước khi nó lọt ra ngoài.',
     neighbors: ['s', 'd'],
     opposite: 'i',
   },

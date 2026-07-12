@@ -64,6 +64,7 @@ export function CanXuongFrame() {
 
 export function CanXuongDepth() {
   return (
+    <div className="space-y-4">
     <DepthTabs
       topicId="can-xuong"
       concept="Vì sao “cân nặng xương” chỉ nên đọc như lời động viên, không phải phán số mệnh"
@@ -118,6 +119,61 @@ export function CanXuongDepth() {
         },
       ]}
     />
+
+    <DepthTabs
+      topicId="can-xuong"
+      concept="Vì sao rất nhiều người trùng số cân — “độ phân giải” của phép cân"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Tưởng tượng chỉ có {strong('vài chục cái hộp')}, mà cả nước ai cũng phải xếp vào một
+              hộp. Rất nhiều người rơi chung một hộp, nên trùng nhau là chuyện đương nhiên — không
+              phải máy tính bị sai.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Cân xương nén cả ngày–giờ sinh về {strong('một con số tổng')}, mà tổng chỉ có
+                khoảng vài chục mức. Ai cùng năm–tháng–ngày–giờ can chi thì cùng tổng, cùng một bài
+                thơ.
+              </p>
+              <p>
+                Vì thế hàng triệu người trùng kết quả — đó là bản chất {strong('“độ phân giải thấp”')},
+                không phải công cụ tính sai.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                So với Bát Tự / Tử Vi dựng lá số nhiều trụ, nhiều sao, cân xương chỉ có{' '}
+                {strong('một chiều thông tin')} là con số tổng. Số mức tổng hữu hạn (rơi trong
+                khoảng ~2 lạng 1 đến ~7 lạng 1) đem chia cho cả dân số, nên mỗi bài thơ dùng chung
+                cho vô số người.
+              </p>
+              <p>
+                Một bài thơ dùng chung thì về nguyên tắc {strong('không thể là phán quyết riêng')}{' '}
+                cho ai. Hiểu vậy rồi thì đọc bài thơ như một lời động viên là cách dùng đúng tinh
+                thần.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+    </div>
   );
 }
 
@@ -192,6 +248,35 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Hai người cùng tổng lạng và cùng bài thơ, nhưng cuộc đời rất khác nhau — vì sao?',
+    choices: [
+      {
+        text: 'Vì cân xương nén cả ngày giờ sinh về một con số, độ phân giải thấp nên không phân biệt được hai cuộc đời',
+        correct: true,
+        note: 'Đúng — phương pháp thô, không cá nhân hoá; cùng số không có nghĩa cùng một đời.',
+      },
+      { text: 'Vì chắc chắn một trong hai người đã nhập sai ngày sinh', note: 'Không — cùng dữ liệu vẫn ra cùng kết quả; trùng số là bình thường.' },
+      { text: 'Vì công cụ chọn bài thơ ngẫu nhiên mỗi lần', note: 'Không — mỗi tổng ứng cố định một bài thơ, không ngẫu nhiên.' },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'open',
+    prompt:
+      'Vì sao trang này chọn không in bảng số lạng cụ thể của từng năm / tháng / ngày / giờ? Đó có phải là giấu giếm không?',
+    answer: (
+      <>
+        Không phải giấu. Các bảng cân xương {strong('lưu truyền với nhiều dị bản')}: in đúng một
+        bản dễ khiến người đọc tưởng đó là “bản chuẩn” rồi tranh cãi “sai bảng”. Cách trung thực hơn
+        là {strong('chọn một bản nhất quán và nói rõ mình chọn một bản')} — công cụ vẫn tính đầy đủ
+        và cho bạn tổng cùng bài thơ, còn trang học thì giải thích cơ chế thay vì phát tán một bảng
+        như thể nó là con số duy nhất đúng.
+      </>
+    ),
+  },
 ];
 
 export function CanXuongRecall() {
@@ -210,6 +295,11 @@ const FACETS: UnderstandingFacet[] = [
     can: 'Mô tả cách tính: gán trọng lượng (lạng/chỉ) cho năm–tháng–ngày–giờ âm lịch → cộng lại thành tổng “cân nặng xương” → tra bài thơ tương ứng.',
   },
   {
+    id: 'walkthrough',
+    facet: 'Đi một vòng',
+    can: 'Đi được một vòng ví dụ ở mức khung: từ ngày giờ sinh âm lịch → tra 4 trọng lượng → cộng thành tổng → ra bài thơ tương ứng, mà không cần nhớ con số cụ thể.',
+  },
+  {
     id: 'components',
     facet: 'Thành phần',
     can: 'Kể được đúng 4 yếu tố góp trọng lượng: năm (can–chi), tháng, ngày, giờ — tất cả theo lịch âm.',
@@ -223,6 +313,11 @@ const FACETS: UnderstandingFacet[] = [
     id: 'boundary',
     facet: 'Ranh giới',
     can: 'Chỉ ra vì sao hàng triệu người trùng “cân nặng” và trùng bài thơ — độ phân giải thấp, không cá nhân hoá.',
+  },
+  {
+    id: 'variants',
+    facet: 'Dị bản',
+    can: 'Nói được vì sao cân xương có nhiều dị bản (bảng số, thậm chí tách thơ nam – nữ) và vì sao công cụ chọn một bản nhất quán rồi nói rõ, thay vì coi một bảng là “bản chuẩn duy nhất”.',
   },
   {
     id: 'guard',

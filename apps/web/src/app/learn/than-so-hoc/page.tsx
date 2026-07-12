@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   Accordion,
   AccordionContent,
@@ -8,7 +9,7 @@ import {
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import {
   ThanSoHocFrame,
   ThanSoHocDepth,
@@ -28,12 +29,12 @@ export const metadata: Metadata = {
 // chữ schema === chữ hiển thị (chống cloaking) + crawler/AI đọc được câu trả lời.
 const FAQS = [
   {
-    q: 'Pythagoras là ai?',
-    a: 'Pythagoras (~570 TCN) là nhà toán học, triết gia Hy Lạp, người đặt nền móng cho Thần Số Học phương Tây. Ông tin số không chỉ đếm vật, mà còn mang "linh hồn" riêng phản ánh quy luật vũ trụ.',
+    q: 'Pythagoras là ai, và ông có thật sự lập ra Thần Số Học không?',
+    a: 'Pythagoras (~570–495 TCN) là nhà toán học, triết gia Hy Lạp gắn với ý tưởng "vạn vật đều có thể quy về số" — số không chỉ để đếm mà còn mang một "linh hồn" phản ánh quy luật vũ trụ. Nhưng cái tên Pythagoras ở đây mang tính quy ước: không có bằng chứng lịch sử rằng chính ông lập ra bảng chữ→số ngày nay. Hệ thống hiện hành chủ yếu được định hình ở thế kỷ 20 (L. Dow Balliett, Juno Jordan, rồi Hans Decoz). hieu.asia bám biến thể Decoz.',
   },
   {
     q: 'Cách tính số chủ đạo?',
-    a: 'Cộng tất cả chữ số trong ngày sinh đầy đủ. Ví dụ 15/08/1990 = 1+5+0+8+1+9+9+0 = 33 → 3+3 = 6. Vậy số chủ đạo là 6 (riêng 11, 22, 33 giữ nguyên, gọi là số bậc thầy).',
+    a: 'hieu.asia dùng cách theo thành phần (Decoz): rút gọn riêng ngày, tháng, năm rồi mới cộng lại. Ví dụ 15/08/1990: ngày 15 → 1+5 = 6; tháng 08 → 8; năm 1990 → 1+9+9+0 = 19 → 1+9 = 10 → 1; cộng 6+8+1 = 15 → 6. Vậy số chủ đạo là 6. Riêng khi một tổng rơi đúng 11, 22 hoặc 33 thì giữ nguyên (gọi là số bậc thầy), không rút tiếp.',
   },
   {
     q: 'Số từ tên thì sao?',
@@ -59,6 +60,14 @@ const FAQS = [
     q: 'Thần Số Học có phải là khoa học không?',
     a: 'Không. Giới khoa học xếp thần số học vào nhóm pseudoscience — không có cơ chế nhân quả được kiểm chứng. hieu.asia trung thực về điều này và định vị nó như một lăng kính biểu tượng để phản tư, KHÔNG phải dự báo. Giá trị nằm ở việc nó gợi cho bạn những câu hỏi để hiểu mình hơn, không nằm ở chỗ "đoán đúng tương lai".',
   },
+  {
+    q: 'Vì sao có người tính Số Đường Đời ra kết quả khác tôi?',
+    a: 'Thường là do khác cách tính, không phải ai sai. hieu.asia dùng "cách theo thành phần" (rút gọn riêng ngày, tháng, năm rồi mới cộng — theo Decoz), giúp giữ lại số Master ẩn trong tháng hoặc năm. Nhiều công cụ khác cộng thẳng toàn bộ chữ số ngày sinh một lần. Đa số trường hợp hai cách cho cùng kết quả; chúng chỉ lệch ở vài ca biên có số Master ẩn. Ví dụ người sinh 01/01/1980: cách theo thành phần ra 11, còn cộng thẳng ra 2.',
+  },
+  {
+    q: 'Đổi tên có đổi được con số và vận mệnh không?',
+    a: 'Các con số từ tên được tính theo tên trên giấy khai sinh, nên đổi tên gọi không làm "đổi số gốc" của bạn. Có người chọn dùng một tên mới như một thực hành biểu tượng cá nhân, nhưng hieu.asia không quảng cáo đổi tên như cách "cải số, đổi vận". Thần Số Học là lăng kính để hiểu mình, không phải công cụ đổi mệnh — và ở đây không có dịch vụ "giải nghiệp" nào.',
+  },
 ];
 
 const JSONLD = [
@@ -74,24 +83,162 @@ const JSONLD = [
     { name: 'Thần Số Học', url: '/learn/than-so-hoc' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Thần Số Học Pythagoras: Học huyền học',
+    description:
+      'Thần Số Học (Numerology) theo trường phái Pythagoras: rút số chủ đạo từ ngày sinh và tên, mỗi số mang một năng lượng riêng.',
+    url: '/learn/than-so-hoc',
+  }),
 ];
 
 interface NumberCard {
   num: number;
+  slug: string;
   name: string;
-  keywords: string;
+  body: string;
 }
 
+// Nguyên mẫu + năng lượng lõi + mặt bóng tối + môi trường hợp cho từng số 1–9.
+// Bám bảng tra §3.1 tài liệu nguồn than-so-hoc.md; tên nguyên mẫu khớp dữ liệu
+// SO_CHU_DAO (than-so-hoc-numbers.ts) để đồng bộ với trang tra cứu /than-so-hoc/y-nghia.
 const NUMBERS: readonly NumberCard[] = [
-  { num: 1, name: 'Người dẫn đầu', keywords: 'Độc lập, khởi xướng, tự chủ' },
-  { num: 2, name: 'Người hợp tác', keywords: 'Hài hòa, ngoại giao, nhạy cảm' },
-  { num: 3, name: 'Người sáng tạo', keywords: 'Biểu đạt, lạc quan, nghệ thuật' },
-  { num: 4, name: 'Người xây dựng', keywords: 'Kỷ luật, thực tế, bền bỉ' },
-  { num: 5, name: 'Người tự do', keywords: 'Phiêu lưu, linh hoạt, năng động' },
-  { num: 6, name: 'Người chăm sóc', keywords: 'Trách nhiệm, gia đình, hài hòa' },
-  { num: 7, name: 'Nhà tư tưởng', keywords: 'Phân tích, tâm linh, ẩn dật' },
-  { num: 8, name: 'Người quyền lực', keywords: 'Tham vọng, vật chất, quản trị' },
-  { num: 9, name: 'Người nhân ái', keywords: 'Vị tha, hoàn thiện, toàn cầu' },
+  {
+    num: 1,
+    slug: 'so-1',
+    name: 'Người tiên phong',
+    body: 'Năng lượng số 1 là khởi xướng: độc lập, dẫn đầu, thích tự mở đường thay vì đi theo lối có sẵn. Đây là người dám đứng mũi chịu sào. Mặt cần rèn là cái tôi lớn khiến khó hợp tác, hay ôm hết việc vì nghĩ "tự làm nhanh hơn". Hợp môi trường cho phép chủ động và chịu trách nhiệm về kết quả — khởi nghiệp, dẫn dắt một dự án mới từ con số không.',
+  },
+  {
+    num: 2,
+    slug: 'so-2',
+    name: 'Người hòa giải',
+    body: 'Số 2 sống bằng kết nối: thấu cảm, kiên nhẫn, giỏi đọc không khí và làm dịu căng thẳng giữa người với người. Đây là chất keo của một nhóm. Mặt cần rèn là dễ tự xóa mình, ngại nói "không", hay dò ý người khác rồi sống thay cho mong muốn của họ. Hợp những vai cần sự tinh tế trong quan hệ — nhân sự, ngoại giao, điều phối, tư vấn.',
+  },
+  {
+    num: 3,
+    slug: 'so-3',
+    name: 'Người biểu đạt',
+    body: 'Số 3 là năng lượng sáng tạo và giao tiếp: lạc quan, có duyên ngôn ngữ, biết làm không khí nhẹ đi. Đây là người kể chuyện. Mặt cần rèn là dễ tản mạn, bắt đầu nhiều thứ rồi bỏ dở, đôi khi nghiện được vỗ tay và né những nỗi buồn thật. Hợp nơi cần biểu đạt và ý tưởng — nội dung, truyền thông, giảng dạy, nghệ thuật.',
+  },
+  {
+    num: 4,
+    slug: 'so-4',
+    name: 'Người xây nền',
+    body: 'Số 4 xây bằng kỷ luật: có hệ thống, đáng tin, làm tới nơi tới chốn, là người bạn giao việc khó mà yên tâm. Mặt cần rèn là dễ cứng nhắc kiểu "xưa nay vẫn thế", cầu toàn quá mức và ngại thay đổi. Hợp những việc cần độ chính xác và bền bỉ — vận hành, tài chính, kỹ thuật, kiểm thử chất lượng.',
+  },
+  {
+    num: 5,
+    slug: 'so-5',
+    name: 'Người tự do',
+    body: 'Số 5 cần không gian để xoay: thích nghi nhanh, ưa phiêu lưu, đa năng, chán lối mòn. Đây là người mang gió mới vào phòng. Mặt cần rèn là dễ phóng túng, sợ cam kết, và đôi khi nhầm tự do với chạy trốn khỏi điều khó. Hợp môi trường biến động và nhiều tiếp xúc — kinh doanh, marketing, du lịch, các nghề tự do.',
+  },
+  {
+    num: 6,
+    slug: 'so-6',
+    name: 'Người chăm sóc',
+    body: 'Số 6 sống vì trách nhiệm: vun vén, che chở, có mặt cho người thuộc về mình, thường là chỗ dựa của gia đình. Mặt cần rèn là hay quên chăm chính mình, thương mà hóa kiểm soát, và âm thầm "ghi sổ hy sinh" rồi trách móc. Hợp những nghề nuôi dưỡng con người — giáo dục, y tế, nhân sự, dịch vụ.',
+  },
+  {
+    num: 7,
+    slug: 'so-7',
+    name: 'Người tìm chân lý',
+    body: 'Số 7 đi tìm chiều sâu: trực giác mạnh, thích nghiên cứu, cần thời gian một mình để tiêu hóa mọi thứ. Đây là người đặt câu hỏi "thật ra là gì". Mặt cần rèn là dễ cô lập như pháo đài, hoài nghi cả những điều ấm áp có thật. Hợp việc cho phép đào sâu và tĩnh lặng — nghiên cứu, phân tích, kỹ thuật chuyên sâu, học thuật.',
+  },
+  {
+    num: 8,
+    slug: 'so-8',
+    name: 'Người kiến tạo quyền lực',
+    body: 'Số 8 hướng tới tầm vóc: tham vọng, nhạy với tiền bạc và quyền lực, giỏi điều hành và biến nguồn lực thành kết quả. Mặt cần rèn là dễ đánh đồng tiền với giá trị con người và không biết điểm "đủ". Hợp nơi cần cầm trịch và chịu áp lực lớn — kinh doanh, tài chính, quản lý cấp cao, bất động sản.',
+  },
+  {
+    num: 9,
+    slug: 'so-9',
+    name: 'Người nhân đạo',
+    body: 'Số 9 mang trắc ẩn rộng: lý tưởng, muốn cống hiến cho điều lớn hơn bản thân, dễ đồng cảm với nỗi đau của cả người xa lạ. Mặt cần rèn là khó buông cái đã hết vai, cho mãi mà quên nhận lại, và hay lý tưởng hóa người khác. Hợp những việc phụng sự cộng đồng — giáo dục, y tế cộng đồng, phi lợi nhuận, nghệ thuật.',
+  },
+];
+
+interface GlossaryItem {
+  term: string;
+  en?: string;
+  def: string;
+}
+
+// Sổ tay thuật ngữ — mọi định nghĩa bám tài liệu nguồn than-so-hoc.md (§0–§10).
+const GLOSSARY: readonly GlossaryItem[] = [
+  {
+    term: 'Số Đường Đời',
+    en: 'Life Path / Số Chủ Đạo',
+    def: 'Con số trung tâm, rút từ ngày–tháng–năm sinh; mô tả con đường lớn, chủ đề và những bài học lặp lại của đời.',
+  },
+  {
+    term: 'Số Vận Mệnh / Biểu Đạt',
+    en: 'Expression / Destiny',
+    def: 'Rút từ tất cả chữ cái trong tên đầy đủ khi sinh; năng khiếu trời cho và cách bạn cống hiến ra ngoài.',
+  },
+  {
+    term: 'Số Linh Hồn',
+    en: 'Soul Urge / Heart’s Desire',
+    def: 'Rút từ các nguyên âm trong tên; khao khát sâu kín, động lực thầm lặng phía sau mọi lựa chọn.',
+  },
+  {
+    term: 'Số Nhân Cách',
+    en: 'Personality',
+    def: 'Rút từ các phụ âm trong tên; lớp vỏ ngoài, ấn tượng đầu mà người khác cảm nhận trước.',
+  },
+  {
+    term: 'Số Ngày Sinh',
+    en: 'Birthday',
+    def: 'Lấy riêng ngày trong tháng (1–31); một tài năng bẩm sinh cụ thể tô điểm cho Đường Đời.',
+  },
+  {
+    term: 'Số Master / Số Bậc Thầy',
+    en: 'Master Number',
+    def: '11, 22, 33 — phiên bản cường độ cao của 2/4/6; giữ nguyên không rút gọn; tiềm năng lớn hơn kèm bài tập khó hơn, không phải "đẳng cấp cao hơn".',
+  },
+  {
+    term: 'Rút gọn',
+    en: 'Reduce',
+    def: 'Cộng dồn các chữ số của một số cho tới khi còn một chữ số, trừ khi rơi đúng 11/22/33 thì giữ nguyên.',
+  },
+  {
+    term: 'Số Nợ Nghiệp',
+    en: 'Karmic Debt',
+    def: '13, 14, 16, 19 — bài học còn dang dở cần hoàn thiện bằng nỗ lực có ý thức; theo cách đọc Decoz, không phải điềm xấu.',
+  },
+  {
+    term: 'Bài Học Nghiệp',
+    en: 'Karmic Lessons',
+    def: 'Các chữ số 1–9 vắng mặt trong tên; phẩm chất bạn chưa quen dùng, cần ý thức rèn.',
+  },
+  {
+    term: 'Số Trưởng Thành',
+    en: 'Maturity',
+    def: 'Rút gọn của (Đường Đời + Vận Mệnh); con người bạn hội tụ về ở nửa sau cuộc đời.',
+  },
+  {
+    term: 'Năm / Tháng cá nhân',
+    en: 'Personal Year / Month',
+    def: 'Chu kỳ lặp mô tả "mùa" hiện tại của đời; dùng để định hướng giai đoạn, không phải tiên tri.',
+  },
+  {
+    term: 'Đỉnh Cao',
+    en: 'Pinnacle',
+    def: 'Bốn giai đoạn lớn của đời, mỗi giai đoạn một con số chủ đề; mốc giai đoạn đầu kết thúc ở tuổi 36 trừ Số Đường Đời.',
+  },
+  {
+    term: 'Thử Thách',
+    en: 'Challenge',
+    def: 'Bốn "bài kiểm tra" tính bằng hiệu tuyệt đối giữa các thành phần ngày sinh; có thể ra 0, không bao giờ là số Master.',
+  },
+  {
+    term: 'Pythagorean',
+    def: 'Hệ phương Tây phổ biến nhất, 26 chữ cái quy về 1–9, có số Master; hieu.asia dùng hệ này.',
+  },
+  {
+    term: 'Chaldean',
+    def: 'Hệ cổ gốc Babylon, gán chữ cái 1–8 (số 9 thiêng), bảng số khác hẳn Pythagoras, tính theo tên thường dùng/phát âm; đừng trộn với Pythagorean.',
+  },
 ];
 
 export default function LearnThanSoHocPage() {
@@ -131,29 +278,148 @@ export default function LearnThanSoHocPage() {
           children: <ThanSoHocFrame />,
         },
         {
+          id: 'su-that-lich-su',
+          tocLabel: 'Sự thật lịch sử',
+          heading: 'Pythagoras chỉ là cái tên — sự thật lịch sử',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Thần Số Học (numerology) là hệ thống gán ý nghĩa biểu tượng cho các con số rút ra từ
+                hai nguồn: <strong>ngày sinh</strong> và <strong>tên đầy đủ khi sinh</strong>. Từ đó nó
+                đọc ra khuynh hướng tính cách, động lực và những bài học lặp lại. Hai nguồn này là hai
+                trục: trục ngày sinh (cố định, không đổi) cho Số Đường Đời, Số Ngày Sinh, các Đỉnh Cao,
+                Thử Thách, Năm và Tháng cá nhân; trục tên (phụ thuộc tên trên giấy khai sinh) cho Số
+                Vận Mệnh, Số Linh Hồn, Số Nhân Cách và Bài Học Nghiệp.
+              </p>
+              <p>
+                Cái tên "Pythagoras" ở đây mang tính quy ước, gần như huyền thoại.{' '}
+                <strong>Không có bằng chứng lịch sử</strong> nào cho thấy nhà toán học Pythagoras
+                (khoảng 570–495 TCN) lập ra bảng chữ cái quy đổi thành số mà ta dùng hôm nay. Hệ thống
+                tính toán hiện hành chủ yếu được định hình ở thế kỷ 20, bởi các tác giả như{' '}
+                <strong>L. Dow Balliett</strong> và <strong>Juno Jordan</strong> (thường gọi là trường
+                phái California), rồi <strong>Hans Decoz</strong> hệ thống hóa lại. hieu.asia bám biến
+                thể Decoz: Đường Đời rút gọn theo từng thành phần, bộ Nợ Nghiệp 13/14/16/19, và Bài Học
+                Nghiệp là chữ số thiếu trong tên.
+              </p>
+              <p>
+                Đừng nhầm hệ này với <strong>Chaldean numerology</strong> — một hệ cổ hơn, gốc
+                Babylon/Trung Đông. Chaldean gán các chữ cái giá trị 1–8 (số 9 được coi là thiêng nên
+                hiếm khi gán trực tiếp), bảng số khác hẳn Pythagoras, và thường tính theo tên thường
+                dùng hoặc cách phát âm thay vì tên khai sinh. Hai hệ cho ra những con số khác nhau, nên
+                không trộn bảng của hệ này với hệ kia.
+              </p>
+              <p>
+                Cũng cần tách bạch: Thần Số Học là hệ <strong>phương Tây hiện đại</strong>, độc lập với
+                Bát Tự, Tử Vi hay Kinh Dịch (vốn dựa trên Can–Chi và ngũ hành). Khi hieu.asia đặt nhiều
+                bộ môn cạnh nhau, con số thần số không quy đổi qua lại với ngũ hành — chúng là những
+                lăng kính riêng.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Và trung thực một lần nữa: giới khoa học xếp thần số học vào nhóm pseudoscience — không
+                có cơ chế nhân quả nào được kiểm chứng. Trang này giữ nó như một lăng kính biểu tượng để
+                phản tư, không phải một dự báo.
+              </p>
+            </div>
+          ),
+        },
+        {
           id: 'chin-so-chu-dao',
           tocLabel: '9 số chủ đạo',
           heading: '9 số chủ đạo',
           children: (
             <>
-              <div className="grid gap-3 sm:grid-cols-3">
+              <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+                Mỗi số từ 1 đến 9 là một dải năng lượng có hai cực: một cực sáng (điểm mạnh) và một cực
+                tối (bài học cần rèn). Đọc cả hai, và nhớ bóng tối là việc cần luyện chứ không phải bản
+                án. Bấm vào từng số để đọc sâu hơn về khuynh hướng, tình cảm, công việc và câu hỏi tự
+                soi.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
                 {NUMBERS.map((n) => (
                   <div
                     key={n.num}
-                    className="rounded-lg border border-border bg-card/40 p-4 transition-colors hover:border-gold/40"
+                    className="flex flex-col rounded-lg border border-border bg-card/40 p-4 transition-colors hover:border-gold/40"
                   >
                     <div className="flex items-baseline gap-3">
                       <span className="font-heading text-3xl font-bold text-gold-700">{n.num}</span>
                       <span className="text-sm font-semibold text-foreground">{n.name}</span>
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{n.keywords}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{n.body}</p>
+                    <Link
+                      href={`/than-so-hoc/y-nghia/${n.slug}`}
+                      className="mt-3 inline-block text-xs font-medium text-gold hover:underline"
+                    >
+                      Đọc sâu số {n.num} →
+                    </Link>
                   </div>
                 ))}
               </div>
               <p className="mt-4 text-xs text-muted-foreground">
-                Ngoài 1–9 còn có 3 số "bậc thầy": 11, 22, 33, không rút gọn về 1 chữ số.
+                Ngoài 1–9 còn có ba số "bậc thầy" giữ nguyên không rút gọn về một chữ số:{' '}
+                <Link href="/than-so-hoc/y-nghia/so-11" className="text-gold hover:underline">
+                  11
+                </Link>
+                ,{' '}
+                <Link href="/than-so-hoc/y-nghia/so-22" className="text-gold hover:underline">
+                  22
+                </Link>{' '}
+                và{' '}
+                <Link href="/than-so-hoc/y-nghia/so-33" className="text-gold hover:underline">
+                  33
+                </Link>
+                . Xem chi tiết ở phần "Số bậc thầy" bên dưới.
               </p>
             </>
+          ),
+        },
+        {
+          id: 'hai-cach-tinh',
+          tocLabel: 'Hai cách tính Đường Đời',
+          heading: 'Hai cách tính Đường Đời — và vì sao chọn cách A',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Số Đường Đời rút từ ngày–tháng–năm sinh và là con số{' '}
+                <strong>trung tâm</strong> của một lá số: nếu chỉ đọc một số, hãy đọc số này. Nhưng có
+                hai cách tính khác nhau, và hieu.asia chọn có chủ đích.
+              </p>
+
+              <div className="rounded-lg border border-border bg-card/40 p-4">
+                <h3 className="font-semibold text-foreground">Cách A — theo từng thành phần (hieu.asia dùng)</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  Rút gọn <strong>riêng</strong> ngày, tháng, năm (giữ số Master ở mỗi phần nếu có),
+                  rồi cộng ba kết quả, rồi rút gọn lần cuối. Ví dụ 14/02/1992: ngày 14 → 1+4 = 5; tháng
+                  02 → 2; năm 1992 → 1+9+9+2 = 21 → 3; tổng 5+2+3 = 10 → <strong>1</strong>. Đường Đời là
+                  1. Đây là cách của Hans Decoz.
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-border bg-card/40 p-4">
+                <h3 className="font-semibold text-foreground">Cách B — cộng thẳng cả chuỗi</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  Cộng tất cả chữ số của cả ngày sinh một lần rồi rút gọn. Với đa số ngày sinh, Cách A
+                  và Cách B cho <strong>cùng một kết quả</strong>. Chúng chỉ lệch ở vài ca biên — khi có
+                  một <strong>số Master ẩn</strong> trong tháng hoặc năm mà cách theo thành phần giữ
+                  được còn cộng thẳng làm rơi mất.
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-gold/25 bg-gold/5 p-4">
+                <h3 className="font-semibold text-foreground">Khi nào hai cách cho số khác nhau</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  Lấy người sinh <strong>01/01/1980</strong>. Cách A: ngày 1, tháng 1, năm 1980 → 1+9+8+0
+                  = 18 → 9; tổng 1+1+9 = 11 → giữ nguyên <strong>số Master 11</strong>. Cách B: cộng
+                  thẳng 0+1+0+1+1+9+8+0 = 20 → <strong>2</strong>. Cùng một người, cách A ra 11, cách B
+                  ra 2 — số Master chỉ lộ ra ở cách theo thành phần.
+                </p>
+              </div>
+
+              <p className="text-sm text-muted-foreground">
+                hieu.asia chốt <strong>Cách A</strong> vì nó bảo toàn số Master ẩn; nhiều nguồn cũng coi
+                đây là cách chuẩn. Nếu bạn tự tính bằng công cụ khác ra số khác, nhiều khả năng đó là
+                khác trường phái (Cách B), không phải ai sai.
+              </p>
+            </div>
           ),
         },
         {
@@ -164,38 +430,53 @@ export default function LearnThanSoHocPage() {
         },
         {
           id: 'giai-thich',
-          tocLabel: 'Giải thích chi tiết',
-          heading: 'Giải thích chi tiết',
+          tocLabel: 'Bốn điểm hay hỏi',
+          heading: 'Bốn điểm hay gây bối rối',
           children: (
             <Accordion type="single" collapsible className="space-y-2">
-              <AccordionItem value="origin" className="rounded border border-border px-4">
-                <AccordionTrigger>Pythagoras là ai?</AccordionTrigger>
+              <AccordionItem value="vowel-y" className="rounded border border-border px-4">
+                <AccordionTrigger>Chữ Y là nguyên âm hay phụ âm?</AccordionTrigger>
                 <AccordionContent>
-                  Pythagoras (~570 TCN) là nhà toán học, triết gia Hy Lạp, người đặt nền móng cho
-                  Thần Số Học phương Tây. Ông tin số không chỉ đếm vật, mà còn mang "linh hồn"
-                  riêng phản ánh quy luật vũ trụ.
+                  Nguyên âm cứng là A, E, I, O, U; còn lại là phụ âm. Riêng chữ Y (và đôi khi W) nằm ở
+                  ranh giới: trong canon, Y được tính là nguyên âm khi đóng vai âm nguyên âm (như trong
+                  "Lynn", "Yvonne") và là phụ âm khi phát âm như phụ âm (như "Yes"); quy tắc kinh điển
+                  là Y làm nguyên âm khi nằm giữa hai phụ âm hoặc khi âm tiết không có nguyên âm nào
+                  khác. Vì Số Linh Hồn lấy nguyên âm còn Số Nhân Cách lấy phụ âm, cách xếp Y ảnh hưởng
+                  trực tiếp tới cả hai. hieu.asia đơn giản hóa: luôn xếp Y là nguyên âm và không xử lý
+                  riêng W. Đây là một quy ước, nên trang không nói mình "tính theo phát âm chuẩn" — chỉ
+                  nói "theo quy ước Y là nguyên âm".
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="calc" className="rounded border border-border px-4">
-                <AccordionTrigger>Cách tính số chủ đạo?</AccordionTrigger>
+              <AccordionItem value="master-why" className="rounded border border-border px-4">
+                <AccordionTrigger>Vì sao 11, 22, 33 không rút gọn?</AccordionTrigger>
                 <AccordionContent>
-                  Cộng tất cả chữ số trong ngày sinh đầy đủ. Ví dụ 15/08/1990 = 1+5+0+8+1+9+9+0 =
-                  33 → 3+3 = 6. Vậy số chủ đạo là 6 (riêng 11, 22, 33 giữ nguyên, gọi là số bậc thầy).
+                  Khi tổng rút gọn rơi đúng vào 11, 22 hoặc 33 thì giữ nguyên, không rút tiếp về 2, 4,
+                  6. Lý do: các con số này được xem là phiên bản cường độ cao của số gốc (11 của 2, 22
+                  của 4, 33 của 6) — tiềm năng lớn hơn nhưng cũng là bài tập khó hơn, không phải "đẳng
+                  cấp cao hơn". Có trường phái chỉ công nhận 11 và 22, coi 33 là hiếm và đòi điều kiện
+                  chặt; cách đọc Decoz mà hieu.asia dùng công nhận cả ba. Một số tác giả còn mở rộng tới
+                  44, 55 — đây là biến thể hiếm, hieu.asia không dùng.
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="name" className="rounded border border-border px-4">
-                <AccordionTrigger>Số từ tên thì sao?</AccordionTrigger>
+              <AccordionItem value="zero" className="rounded border border-border px-4">
+                <AccordionTrigger>Số 0 trong ngày sinh có ý nghĩa gì?</AccordionTrigger>
                 <AccordionContent>
-                  Mỗi chữ cái được gán một số 1–9 theo bảng Pythagoras. Cộng các số ứng với tên
-                  đầy đủ rồi rút gọn, ra số biểu hiện (expression number) và số linh hồn (soul
-                  urge number).
+                  Bảng Pythagoras chỉ chạy từ 1 đến 9, không có số 0. Khi cộng các chữ số của ngày sinh,
+                  số 0 không thêm gì vào tổng (ví dụ 15/08/1990 = 1+5+0+8+1+9+9+0, các số 0 không làm
+                  đổi kết quả). Vì vậy không có "Số Đường Đời 0": mọi con số cuối cùng đều rơi vào 1–9
+                  hoặc số Master 11/22/33. Số 0 chỉ là một chữ số trong ngày, không phải một con số chủ
+                  đạo riêng.
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="usage" className="rounded border border-border px-4">
-                <AccordionTrigger>Dùng để làm gì?</AccordionTrigger>
+              <AccordionItem value="birth-name" className="rounded border border-border px-4">
+                <AccordionTrigger>Dùng tên khai sinh hay tên thường gọi?</AccordionTrigger>
                 <AccordionContent>
-                  Soi tính cách bẩm sinh, sứ mệnh đời, vùng dễ vấp. Là công cụ tự nhận thức nhanh,
-                  chỉ cần ngày sinh + tên là có bản phác họa.
+                  Các con số từ tên (Vận Mệnh, Linh Hồn, Nhân Cách, Bài Học Nghiệp) phải tính theo tên
+                  đầy đủ trên giấy khai sinh, không phải nghệ danh hay tên gọi thường — đây là điểm hay
+                  bị làm sai. Với người đã đổi tên hoặc dùng tên khác, một số trường phái tính thêm một
+                  "Số Biểu Đạt phụ" từ tên thường dùng; hieu.asia hiện chỉ tính theo tên bạn nhập vào,
+                  nên hãy nhập đúng tên khai sinh. Có người chọn một tên mới như một thực hành biểu
+                  tượng cá nhân, nhưng đó không phải cách "đổi số mệnh".
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -353,25 +634,203 @@ export default function LearnThanSoHocPage() {
                   Decoz, không phải khẳng định siêu hình. Không phải trường phái nào cũng dùng bộ
                   Nợ Nghiệp này — một số hệ bỏ qua hoàn toàn. hieu.asia trình bày theo cách đọc
                   Decoz, luôn đóng khung là "việc cần rèn" kèm lối đi tới, và không bao giờ hù dọa
-                  hay bán dịch vụ "giải nghiệp".
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-foreground">
-                  Bài Học Nghiệp — chữ số THIẾU trong tên
-                </h3>
-                <p>
-                  Khác với Nợ Nghiệp (đến từ một con số có mặt),{' '}
-                  <strong>Bài Học Nghiệp</strong> là các chữ số 1–9{' '}
-                  <strong>không xuất hiện</strong> khi quy đổi tên đầy đủ sang số. Mỗi số vắng mặt
-                  là một phẩm chất bạn chưa quen vận dụng, cần ý thức rèn — một{' '}
-                  <strong>cơ hội phát triển</strong>, không phải khiếm khuyết cố định. Vì tên Việt
-                  bỏ dấu và thường ngắn nên có thể vắng nhiều chữ số hơn tên phương Tây; hãy đọc
-                  nhẹ nhàng như "vùng cần để ý", đừng để thấy mình "thiếu nhiều thứ".
+                  hay bán dịch vụ "giải nghiệp". Còn <strong>Bài Học Nghiệp</strong> — đến từ chữ số
+                  thiếu trong tên, khác hẳn Nợ Nghiệp — được nói riêng ở phần ngay dưới đây.
                 </p>
               </div>
             </div>
+          ),
+        },
+        {
+          id: 'bai-hoc-nghiep',
+          tocLabel: 'Bài Học Nghiệp',
+          heading: 'Bài Học Nghiệp — chữ số thiếu trong tên',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Quy đổi cả tên đầy đủ sang số theo bảng Pythagoras, rồi nhìn xem chữ số nào từ 1 đến 9{' '}
+                <strong>không xuất hiện lần nào</strong>. Những chữ số vắng mặt đó là{' '}
+                <strong>Bài Học Nghiệp</strong>. Khác với Nợ Nghiệp (đến từ một con số có mặt), đây đến
+                từ con số <strong>vắng mặt</strong> — mỗi số thiếu là một phẩm chất bạn chưa quen vận
+                dụng, cần ý thức rèn. Đây là một cơ hội phát triển, không phải khiếm khuyết cố định.
+              </p>
+
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-left text-muted-foreground">
+                      <th className="py-2 pr-3 font-semibold">Thiếu số</th>
+                      <th className="py-2 font-semibold">Phẩm chất cần rèn</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-foreground/85">
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-3 font-heading font-bold text-gold-700">1</td>
+                      <td className="py-2">Tự khẳng định, độc lập, dám quyết và khởi xướng.</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-3 font-heading font-bold text-gold-700">2</td>
+                      <td className="py-2">Hợp tác, kiên nhẫn, tế nhị, lắng nghe, đi chậm để cùng nhau.</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-3 font-heading font-bold text-gold-700">3</td>
+                      <td className="py-2">Biểu đạt, tự tin sáng tạo, nói ra cảm xúc, cho phép mình vui.</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-3 font-heading font-bold text-gold-700">4</td>
+                      <td className="py-2">Kỷ luật, trật tự, làm đều đặn tới cùng, xây nền móng.</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-3 font-heading font-bold text-gold-700">5</td>
+                      <td className="py-2">Thích nghi, đón thay đổi, tự do có trách nhiệm.</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-3 font-heading font-bold text-gold-700">6</td>
+                      <td className="py-2">Nhận trách nhiệm, chăm sóc, cam kết với người thuộc về mình.</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-3 font-heading font-bold text-gold-700">7</td>
+                      <td className="py-2">Đi vào chiều sâu, tĩnh lặng, tin tưởng nội tâm.</td>
+                    </tr>
+                    <tr className="border-b border-border/60">
+                      <td className="py-2 pr-3 font-heading font-bold text-gold-700">8</td>
+                      <td className="py-2">Quản lý vật chất/quyền lực, tự tin tài chính, nhận vai lãnh đạo.</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-3 font-heading font-bold text-gold-700">9</td>
+                      <td className="py-2">Buông bỏ, từ bi, nhìn toàn cảnh vượt lợi ích cá nhân.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="text-sm text-muted-foreground">
+                Một lưu ý văn hóa Việt: vì tên Việt bỏ dấu về chữ La-tinh và thường ngắn (3–4 âm tiết),
+                nhiều chữ số dễ vắng mặt, nên có thể ra nhiều Bài Học Nghiệp hơn tên phương Tây dài. Hãy
+                đọc nhẹ nhàng như "vùng cần để ý", đừng để thấy mình "thiếu nhiều thứ". Đây cũng là một
+                giới hạn của việc áp bảng La-tinh lên tên Việt.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'chu-ky-thoi-gian',
+          tocLabel: 'Chu kỳ thời gian',
+          heading: 'Các chu kỳ thời gian trong một lá số',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Ngoài phần lõi (Đường Đời và bốn con số lõi), thần số học còn có mấy lớp mô tả{' '}
+                <strong>thời gian và giai đoạn</strong>. Đây là lớp làm sâu, không phải lõi — nêu ở mức
+                khái niệm để bạn biết chúng là gì.
+              </p>
+
+              <div className="space-y-3">
+                <div className="rounded-lg border border-border bg-card/40 p-4">
+                  <h3 className="font-semibold text-foreground">Năm cá nhân / Tháng cá nhân</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    Chu kỳ lặp lại mô tả "mùa" hiện tại của đời. Năm cá nhân tính gần đúng bằng rút gọn
+                    của (ngày + tháng sinh + năm hiện tại); Tháng cá nhân bằng rút gọn của (năm cá nhân +
+                    tháng hiện tại). Dùng để gợi ý năm nay hợp khởi đầu, thu hoạch hay buông bỏ — không
+                    biến thành lời tiên tri về năm.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-border bg-card/40 p-4">
+                  <h3 className="font-semibold text-foreground">4 Đỉnh Cao (Pinnacles)</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    Bốn giai đoạn lớn của đời, mỗi giai đoạn mang một con số chủ đề. Mốc kết thúc giai
+                    đoạn đầu tiên rơi vào tuổi 36 trừ đi Số Đường Đời, các giai đoạn sau nối tiếp theo
+                    từng quãng.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-border bg-card/40 p-4">
+                  <h3 className="font-semibold text-foreground">4 Thử Thách (Challenges)</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    Tính bằng hiệu tuyệt đối giữa các thành phần ngày sinh, nên có thể ra số 0 (điều
+                    bình thường, mang nghĩa riêng) và không bao giờ có số Master. Là những "bài kiểm tra"
+                    lặp lại mà ta gặp đi gặp lại.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-border bg-card/40 p-4">
+                  <h3 className="font-semibold text-foreground">Số Trưởng Thành (Maturity)</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    Rút gọn của (Đường Đời + Vận Mệnh), giữ số Master. Chủ đề "con người bạn hội tụ về" ở
+                    nửa sau cuộc đời, thường nói tới sau tuổi 30–35.
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-sm text-muted-foreground">
+                Công cụ Thần Số Học trên hieu.asia có tính và hiển thị cả bốn lớp này cùng bản đọc,
+                nhưng nguyên tắc là <strong>luôn bám lõi trước</strong> — Đường Đời và bốn con số lõi —
+                rồi mới dùng lớp thời gian để tô màu giai đoạn, không để nó thành "lời tiên tri năm nay".
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'thu-tu-luan',
+          tocLabel: 'Thứ tự luận 7 bước',
+          heading: 'Thứ tự luận một lá số — để không rơi vào Barnum',
+          children: (
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
+              <p>
+                Một lá số thần số dễ rơi vào bẫy Barnum — những câu đúng với gần như mọi người ("bạn vừa
+                mạnh mẽ vừa nhạy cảm"). Cách chống là đọc <strong>có thứ tự</strong> và luôn buộc mỗi
+                nhận định vào một con số cụ thể đã tính.
+              </p>
+              <ol className="list-decimal space-y-2 pl-6">
+                <li>
+                  <strong>Số Đường Đời</strong> — khung chủ đề lớn, đọc trước để đặt bối cảnh.
+                </li>
+                <li>
+                  <strong>Số Vận Mệnh</strong> — tài năng mang theo; đối chiếu cùng hay khác hướng với
+                  Đường Đời để thấy "sức cộng hưởng" hoặc "sức kéo".
+                </li>
+                <li>
+                  <strong>Linh Hồn so với Nhân Cách</strong> — nội tâm so với vẻ ngoài; khoảng cách giữa
+                  hai số là chất liệu luận đắt giá nhất (người ta thấy bạn thế nào khác với bạn thật sự
+                  muốn gì).
+                </li>
+                <li>
+                  <strong>Số Ngày Sinh</strong> — một tài năng cụ thể tô điểm thêm.
+                </li>
+                <li>
+                  <strong>Số Master (nếu có)</strong> — nêu tiềm năng kèm áp lực, không tâng bốc.
+                </li>
+                <li>
+                  <strong>Nợ Nghiệp / Bài Học Nghiệp (nếu có)</strong> — đóng khung là việc cần rèn,
+                  luôn kèm cách đi tới.
+                </li>
+                <li>
+                  <strong>Lớp thời gian (Năm cá nhân, Đỉnh Cao)</strong> — chỉ thêm khi muốn chiều sâu
+                  giai đoạn.
+                </li>
+              </ol>
+              <p className="text-sm text-muted-foreground">
+                Quy tắc chống bịa: mọi câu phải dẫn về một con số thật ("vì Đường Đời của bạn là 4
+                nên…"), không phán câu đúng với mọi người. Khi hai con số mâu thuẫn, hãy mô tả chính sự
+                căng thẳng đó như điều đáng soi, đừng ép nó thành một kết luận trơn tru.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'so-tay-thuat-ngu',
+          tocLabel: 'Sổ tay thuật ngữ',
+          heading: 'Sổ tay thuật ngữ',
+          children: (
+            <dl className="space-y-3">
+              {GLOSSARY.map((g) => (
+                <div key={g.term} className="rounded-lg border border-border bg-card/40 p-3">
+                  <dt className="text-sm font-semibold text-foreground">
+                    {g.term}
+                    {g.en ? <span className="font-normal text-muted-foreground"> · {g.en}</span> : null}
+                  </dt>
+                  <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{g.def}</dd>
+                </div>
+              ))}
+            </dl>
           ),
         },
         {
