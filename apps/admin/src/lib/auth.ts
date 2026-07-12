@@ -5,8 +5,10 @@
  *   - User enters email+password at /login → POST /api/admin/login.
  *   - Login route fetches GET https://api.hieu.asia/admin/users (X-Admin-Token)
  *     and matches email + sha256(password) against the KV-stored list.
- *   - On success: set httpOnly cookie `hieu_admin_session=<email>:<role>.<hmac>`.
- *     HMAC-SHA256 with ADMIN_COOKIE_SECRET prevents cookie forgery.
+ *   - On success: set httpOnly cookie `hieu_admin_session=<email>:<role>:<issuedAt>.<hmac>`.
+ *     HMAC-SHA256 with ADMIN_COOKIE_SECRET prevents cookie forgery; the signed
+ *     `issuedAt` (epoch ms) bounds the session lifetime (see SESSION_TTL_MS) so a
+ *     captured cookie cannot be replayed forever.
  *   - middleware.ts + admin-proxy + layout call `verifySession()` which checks
  *     both shape AND signature. Forged or modified cookies return null.
  *
@@ -101,6 +103,17 @@ export async function fetchAdminUsersFull(): Promise<AdminUserFull[]> {
 
 const SIG_SEPARATOR = '.';
 
+/**
+ * Max admin session lifetime, in milliseconds.
+ *
+ * MUST match the login cookie `maxAge`
+ * (apps/admin/src/app/api/admin/login/route.ts → `60 * 60 * 24 * 7` seconds),
+ * so the signed `issuedAt` and the browser cookie expire together. After this
+ * window `verifySession()` rejects the cookie even if the signature is valid —
+ * a session captured from a proxy/OS/CDN log or a shared machine stops working.
+ */
+export const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
+
 async function hmacSha256Hex(secret: string, message: string): Promise<string> {
   const key = await crypto.subtle.importKey(
     'raw',
@@ -139,16 +152,25 @@ export async function signRealtimeTicket(
 }
 
 /**
- * Encode (email, role) into a SIGNED cookie value.
+ * Encode (email, role, issuedAt) into a SIGNED cookie value.
  *
- * Format: `<email>:<role>.<hmac_hex>`
+ * Format: `<email>:<role>:<issuedAt>.<hmac_hex>`
+ *
+ * `issuedAt` (epoch ms, defaults to now) is part of the signed payload, so it
+ * cannot be tampered with. `verifySession()` rejects cookies older than
+ * SESSION_TTL_MS — this bounds how long a leaked cookie stays usable and rotates
+ * the token on every login.
  *
  * Fail-closed: if `ADMIN_COOKIE_SECRET` is not set this THROWS rather than
  * minting an unsigned (forgeable) cookie. The secret must be present for login
  * to work — there is no insecure fallback.
  */
-export async function encodeSession(email: string, role: AdminRole): Promise<string> {
-  const payload = `${email}:${role}`;
+export async function encodeSession(
+  email: string,
+  role: AdminRole,
+  issuedAt: number = Date.now(),
+): Promise<string> {
+  const payload = `${email}:${role}:${issuedAt}`;
   const secret = getCookieSecret();
   if (!secret) {
     // Fail-closed (Wave 64 security audit P0): NEVER issue an unsigned session.
@@ -169,12 +191,16 @@ export async function encodeSession(email: string, role: AdminRole): Promise<str
  *   - cookie malformed
  *   - role not in allow-list
  *   - HMAC mismatch (forgery attempt)
+ *   - session older than SESSION_TTL_MS (expired / replayed leaked cookie)
+ *
+ * `now` (epoch ms) is injectable for deterministic tests; callers omit it.
  *
  * IMPORTANT: This function is async because HMAC verification needs Web Crypto.
  * All callers must `await`.
  */
 export async function verifySession(
   cookieValue: string | undefined | null,
+  now: number = Date.now(),
 ): Promise<{ email: string; role: AdminRole } | null> {
   if (!cookieValue) return null;
 
@@ -201,21 +227,47 @@ export async function verifySession(
   if (!/^[0-9a-f]{64}$/.test(providedSig)) return null;
   const expectedSig = await hmacSha256Hex(secret, payload);
   if (!constantTimeEqual(providedSig, expectedSig)) return null;
-  return parseAuthPayload(payload);
+
+  const parsed = parseAuthPayload(payload);
+  if (!parsed) return null;
+
+  // Expiry (2026-07-12 audit): reject sessions older than SESSION_TTL_MS. Because
+  // `issuedAt` lives inside the signed payload it cannot be forged, so a stolen
+  // cookie is only replayable until this window elapses. Signature is already
+  // verified above, so a valid-but-stale cookie lands here and is rejected.
+  if (now - parsed.issuedAt > SESSION_TTL_MS) return null;
+
+  return { email: parsed.email, role: parsed.role };
 }
 
+/**
+ * Parse the signed payload `<email>:<role>:<issuedAt>` (right-to-left, since the
+ * role is always one of the fixed tokens and `issuedAt` is digits-only).
+ *
+ * Returns null on any shape mismatch, including OLD `<email>:<role>` cookies
+ * (no timestamp) — even though their signature is still valid, dropping the
+ * timestamp field fails the numeric `issuedAt` check, so they are rejected and
+ * the operator simply logs in again (acceptable: only the founder holds a
+ * session pre-launch).
+ */
 function parseAuthPayload(
   payload: string,
-): { email: string; role: AdminRole } | null {
-  const idx = payload.lastIndexOf(':');
-  if (idx === -1) {
-    // Legacy cookie (email only) — treat as viewer for safety
-    return { email: payload, role: 'viewer' };
-  }
-  const email = payload.slice(0, idx);
-  const role = payload.slice(idx + 1) as AdminRole;
+): { email: string; role: AdminRole; issuedAt: number } | null {
+  const tsColon = payload.lastIndexOf(':');
+  if (tsColon === -1) return null;
+  const issuedAtStr = payload.slice(tsColon + 1);
+  if (!/^\d+$/.test(issuedAtStr)) return null; // missing/non-numeric ts → reject (incl. legacy)
+  const issuedAt = Number(issuedAtStr);
+  if (!Number.isSafeInteger(issuedAt)) return null;
+
+  const rest = payload.slice(0, tsColon); // `<email>:<role>`
+  const roleColon = rest.lastIndexOf(':');
+  if (roleColon === -1) return null;
+  const email = rest.slice(0, roleColon);
+  const role = rest.slice(roleColon + 1) as AdminRole;
+  if (!email) return null;
   if (!['owner', 'admin', 'viewer'].includes(role)) return null;
-  return { email, role };
+  return { email, role, issuedAt };
 }
 
 /**
