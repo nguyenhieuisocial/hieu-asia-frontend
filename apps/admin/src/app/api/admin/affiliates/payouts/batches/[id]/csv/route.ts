@@ -23,7 +23,7 @@ export async function GET(
   // (matches the approve / build-batch sibling routes). A viewer must not be able
   // to export it. requireAdminSession enforces the per-user role the proxy/worker
   // would otherwise skip.
-  const auth = await requireAdminSession('admin');
+  const auth = await requireAdminSession('admin', { read: true });
   if ('error' in auth) return auth.error;
   const session = auth.session;
   if (!TOKEN) {

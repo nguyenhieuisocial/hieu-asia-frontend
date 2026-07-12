@@ -3,7 +3,8 @@
  *
  * TẤT CẢ grounded từ chính bài viết Tarot (78 lá = 22 Ẩn Chính + 56 Ẩn Phụ,
  * bốn chất Gậy–Cốc–Kiếm–Tiền, hành trình Gã Khờ, các lá hay bị hù dọa, lá ngược,
- * các kiểu trải bài, đọc tổng thể). KHÔNG thêm dữ kiện mới. Giữ giọng "lá bài là
+ * cốt truyện số Át→10, lá-của-ngày chung cho mọi người, các kiểu trải bài,
+ * đọc tổng thể). KHÔNG thêm dữ kiện mới. Giữ giọng "lá bài là
  * lăng kính để hiểu mình, không phán số mệnh" — tham khảo / góc nhìn, không phán định.
  */
 
@@ -62,10 +63,11 @@ export function TarotFrame() {
 
 export function TarotDepth() {
   return (
-    <DepthTabs
-      topicId="tarot"
-      concept="Vì sao không đọc từng lá rời — đọc cả bức tranh chung"
-      levels={[
+    <div className="space-y-4">
+      <DepthTabs
+        topicId="tarot"
+        concept="Vì sao không đọc từng lá rời — đọc cả bức tranh chung"
+        levels={[
         {
           id: 'eli5',
           label: 'Trẻ 5 tuổi',
@@ -117,8 +119,228 @@ export function TarotDepth() {
             </>
           ),
         },
-      ]}
-    />
+        ]}
+      />
+      <DepthTabs
+        topicId="tarot"
+        concept="Lá hoàng gia (court cards) đang chỉ ai?"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Trong bộ bài có 16 lá vẽ người: Thị Đồng, Hiệp Sĩ, Hoàng Hậu, Vua. Lá vẽ người
+                {strong(' không nhất thiết là một người khác')} — nhiều khi nó là một phần của
+                chính mình, giống như mình lúc thì ham chơi, lúc thì nghiêm túc.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Một lá hoàng gia có thể chỉ (a) {strong('một người thật')} quanh bạn, (b){' '}
+                  {strong('một mặt của chính bạn')}, hoặc (c) {strong('một kiểu năng lượng')},
+                  cách hành xử.
+                </p>
+                <p>
+                  Đọc theo hai trục: {strong('cấp bậc')} = mức trưởng thành của năng lượng (Thị
+                  Đồng học việc → Hiệp Sĩ lao đi → Hoàng Hậu làm chủ từ bên trong → Vua làm chủ
+                  hướng ra ngoài); {strong('chất')} = lĩnh vực (Gậy ý chí, Cốc cảm xúc, Kiếm tư
+                  duy, Tiền thực tế).
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Ghép hai trục cho chân dung đủ sắc thái: {strong('Hoàng Hậu Cốc')} = làm chủ
+                  cảm xúc từ bên trong — thấu cảm sâu mà vẫn giữ được mình; chiều ngược là chìm
+                  trong cảm xúc người khác đến kiệt. {strong('Hiệp Sĩ')} là thái cực của chất
+                  (quá nhiều hoặc quá ít) nên thường là lá "đậm và bốc" nhất trong bốn cấp.
+                </p>
+                <p>
+                  Khi rút trúng lá hoàng gia, câu làm việc tốt nhất là hỏi: lá này gợi đến ai —
+                  hay khía cạnh nào của chính mình? {strong('Không chốt cứng')} "đây là người
+                  X".
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="tarot"
+        concept="Lá ngược (reversed) nghĩa là gì?"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Lá lật ngược {strong('không phải lá xấu')}. Nó giống chiếc đèn đang bị che bớt:
+                ánh sáng vẫn là ánh sáng, chỉ đang bị chặn lại, hoặc đang chiếu vào bên trong.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <p>
+                Bốn cách luận phổ biến: (1) {strong('nghẽn / chậm lại')} — năng lượng bị cản,
+                đến trễ; (2) {strong('hướng vào trong')} — chuyện đang diễn ra bên trong thay vì
+                ra ngoài; (3) {strong('thái quá hoặc thiếu hụt')}; (4){' '}
+                {strong('đang gỡ / sắp qua')} — với lá "nặng" như Ba Kiếm, Mười Kiếm, chiều
+                ngược hay là dấu phục hồi.
+              </p>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Không cách nào là duy nhất đúng — chọn theo ngữ cảnh câu hỏi và cả trải bài.
+                  Ví dụ cùng quy tắc "thái quá / thiếu hụt" nhưng hai hướng ngược nhau: Tiết Độ
+                  ngược = mất điều độ (thái quá), Sức Mạnh ngược = thiếu tự tin (thiếu hụt).
+                </p>
+                <p>
+                  Có trường phái {strong('bỏ hẳn lá ngược')}, đọc tất cả như xuôi và để toàn
+                  cảnh trải bài quyết sắc thái — lựa chọn hợp lệ. Công cụ ở đây có rút chiều
+                  ngược (50/50 mỗi lá) và luôn khung nó là {strong('"mặt trầm để soi"')}, không
+                  phải điềm gở.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="tarot"
+        concept="Cốt truyện số Át→10 — một mạch lặp ở cả bốn chất"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                40 lá số giống {strong('bốn cuốn truyện kể cùng một câu chuyện')}: bắt đầu (Át),
+                gặp khó ở giữa đường (5), về đích (10). Mỗi cuốn chỉ khác ở chỗ nó kể về gì —
+                chuyện làm, chuyện thương, chuyện nghĩ, hay chuyện có. Thuộc một cốt truyện là
+                đoán được hướng của cả bốn cuốn.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Mạch đầy đủ: {strong('Át')} là hạt mầm thuần khiết nhất của chất; 2 lựa chọn
+                  đôi; 3 thành hình bước đầu; 4 ổn định, đôi khi trì trệ; {strong('5 xáo trộn')};
+                  6 hồi phục; 7 đánh giá, kiên trì; 8 vận động; 9 gần trọn, đỉnh cảm xúc của
+                  chất; {strong('10 trọn vẹn hoặc quá tải')} — đỉnh điểm, chuyển sang chu kỳ mới.
+                </p>
+                <p>
+                  Cùng một số qua bốn chất là {strong('cùng mô-típ, mỗi chất một mặt đời')}: Năm
+                  Gậy là ý kiến va nhau, Năm Cốc là nỗi buồn cho phần đã đổ, Năm Kiếm hỏi
+                  {' "'}thắng keo này mất gì{'"'}, Năm Tiền là mùa đông vật chất.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Đây là {strong('khung gợi ý, không phải công thức cứng')}: sắc thái từng lá vẫn
+                  lệch theo chất — số 8 chẳng hạn, là vận động nhanh, chuyên cần, hay rời đi tùy
+                  chất. Vì vậy công cụ trên hieu.asia viết nghĩa từng lá riêng, không sinh máy
+                  móc theo số × chất; khi đọc, ưu tiên nghĩa cụ thể của lá hơn là suy từ số.
+                </p>
+                <p>
+                  Chỗ dùng đắt nhất của cốt truyện số là {strong('đọc tổng thể')}: nhiều lá cùng
+                  số trong một trải (vd ba lá số 5) cho thấy cùng một mô-típ đang lặp ở nhiều mặt
+                  đời sống. Nó khoanh vùng chủ đề để soi kỹ hơn, không phải {'"'}điềm xấu nhân
+                  ba{'"'}.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="tarot"
+        concept="Vì sao lá-của-ngày chung cho mọi người — Tarot ở đây không tiên tri"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Mỗi ngày trang web lật ra một lá, {strong('ai vào xem cũng thấy đúng lá đó')} —
+                giống câu đố treo trước cửa lớp: cả lớp đọc chung một câu, nhưng mỗi bạn nghĩ ra
+                câu trả lời của riêng mình. Lá bài là câu đố gợi nghĩ, không phải quả cầu tiên
+                tri.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Tarot ra đời ở Ý thế kỷ 15 như bài chơi; mãi cuối thế kỷ 18 mới được gán nghĩa
+                  bói toán. Nghĩa {'"'}tiên tri{'"'} là {strong('lớp gán thêm về sau')}, không
+                  phải bản chất gốc của bộ bài.
+                </p>
+                <p>
+                  Trên hieu.asia, một lá rút ra là {strong('một câu hỏi gợi mở')}: lấy nghĩa cốt
+                  lõi cộng một câu hỏi tự soi, rồi áp vào tình huống thật của mình. Lá {'"'}tương
+                  lai{'"'} hay {'"'}kết quả{'"'} luôn được khung là xu hướng nếu giữ nguyên hướng
+                  đi — người hỏi vẫn là người chọn.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Lá-của-ngày cố định theo ngày (giờ Việt Nam) và {strong('chung cho mọi người')}{' '}
+                  — công cụ nói thẳng nó không phải tiên đoán về ngày của bạn. Nếu lá bài
+                  {' "'}biết trước{'"'} chuyện riêng từng người thì một lá chung cho tất cả là vô
+                  nghĩa; nó đứng được chính vì giá trị nằm ở {strong('phía người soi')}: cùng một
+                  lá, mỗi người mang một tình huống và một câu hỏi khác nên soi ra một điều khác.
+                </p>
+                <p>
+                  Cùng logic đó, một buổi đọc tử tế không phán {'"'}sắp giàu / sắp chia tay / gặp
+                  hạn{'"'}, không bán {'"'}đổi vận, giải hạn{'"'}, và không thay lời khuyên y tế,
+                  pháp lý, tài chính. Tarot ở đây để{' '}
+                  {strong('hiểu mình và ra quyết định tỉnh táo hơn')} — quyền quyết định luôn ở
+                  người hỏi.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -201,6 +423,60 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Rút trúng một lá hoàng gia (ví dụ Hoàng Hậu Cốc), nên hiểu lá này chỉ ai?',
+    choices: [
+      {
+        text: 'Có thể là một người thật, một mặt của chính mình, hoặc một kiểu năng lượng — tự hỏi lá gợi đến ai / khía cạnh nào',
+        correct: true,
+        note: 'Đúng — khung hai trục cấp bậc × chất giúp đọc, nhưng không chốt cứng.',
+      },
+      {
+        text: 'Luôn là một người thật ngoài đời mà mình cần dè chừng',
+        note: 'Không — chốt cứng "đây là người X" là cách đọc dễ sai nhất với lá hoàng gia.',
+      },
+      {
+        text: 'Cấp bậc của lá cho biết tuổi tác hay tình trạng hôn nhân của người đó',
+        note: 'Không — cấp bậc nói về mức trưởng thành của năng lượng, không phải nhân khẩu học.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'mcq',
+    prompt: 'Trong trải bài Celtic Cross, lá số 10 "Kết quả khả dĩ" nên hiểu thế nào?',
+    choices: [
+      {
+        text: 'Xu hướng nếu giữ nguyên đường đi — người hỏi vẫn là người chọn',
+        correct: true,
+        note: 'Đúng — lá 10 không phải định mệnh cứng.',
+      },
+      {
+        text: 'Định mệnh chắc chắn xảy ra, không thay đổi được',
+        note: 'Sai — chính bài đã nhấn: lá "kết quả" luôn được khung là xu hướng, quyền tự quyết ở người hỏi.',
+      },
+      {
+        text: 'Lá quan trọng duy nhất; chín lá còn lại chỉ phụ họa',
+        note: 'Không — mỗi ô có vai trò riêng, và tổng thể trải bài quan trọng hơn từng lá.',
+      },
+    ],
+  },
+  {
+    id: 'q8',
+    type: 'open',
+    prompt:
+      'Một trải bài ra ba lá cùng số 5 (Năm Gậy, Năm Cốc, Năm Tiền). Theo cách đọc tổng thể, điều đó gợi gì?',
+    answer: (
+      <>
+        Số lặp là một tín hiệu tổng thể: {strong('cùng một mô-típ đang lặp ở nhiều mặt đời sống')}.
+        Trong cốt truyện số, 5 là xáo trộn, va chạm — thử thách giữa chặng: ý kiến va nhau (Gậy),
+        nỗi buồn cho phần đã mất (Cốc), mùa đông vật chất (Tiền). Không phải "điềm xấu nhân ba" —
+        nó khoanh vùng chủ đề để mình soi kỹ hơn.
+      </>
+    ),
+  },
 ];
 
 export function TarotRecall() {
@@ -237,6 +513,16 @@ const FACETS: UnderstandingFacet[] = [
     id: 'guard',
     facet: 'Tránh ngộ nhận',
     can: 'Nói được vì sao Cái Chết không = chết thật, Tòa Tháp/Ác Quỷ/Mặt Trăng không = điềm gở, và lá ngược không = luôn xấu.',
+  },
+  {
+    id: 'court',
+    facet: 'Lá hoàng gia',
+    can: 'Đọc một lá hoàng gia theo hai trục (cấp bậc × chất) — và nói được vì sao không chốt cứng "đây là người X".',
+  },
+  {
+    id: 'spread',
+    facet: 'Trải bài',
+    can: 'Kể được vai trò các ô trong trải một lá / ba lá / Celtic Cross — và giải thích vì sao lá "kết quả" chỉ là xu hướng nếu giữ nguyên hướng đi.',
   },
   {
     id: 'teach-back',
