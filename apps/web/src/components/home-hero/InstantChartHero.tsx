@@ -108,30 +108,24 @@ export function InstantChartHero(): React.JSX.Element {
         {/* Wave 65 — lời hứa thương hiệu lên đầu (page 1) theo yêu cầu founder;
             GIỮ nguyên H1 hành động + form ngay dưới (không phá mối nối chuyển đổi). */}
         <p
-          className="hero-enter font-marketing-display text-lg italic leading-tight text-primary/90 sm:text-xl"
-          style={{ animationDelay: '80ms' }}
-        >
-          Hiểu mình. Quyết định mình.
-        </p>
-        <p
-          className="hero-enter mt-2 font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80"
+          className="hero-enter font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80"
           style={{ animationDelay: '150ms' }}
         >
           Lá số Bát Tự thật · tính ngay · miễn phí
         </p>
         <h1 className="mt-3 text-balance font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
-          Nhập ngày sinh —{' '}
-          <ShimmerText>xem lá số của bạn</ShimmerText>{' '}
-          ngay.
+          Nhập ngày sinh,{' '}
+          <ShimmerText>hiểu mình rõ hơn</ShimmerText>{' '}
+          trong một phút.
         </h1>
         <p
           className="hero-enter mt-4 max-w-xl text-sm leading-relaxed text-foreground/75 sm:text-base"
           style={{ animationDelay: '220ms' }}
         >
-          Bốn trụ, Nhật Chủ, ngũ hành, đại vận — tính theo tiết khí, đúng chuẩn,{' '}
-          <strong className="text-foreground/90">kiểm chứng được</strong>. Lập ngay trong trình
-          duyệt, không cần đăng ký. Con số là thật; phần luận giải là để bạn tự hiểu mình, không
-          bói toán.
+          Từ ngày và giờ sinh, hệ thống dựng lá số Bát Tự của bạn: Nhật Chủ, ngũ hành mạnh yếu,
+          đại vận từng chặng. Con số tính bằng thuật toán theo tiết khí,{' '}
+          <strong className="text-foreground/90">không tra bảng sẵn</strong>. Phần luận giải giúp
+          bạn hiểu mình và chọn thời điểm, không phán vận hạn.
         </p>
 
         {/* Lời mời gọn — above the fold, không ngộp dữ liệu trước khi khách hành động */}
@@ -233,7 +227,7 @@ export function InstantChartHero(): React.JSX.Element {
             </p>
           )}
           <p className="mt-3 font-mono text-[13px] leading-relaxed text-muted-foreground">
-            Tính ngay trong trình duyệt · không lưu nếu bạn chưa đăng ký · không bán hay chia sẻ.
+            Tính ngay trên máy bạn · chưa đăng ký thì không lưu gì · không bán, không chia sẻ.
           </p>
         </form>
 

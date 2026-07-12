@@ -360,10 +360,10 @@ export function FeaturePaywall({
         <CardContent className="space-y-4 p-8 text-center">
           <p className="text-4xl" aria-hidden>🔒</p>
           <p className="font-heading text-xl text-foreground">
-            {toolLabel} — tính năng trả phí
+            Mở khoá {toolLabel} đầy đủ cho lá số của bạn
           </p>
           <p className="text-sm text-muted-foreground">
-            Giá:{' '}
+            Một lần{' '}
             {appliedCode ? (
               <>
                 <span className="text-muted-foreground line-through">
@@ -391,8 +391,8 @@ export function FeaturePaywall({
               <span className="font-semibold text-gold">
                 {price.toLocaleString('vi-VN')}đ
               </span>
-            )}{' '}
-            / lần mở khoá
+            )},{' '}
+            xem trọn phần luận giải {toolLabel} riêng theo lá số của bạn. Mở khoá rồi, xem lại bao nhiêu lần tuỳ bạn.
           </p>
 
           {/* Voucher / promo code — understated, secondary to the unlock CTA. */}
@@ -447,7 +447,7 @@ export function FeaturePaywall({
           >
             {appliedFree
               ? 'Mở khoá miễn phí 🎁'
-              : `Mở khoá — ${effectivePrice.toLocaleString('vi-VN')}đ`}
+              : `Mở khoá ${toolLabel} — ${effectivePrice.toLocaleString('vi-VN')}đ`}
           </Button>
         </CardContent>
       </Card>
