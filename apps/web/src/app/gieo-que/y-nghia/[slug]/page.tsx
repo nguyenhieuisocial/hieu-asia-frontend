@@ -193,6 +193,11 @@ export default async function QueMeaningPage({ params }: Props) {
         </section>
 
         <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+          <h2 className="font-heading text-xl font-semibold text-foreground">Chỗ dễ hiểu sai</h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{q.misread}</p>
+        </section>
+
+        <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
           <h2 className="font-heading text-xl font-semibold text-foreground">Ứng xử khôn ngoan trong thế cục này</h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{q.advice}</p>
         </section>
@@ -207,6 +212,11 @@ export default async function QueMeaningPage({ params }: Props) {
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{q.work}</p>
           </section>
         </div>
+
+        <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+          <h2 className="font-heading text-xl font-semibold text-foreground">Vị trí trong mạch 64 quẻ</h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{q.sequenceNote}</p>
+        </section>
 
         <section className="rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/10 to-transparent p-6">
           <h2 className="font-heading text-lg font-semibold text-foreground">Câu hỏi để bạn tự soi</h2>

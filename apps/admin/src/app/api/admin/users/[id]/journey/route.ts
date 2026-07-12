@@ -34,7 +34,7 @@ export const dynamic = 'force-dynamic';
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function GET(_req: Request, ctx: Ctx) {
-  const auth = await requireAdminSession('admin');
+  const auth = await requireAdminSession('admin', { read: true });
   if ('error' in auth) return auth.error;
 
   const { id } = await ctx.params;

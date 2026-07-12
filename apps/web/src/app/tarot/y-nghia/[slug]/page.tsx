@@ -105,6 +105,20 @@ export default async function TarotCardMeaningPage({ params }: Props) {
         </section>
 
         <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+          <h2 className="font-heading text-xl font-semibold text-foreground">Biểu tượng trên lá</h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{c.symbols}</p>
+          <p className="mt-3 text-xs leading-relaxed text-muted-foreground/80">
+            Mô tả theo tranh hệ Rider–Waite–Smith, viết bằng lời — các bản in tranh hiện đại còn bản
+            quyền nên trang không dùng hình chụp lá bài.
+          </p>
+        </section>
+
+        <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
+          <h2 className="font-heading text-xl font-semibold text-foreground">Vị trí trong mạch bài</h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{c.storyArc}</p>
+        </section>
+
+        <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
           <h2 className="font-heading text-xl font-semibold text-foreground">Nghĩa xuôi (upright)</h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{c.up}</p>
         </section>
