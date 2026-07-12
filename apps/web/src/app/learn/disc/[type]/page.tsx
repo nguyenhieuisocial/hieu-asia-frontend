@@ -11,6 +11,8 @@ import {
   MessageCircle,
   Briefcase,
   Zap,
+  Users,
+  Eye,
 } from 'lucide-react';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
@@ -177,6 +179,20 @@ export default async function DiscStylePage({
         <p className="text-base leading-relaxed text-foreground/85">{d.overview}</p>
       </section>
 
+      {/* Hay bị hiểu lầm */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <Card className="border-border bg-card/40">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 font-heading text-base text-foreground">
+              <Eye className="h-4 w-4 text-gold" aria-hidden /> Nhóm {d.letter} hay bị hiểu lầm
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm leading-relaxed text-foreground/80">
+            {d.misreads}
+          </CardContent>
+        </Card>
+      </section>
+
       {/* Điểm mạnh + Hướng phát triển */}
       <section className="relative mx-auto max-w-3xl px-6 pb-10">
         <div className="grid gap-3 sm:grid-cols-2">
@@ -285,6 +301,18 @@ export default async function DiscStylePage({
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Phối hợp với ba nhóm còn lại */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          <Users className="h-5 w-5 text-gold" aria-hidden /> Phối hợp với ba nhóm còn lại
+        </h2>
+        <p className="text-base leading-relaxed text-foreground/85">{d.collaboration}</p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Không cặp nào &ldquo;khắc&rdquo; nhau — mỗi cặp chỉ cần chỉnh nhịp và trọng tâm cho hợp. Đây
+          là chỗ DISC hữu dụng nhất: làm ngôn ngữ chung để một nhóm phối hợp trơn hơn.
+        </p>
       </section>
 
       {/* FAQ */}
