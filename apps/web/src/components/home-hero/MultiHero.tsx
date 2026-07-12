@@ -27,7 +27,7 @@ const SOFT = 'hsl(var(--muted-foreground))';
 // Flagship lenses từ catalog (lib/catalog/lenses) — 1 nguồn sự thật, hết drift.
 const SYSTEMS = LENSES.map((l) => ({ n: l.name, r: l.role, full: l.full }));
 const LENS_N = SYSTEMS.length;
-const WORDS = ['mình.', 'đời mình.', 'con đường.', 'hướng đi.', 'bước tiếp theo.'];
+const WORDS = ['chính mình', 'đời mình', 'con đường phía trước', 'bước tiếp theo'];
 const SAMPLES = [
   'Hợp quyết nhanh, nhưng nên hoãn việc lớn khi đang mệt.',
   'Mạnh ở tầm nhìn xa; điểm cần giữ là kiên nhẫn với chi tiết.',
@@ -75,8 +75,8 @@ export function MultiHero(): React.JSX.Element {
         <div className="mh-copy">
           <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />NĂM LĂNG KÍNH · AI HỢP NHẤT THÀNH MỘT</p>
           <h2 className="mh-h1">
-            <span className="mh-line mh-l1">Hiểu mình.</span>
-            <span className="mh-line mh-l2">Quyết định{' '}
+            <span className="mh-line mh-l1">Hiểu mình rõ hơn,</span>
+            <span className="mh-line mh-l2">rồi quyết định cho{' '}
               <span className="mh-rot-slot">
                 {WORDS.map((w, i) => (
                   <span key={w} aria-hidden={i !== wordIdx} className={`mh-rot${i === wordIdx ? ' mh-rot-on' : ''}`}>
@@ -86,7 +86,7 @@ export function MultiHero(): React.JSX.Element {
               </span>
             </span>
           </h2>
-          <p className="mh-deck">Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng — năm lăng kính cho bức tranh sâu nhất, cùng cả bộ công cụ cổ học &amp; hiện đại. AI hợp nhất để bạn tự quyết.</p>
+          <p className="mh-deck">Năm hệ soi cùng một người: Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng. Mỗi hệ một góc nhìn; ghép lại, bạn thấy mình rõ hơn khi chỉ nhìn từ một hệ.</p>
         </div>
 
         {/* mobile-first: CTA TRƯỚC la bàn → user bấm được ngay màn 1 (above-fold).
@@ -95,10 +95,10 @@ export function MultiHero(): React.JSX.Element {
           {/* Khung "quà" — reciprocity THẬT: lá số đầy đủ (114 sao, tính thật) là
               quà giữ được, KHÔNG phải teaser. Cố ý KHÔNG hứa "luận giải sâu miễn
               phí" (phần đó trả phí) → trung thực, không over-claim. */}
-          <p className="mh-gift"><span className="mh-gift-mk" aria-hidden="true">✦</span> Quà mở đầu · <strong>lá số Tử Vi đầy đủ</strong>, miễn phí — của bạn để giữ</p>
+          <p className="mh-gift"><span className="mh-gift-mk" aria-hidden="true">✦</span> Quà mở đầu: <strong>lá số Tử Vi 12 cung, 14 chính tinh</strong>, miễn phí, của bạn để giữ.</p>
           <div className="mh-cta-row">
-            <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Tôi đang phân vân một quyết định</a>
-            <Link className="mh-cta mh-cta-ghost" href="/tu-vi-2026"><span className="mh-cta-num">②</span>Xem nhanh<span className="mh-cta-sub">· Tử Vi 2026 · Hợp tuổi</span></Link>
+            <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Tôi đang phân vân → xem lá số gợi ý gì</a>
+            <Link className="mh-cta mh-cta-ghost" href="/tu-vi-2026"><span className="mh-cta-num">②</span>Xem Tử Vi 2026<span className="mh-cta-sub">&amp; hợp tuổi của tôi</span></Link>
           </div>
           <p className="mh-micro">KHÔNG CẦN THẺ · 1 PHÚT · KHÔNG SPAM</p>
         </div>

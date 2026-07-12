@@ -651,7 +651,7 @@ export function BirthDataForm() {
             }
           }}
         >
-          {isSubmitting ? 'Đang xử lý...' : 'Tiếp tục'}
+          {isSubmitting ? 'Đang xử lý...' : 'Xem lá số của tôi'}
         </Button>
       </div>
     </form>
