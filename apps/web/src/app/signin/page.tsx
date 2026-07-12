@@ -42,26 +42,19 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const reason = params.reason;
 
   return (
-    // Wave 60.80.a11y — /signin is a hardcoded warm-dark editorial surface
-    // (`bg-warm-dark-50`, cream text, Turnstile theme="dark"). Scope it to the
-    // dark token set so the shared chrome (SiteNav/SiteFooter) renders dark too.
-    // Otherwise the light-theme translucent header (`bg-card/70`) blends over the
-    // dark <main> to ~#b9b9b9, dropping nav-link + logo contrast below WCAG AA
-    // (axe color-contrast, 7 nav links @3.71 + logo @3.23). Dark tokens flip the
-    // nav text to bone/gold on charcoal (≥6:1), matching the page's own design.
-    <div className="dark">
+    <>
       <SiteNav />
       <main
         id="main-content"
-        className="relative isolate min-h-screen bg-warm-dark-50 px-6 py-12 pt-24 text-cream-50"
+        className="relative isolate min-h-screen bg-background px-6 py-12 pt-24 text-foreground"
       >
         <div className="mx-auto max-w-marketing">
-          <nav aria-label="Breadcrumb" className="mb-8 text-xs text-cream-500">
+          <nav aria-label="Breadcrumb" className="mb-8 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">
               Trang chủ
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-cream-300">Đăng nhập</span>
+            <span className="text-foreground/80">Đăng nhập</span>
           </nav>
 
           {/* Wave 60.79.T3 (vault 112 P1 #11): post-timeout banner so users
@@ -69,9 +62,9 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           {reason === 'auth' && (
             <div
               role="status"
-              className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200"
+              className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-200"
             >
-              <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" aria-hidden />
+              <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-300" aria-hidden />
               <p>
                 Phiên đăng nhập đã hết. Vui lòng đăng nhập lại.
               </p>
@@ -79,14 +72,14 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           )}
 
           <header className="mb-10 max-w-marketing-text">
-            <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-[#d4b373]">
+            <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold/80">
               — HIEU.ASIA · ĐĂNG NHẬP
             </p>
-            <h1 className="mt-4 font-marketing-display text-4xl leading-tight text-cream-50 md:text-5xl">
+            <h1 className="mt-4 font-marketing-display text-4xl leading-tight text-foreground md:text-5xl">
               Đăng nhập để được{' '}
-              <span className="italic text-[#d4b373]">hiểu</span>.
+              <span className="italic text-primary">hiểu</span>.
             </h1>
-            <p className="mt-4 font-sans text-base text-cream-300">
+            <p className="mt-4 font-sans text-base text-foreground/75">
               Không cần mật khẩu. Chọn nhà cung cấp hoặc nhận liên kết qua email.
             </p>
           </header>
@@ -113,6 +106,6 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
         </div>
       </main>
       <SiteFooter />
-    </div>
+    </>
   );
 }
