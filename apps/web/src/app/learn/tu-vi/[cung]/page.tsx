@@ -38,6 +38,7 @@ export async function generateMetadata(
 }
 
 const PUBLISHED_AT = '2026-05-22';
+const MODIFIED_AT = '2026-07-12';
 
 export default async function LearnPalacePage({
   params,
@@ -55,7 +56,7 @@ export default async function LearnPalacePage({
       description: data.governs,
       url: `/learn/tu-vi/${data.slug}`,
       datePublished: PUBLISHED_AT,
-      dateModified: PUBLISHED_AT,
+      dateModified: MODIFIED_AT,
     }),
     breadcrumb([
       { name: 'Trang chủ', url: '/' },
@@ -89,6 +90,24 @@ export default async function LearnPalacePage({
         label: 'Lập lá số Tử Vi',
       }}
       sections={[
+        {
+          id: 'cau-hoi-trung-tam',
+          tocLabel: 'Câu hỏi trung tâm',
+          heading: `Câu hỏi trung tâm của cung ${data.name}`,
+          children: (
+            <figure className="rounded-xl border border-gold/30 bg-card/40 p-5 sm:p-6">
+              <blockquote className="text-base font-medium leading-relaxed text-foreground">
+                {'“'}
+                {data.coreQuestion}
+                {'”'}
+              </blockquote>
+              <figcaption className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Mọi phần bên dưới xoay quanh câu hỏi này: sao nào hay đóng ở đây, luận thế nào
+                cho sâu, và đâu là chỗ người mới dễ đọc sai.
+              </figcaption>
+            </figure>
+          ),
+        },
         {
           id: 'sao-dang-y',
           tocLabel: 'Sao đáng để ý',
@@ -133,6 +152,32 @@ export default async function LearnPalacePage({
           ),
         },
         {
+          id: 'cach-luan-sau',
+          tocLabel: 'Cách luận sâu',
+          heading: `Cách luận sâu cung ${data.name}`,
+          children: (
+            <div className="rounded-xl border border-border bg-card/40 p-5 sm:p-6">
+              <p className="text-sm leading-relaxed text-foreground/80">{data.readingGuide}</p>
+            </div>
+          ),
+        },
+        {
+          id: 'tam-phuong',
+          tocLabel: 'Tam phương tứ chính',
+          heading: `Tam phương tứ chính của cung ${data.name}`,
+          children: (
+            <>
+              <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+                Trong Tử Vi, một cung không bao giờ đọc đơn lẻ: phải gộp với hai cung tam hợp
+                và cung xung chiếu đối diện. Với cung {data.name}, bộ bốn đó như sau:
+              </p>
+              <div className="rounded-xl border border-border bg-card/40 p-5 sm:p-6">
+                <p className="text-sm leading-relaxed text-foreground/80">{data.trioNote}</p>
+              </div>
+            </>
+          ),
+        },
+        {
           id: 'cau-hoi',
           tocLabel: 'Trả lời câu hỏi nào',
           heading: `Cung ${data.name} trả lời được câu hỏi nào của bạn`,
@@ -154,6 +199,26 @@ export default async function LearnPalacePage({
                 ))}
               </ul>
             </>
+          ),
+        },
+        {
+          id: 'ngo-nhan',
+          tocLabel: 'Ngộ nhận thường gặp',
+          heading: `Ngộ nhận thường gặp về cung ${data.name}`,
+          children: (
+            <ul className="space-y-3">
+              {data.commonMisreads.map((m, i) => (
+                <li
+                  key={i}
+                  className="flex gap-3 rounded-lg border border-border bg-card/30 p-4"
+                >
+                  <span className="shrink-0 font-mono text-xs font-bold text-gold-700">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="text-sm leading-relaxed text-foreground/80">{m}</span>
+                </li>
+              ))}
+            </ul>
           ),
         },
         {
