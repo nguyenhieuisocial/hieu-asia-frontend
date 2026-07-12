@@ -97,7 +97,7 @@ export function InfographicPalm() {
       </svg>
 
       <div className="space-y-2">
-        <h3 className="font-heading text-sm font-semibold text-gold">7 đường chỉ tay chính</h3>
+        <h3 className="font-heading text-sm font-semibold text-gold">Sáu đường chính và Vòng Kim Tinh</h3>
         <div className="space-y-1.5">
           {LINES.map((line) => (
             <button

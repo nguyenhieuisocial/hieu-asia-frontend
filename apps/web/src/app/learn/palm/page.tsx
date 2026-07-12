@@ -193,8 +193,8 @@ export default function LearnPalmPage() {
         },
         {
           id: 'so-do-7-duong',
-          tocLabel: '7 đường chính',
-          heading: 'Sơ đồ 7 đường chính',
+          tocLabel: 'Sơ đồ bàn tay',
+          heading: 'Sơ đồ các nét chính trên bàn tay',
           children: (
             <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
               <InfographicPalm />
