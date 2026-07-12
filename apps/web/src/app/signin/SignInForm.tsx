@@ -21,6 +21,7 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import { Facebook, Apple, ShieldCheck } from 'lucide-react';
 import { Button, Input, Label } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
@@ -84,6 +85,10 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
   // logged-in user can reload /signin and see the form again — confusing and
   // could let them re-trigger an OAuth flow that overwrites their session.
   const { user: authedUser, loading: authLoading } = useAuth();
+  // Turnstile is a third-party iframe that can't inherit our CSS tokens, so it
+  // needs the resolved theme passed explicitly to match the page (Day/light by
+  // default on /signin, but user-toggleable — Wave 60.80.a11y).
+  const { resolvedTheme } = useTheme();
 
   React.useEffect(() => {
     if (!authLoading && authedUser) {
@@ -132,12 +137,12 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
     return (
       <>
         <SiteNav />
-        <main className="flex min-h-screen items-center justify-center bg-warm-dark-50 text-cream-50">
+        <main className="flex min-h-screen items-center justify-center bg-background text-foreground">
           <p
             role="status"
             aria-live="polite"
             aria-busy="true"
-            className="font-marketing-display italic text-gold"
+            className="font-marketing-display italic text-primary"
           >
             Đang kiểm tra phiên đăng nhập…
           </p>
@@ -202,11 +207,11 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
   return (
     <>
       {!authAvailable ? (
-        <div className="rounded-card-editorial border border-amber-500/40 bg-warm-dark-200 p-6 text-sm text-amber-200">
+        <div className="rounded-card-editorial border border-amber-500/40 bg-amber-500/10 p-6 text-sm text-amber-800 dark:text-amber-200">
           <p className="font-marketing-display text-lg italic">
             Đăng nhập tạm thời chưa khả dụng
           </p>
-          <p className="mt-2 text-amber-200/80">
+          <p className="mt-2 text-amber-700 dark:text-amber-200/80">
             Hệ thống xác thực đang được cấu hình. Vui lòng quay lại sau
             ít phút hoặc liên hệ{' '}
             <a href="mailto:hi@hieu.asia" className="underline hover:text-gold">
@@ -216,11 +221,11 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
           </p>
         </div>
       ) : sent ? (
-        <div className="rounded-card-editorial border border-emerald-500/40 bg-warm-dark-200 p-6 text-sm text-emerald-200">
+        <div className="rounded-card-editorial border border-emerald-500/40 bg-emerald-500/10 p-6 text-sm text-emerald-800 dark:text-emerald-200">
           <p className="font-marketing-display text-lg italic">
             Đã gửi liên kết đăng nhập
           </p>
-          <p className="mt-2 text-emerald-200/80">
+          <p className="mt-2 text-emerald-700 dark:text-emerald-200/80">
             Kiểm tra hộp thư <strong>{email}</strong> và nhấp vào liên
             kết để hoàn tất đăng nhập. Liên kết có hiệu lực trong 15
             phút.
@@ -236,7 +241,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
               tightened wrapper to `p-1 min-h-0` so the box doesn't reserve
               ~150px of empty whitespace before Turnstile script loads. The
               widget itself self-labels (Cloudflare branding) when rendered. */}
-          <div className="flex min-h-0 justify-center rounded-card-editorial border border-warm-dark-300 bg-warm-dark-200 p-1">
+          <div className="flex min-h-0 justify-center rounded-card-editorial border border-border bg-card p-1">
             <TurnstileWidget
               onVerify={(token) => {
                 setCaptchaToken(token);
@@ -248,7 +253,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
                 )
               }
               onExpire={() => setCaptchaToken(null)}
-              theme="dark"
+              theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
               className="flex justify-center"
             />
           </div>
@@ -258,7 +263,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
               disabled, instead of seeing four greyed-out buttons with
               no upfront explanation. Disappears once captcha resolves. */}
           {!captchaToken && (
-            <p className="text-center font-mono text-[13px] uppercase tracking-wider text-cream-500">
+            <p className="text-center font-mono text-[13px] uppercase tracking-wider text-muted-foreground">
               Hoàn tất xác thực Cloudflare bên dưới để mở tuỳ chọn đăng nhập
             </p>
           )}
@@ -270,7 +275,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
               variant="outline"
               onClick={() => onOAuthClick('google')}
               disabled={anyLoading || !captchaToken}
-              className="h-12 w-full justify-start gap-3 rounded-pill border-warm-dark-300 bg-warm-dark-200 text-cream-100 hover:border-gold-soft hover:bg-warm-dark-300"
+              className="h-12 w-full justify-start gap-3 rounded-pill border-border bg-card text-foreground hover:border-primary hover:bg-muted"
             >
               <GoogleIcon className="h-5 w-5 shrink-0" />
               <span className="flex-1 text-left text-sm">
@@ -285,7 +290,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
               variant="outline"
               onClick={() => onOAuthClick('facebook')}
               disabled={anyLoading || !captchaToken}
-              className="h-12 w-full justify-start gap-3 rounded-pill border-warm-dark-300 bg-warm-dark-200 text-cream-100 hover:border-gold-soft hover:bg-warm-dark-300"
+              className="h-12 w-full justify-start gap-3 rounded-pill border-border bg-card text-foreground hover:border-primary hover:bg-muted"
             >
               <Facebook
                 className="h-5 w-5 shrink-0 text-[#1877F2]"
@@ -304,10 +309,10 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
               variant="outline"
               onClick={() => onOAuthClick('apple')}
               disabled={anyLoading || !captchaToken}
-              className="h-12 w-full justify-start gap-3 rounded-pill border-warm-dark-300 bg-warm-dark-200 text-cream-100 hover:border-gold-soft hover:bg-warm-dark-300"
+              className="h-12 w-full justify-start gap-3 rounded-pill border-border bg-card text-foreground hover:border-primary hover:bg-muted"
             >
               <Apple
-                className="h-5 w-5 shrink-0 text-cream-100"
+                className="h-5 w-5 shrink-0 text-foreground"
                 aria-hidden="true"
                 fill="currentColor"
               />
@@ -322,10 +327,10 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
           {/* Divider */}
           <div className="relative my-2" aria-hidden="true">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-warm-dark-300" />
+              <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-warm-dark-50 px-3 font-mono uppercase tracking-wider text-cream-500">
+              <span className="bg-background px-3 font-mono uppercase tracking-wider text-muted-foreground">
                 hoặc
               </span>
             </div>
@@ -334,7 +339,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
           {/* Magic-link form */}
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-cream-300">
+              <Label htmlFor="email" className="text-foreground">
                 Email
               </Label>
               <Input
@@ -348,14 +353,14 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={anyLoading}
-                className="min-h-[44px] rounded-pill border-warm-dark-300 bg-warm-dark-200 px-5 text-cream-50 placeholder:text-cream-500"
+                className="min-h-[44px] rounded-pill border-border bg-card px-5 text-foreground placeholder:text-muted-foreground"
               />
             </div>
 
             {error && (
               <div
                 role="alert"
-                className="rounded-card-editorial border border-rose-500/40 bg-warm-dark-200 p-3 text-sm text-rose-200"
+                className="rounded-card-editorial border border-rose-500/40 bg-rose-500/10 p-3 text-sm text-rose-700 dark:text-rose-200"
               >
                 {error}
               </div>
@@ -364,12 +369,12 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
             <Button
               type="submit"
               disabled={anyLoading || !email || !captchaToken}
-              className="h-12 w-full rounded-pill border border-gold-soft/50 bg-gold text-warm-dark-50 transition-all duration-300 ease-editorial hover:bg-gold-soft disabled:opacity-60"
+              className="h-12 w-full rounded-pill border border-gold-soft/50 bg-gold text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft disabled:opacity-60"
             >
               {emailLoading ? 'Đang gửi…' : 'Gửi liên kết đăng nhập'}
             </Button>
 
-            <p className="text-center text-xs text-cream-500">
+            <p className="text-center text-xs text-muted-foreground">
               Bằng cách đăng nhập, bạn đồng ý với{' '}
               <a href="/terms" className="underline hover:text-gold">
                 Điều khoản
@@ -384,7 +389,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
         </div>
       )}
 
-      <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-cream-500">
+      <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
         <ShieldCheck
           className="h-3.5 w-3.5 text-gold-soft"
           aria-hidden="true"
@@ -396,7 +401,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
           receive the magic link (spam filter, typo, blocked OAuth)
           always have a contact path. Previously only surfaced in the
           !authAvailable fallback. */}
-      <p className="mt-4 text-center text-xs text-cream-500">
+      <p className="mt-4 text-center text-xs text-muted-foreground">
         Cần trợ giúp đăng nhập?{' '}
         <a
           href="mailto:hi@hieu.asia"
