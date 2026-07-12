@@ -13,6 +13,9 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { ItalicSpan } from '@/components/marketing/ItalicSpan';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { MbtiTool } from '@/components/tools/MbtiTool';
+import type { Metadata } from 'next';
+import { scoreFromShare } from '@/lib/scoring/mbti';
+import { buildType } from '@/lib/mbti-type-data';
 
 /**
  * Wave 60.95.u P1 (vault 130 P1) — /mbti audience landing.
@@ -126,6 +129,48 @@ const FAQ_JSONLD = {
     },
   })),
 };
+
+const MBTI_META_DESC =
+  'MBTI tại hieu.asia: 4 trục, 16 kiểu — làm bài test 24 câu ra kiểu của bạn, rồi đối chiếu cùng Tử Vi, Bát Tự, Big Five, Xem Tướng. Một ngôn ngữ tự nhận diện, không phán số mệnh.';
+
+// Link chia sẻ kết quả (?r=EI-SN-TF-JP) → ảnh OG ĐỘNG hiện "Tôi là INTJ ·
+// Nhà Chiến Lược" (preview FB/Zalo cá-nhân-hoá, click nhiều hơn ảnh generic).
+// Không có ?r= → trả metadata gốc, để opengraph-image.tsx (ảnh MBTI tĩnh) áp
+// dụng như trước. Canonical VẪN /mbti (không index URL tham số). Mirror pattern
+// /la-so-tu-vi + /la-so-bat-tu.
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ r?: string }>;
+}): Promise<Metadata> {
+  const base: Metadata = {
+    title: 'MBTI — 16 kiểu tâm trí, 4 trục',
+    description: MBTI_META_DESC,
+    alternates: { canonical: 'https://hieu.asia/mbti' },
+  };
+  const sp = await searchParams;
+  const r = sp?.r;
+  if (!r) return base;
+  const parts = r.split('-').map((n) => parseInt(n, 10));
+  if (parts.length !== 4 || parts.some((n) => !Number.isFinite(n) || n < 0 || n > 100)) return base;
+  const scored = scoreFromShare(parts);
+  const meta = scored ? buildType(scored.type) : null;
+  if (!meta) return base;
+  const ogUrl = `https://hieu.asia/mbti/og?r=${encodeURIComponent(r)}`;
+  const title = `Tôi là ${meta.code} · ${meta.nick} — MBTI`;
+  return {
+    ...base,
+    title,
+    openGraph: {
+      title,
+      description: MBTI_META_DESC,
+      url: 'https://hieu.asia/mbti',
+      type: 'website',
+      images: [{ url: ogUrl, width: 1200, height: 630, alt: `MBTI ${meta.code}` }],
+    },
+    twitter: { card: 'summary_large_image', title, images: [ogUrl] },
+  };
+}
 
 export default function MbtiHubPage() {
   return (
