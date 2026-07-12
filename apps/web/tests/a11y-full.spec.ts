@@ -33,6 +33,21 @@ try {
 for (const p of PAGES) {
   test(`a11y-full: ${p.name} (${p.path})`, async ({ page }) => {
     await page.goto(p.path, { waitUntil: "domcontentloaded" });
+    // Stabilise entrance animations for the whole settle window (see
+    // tests/a11y.spec.ts): reveal fades that straddle the settle otherwise make
+    // axe composite mid-fade opacity into false-positive contrast failures. Snap
+    // durations to 0 so the audit reflects the settled, as-read state. Injected
+    // before the settle wait. Matches tests/visual.spec.ts.
+    await page.addStyleTag({
+      content: `
+        *, *::before, *::after {
+          animation-duration: 0s !important;
+          animation-delay: 0s !important;
+          transition-duration: 0s !important;
+          transition-delay: 0s !important;
+        }
+      `,
+    });
     await page.waitForTimeout(2000);
 
     const results = await new AxeBuilder({ page })
