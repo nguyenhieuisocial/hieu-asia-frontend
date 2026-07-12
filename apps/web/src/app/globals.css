@@ -348,6 +348,19 @@ html {
   color: #d4b373;
 }
 
+/* Same fix, jade LABEL family. The light sweeps below deepen jade on cream, but
+ * DARK was left on raw jade-300 at reduced opacity: on /methodology's dark
+ * jade-tinted card the `text-jade-300/80` eyebrow ("Dựa trên") composites to
+ * #4e8c85 on #1b1c1e ≈ 4.39:1 — under AA (axe, 2026-07-12). Drop the opacity to
+ * solid jade-marketing #5BA89F (≈ 6.1:1 on the dark card), matching the gold
+ * collapse above. Full-opacity jade-300 already clears AA in dark, so only the
+ * dimmed /80–/90 label variants are swept. */
+.dark .text-jade-300\/80,
+.dark .text-jade-300\/85,
+.dark .text-jade-300\/90 {
+  color: #5ba89f;
+}
+
 /* AA contrast sweep — CONTINUED (light only). The block above handles the gold
  * label opacities; Lighthouse color-contrast (desktop) still flagged the
  * remaining accent families on the five cream marketing surfaces (/, /pricing,
