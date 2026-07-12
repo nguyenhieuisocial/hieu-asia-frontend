@@ -225,6 +225,114 @@ export function HopTuoiDepth() {
           },
         ]}
       />
+      <DepthTabs
+        topicId="hop-tuoi"
+        concept="Tam Hợp và cấu trúc Sinh – Vượng – Mộ"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Có những nhóm ba con giáp chơi với nhau rất ăn ý, gọi là {strong('Tam Hợp')}. Cứ hình
+                dung một đội ba bạn: một bạn khởi đầu, một bạn khỏe nhất ở giữa cuộc, một bạn thu dọn
+                cuối cùng. Ba bạn đỡ nhau nên đội lúc nào cũng hợp. Đó là lý do ba con giáp trong nhóm
+                dễ hợp nhau.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Tam Hợp là ba con giáp cách nhau đều {strong('bốn ngôi')}, gộp lại thành một “cục”
+                  ngũ hành. Có bốn nhóm: Thân–Tý–Thìn thành Thủy, Dần–Ngọ–Tuất thành Hỏa, Tỵ–Dậu–Sửu
+                  thành Kim, Hợi–Mão–Mùi thành Mộc.
+                </p>
+                <p>
+                  Ba ngôi này hợp vì mỗi ngôi giữ một vai: một ngôi khởi đầu, một ngôi lên đỉnh, một
+                  ngôi thu giữ, cùng một hành nên nâng nhau tự nhiên. Nếu chỉ có hai trong ba con giáp
+                  thì gọi là {strong('bán Tam Hợp')}, vẫn hợp nhưng nhẹ hơn.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Cấu trúc của mỗi Tam Hợp là {strong('Sinh – Vượng – Mộ')}: một ngôi Trường Sinh
+                  (khởi đầu), một ngôi Đế Vượng (đỉnh cao) và một ngôi Mộ Khố (thu giữ) của cùng một
+                  hành. Ví dụ Thủy cục: Thân là Trường Sinh của Thủy, Tý là Đế Vượng, Thìn là Mộ.
+                </p>
+                <p>
+                  Ba ngôi nối theo mạch khởi đầu – cao trào – kết tinh nên bổ trợ tự nhiên, là quan hệ
+                  hợp mạnh nhất trong sáu nhóm. Đủ ba ngôi là Tam Hợp; chỉ có 2/3 (vd Thân–Tý hay
+                  Tý–Thìn) là {strong('bán Tam Hợp')}, lực nhẹ hơn.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="hop-tuoi"
+        concept="Hệ Can Chi và vòng 60 Hoa Giáp"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Người xưa đặt tên cho mỗi năm bằng cách ghép hai bộ chữ lại: một bộ có{' '}
+                {strong('mười chữ')}, một bộ có {strong('mười hai con vật')}. Ghép hai bộ rồi xoay
+                vòng mãi, phải đúng 60 năm mới quay về cái tên cũ. Nhờ vậy mỗi năm sinh có một cái tên
+                riêng để nhớ.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Lịch Á Đông dùng hai hệ: {strong('mười Thiên Can')} (Giáp, Ất, Bính, Đinh…) và{' '}
+                  {strong('mười hai Địa Chi')}, chính là mười hai con giáp. Mỗi Can mang một hành:
+                  Giáp Ất là Mộc, Bính Đinh là Hỏa, Mậu Kỷ là Thổ, Canh Tân là Kim, Nhâm Quý là Thủy.
+                </p>
+                <p>
+                  Mỗi Chi cũng gắn một con vật và một hành chính. Ghép một Can với một Chi rồi xoay
+                  vòng, được 60 tổ hợp như Giáp Tý, Ất Sửu, gọi là {strong('Lục Thập Hoa Giáp')}, đủ
+                  60 năm thì lặp lại.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Mười Thiên Can chia Âm – Dương: can lẻ là Dương, can chẵn là Âm, mỗi cặp gắn một
+                  hành (Giáp Ất Mộc, Bính Đinh Hỏa, Mậu Kỷ Thổ, Canh Tân Kim, Nhâm Quý Thủy). Mười hai
+                  Địa Chi mỗi Chi có một hành chính, ví dụ Tý là Thủy, Dần là Mộc, Ngọ là Hỏa.
+                </p>
+                <p>
+                  Mười Can xoay với mười hai Chi cho đúng {strong('60 tổ hợp Can-Chi')}, tức Lục Thập
+                  Hoa Giáp, lặp lại sau 60 năm. Đây là bộ khung nền mà con giáp, nạp âm và các nhóm
+                  quan hệ về sau đều dựa vào.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }

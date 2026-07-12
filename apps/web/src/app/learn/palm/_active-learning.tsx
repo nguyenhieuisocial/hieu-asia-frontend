@@ -238,6 +238,122 @@ export function PalmDepth() {
           },
         ]}
       />
+
+      <DepthTabs
+        topicId="palm"
+        concept="Bảy đường trên bàn tay: ba trục chính và bốn đường phụ"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Bàn tay có bảy đường lớn được xem nhiều nhất. {strong('Ba đường')} thì gần như ai
+                cũng có — một đường về tình cảm, một đường về cách nghĩ, một đường về sức sống. Bốn
+                đường còn lại thì người có, người không; {strong('thiếu một đường phụ cũng chẳng sao')}
+                , chỉ là bàn tay của bạn thuộc kiểu khác thôi.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Ba đường trục gần như ai cũng có. {strong('Tâm đạo')} là đường trên cùng, chạy
+                  ngang dưới gốc các ngón, nói về cách yêu và cách kết nối cảm xúc. {strong('Trí đạo')}{' '}
+                  là đường giữa, nói về phong cách tư duy — thực tế hay giàu tưởng tượng — chứ không
+                  phải mức IQ. {strong('Sinh đạo')} vòng quanh gốc ngón cái, nói về sức sống, năng
+                  lượng và các bước ngoặt lớn, không phải tuổi thọ.
+                </p>
+                <p>
+                  Bốn đường phụ là {strong('số mệnh, mặt trời, thuỷ tinh và hôn nhân')}. Khác với ba
+                  đường trục, chúng không phải ai cũng có — và không có một đường phụ nào đó không phải
+                  là thiếu sót, chỉ là bàn tay thuộc kiểu khác.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Bốn đường phụ đều kèm một lằn ranh dễ đọc sai. Đường {strong('số mệnh')} chủ định
+                  hướng nghề: đậm thẳng gợi con đường nhất quán, đứt đoạn gợi đa nghề; không có đường
+                  này là đường đời tự định, không phải “vô định”. Đường {strong('mặt trời')} chủ niềm
+                  vui sáng tạo và sức hút, không hứa nổi tiếng hay giàu. Đường {strong('thuỷ tinh')}{' '}
+                  chủ giao tiếp, nhạy bén; dù mang tên “sức khoẻ” cũng không đọc thành chẩn bệnh. Đường{' '}
+                  {strong('hôn nhân')} chủ quan hệ gắn bó, không đếm vạch để phán số lần kết hôn.
+                </p>
+                <p>
+                  Dù là đường trục hay đường phụ, tất cả vẫn đọc theo {strong('tổ hợp')} hình dạng, độ
+                  rõ, nhánh và chỗ bắt đầu — không đọc độ dài đơn lẻ.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="palm"
+        concept="Hai hệ hình dáng bàn tay: bốn yếu tố phương Tây và Ngũ hành thủ"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Trước khi soi từng đường nhỏ, người xem tay nhìn {strong('hình dáng cả bàn tay')}{' '}
+                trước — như nhìn dáng người trước khi nhìn nét mặt. Có hai cách chia dáng tay: một
+                cách của phương Tây và một cách của phương Đông. Hai cách này {strong('khác nhau')},
+                nên đừng lẫn lộn cách nọ với cách kia.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Hệ phương Tây chia dáng bàn tay theo {strong('bốn yếu tố')}. {strong('Tay Đất')} —
+                  lòng vuông, ngón ngắn — thiên thực tế, vững vàng, đáng tin. {strong('Tay Khí')} —
+                  lòng vuông, ngón dài — thiên lý trí, giao tiếp, tò mò trí tuệ.
+                </p>
+                <p>
+                  {strong('Tay Lửa')} — lòng dài, ngón ngắn — thiên năng động, hành động nhanh.{' '}
+                  {strong('Tay Nước')} — lòng dài, ngón dài-mảnh, da mềm — thiên nhạy cảm, giàu cảm
+                  xúc và trực giác. Nhìn dáng tay để định “khung” tổng thể trước, rồi mới luận từng
+                  đường.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Đông Á có một hệ riêng: {strong('Ngũ hành thủ')}, gồm Kim, Mộc, Thuỷ, Hoả, Thổ thủ.
+                  Điểm phải nói thẳng là hai hệ {strong('không tương ứng 1-1')}: phương Tây bốn loại,
+                  Đông Á năm loại; cách quan sát và tên gọi cũng khác. Vì thế đừng coi “tay Nước” của
+                  phương Tây là đồng nghĩa với một hành Thuỷ nào đó.
+                </p>
+                <p>
+                  Có trường phái phân theo Ngũ hành thủ, có phái theo bốn yếu tố; khi luận nên nói rõ
+                  mình đang dùng hệ nào để người nghe không trộn lẫn. Dù theo hệ nào, mục đích cũng chỉ
+                  là {strong('định khung')} tổng thể trước khi đọc từng đường.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }

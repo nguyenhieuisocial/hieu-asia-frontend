@@ -66,6 +66,65 @@ export function EnneagramDepth() {
     <div className="space-y-6">
       <DepthTabs
         topicId="enneagram"
+        concept="Động lực cốt lõi: mỗi nhóm chạy sau một khao khát và một nỗi sợ"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Ai cũng có một điều {strong('rất muốn có')} và một điều {strong('rất sợ mất')}.
+                Enneagram nhìn vào hai thứ giấu bên trong đó, thay vì nhìn bạn đang làm gì bên ngoài.
+                Có bạn luôn muốn được thương và sợ thành người thừa; có bạn luôn muốn làm đúng và sợ
+                mình sai. Chính cái muốn và cái sợ đó mới cho biết bạn thuộc nhóm nào, chứ không phải
+                chuyện bạn nói nhiều hay ít.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Mỗi nhóm được xác định bởi một cặp: {strong('khao khát cốt lõi')} (điều luôn hướng
+                  tới) và {strong('nỗi sợ cốt lõi')} (điều luôn né). Nhóm 1 khao khát sống đúng đắn,
+                  sợ mình sai. Nhóm 2 khao khát được cần đến, sợ thành người thừa. Nhóm 5 khao khát
+                  hiểu thấu và tự chủ, sợ bị vắt cạn.
+                </p>
+                <p>
+                  Hành vi bề mặt chỉ là cách mỗi người xoay xở quanh cặp động lực đó. Vì thế hai người
+                  làm những việc rất khác nhau vẫn có thể {strong('cùng một nhóm')} — cùng một động cơ
+                  đứng phía sau.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Điểm phân biệt của Enneagram: nó phân loại theo {strong('động lực cốt lõi')} — cặp
+                  khao khát và nỗi sợ chạy phía sau hành vi — chứ không theo tập hành vi quan sát được
+                  ở bề mặt. Cùng một động cơ có thể hiện ra rất nhiều hành vi khác nhau, tùy mức lành
+                  mạnh và cánh của người đó; đó là lý do hai người trông rất khác nhau vẫn có thể cùng
+                  một nhóm.
+                </p>
+                <p>
+                  {strong('Nhóm chính')} khá ổn định theo thời gian, còn thứ thay đổi là cách bạn
+                  biểu hiện nó. Vì vậy để tìm đúng nhóm, câu hỏi cốt lõi là “tôi thật sự sợ và khao
+                  khát điều gì”, không phải “tôi thường cư xử ra sao”.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="enneagram"
         concept="Ba trung tâm: mỗi cụm nhóm vật lộn với một cảm xúc lõi"
         levels={[
           {
@@ -222,6 +281,65 @@ export function EnneagramDepth() {
                 {strong('xu hướng động lực trên một phổ')}, không phải phép đo khoa học như xét nghiệm.
               </p>
             </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="enneagram"
+        concept="Chín mức phát triển: cùng một nhóm vẫn có phiên bản sáng và phiên bản tối"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Cùng một người, lúc {strong('khoẻ khoắn')} thì dễ thương, lúc {strong('mệt mỏi')} thì
+                khó ở. Trong Enneagram, cùng một nhóm cũng có ngày sáng ngày tối như vậy. Có lúc bạn
+                dùng tính cách của mình theo kiểu đẹp nhất, có lúc lại theo kiểu gắt gỏng nhất. Vậy
+                nên biết mình nhóm mấy vẫn chưa đủ — còn phải xem hôm nay mình đang ở phiên bản đẹp
+                hay phiên bản xấu của nhóm đó.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Riso và Hudson thêm một ý: trong cùng một nhóm, người ta dao động trên một dải “mức
+                  độ lành mạnh”, chia thành chín mức gộp lại thành {strong('ba vùng')}.
+                </p>
+                <p>
+                  {strong('Vùng lành mạnh')}: điểm mạnh của nhóm toả sáng, phòng vệ nhẹ đi.{' '}
+                  {strong('Vùng trung bình')}: nơi phần lớn chúng ta sống, cơ chế phòng vệ lộ rõ
+                  nhưng vẫn xoay xở được. {strong('Vùng kém lành mạnh')}: nỗi sợ cốt lõi lấn át, hành
+                  vi cứng nhắc, tự hại hoặc làm khổ người xung quanh. Hai người cùng nhóm 8 có thể rất
+                  khác: một người che chở rộng lượng, một người áp đặt kiểm soát.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Nhóm cho biết bạn thường {strong('bắt đầu từ đâu')}; mức phát triển cho biết bạn
+                  đang dùng động lực ấy theo hướng {strong('cởi mở hay cứng nhắc')}. Chín mức là một
+                  dải liên tục, không phải nhãn cố định — cùng một người xê dịch lên xuống theo giai
+                  đoạn đời, sức khoẻ, hoàn cảnh.
+                </p>
+                <p>
+                  Cần nói thẳng: đây là ý tưởng khung, {strong('không phải thang đo chính xác')}.
+                  Không có “điểm mức” nào chấm được bằng một bài trắc nghiệm ngắn, kể cả bài của
+                  hieu.asia. Hãy đọc nó như lời nhắc rằng cùng một nhóm vẫn có nhiều phiên bản và bạn
+                  di chuyển được, đừng biến nó thành một con số để tự dán lên mình.
+                </p>
+              </>
             ),
           },
         ]}
