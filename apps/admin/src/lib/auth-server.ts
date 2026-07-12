@@ -29,6 +29,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { ADMIN_SESSION_COOKIE, verifySession, type AdminRole } from './auth';
+import { resolveLiveRole, decideEffectiveRole } from './admin-user-store';
 
 export interface AdminSession {
   email: string;
@@ -43,6 +44,7 @@ export type RequireAdminSessionResult =
 
 export async function requireAdminSession(
   minRole: AdminRole = 'viewer',
+  opts: { fresh?: boolean; read?: boolean } = {},
 ): Promise<RequireAdminSessionResult> {
   const cookieStore = await cookies();
   const session = await verifySession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
@@ -56,7 +58,23 @@ export async function requireAdminSession(
     };
   }
 
-  if (ROLE_RANK[session.role] < ROLE_RANK[minRole]) {
+  // Instant revocation (2026-07-12 audit, step 3): re-derive the role from the live
+  // user store, never trusting the (possibly stale) signed cookie role for a
+  // privileged decision. Privileged checks (a mutation/capability route — elevated
+  // role by default, or explicit `fresh`) skip the cache and FAIL CLOSED when the
+  // authority can't be confirmed. A `read: true` GET stays on the cached, fail-open
+  // path (a read can't escalate, so a slow /admin/users must not 503 an otherwise
+  // healthy PostHog/Ahrefs/Supabase read). `decideEffectiveRole` centralizes that.
+  const privileged = opts.read ? false : (opts.fresh ?? minRole !== 'viewer');
+  const live = await resolveLiveRole(session.email, Date.now(), privileged);
+  const decision = decideEffectiveRole(live, session.role, privileged);
+  if ('deny' in decision) {
+    return decision.deny === 'revoked'
+      ? { error: NextResponse.json({ ok: false, error: 'session_revoked' }, { status: 401 }) }
+      : { error: NextResponse.json({ ok: false, error: 'role_unverifiable' }, { status: 503 }) };
+  }
+
+  if (ROLE_RANK[decision.role] < ROLE_RANK[minRole]) {
     return {
       error: NextResponse.json(
         { ok: false, error: `forbidden: requires ${minRole} or higher` },
@@ -65,5 +83,5 @@ export async function requireAdminSession(
     };
   }
 
-  return { session };
+  return { session: { email: session.email, role: decision.role } };
 }

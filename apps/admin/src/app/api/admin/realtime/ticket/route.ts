@@ -19,7 +19,11 @@ export const dynamic = 'force-dynamic';
 const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 
 export async function GET() {
-  const auth = await requireAdminSession();
+  // `fresh: true` — this GET mints a 60s bearer ticket for the realtime WS, and the
+  // DO is role-blind, so the ticket's lifetime is independent of the live role. A
+  // cached (15s-stale) revocation check would let a just-revoked admin mint a ticket
+  // and keep streaming for ~75s. Force a live revocation check before minting.
+  const auth = await requireAdminSession('viewer', { fresh: true });
   if ('error' in auth) return auth.error;
   if (!TOKEN) {
     return NextResponse.json(
