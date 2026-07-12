@@ -11,7 +11,7 @@ import { relatedLearnLenses } from '@/lib/learn/related';
 import { MAJOR_PAGES, ALL_PAGES } from '@/lib/tarot-card-pages';
 import { MINOR_PAGES } from '@/lib/tarot-card-pages-minor';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   TarotFrame,
   TarotDepth,
@@ -85,6 +85,12 @@ const JSONLD = [
     { name: 'Tarot', url: '/learn/tarot' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Tarot là gì? 78 lá bài & cách đọc cho người mới',
+    description:
+      'Tarot 78 lá (22 Ẩn Chính + 56 Ẩn Phụ): ý nghĩa, bốn chất Gậy–Cốc–Kiếm–Tiền và cách đọc như lăng kính phản tư để hiểu mình, không phán số mệnh.',
+    url: '/learn/tarot',
+  }),
   itemList(
     ALL_PAGES.map((c) => ({ name: c.name_vi, url: '/tarot/y-nghia/' + c.slug })),
   ),

@@ -9,7 +9,7 @@ import {
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   DiscFrame,
   DiscDepth,
@@ -128,6 +128,15 @@ const JSONLD = [
     { name: 'DISC', url: '/learn/disc' },
   ]),
   faqPage(FAQS),
+  course({
+    // Course entity name = tên khoá sạch, KHÔNG gắn hậu tố chuyên mục
+    // "| Học huyền học": DISC là mô hình tâm lý học (Marston), không phải huyền học.
+    // metadata.title (canonical) giữ nguyên — đổi title là quyết định của founder.
+    name: 'DISC — 4 nhóm hành vi (D/I/S/C)',
+    description:
+      'DISC: 4 thiên hướng hành vi — Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C). Cách bạn phản ứng với thử thách và con người — xu hướng, không nhãn.',
+    url: '/learn/disc',
+  }),
   itemList(
     STYLES.map((s) => ({
       name: `${s.letter} — ${s.vi} (${s.en})`,

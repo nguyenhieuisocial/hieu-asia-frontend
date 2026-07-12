@@ -242,3 +242,44 @@ export function product(input: ProductInput): JsonLdNode {
     })),
   };
 }
+
+export interface CourseInput {
+  name: string;
+  description: string;
+  /** Site-relative path hoặc URL tuyệt đối của trang canonical. */
+  url: string;
+}
+
+/**
+ * Course node cho mỗi chủ đề /learn — một "khóa" tự học MIỄN PHÍ.
+ * Đủ điều kiện Course rich result của Google: name + description + provider +
+ * offers (giá 0) + hasCourseInstance (học online, tải ~1h). `isAccessibleForFree`
+ * báo rõ miễn phí → Google/AI search phân loại đúng là tài nguyên học, không phải
+ * trang bán. `provider` trỏ `@id` Organization (node phát site-wide qua siteGraph()).
+ */
+export function course(input: CourseInput): JsonLdNode {
+  const url = abs(input.url);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: input.name,
+    description: input.description,
+    url,
+    inLanguage: SITE_LOCALE,
+    provider: { '@id': ORG_ID },
+    isAccessibleForFree: true,
+    hasCourseInstance: {
+      '@type': 'CourseInstance',
+      courseMode: 'online',
+      courseWorkload: 'PT1H',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'VND',
+      category: 'Free',
+      availability: 'https://schema.org/InStock',
+      url,
+    },
+  };
+}

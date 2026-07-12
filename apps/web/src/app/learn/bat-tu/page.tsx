@@ -9,7 +9,7 @@ import { InfographicBatTu } from '@/components/learn/InfographicBatTu';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import { CAN_PLAIN } from '@/lib/bat-tu-plain';
 import {
   BatTuFrame,
@@ -246,6 +246,12 @@ const JSONLD = [
     { name: 'Bát Tự Tứ Trụ', url: '/learn/bat-tu' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Bát Tự Tứ Trụ: Học huyền học',
+    description:
+      'Bát Tự (Tứ Trụ) từ nền tảng tới chuyên sâu: 10 Thiên Can, 12 Địa Chi, tàng can, Thập Thần, Dụng Thần, Vòng Trường Sinh, Thần Sát, Đại Vận – Lưu Niên. Góc nhìn để hiểu mình, không phán số mệnh.',
+    url: '/learn/bat-tu',
+  }),
 ];
 
 export default function LearnBatTuPage() {

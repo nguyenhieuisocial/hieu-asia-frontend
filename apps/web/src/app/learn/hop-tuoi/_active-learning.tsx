@@ -65,62 +65,167 @@ export function HopTuoiFrame() {
 
 export function HopTuoiDepth() {
   return (
-    <DepthTabs
-      topicId="hop-tuoi"
-      concept="Vì sao “xung tuổi” không có nghĩa là xấu — nhóm quan hệ chỉ là “nhịp”"
-      levels={[
-        {
-          id: 'eli5',
-          label: 'Trẻ 5 tuổi',
-          content: (
-            <p>
-              Hai người như hai bài hát. Cùng nhịp thì dễ hát chung ({strong('hợp')}); khác nhịp thì
-              lúc đầu hơi vấp ({strong('xung')}) — nhưng tập một chút là hát rất hay. Khác nhịp{' '}
-              {strong('không phải là hỏng')}.
-            </p>
-          ),
-        },
-        {
-          id: 'eli14',
-          label: 'Người 14 tuổi',
-          content: (
-            <>
+    <div className="space-y-6">
+      <DepthTabs
+        topicId="hop-tuoi"
+        concept="Vì sao “xung tuổi” không có nghĩa là xấu — nhóm quan hệ chỉ là “nhịp”"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Các nhóm quan hệ chỉ nói về {strong('nhịp sống')}, không phải tốt hay xấu. Tam Hợp và
-                Lục Hợp là “cùng nhịp / bổ trợ” nên dễ chịu; Lục Xung và Lục Hại là “khác nhịp” nên
-                đôi khi dễ va quan điểm.
+                Hai người như hai bài hát. Cùng nhịp thì dễ hát chung ({strong('hợp')}); khác nhịp thì
+                lúc đầu hơi vấp ({strong('xung')}) — nhưng tập một chút là hát rất hay. Khác nhịp{' '}
+                {strong('không phải là hỏng')}.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Các nhóm quan hệ chỉ nói về {strong('nhịp sống')}, không phải tốt hay xấu. Tam Hợp và
+                  Lục Hợp là “cùng nhịp / bổ trợ” nên dễ chịu; Lục Xung và Lục Hại là “khác nhịp” nên
+                  đôi khi dễ va quan điểm.
+                </p>
+                <p>
+                  Thực tế rất nhiều cặp {strong('“xung”')} lại rất bền, vì khác biệt đúng cách trở thành
+                  bổ sung (người tiến – người giữ, người nóng – người nguội). Hướng hóa giải lành mạnh
+                  là chủ động hiểu nhau và nhường nhịn đúng lúc — không phải kiêng nhau hay làm lễ giải.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Lục Xung là sáu cặp Chi đối xứng 180° trên vòng (Tý–Ngọ, Sửu–Mùi, Dần–Thân, Mão–Dậu,
+                  Thìn–Tuất, Tỵ–Hợi). Có {strong('hai cơ chế')} khác nhau: bốn cặp khác hành xung do
+                  đối khắc về ngũ hành; còn hai cặp cùng hành Thổ (Sửu–Mùi, Thìn–Tuất) là{' '}
+                  {strong('“xung mộ khố”')} — các tàng can trong kho Thổ va nhau, không phải đối khắc về
+                  hành.
+                </p>
+                <p>
+                  Lục Hại (Tý–Mùi, Sửu–Ngọ, Dần–Tỵ, Mão–Thìn, Thân–Hợi, Dậu–Tuất) nhẹ hơn Lục Xung về
+                  “lực”, nhưng kiểu khó chịu là {strong('hiểu lầm âm ỉ')} hơn là va chạm bùng nổ. Dù cơ
+                  chế khác nhau, kết luận không đổi: đây là tín hiệu “cần thấu hiểu nhiều hơn”, không
+                  phải điềm xấu để kiêng nhau.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="hop-tuoi"
+        concept="Mệnh nạp âm là gì — lớp ngũ hành theo năm sinh"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Thực tế rất nhiều cặp {strong('“xung”')} lại rất bền, vì khác biệt đúng cách trở thành
-                bổ sung (người tiến – người giữ, người nóng – người nguội). Hướng hóa giải lành mạnh
-                là chủ động hiểu nhau và nhường nhịn đúng lúc — không phải kiêng nhau hay làm lễ giải.
+                Mỗi năm sinh còn có một cái tên vui theo ngũ hành, ví dụ{' '}
+                {strong('Hải Trung Kim')} nghĩa là “vàng trong biển”. Đó là {strong('mệnh nạp âm')} —
+                một cách gọi năm sinh cho dễ hình dung.
               </p>
-            </>
-          ),
-        },
-        {
-          id: 'expert',
-          label: 'Chuyên gia',
-          content: (
-            <>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Ngoài con giáp, mỗi cặp Can-Chi trong vòng 60 năm còn mang một{' '}
+                  {strong('tên nạp âm')} và một hành (Kim, Mộc, Thủy, Hỏa, Thổ). Ví dụ Giáp Tý và Ất
+                  Sửu cùng là Hải Trung Kim. Đây là lớp ngũ hành theo năm sinh.
+                </p>
+                <p>
+                  Người ta dùng nó để xem hai mệnh {strong('sinh hay khắc')} nhau theo vòng ngũ hành.
+                  “Khắc” ở đây không phải điềm xấu, chỉ là hai chất khác nhau cần dung hòa.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Vòng 60 Hoa Giáp có {strong('30 nạp âm')}, mỗi tên ứng hai năm liền nhau. Luận hợp
+                  mệnh là so hành nạp âm của hai người theo vòng sinh (Mộc → Hỏa → Thổ → Kim → Thủy) và
+                  vòng khắc tương ứng.
+                </p>
+                <p>
+                  Có trường phái xét theo {strong('hành nạp âm')}, có trường phái xét theo{' '}
+                  {strong('chính ngũ hành của con giáp')} — nên khi luận cần nói rõ đang xét lớp nào.
+                  Nạp âm chỉ là một lát cắt thô theo năm sinh, không thay được lá số đầy đủ.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="hop-tuoi"
+        concept="Vì sao Tỵ – Thân vừa hợp vừa “hình” — quan hệ Can Chi đa tầng"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Lục Xung là sáu cặp Chi đối xứng 180° trên vòng (Tý–Ngọ, Sửu–Mùi, Dần–Thân, Mão–Dậu,
-                Thìn–Tuất, Tỵ–Hợi). Có {strong('hai cơ chế')} khác nhau: bốn cặp khác hành xung do
-                đối khắc về ngũ hành; còn hai cặp cùng hành Thổ (Sửu–Mùi, Thìn–Tuất) là{' '}
-                {strong('“xung mộ khố”')} — các tàng can trong kho Thổ va nhau, không phải đối khắc về
-                hành.
+                Có đôi bạn vừa rất thân vừa hay giận dỗi nhau. Tỵ và Thân là kiểu đó: {strong('vừa hợp')}{' '}
+                mà đôi lúc {strong('vừa cọ')}. Không phải xấu, chỉ là cần hiểu nhau thêm.
               </p>
-              <p>
-                Lục Hại (Tý–Mùi, Sửu–Ngọ, Dần–Tỵ, Mão–Thìn, Thân–Hợi, Dậu–Tuất) nhẹ hơn Lục Xung về
-                “lực”, nhưng kiểu khó chịu là {strong('hiểu lầm âm ỉ')} hơn là va chạm bùng nổ. Dù cơ
-                chế khác nhau, kết luận không đổi: đây là tín hiệu “cần thấu hiểu nhiều hơn”, không
-                phải điềm xấu để kiêng nhau.
-              </p>
-            </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Tỵ – Thân là một cặp {strong('Lục Hợp')} (bổ trợ nhau). Nhưng trong canon, cặp này
+                  cũng nằm trong {strong('Tương Hình')} (cọ xát nội tại). Vì thế người xưa gọi đây là
+                  cặp “ân oán đan xen” — vừa hút vừa cọ.
+                </p>
+                <p>
+                  Giọng phù hợp là “bổ trợ nhưng cần điều tiết”, không cường điệu mặt hình. Công cụ hợp
+                  tuổi ưu tiên xếp cặp này vào Lục Hợp.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Đây là ví dụ kinh điển cho thấy quan hệ Can Chi {strong('đa tầng')}: một cặp có thể
+                  vừa thuộc lớp hợp vừa thuộc lớp hình. Thứ tự ưu tiên của công cụ là tam-hợp → lục-hợp
+                  trước lục-xung / lục-hại, nên Tỵ–Thân được phân vào Lục Hợp.
+                </p>
+                <p>
+                  Công cụ {strong('chưa tính lớp Tương Hình')}, nên phần “hình” của Tỵ–Thân là kiến
+                  thức nền. Khi luận, giữ giọng dung hòa: nền bổ trợ tốt, chỉ cần điều tiết những lúc
+                  hai bên dễ cọ.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -202,6 +307,60 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Cấu trúc "Sinh – Vượng – Mộ" của một nhóm Tam Hợp nghĩa là gì?',
+    choices: [
+      {
+        text: 'Ba ngôi ứng Trường Sinh (khởi đầu) – Đế Vượng (đỉnh cao) – Mộ Khố (thu giữ) của cùng một hành',
+        correct: true,
+        note: 'Đúng — ví dụ Thủy cục: Thân (Trường Sinh) → Tý (Đế Vượng) → Thìn (Mộ). Ba ngôi nâng nhau nên bổ trợ tự nhiên.',
+      },
+      {
+        text: 'Ba ngôi đối xứng 180° trên vòng',
+        note: 'Đó là mô tả cặp Lục Xung, không phải cấu trúc Tam Hợp.',
+      },
+      {
+        text: 'Ba con giáp có cùng mệnh nạp âm',
+        note: 'Không — Tam Hợp xét theo Địa Chi hội cục, không phải theo nạp âm.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'open',
+    prompt:
+      'Khi xét hợp mệnh, vì sao cần nói rõ đang xét theo "nạp âm" hay theo "chính ngũ hành của con giáp"?',
+    answer: (
+      <>
+        Vì đó là {strong('hai lớp khác nhau')}. Nạp âm là hành theo cả cặp Can-Chi năm sinh (vd Giáp Tý
+        = Hải Trung Kim, hành Kim); còn chính ngũ hành của con giáp là hành của riêng Địa Chi (vd Tý =
+        Thủy). Có trường phái xét lớp này, có trường phái xét lớp kia — nếu không nói rõ sẽ luận nhầm.
+        Công cụ tách riêng hai lớp, không trộn.
+      </>
+    ),
+  },
+  {
+    id: 'q8',
+    type: 'mcq',
+    prompt: 'Tương Hình và Thiên Can ngũ hợp có được công cụ hợp tuổi tính không?',
+    choices: [
+      {
+        text: 'Chưa — công cụ chỉ xét con giáp và phân sáu nhóm; hai lớp này là kiến thức nền của canon',
+        correct: true,
+        note: 'Đúng. Nêu để hiểu trọn hệ Can Chi, không phải để lo thêm; muốn nâng cấp thì cần thêm dữ liệu Can và tập Tương Hình.',
+      },
+      {
+        text: 'Có — công cụ tính đủ mọi lớp Can Chi',
+        note: 'Không — công cụ hiện chỉ xét Địa Chi và sáu nhóm quan hệ.',
+      },
+      {
+        text: 'Có, nhưng chỉ tính cho cặp vợ chồng',
+        note: 'Không — công cụ không tính Tương Hình hay Thiên Can ngũ hợp cho bất kỳ trường hợp nào.',
+      },
+    ],
+  },
 ];
 
 export function HopTuoiRecall() {
@@ -248,6 +407,16 @@ const FACETS: UnderstandingFacet[] = [
     id: 'metacognition',
     facet: 'Tự biết chỗ hổng',
     can: 'Chỉ ra được khái niệm nào (vd nạp âm, “xung mộ khố”, hay hai lớp ngũ hành) bạn vẫn còn thấy mơ hồ.',
+  },
+  {
+    id: 'nap-am',
+    facet: 'Nạp âm',
+    can: 'Giải thích được mệnh nạp âm là lớp ngũ hành theo cả cặp Can-Chi năm sinh (vòng 60 có 30 nạp âm, mỗi tên ứng 2 năm), khác với ngũ hành riêng của con giáp — và biết nó chỉ là lát cắt thô.',
+  },
+  {
+    id: 'engine-gap',
+    facet: 'Giới hạn công cụ',
+    can: 'Nói được công cụ hợp tuổi hiện chỉ xét con giáp và sáu nhóm quan hệ, chưa tính Tương Hình hay Thiên Can ngũ hợp — và biết vài chỗ các trường phái chưa nhất trí (hành hóa Lục Hợp, tên các vòng Hình…).',
   },
 ];
 

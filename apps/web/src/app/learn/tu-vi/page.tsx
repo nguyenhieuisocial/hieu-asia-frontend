@@ -6,7 +6,7 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { PALACE_READINGS } from '@/lib/palace-readings';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   TuViFrame,
   TuViDepth,
@@ -168,6 +168,12 @@ const JSONLD = [
     { name: 'Tử Vi 12 cung', url: '/learn/tu-vi' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Tử Vi 12 cung, Học huyền học',
+    description:
+      'Bách khoa Tử Vi Đẩu Số: 12 cung, 14 chính tinh, độ sáng miếu hãm, Tứ Hóa, Cục, Tuần Triệt, cách cục, đại vận lưu niên, kèm quy trình luận 6 bước và sổ tay thuật ngữ.',
+    url: '/learn/tu-vi',
+  }),
   itemList(
     PALACE_READINGS.map((p) => ({ name: 'Cung ' + p.name, url: '/learn/tu-vi/' + p.slug })),
   ),

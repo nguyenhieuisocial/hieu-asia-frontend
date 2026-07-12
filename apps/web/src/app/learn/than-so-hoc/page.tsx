@@ -9,7 +9,7 @@ import {
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import {
   ThanSoHocFrame,
   ThanSoHocDepth,
@@ -83,6 +83,12 @@ const JSONLD = [
     { name: 'Thần Số Học', url: '/learn/than-so-hoc' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Thần Số Học Pythagoras: Học huyền học',
+    description:
+      'Thần Số Học (Numerology) theo trường phái Pythagoras: rút số chủ đạo từ ngày sinh và tên, mỗi số mang một năng lượng riêng.',
+    url: '/learn/than-so-hoc',
+  }),
 ];
 
 interface NumberCard {

@@ -10,7 +10,7 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { listCung } from '@/lib/cung-hoang-dao-data';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   ChiemTinhFrame,
   ChiemTinhDepth,
@@ -170,6 +170,12 @@ const JSONLD = [
     { name: 'Chiêm tinh phương Tây', url: '/learn/chiem-tinh' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Chiêm tinh phương Tây — bản đồ sao & 12 cung',
+    description:
+      'Chiêm tinh phương Tây dựng bản đồ sao từ giờ + nơi sinh: 12 cung hoàng đạo, hành tinh, cung Mọc, 12 nhà, góc hợp — xu hướng để hiểu mình, không phán số mệnh.',
+    url: '/learn/chiem-tinh',
+  }),
   itemList(listCung().map((s) => ({ name: s.name, url: '/cung-hoang-dao/' + s.slug }))),
 ];
 

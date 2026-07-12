@@ -10,7 +10,7 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { QUE_PAGES } from '@/lib/que-kinh-dich';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage, itemList } from '@/lib/seo/jsonld';
 import {
   KinhDichFrame,
   KinhDichDepth,
@@ -160,6 +160,12 @@ const JSONLD = [
     { name: 'Kinh Dịch', url: '/learn/kinh-dich' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Kinh Dịch (Chu Dịch / I Ching): Học huyền học',
+    description:
+      'Kinh Dịch là kinh về sự biến dịch: 64 quẻ kép, mỗi quẻ 6 hào âm dương, là gương soi thế cục để chiêm nghiệm — không phải sấm định mệnh.',
+    url: '/learn/kinh-dich',
+  }),
   itemList(
     QUE_PAGES.map((q) => ({
       name: 'Quẻ ' + q.id + ' — ' + q.nameVi,
