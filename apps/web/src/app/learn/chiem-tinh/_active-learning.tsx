@@ -62,62 +62,173 @@ export function ChiemTinhFrame() {
 
 export function ChiemTinhDepth() {
   return (
-    <DepthTabs
-      topicId="chiem-tinh"
-      concept="Vì sao đừng chỉ đọc cung Mặt Trời — “bộ ba cốt lõi”"
-      levels={[
-        {
-          id: 'eli5',
-          label: 'Trẻ 5 tuổi',
-          content: (
-            <p>
-              Đừng tả một người chỉ bằng một câu. Bản đồ sao cũng vậy: chỉ đọc “cung Mặt Trời” (cái mà
-              ai cũng biết) là mới thấy một mảnh. Phải nhìn cả {strong('“bộ ba”')} — Mặt Trời, Mặt
-              Trăng và cung Mọc — mới ra chân dung thật.
-            </p>
-          ),
-        },
-        {
-          id: 'eli14',
-          label: 'Người 14 tuổi',
-          content: (
-            <>
+    <div className="space-y-5">
+      <DepthTabs
+        topicId="chiem-tinh"
+        concept="Vì sao đừng chỉ đọc cung Mặt Trời — “bộ ba cốt lõi”"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Cung Mặt Trời là {strong('bản chất, mục tiêu sống')}; Mặt Trăng là{' '}
-                {strong('đời sống cảm xúc, nhu cầu an toàn')}; cung Mọc là {strong('lớp vỏ')} — cách
-                thế giới thấy bạn và ấn tượng đầu tiên. Ba lớp này ghép lại mới thành chân dung cốt
-                lõi.
+                Đừng tả một người chỉ bằng một câu. Bản đồ sao cũng vậy: chỉ đọc “cung Mặt Trời”
+                (cái mà ai cũng biết) là mới thấy một mảnh. Phải nhìn cả {strong('“bộ ba”')} — Mặt
+                Trời, Mặt Trăng và cung Mọc — mới ra chân dung thật.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Cung Mặt Trời là {strong('bản chất, mục tiêu sống')}; Mặt Trăng là{' '}
+                  {strong('đời sống cảm xúc, nhu cầu an toàn')}; cung Mọc là {strong('lớp vỏ')} —
+                  cách thế giới thấy bạn và ấn tượng đầu tiên. Ba lớp này ghép lại mới thành chân
+                  dung cốt lõi.
+                </p>
+                <p>
+                  Mô tả cung Mặt Trời là chung cho cả tháng sinh nên dễ rơi vào “bẫy Barnum” — ai
+                  đọc cũng thấy đúng. Muốn có ý nghĩa cá nhân thì phải dẫn theo dữ kiện thật: Mặt
+                  Trăng, cung Mọc, hành tinh ở nhà nào, hợp góc gì.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Luận giải kết hợp ba lớp: {strong('hành tinh')} (cái gì) — {strong('cung')} (kiểu
+                  gì) — {strong('nhà')} (lĩnh vực nào), rồi phủ {strong('góc hợp')} để thấy các phần
+                  trong một người “nói chuyện” với nhau hài hoà hay căng. Cung Mọc quyết định cách
+                  xếp toàn bộ 12 nhà nên nó là phần {strong('nhạy giờ nhất')} (đổi cung mỗi khoảng 2
+                  giờ).
+                </p>
+                <p>
+                  Có thể nhìn thêm cân bằng nguyên tố: các thiên thể nghiêng về nguyên tố nào, tính
+                  chất nào — nhưng đếm chỉ là gợi ý thô vì trọng số mỗi thiên thể không bằng nhau. Và
+                  góc “căng” (vuông góc, đối đỉnh) không đồng nghĩa xui, góc “hài hoà” (tam hợp, lục
+                  hợp) không đảm bảo tốt: tránh dán nhãn tốt/xấu cứng.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="chiem-tinh"
+        concept="“Nhà” (house) là gì — cùng một hành tinh mà khác lĩnh vực đời sống"
+        levels={[
+          {
+            id: 'nha-eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Mô tả cung Mặt Trời là chung cho cả tháng sinh nên dễ rơi vào “bẫy Barnum” — ai đọc
-                cũng thấy đúng. Muốn có ý nghĩa cá nhân thì phải dẫn theo dữ kiện thật: Mặt Trăng, cung
-                Mọc, hành tinh ở nhà nào, hợp góc gì.
+                Cung nói bạn có tính cách kiểu gì. {strong('Nhà')} nói cái đó xảy ra ở{' '}
+                {strong('chỗ nào')} trong đời — chuyện tiền, chuyện học, chuyện gia đình hay chuyện
+                bạn bè. Mười hai nhà là mười hai khu vực của cuộc sống.
               </p>
-            </>
-          ),
-        },
-        {
-          id: 'expert',
-          label: 'Chuyên gia',
-          content: (
-            <>
+            ),
+          },
+          {
+            id: 'nha-eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Nhà chia bản đồ thành 12 lĩnh vực đời sống: nhà 1 là bản thân, nhà 7 là hôn
+                  nhân/đối tác, nhà 10 là sự nghiệp… Một hành tinh rơi vào nhà nào thì “chuyện” của
+                  hành tinh đó diễn ra mạnh ở lĩnh vực ấy.
+                </p>
+                <p>
+                  hieu.asia dùng hệ {strong('Whole-Sign')}: mỗi nhà phủ trọn một cung, nhà 1 là cung
+                  chứa cung Mọc. Vì cung Mọc phụ thuộc giờ sinh, nên cách xếp 12 nhà cũng nhạy giờ
+                  theo.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'nha-expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Ghép ba lớp: {strong('hành tinh')} (cái gì) — {strong('cung')} (kiểu gì) —{' '}
+                  {strong('nhà')} (lĩnh vực nào). Ví dụ Sao Kim (tình yêu/giá trị) ở Ma Kết (nghiêm
+                  túc, dài hạn) trong nhà 7 (hôn nhân) → xu hướng yêu chậm mà chắc, coi trọng cam kết
+                  bền.
+                </p>
+                <p>
+                  Có nhiều hệ chia nhà (Placidus, Koch, Equal, Whole-Sign…). Ở đây chỉ dùng
+                  Whole-Sign vì nó cổ nhất và mỗi nhà = một cung trọn; hệ khác có thể cho ranh giới
+                  nhà hơi khác — đừng trộn hệ khi luận.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="chiem-tinh"
+        concept="“Góc hợp” (aspect) là gì — các phần trong bạn nói chuyện với nhau"
+        levels={[
+          {
+            id: 'goc-eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Luận giải kết hợp ba lớp: {strong('hành tinh')} (cái gì) — {strong('cung')} (kiểu gì)
-                — {strong('nhà')} (lĩnh vực nào), rồi phủ {strong('góc hợp')} để thấy các phần trong
-                một người “nói chuyện” với nhau hài hoà hay căng. Cung Mọc quyết định cách xếp toàn bộ
-                12 nhà nên nó là phần {strong('nhạy giờ nhất')} (đổi cung mỗi khoảng 2 giờ).
+                Các hành tinh đứng cách nhau những khoảng nhất định trên vòng tròn. Khoảng đó cho
+                biết hai phần trong con người bạn có {strong('ăn ý')} với nhau không — có cái hợp
+                nhau êm, có cái cọ nhau.
               </p>
-              <p>
-                Có thể nhìn thêm bức tranh tổng: các thiên thể nghiêng về nguyên tố nào, tính chất nào
-                — nhưng đếm chỉ là gợi ý thô vì trọng số mỗi thiên thể không bằng nhau. Và góc “căng”
-                (vuông góc, đối đỉnh) không đồng nghĩa xui, góc “hài hoà” (tam hợp, lục hợp) không đảm
-                bảo tốt: tránh dán nhãn tốt/xấu cứng.
-              </p>
-            </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+          {
+            id: 'goc-eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Góc hợp là khoảng cách góc giữa hai thiên thể. Năm góc lớn: trùng tụ 0°, lục hợp
+                  60°, vuông góc 90°, tam hợp 120°, đối đỉnh 180°. Góc “căng” (vuông góc, đối đỉnh)
+                  cho ma sát và động lực; góc “hài hoà” (tam hợp, lục hợp) cho sự trôi chảy.
+                </p>
+                <p>
+                  Góc không cần khít tuyệt đối mới tính — có một khoảng sai số cho phép gọi là{' '}
+                  {strong('orb')}. Orb càng nhỏ thì góc càng khít, ảnh hưởng càng rõ.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'goc-expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Công cụ cho orb khoảng 8° khi có Mặt Trời/Mặt Trăng, 6° cho các cặp còn lại; mỗi
+                  cặp hành tinh chỉ giữ một góc khít nhất.
+                </p>
+                <p>
+                  Lưu ý nguồn: Ptolemy nguyên gốc chỉ xếp bốn góc 60°/90°/120°/180° là “aspect”;
+                  trùng tụ 0° được chiêm tinh hiện đại tính thêm như góc 0°, còn hệ cổ điển coi nó là
+                  “đứng cùng chỗ”. Công cụ chỉ tính năm góc lớn này, không tính các góc nhỏ (quincunx
+                  150°, semisextile 30°…).
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -209,6 +320,59 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Trong bản đồ sao, “nhà” (house) nói lên điều gì?',
+    choices: [
+      {
+        text: 'Lĩnh vực đời sống mà một hành tinh tác động: tiền bạc, hôn nhân, sự nghiệp, gia đình…',
+        correct: true,
+        note: 'Đúng — hành tinh (cái gì) × cung (kiểu gì) × nhà (lĩnh vực nào).',
+      },
+      {
+        text: 'Tính cách kiểu gì — giống như nguyên tố và tính chất của cung',
+        note: 'Không — đó là việc của cung; nhà nói “ở lĩnh vực nào của đời sống”.',
+      },
+      {
+        text: 'Hành tinh nào cai quản (chủ quản) cung đó',
+        note: 'Không — chủ quản là chuyện của cung, không phải của nhà.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'mcq',
+    prompt: 'Sao Thủy nghịch hành (Mercury retrograde) có phải điềm khiến “mọi thứ đều hỏng” không?',
+    choices: [
+      {
+        text: 'Đúng — cứ Thủy nghịch là mọi việc sẽ trục trặc',
+        note: 'Sai — đó là cách hiểu bị thổi phồng.',
+      },
+      {
+        text: 'Không — retrograde là chuyển động lùi biểu kiến, hiện tượng bình thường; gán mọi trục trặc cho nó là thổi phồng',
+        correct: true,
+        note: 'Đúng. Có trường phái coi đó là lúc nên rà soát, nhưng không phải điềm gở tự động.',
+      },
+      {
+        text: 'Không cần bận tâm — công cụ ở đây tính sẵn transit Thủy nghịch mỗi ngày cho bạn',
+        note: 'Không — công cụ tập trung bản đồ lúc sinh, chưa tính transit theo ngày hiện tại.',
+      },
+    ],
+  },
+  {
+    id: 'q8',
+    type: 'open',
+    prompt: 'Vì sao “hợp cung Mặt Trời” chưa đủ để kết luận hai người có hợp nhau hay không?',
+    answer: (
+      <>
+        Vì cung Mặt Trời chỉ là {strong('một lát cắt thô')}. Độ hợp thật của hai người cần cả bản đồ
+        đầy đủ — {strong('Mặt Trăng, Sao Kim, Sao Hỏa, cung Mọc')}… — mới đủ chuyện. Và{' '}
+        {strong('không có hai cung “khắc” nhau theo kiểu định mệnh')}: khác biệt là cần thấu hiểu và
+        nhường nhau, không phải “không thể yêu”.
+      </>
+    ),
+  },
 ];
 
 export function ChiemTinhRecall() {
@@ -250,6 +414,16 @@ const FACETS: UnderstandingFacet[] = [
     id: 'teach-back',
     facet: 'Dạy lại',
     can: 'Giảng lại “mỗi cung = tính chất + nguyên tố” cho một người chưa biết, bằng ví dụ của riêng bạn.',
+  },
+  {
+    id: 'timelayer',
+    facet: 'Phạm vi công cụ',
+    can: 'Phân biệt được bản đồ natal với transit/tiến trình, và biết công cụ ở đây tập trung bản đồ lúc sinh — chưa tính transit theo ngày hiện tại.',
+  },
+  {
+    id: 'balance',
+    facet: 'Cân bằng nguyên tố',
+    can: 'Đọc được ý nghĩa khi bản đồ trội hoặc thiếu một nguyên tố/tính chất, và biết vì sao “đếm” chỉ là gợi ý thô.',
   },
   {
     id: 'metacognition',

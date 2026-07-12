@@ -62,61 +62,293 @@ export function BatTuFrame() {
 
 export function BatTuDepth() {
   return (
-    <DepthTabs
-      topicId="bat-tu"
-      concept="Nhật Chủ vượng hay nhược — vì sao đây là bước đầu tiên"
-      levels={[
-        {
-          id: 'eli5',
-          label: 'Trẻ 5 tuổi',
-          content: (
-            <p>
-              Hãy tưởng tượng “tôi” là một cái cây. Cây khoẻ hay yếu tuỳ vào: có trồng đúng mùa
-              không, rễ có bám đất không, xung quanh có nhiều cây cùng phe nâng đỡ không. Cây{' '}
-              {strong('khoẻ')} thì cần bớt tưới; cây {strong('yếu')} thì cần thêm nước, thêm nắng.
-              Bát Tự xem “cái tôi” của bạn đang là cây khoẻ hay cây yếu.
-            </p>
-          ),
-        },
-        {
-          id: 'eli14',
-          label: 'Người 14 tuổi',
-          content: (
-            <>
+    <div className="space-y-5">
+      <DepthTabs
+        topicId="bat-tu"
+        concept="Nhật Chủ vượng hay nhược — vì sao đây là bước đầu tiên"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                {strong('Nhật Chủ')} là Thiên Can của ngày sinh — đại diện cho “bạn”. Trước khi nói
-                tốt hay xấu, phải biết Nhật Chủ {strong('mạnh (vượng)')} hay {strong('yếu (nhược)')},
-                vì cùng một quan hệ Ngũ Hành nhưng người mạnh và người yếu lại luận theo hướng khác
-                nhau, đôi khi ngược hẳn.
+                Hãy tưởng tượng “tôi” là một cái cây. Cây khoẻ hay yếu tuỳ vào: có trồng đúng mùa
+                không, rễ có bám đất không, xung quanh có nhiều cây cùng phe nâng đỡ không. Cây{' '}
+                {strong('khoẻ')} thì cần bớt tưới; cây {strong('yếu')} thì cần thêm nước, thêm nắng.
+                Bát Tự xem “cái tôi” của bạn đang là cây khoẻ hay cây yếu.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  {strong('Nhật Chủ')} là Thiên Can của ngày sinh — đại diện cho “bạn”. Trước khi
+                  nói tốt hay xấu, phải biết Nhật Chủ {strong('mạnh (vượng)')} hay{' '}
+                  {strong('yếu (nhược)')}, vì cùng một quan hệ Ngũ Hành nhưng người mạnh và người
+                  yếu lại luận theo hướng khác nhau, đôi khi ngược hẳn.
+                </p>
+                <p>
+                  Ba căn cứ chính: {strong('mùa sinh')} (mạnh nhất), {strong('gốc rễ')} trong các
+                  chi, và số {strong('“đồng minh”')} so với {strong('“đối thủ”')} trong lá số.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Phán định vượng–nhược dựa trên ba lớp: {strong('đắc lệnh')} (trạng thái mùa của
+                  Nhật Chủ qua Chi Tháng — Vượng / Tướng / Hưu / Tù / Tử), {strong('đắc địa')}{' '}
+                  (thông căn — tàng can các chi cùng hành hoặc hành sinh Nhật Chủ), và{' '}
+                  {strong('đắc thế')} (so lực phe Tỷ Kiếp + Ấn với phe Quan Sát + Tài + Thực Thương).
+                </p>
+                <p>
+                  Chỉ “đếm số chữ mỗi hành” là cách thô và dễ sai — phải xét cả tổ hợp, hội cục, can
+                  hợp hoá. Đây là bước nền để chọn Dụng Thần, và cũng là chỗ các trường phái có thể
+                  kết luận khác nhau cho cùng một lá số.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="bat-tu"
+        concept="Thập Thần — 10 mối quan hệ với “tôi”"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Ba căn cứ chính: {strong('mùa sinh')} (mạnh nhất), {strong('gốc rễ')} trong các chi,
-                và số {strong('“đồng minh”')} so với {strong('“đối thủ”')} trong lá số.
+                Đặt “tôi” ở giữa. Người quanh tôi có mấy kiểu: người giống tôi (bạn bè), việc tôi
+                làm ra (tôi vẽ, tôi hát), đồ tôi giữ (tiền, đồ chơi), người quản tôi (thầy cô), và
+                người nuôi tôi (ba mẹ). Thập Thần chỉ là {strong('cách gọi tên')} năm kiểu quan hệ
+                đó cho gọn.
               </p>
-            </>
-          ),
-        },
-        {
-          id: 'expert',
-          label: 'Chuyên gia',
-          content: (
-            <>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  {strong('Thập Thần (十神)')} là 10 tên gọi cho quan hệ Ngũ Hành giữa mỗi chữ trong
+                  lá số với Nhật Chủ. Gốc là 5 nhóm: {strong('đồng hành')} với tôi, thứ{' '}
+                  {strong('tôi sinh ra')}, thứ {strong('tôi khắc')}, thứ {strong('khắc tôi')}, thứ{' '}
+                  {strong('sinh ra tôi')}.
+                </p>
+                <p>
+                  Mỗi nhóm tách đôi theo âm–dương nên thành 10. Chúng đánh dấu các mảng đời sống: bản
+                  thân, tài năng, tiền bạc, sự nghiệp, học vấn. Điều quan trọng:{' '}
+                  {strong('không thần nào tốt hay xấu cố định')} — còn tuỳ lá số đang cần gì.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Năm quan hệ gốc: {strong('Tỷ Kiếp')} (đồng hành), {strong('Thực Thương')} (Nhật
+                  Chủ sinh ra), {strong('Tài')} (Nhật Chủ khắc), {strong('Quan Sát')} (khắc Nhật
+                  Chủ), {strong('Ấn')} (sinh Nhật Chủ). Mỗi nhóm tách đôi theo âm–dương: khác âm–dương
+                  cho ra thần “chính”, cùng âm–dương cho ra thần “thiên/lệch” (ví dụ với Tài: khác =
+                  Chính Tài, cùng = Thiên Tài; với Quan Sát: khác = Chính Quan, cùng = Thất Sát).
+                </p>
+                <p>
+                  Không đọc một thần một cách máy móc. Luận chuẩn là{' '}
+                  {strong('Thập Thần × vượng/nhược × Dụng Thần')}: cùng một Thất Sát, thân vượng có
+                  thể “dùng” được (cần Thực Thần chế Sát hoặc Ấn hoá Sát), thân nhược thì nó thành áp
+                  lực đè.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="bat-tu"
+        concept="Dụng Thần — vì sao đây là chìa khoá của cả lá số"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Phán định vượng–nhược dựa trên ba lớp: {strong('đắc lệnh')} (trạng thái mùa của Nhật
-                Chủ qua Chi Tháng — Vượng / Tướng / Hưu / Tù / Tử), {strong('đắc địa')} (thông căn —
-                tàng can các chi cùng hành hoặc hành sinh Nhật Chủ), và {strong('đắc thế')} (so lực
-                phe Tỷ Kiếp + Ấn với phe Quan Sát + Tài + Thực Thương).
+                Lá số như một nồi canh. {strong('Dụng Thần')} là thứ còn thiếu để nồi canh vừa
+                miệng: nhạt quá thì thêm muối, mặn quá thì thêm nước. Nó là thứ kéo mọi vị về{' '}
+                {strong('cân bằng')}.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  {strong('Dụng Thần (用神)')} là hành làm lá số cân bằng và chạy tốt nhất, ví như
+                  “vị thuốc”. Nguyên tắc phổ biến nhất: thân {strong('yếu')} thì dùng hành{' '}
+                  {strong('sinh/trợ')} mình (Ấn, Tỷ Kiếp); thân {strong('mạnh')} thì dùng hành{' '}
+                  {strong('tiết/khắc/hao')} bớt (Thực Thương, Quan Sát, Tài).
+                </p>
+                <p>
+                  Tìm được Dụng Thần rồi thì mới biết Thập Thần nào đang “dùng được”, hành nào nên
+                  bổ trợ trong môi trường sống. Đây là lúc mọi mảnh ghép ráp lại thành một bức tranh
+                  có hướng.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Nguyên tắc gốc là {strong('phù–ức')} (nâng cái yếu, ép cái mạnh). Ngoài ra còn:{' '}
+                  {strong('điều hậu')} (lá số quá lạnh cần Hỏa, quá nóng cần Thủy),{' '}
+                  {strong('thông quan')} (hai hành khắc nhau gay gắt thì cần một hành trung gian),
+                  và bệnh–dược. Hành có lợi gọi là {strong('Hỷ Dụng')}, hành bất lợi gọi là{' '}
+                  {strong('Kỵ Thần')}.
+                </p>
+                <p>
+                  Đây là phần khó và dễ sai nhất; các trường phái có thể chọn khác nhau cho cùng một
+                  lá số. Vì vậy nên trình bày {strong('có cơ sở')} (vượng/nhược + mùa) và nói rõ đây
+                  là một cách luận phổ biến, không tuyệt đối — chứ không biến thành chuyện “đổi mệnh,
+                  giải hạn”.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="bat-tu"
+        concept="Tàng can — vì sao một Chi lại chứa nhiều hành"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Chỉ “đếm số chữ mỗi hành” là cách thô và dễ sai — phải xét cả tổ hợp, hội cục, can
-                hợp hoá. Đây là bước nền để chọn Dụng Thần, và cũng là chỗ các trường phái có thể
-                kết luận khác nhau cho cùng một lá số.
+                Mỗi con giáp (Địa Chi) giống một cái hộp. Nhìn bên ngoài chỉ thấy một màu — đó là
+                “hành chính”. Nhưng mở hộp ra, bên trong còn cất thêm vài món nhỏ. Vì thế một con
+                giáp tuy mang một hành vẫn {strong('giữ thêm chút hành khác')} nấp bên trong.
               </p>
-            </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  {strong('Tàng can (藏干)')} là các Thiên Can “ẩn” bên trong một Địa Chi. Mỗi chi
+                  có một hành chính, nhưng vì cất thêm can ẩn nên nó {strong('“chứa” thêm vài hành')}
+                  {' '}từ các can nằm bên trong. Ví dụ chi {strong('Sửu')} hành chính là Thổ, nhưng
+                  tàng Quý (Thủy), Tân (Kim) và Kỷ (Thổ).
+                </p>
+                <p>
+                  Bốn chi Thổ — Sửu, Mùi, Thìn, Tuất — hay được ví như những {strong('“kho”')} cất
+                  nhiều can. Nhờ tàng can, người luận biết Nhật Chủ có {strong('“gốc rễ”')} trong các
+                  chi hay không.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Tàng can là căn cứ của {strong('đắc địa (thông căn)')}: Nhật Chủ có “rễ” khi tàng
+                  can của một chi cùng hành với nó, hoặc là hành sinh ra nó. Đây là một trong ba căn
+                  cứ xét vượng/nhược, nên {strong('không thể đọc trọn một chi chỉ bằng hành bề mặt')}
+                  {' '}— phải xét cả các can ẩn.
+                </p>
+                <p>
+                  Cũng vì thế, khi hai “kho” Thổ đối nhau — {strong('Sửu–Mùi')} và{' '}
+                  {strong('Thìn–Tuất')} — thì chính các can ẩn bên trong va nhau, gọi là{' '}
+                  {strong('“xung mộ khố”')}, chứ không đơn thuần là hai hành Thổ khắc nhau.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="bat-tu"
+        concept="Vòng Trường Sinh — 12 pha của khí"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Khí của “tôi” giống một đời cây: nảy mầm, lớn lên, ra hoa rực rỡ nhất, rồi lá rụng,
+                thu mình lại vào mùa đông, rồi lại nảy mầm. Mười hai pha chỉ là mười hai chặng{' '}
+                {strong('lên rồi xuống')} đó. Pha “mùa đông” (Tử, Mộ) không phải là cây chết — chỉ là
+                lúc nghỉ để bật lại.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  {strong('Vòng Trường Sinh (十二長生)')} đặt Nhật Chủ lên mỗi Địa Chi rồi hỏi: ở đây
+                  “khí” của tôi đang ở pha nào. Mười hai pha nối thành một vòng: Trường Sinh → Mộc
+                  Dục → Quan Đới → Lâm Quan → {strong('Đế Vượng')} (đỉnh) → Suy → Bệnh → Tử → Mộ →
+                  Tuyệt → Thai → Dưỡng.
+                </p>
+                <p>
+                  Nó cho biết ở trụ đó khí đang mạnh hay yếu, góp phần đánh giá vượng/nhược. Nhớ:
+                  {' '}{strong('“Tử” và “Mộ” nói về cường độ khí đang thu lại')}, không phải điềm chết
+                  chóc.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Pha khí là một lát cắt {strong('bổ sung')} cho vượng/nhược, không thay ba căn cứ
+                  chính (đắc lệnh, đắc địa, đắc thế). Đỉnh của vòng là {strong('Đế Vượng')} (khí thịnh
+                  nhất), đáy là {strong('Tuyệt')} (khí gần như tận). Riêng {strong('Mộ')} là pha thu
+                  tàng, còn gọi là “kho” — nghỉ và tích trữ, không phải suy sụp.
+                </p>
+                <p>
+                  Vì vậy đừng đọc một pha như điềm lành hay dữ tuyệt đối. Cùng một pha vẫn phải soi
+                  chung với cả lá số — {strong('nó chỉ mô tả cường độ khí')}, không phán chuyện sống
+                  chết hay tuổi thọ.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -208,6 +440,60 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Vì sao người ta nói một Địa Chi có thể “chứa” nhiều hành?',
+    choices: [
+      {
+        text: 'Vì mỗi Địa Chi ẩn bên trong một hoặc vài Thiên Can (tàng can), nên mang theo hành của các can ẩn đó',
+        correct: true,
+        note: 'Đúng. Ví dụ Sửu (hành chính Thổ) tàng Quý (Thủy), Tân (Kim), Kỷ (Thổ) — nên đọc trọn một chi phải xét cả các can ẩn.',
+      },
+      {
+        text: 'Vì mỗi Địa Chi tự đổi hành theo mùa trong năm',
+        note: 'Hành chính của Chi là cố định. Cái làm nó “chứa nhiều hành” là các can ẩn bên trong (tàng can), không phải đổi theo mùa.',
+      },
+      {
+        text: 'Vì Thiên Can và Địa Chi thật ra là một thứ, chỉ gọi hai tên',
+        note: 'Can và Chi là hai hệ riêng. Chi ẩn chứa can bên trong, nhưng không phải cùng một thứ.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'mcq',
+    prompt: 'Trong Vòng Trường Sinh, một trụ rơi vào pha “Mộ” hay “Tử” nghĩa là gì?',
+    choices: [
+      {
+        text: 'Là điềm báo về bệnh tật hay cái chết của người đó',
+        note: 'Không. “Tử/Mộ” chỉ nói về cường độ khí đang thu lại, không phải điềm chết chóc.',
+      },
+      {
+        text: 'Là một pha khí của Nhật Chủ đang yếu hoặc thu tàng — chỉ mô tả cường độ, không phải điềm dữ',
+        correct: true,
+        note: 'Đúng. 12 pha (Trường Sinh → Đế Vượng → … → Mộ → Tuyệt → Thai → Dưỡng) là vòng lên–xuống của khí, giống bốn mùa của một đời cây.',
+      },
+      {
+        text: 'Là pha mạnh nhất, đỉnh cao của lá số',
+        note: 'Pha đỉnh là Đế Vượng, không phải Mộ hay Tử.',
+      },
+    ],
+  },
+  {
+    id: 'q8',
+    type: 'open',
+    prompt: 'Bát Tự có cần đúng giờ sinh không? Vì sao?',
+    answer: (
+      <>
+        Có, và khá quan trọng. Trụ Giờ là {strong('một trong bốn trụ')} — tức khoảng 1/4 thông tin
+        lá số, ứng với con cái, vận về già và phần “đầu ra” của đời người. Sai giờ thì sai cả trụ
+        Giờ; mà vì giờ đổi theo mỗi canh giờ (khoảng 2 tiếng), lệch giờ có thể kéo theo lệch cả cách
+        luận Thập Thần, vượng/nhược và Dụng Thần. Nếu không chắc giờ, nên xem phần luận theo giờ là{' '}
+        {strong('tương đối')} và cố tra lại giấy tờ khai sinh.
+      </>
+    ),
+  },
 ];
 
 export function BatTuRecall() {
@@ -226,6 +512,11 @@ const FACETS: UnderstandingFacet[] = [
     can: 'Mô tả lại mạch luận: Nhật Chủ → vượng/nhược → Thập Thần → Dụng Thần.',
   },
   {
+    id: 'building-blocks',
+    facet: 'Bảng chữ cái',
+    can: 'Kể được vai trò của Thiên Can và Địa Chi, và vì sao một Địa Chi có thể chứa nhiều hành (tàng can).',
+  },
+  {
     id: 'discrimination',
     facet: 'Phân biệt',
     can: 'Chỉ ra Bát Tự khác Tử Vi ở đâu (cân bằng Ngũ Hành trong 4 trụ vs hệ sao trên 12 cung).',
@@ -239,6 +530,11 @@ const FACETS: UnderstandingFacet[] = [
     id: 'application',
     facet: 'Vận dụng',
     can: 'Giải thích vì sao cùng một Thập Thần lại luận khác nhau giữa thân vượng và thân nhược.',
+  },
+  {
+    id: 'time',
+    facet: 'Lá số động',
+    can: 'Nói được vì sao một lá Bát Tự không “đứng yên” mà chuyển theo thời gian qua Đại Vận (10 năm) và Lưu Niên (từng năm).',
   },
   {
     id: 'guard',
