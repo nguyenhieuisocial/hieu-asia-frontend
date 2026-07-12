@@ -284,7 +284,13 @@ export function PricingTierV2({
                 id={tier.id}
                 data-in-view={inView ? 'true' : 'false'}
                 style={{ transitionDelay: `${tierIdx * 100}ms` }}
-                className={`scroll-mt-24 ${baseCard} ${cardBorder} translate-y-3 opacity-0 [transition-duration:600ms] data-[in-view=true]:translate-y-0 data-[in-view=true]:opacity-100`}
+                // The entrance (start hidden + lift, fade in on reveal) is gated
+                // behind `motion-safe:` so prefers-reduced-motion visitors get
+                // the cards at full opacity/position immediately — honouring the
+                // "always REVEALED for reduced-motion" intent noted above, which
+                // the unconditional `opacity-0` previously broke. Reduced-motion
+                // then never sees the sub-contrast mid-fade either.
+                className={`scroll-mt-24 ${baseCard} ${cardBorder} motion-safe:translate-y-3 motion-safe:opacity-0 motion-safe:[transition-duration:600ms] motion-safe:data-[in-view=true]:translate-y-0 motion-safe:data-[in-view=true]:opacity-100`}
               >
                 {tier.recommended && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-[hsl(var(--primary-cta))] px-4 py-1 font-mono text-xs uppercase tracking-wider text-primary-foreground">
