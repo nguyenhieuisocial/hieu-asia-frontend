@@ -10,6 +10,7 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
+import { buildTrait, BIG_FIVE_SLUGS } from '@/lib/big-five-trait-data';
 import {
   BigFiveFrame,
   BigFiveDepth,
@@ -17,6 +18,13 @@ import {
   BigFiveChecklist,
   BigFiveWhys,
 } from './_active-learning';
+
+// Bảng 30 khía cạnh (5 chiều × 6 facet) — lấy ĐÚNG từ lib/big-five-trait-data.ts
+// làm nguồn chân lý nội bộ, không hard-code lại.
+const FACET_TABLE = BIG_FIVE_SLUGS.map((slug) => {
+  const t = buildTrait(slug)!;
+  return { vi: t.vi, en: t.en, letter: t.letter, facets: t.facets };
+});
 
 export const metadata: Metadata = {
   title: 'Big Five (OCEAN) — 5 chiều tính cách khoa học',
@@ -43,6 +51,22 @@ const FAQS = [
   {
     q: 'Cần lưu ý gì?',
     a: 'Điểm số là một lát cắt ở thời điểm làm bài, không cố định cả đời và có thể đổi theo giai đoạn. Hãy dùng kết quả để hiểu mình và tự quyết, không để dán nhãn hay phán xét. hieu.asia đọc Big Five như một góc nhìn, kết hợp với các lăng kính khác.',
+  },
+  {
+    q: 'Big Five ra đời thế nào?',
+    a: 'Nó không do một người nghĩ ra trong một buổi. Từ khoảng thập niên 1930, Allport và Odbert lọc ra rất nhiều tính từ mô tả con người trong từ điển; Cattell rút gọn khối từ đó; qua nhiều thập niên phân tích nhân tố, các nhà nghiên cứu thấy chúng dồn về năm nhóm lớn. Lewis Goldberg phổ biến cái tên "Big Five", còn Costa và McCrae chuẩn hoá bộ đo NEO cho mô hình năm nhân tố.',
+  },
+  {
+    q: 'Facet là gì?',
+    a: 'Mỗi chiều lớn còn chia thành các facet — những khía cạnh nhỏ hơn. Ví dụ Cởi mở gồm sáu facet như Trí tưởng tượng, Thẩm mỹ, Ham trí tuệ… Hai người cùng điểm tổng một chiều vẫn có thể khác nhau ở từng facet, nên chân dung thật của họ không giống nhau. Cộng lại, năm chiều nhân sáu facet cho ba mươi khía cạnh.',
+  },
+  {
+    q: 'Vì sao là năm chiều, không phải bốn hay sáu?',
+    a: 'Con số năm không được chọn trước rồi nhồi dữ liệu vào. Nó là thứ các nhà nghiên cứu thấy lặp lại khi phân tích ngôn ngữ mô tả tính cách qua nhiều ngôn ngữ và mẫu người khác nhau. Vẫn có tranh luận: một số mô hình đề xuất sáu chiều, có cách gộp còn ít hơn. Big Five là điểm hội tụ phổ biến nhất, không phải chân lý đóng.',
+  },
+  {
+    q: 'Big Five có nhược điểm gì?',
+    a: 'Có. Phần lớn nghiên cứu dựng trên nhóm dân cư phương Tây, học vấn cao, nên tính phổ quát ở mọi văn hoá vẫn còn bàn cãi. Bài đo dựa trên tự đánh giá nên chịu thiên lệch. Điểm số là một dải, mọi nhãn "cao/thấp" chỉ là quy ước ngưỡng. Và nó mô tả xu hướng, không đo giá trị hay phẩm chất con người.',
   },
 ];
 
@@ -179,10 +203,115 @@ export default function LearnBigFivePage() {
           ),
         },
         {
+          id: 'vi-sao-hoc-thuat',
+          tocLabel: 'Vì sao giới học thuật chọn',
+          heading: 'Vì sao giới học thuật chọn Big Five',
+          children: (
+            <div className="space-y-4 text-[15px] leading-relaxed text-foreground/85">
+              <p>
+                Big Five không phải sáng chế của một người. Nó lớn lên từ một ý tưởng đơn giản: nếu một
+                nét tính cách đủ quan trọng với con người, ngôn ngữ sẽ có từ để gọi nó — cái này gọi là{' '}
+                <em>giả thuyết từ vựng</em> (lexical hypothesis).
+              </p>
+              <p>
+                Khoảng thập niên 1930, Gordon Allport và Henry Odbert dò cả một cuốn từ điển, lọc ra
+                hàng loạt từ mô tả con người. Danh sách dài đến mức khó dùng, nên Raymond Cattell rút
+                gọn nó lại. Qua nhiều thập niên sau đó, khi đem phân tích nhân tố những từ hay đi cùng
+                nhau, các nhà nghiên cứu thấy chúng cứ dồn về năm cụm lớn, lặp lại ở nhiều ngôn ngữ và
+                mẫu người khác nhau.
+              </p>
+              <p>
+                Lewis Goldberg là người phổ biến cái tên &ldquo;Big Five&rdquo; cho năm cụm đó. Rồi
+                Paul Costa và Robert McCrae chuẩn hoá thành bộ đo NEO, biến khung năm nhân tố thành một
+                công cụ đo lường được dùng rộng rãi. Điểm mấu chốt: con số năm nổi lên từ dữ liệu ngôn
+                ngữ, không do ai chọn trước — đó là lý do giới hàn lâm tin cậy nó hơn các bài phân loại
+                &ldquo;đóng hộp&rdquo;.
+              </p>
+            </div>
+          ),
+        },
+        {
+          id: 'ba-muoi-facet',
+          tocLabel: '30 khía cạnh',
+          heading: 'Đọc 30 khía cạnh (facet)',
+          children: (
+            <div>
+              <p className="mb-4 text-[15px] leading-relaxed text-foreground/85">
+                Năm chiều lớn, mỗi chiều sáu facet, cộng lại ba mươi khía cạnh. Đây là tầng chi tiết
+                giúp phân biệt hai người cùng điểm tổng nhưng khác chân dung. Bảng dưới lấy đúng bộ
+                facet mà công cụ Big Five của hieu.asia dùng.
+              </p>
+              <div className="space-y-3">
+                {FACET_TABLE.map((row) => (
+                  <div
+                    key={row.en}
+                    className="rounded-lg border border-border bg-card/40 p-4 sm:p-5"
+                  >
+                    <div className="mb-3 flex items-baseline gap-2">
+                      <span className="font-heading text-base font-semibold text-gold-700">
+                        {row.letter}
+                      </span>
+                      <span className="font-heading text-base text-foreground">{row.vi}</span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                        {row.en}
+                      </span>
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {row.facets.map((f) => (
+                        <p key={f.label} className="text-sm leading-relaxed">
+                          <span className="font-medium text-foreground">{f.label}</span>
+                          <span className="text-muted-foreground"> — {f.gloss}</span>
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ),
+        },
+        {
           id: 'ban-chat-3-tang',
           tocLabel: 'Bản chất · 3 độ sâu',
           heading: 'Hiểu phần lõi ở tầng vừa sức bạn',
           children: <BigFiveDepth />,
+        },
+        {
+          id: 'gioi-han-chuan',
+          tocLabel: 'Giới hạn của chuẩn',
+          heading: 'Giới hạn của chuẩn học thuật',
+          children: (
+            <div className="space-y-4 text-[15px] leading-relaxed text-foreground/85">
+              <p>
+                Big Five là khung tính cách có nền thực nghiệm dày nhất hiện có, nhưng
+                &ldquo;khoa học nhất&rdquo; không có nghĩa là hoàn hảo. Đọc cho sòng phẳng, nó có mấy
+                giới hạn.
+              </p>
+              <ul className="space-y-3">
+                <li className="border-l-2 border-gold/40 pl-4">
+                  Phần lớn nghiên cứu dựng trên nhóm dân cư phương Tây, học vấn cao, công nghiệp hoá
+                  (nhóm thường gọi tắt là WEIRD). Vì thế mức phổ quát của năm chiều ở mọi văn hoá vẫn
+                  còn là câu hỏi mở, không phải điều đã chốt.
+                </li>
+                <li className="border-l-2 border-gold/40 pl-4">
+                  Bài đo dựa trên tự đánh giá, nên chịu thiên lệch: người ta có thể trả lời theo cách
+                  mình muốn được nhìn, hoặc theo tâm trạng lúc làm bài.
+                </li>
+                <li className="border-l-2 border-gold/40 pl-4">
+                  Điểm số là một dải liên tục. Mọi nhãn &ldquo;cao&rdquo; hay &ldquo;thấp&rdquo; chỉ là
+                  quy ước ngưỡng do người đọc đặt ra, không phải ranh giới tự nhiên trong con người.
+                </li>
+                <li className="border-l-2 border-gold/40 pl-4">
+                  Và như mọi lăng kính khác, nó mô tả xu hướng — không đo giá trị, phẩm chất hay mức
+                  đáng quý của một con người.
+                </li>
+              </ul>
+              <p>
+                Nói ra những giới hạn này không làm Big Five yếu đi. Ngược lại, biết một công cụ đo được
+                gì và không đo được gì mới là cách dùng nó cho đúng.
+              </p>
+            </div>
+          ),
         },
         {
           id: 'nam-lan-tai-sao',

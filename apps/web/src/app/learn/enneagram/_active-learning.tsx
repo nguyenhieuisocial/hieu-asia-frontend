@@ -63,10 +63,119 @@ export function EnneagramFrame() {
 
 export function EnneagramDepth() {
   return (
-    <DepthTabs
-      topicId="enneagram"
-      concept="Vì sao Enneagram không phải cái nhãn cố định — “mũi tên” phát triển và căng thẳng"
-      levels={[
+    <div className="space-y-6">
+      <DepthTabs
+        topicId="enneagram"
+        concept="Ba trung tâm: mỗi cụm nhóm vật lộn với một cảm xúc lõi"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Khi gặp chuyện, có người {strong('làm liền')} (nghe cái bụng), có người để ý{' '}
+                {strong('ai thương mình không')} (nghe trái tim), có người {strong('nghĩ cho kỹ đã')}{' '}
+                (nghe cái đầu). Enneagram xếp chín nhóm vào ba kiểu phản ứng đầu tiên đó.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Ba trung tâm chia theo nguồn phản ứng đầu tiên. Nhóm {strong('bụng')} (8·9·1) nhạy
+                  với chuyện kiểm soát và, theo cách trình bày phổ biến, vật lộn với cơn{' '}
+                  {strong('giận')}. Nhóm {strong('tim')} (2·3·4) nhạy với hình ảnh bản thân và vật lộn
+                  với nỗi {strong('xấu hổ')}. Nhóm {strong('đầu')} (5·6·7) nhạy với an toàn và vật lộn
+                  với nỗi {strong('sợ')}.
+                </p>
+                <p>
+                  Trong cùng một cụm, mỗi nhóm xử cảm xúc lõi đó một kiểu khác nhau — đó là lý do ba
+                  nhóm liền nhau lại có họ với nhau.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Theo cách trình bày phổ biến, ba trung tâm gắn với ba cảm xúc nền:{' '}
+                  {strong('giận (bụng), xấu hổ (tim), sợ (đầu)')}. Trong mỗi cụm, một nhóm hướng cảm
+                  xúc ấy ra ngoài, một nhóm nén vào trong, một nhóm lảng khỏi hoặc “quên” nó.
+                </p>
+                <p>
+                  Đây là cách sắp xếp mang tính {strong('khung để hiểu và nhớ')}, giúp thấy vì sao ba
+                  nhóm cùng cụm có chung một mối bận tâm — không phải một khẳng định thần kinh học đo
+                  được.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="enneagram"
+        concept="Cánh (wing): chút gia vị làm hai người cùng nhóm khác hẳn"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
+              <p>
+                Bạn có một màu áo thích nhất ({strong('nhóm chính')}), nhưng hay khoác thêm một chiếc
+                áo bên cạnh ({strong('cánh')}). Cùng thích một màu mà mỗi người khoác thêm chiếc khác,
+                nên trông vẫn khác nhau.
+              </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Trên vòng tròn Enneagram, mỗi nhóm nằm giữa hai nhóm liền kề. {strong('Cánh')} là
+                  việc bạn nghiêng thêm về một trong hai nhóm đó.
+                </p>
+                <p>
+                  Ví dụ nhóm 9 có thể là {strong('9w1')} (thêm nét kỷ luật, nguyên tắc của nhóm 1) hoặc{' '}
+                  {strong('9w8')} (thêm nét quyết liệt, gan góc của nhóm 8). Cánh {strong('không đổi')}{' '}
+                  nhóm chính, nó chỉ pha thêm sắc thái.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Cánh giải thích phần lớn khác biệt giữa hai người cùng nhóm chính: nhóm chính giữ
+                  nguyên {strong('động lực cốt lõi')}, cánh mượn thêm một ít hương vị của một nhóm kề.
+                  Có người có cánh rõ, có người khá cân bằng cả hai cánh.
+                </p>
+                <p>
+                  Cần phân biệt cánh với mũi tên: {strong('cánh là nhóm KỀ')} (cố định hai lựa chọn),
+                  còn {strong('mũi tên nối tới nhóm XA hơn')} và mô tả sự dịch chuyển theo trạng thái
+                  lành mạnh hay căng thẳng.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+
+      <DepthTabs
+        topicId="enneagram"
+        concept="Vì sao Enneagram không phải cái nhãn cố định — “mũi tên” phát triển và căng thẳng"
+        levels={[
         {
           id: 'eli5',
           label: 'Trẻ 5 tuổi',
@@ -113,10 +222,11 @@ export function EnneagramDepth() {
                 {strong('xu hướng động lực trên một phổ')}, không phải phép đo khoa học như xét nghiệm.
               </p>
             </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -195,6 +305,62 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Enneagram (hệ chín kiểu tính cách) có phải một “cổ thư ngàn năm” không?',
+    choices: [
+      {
+        text: 'Không — hệ chín kiểu tính cách là công trình hiện đại, hình thành khoảng giữa thế kỷ 20 qua Ichazo rồi Naranjo; chỉ riêng biểu tượng cửu giác là cũ hơn (truyền qua Gurdjieff)',
+        correct: true,
+        note: 'Đúng — nói thẳng: phần “chín kiểu tính cách” là công trình hiện đại, không phải minh triết cổ đại.',
+      },
+      {
+        text: 'Có — đây là bộ môn cổ đại hàng nghìn năm, giữ nguyên từ xưa tới nay',
+        note: 'Đây chính là ngộ nhận phổ biến bài đính chính: hệ chín kiểu mới được bồi đắp trong khoảng nửa thế kỷ gần đây.',
+      },
+      {
+        text: 'Có — do Riso và Hudson viết ra từ thời cổ đại',
+        note: 'Không — Riso và Hudson là người hiện đại; họ phổ biến phần cánh, mũi tên, mức phát triển, không phải tác giả cổ đại.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'mcq',
+    prompt:
+      'Theo cách trình bày phổ biến, ba trung tâm (bụng / tim / đầu) gắn với ba cảm xúc lõi nào?',
+    choices: [
+      {
+        text: 'Bụng — vui · Tim — buồn · Đầu — tức',
+        note: 'Không khớp; ba cảm xúc lõi theo cách trình bày phổ biến là giận, xấu hổ, sợ.',
+      },
+      {
+        text: 'Bụng (8·9·1) — giận · Tim (2·3·4) — xấu hổ · Đầu (5·6·7) — sợ',
+        correct: true,
+        note: 'Đúng — đây là cách sắp xếp khung phổ biến, không phải một khẳng định thần kinh học.',
+      },
+      {
+        text: 'Ba trung tâm không liên quan gì tới cảm xúc, chỉ nói về nghề nghiệp',
+        note: 'Ba trung tâm nói về nguồn phản ứng và cảm xúc lõi, không phải nghề.',
+      },
+    ],
+  },
+  {
+    id: 'q8',
+    type: 'open',
+    prompt:
+      'Trắc nghiệm Enneagram trên hieu.asia có nói được bạn thuộc bản năng trội nào (sp / sx / so) không? Vì sao?',
+    answer: (
+      <>
+        {strong('Không')}. Bài trắc nghiệm ở đây chỉ tìm {strong('nhóm chính và cánh')}. Bản năng
+        (tự tồn sp, xã hội so, thân mật sx) và {strong('subtype')} — ghép nhóm với bản năng thành hai
+        mươi bảy tổ hợp — là {strong('lớp nâng cao')}, cần quan sát sâu mới xác định được, nên một bài
+        rút gọn không đo. Phần bản năng trên trang chỉ ở mức phác họa để bạn hình dung, không phải kết
+        quả đo cho riêng bạn.
+      </>
+    ),
+  },
 ];
 
 export function EnneagramRecall() {
@@ -236,6 +402,16 @@ const FACETS: UnderstandingFacet[] = [
     id: 'teach-back',
     facet: 'Dạy lại',
     can: 'Bạn hiểu nếu giảng lại được “cánh” và “mũi tên” cho một người chưa biết, bằng ví dụ của riêng bạn.',
+  },
+  {
+    id: 'history',
+    facet: 'Nguồn gốc',
+    can: 'Bạn hiểu nếu kể được vì sao Enneagram chín kiểu KHÔNG phải “cổ thư ngàn năm” — biểu tượng cửu giác cũ hơn (truyền qua Gurdjieff), còn hệ chín kiểu là công trình hiện đại do Ichazo, Naranjo rồi Riso–Hudson bồi đắp.',
+  },
+  {
+    id: 'depth-layers',
+    facet: 'Lớp nâng cao',
+    can: 'Bạn hiểu nếu nói được ba bản năng (sp/sx/so) và “mức phát triển” là gì ở mức khái niệm — và biết trắc nghiệm ở đây chỉ tìm nhóm chính + cánh, không đo bản năng hay subtype.',
   },
   {
     id: 'metacognition',
