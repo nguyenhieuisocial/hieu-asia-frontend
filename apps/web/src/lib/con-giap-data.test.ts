@@ -55,6 +55,14 @@ describe('buildConGiap', () => {
     }
   });
 
+  it('mọi con giáp có hourMonth + pairNotes không rỗng', () => {
+    for (const slug of CON_GIAP_SLUGS) {
+      const d = buildConGiap(slug)!;
+      expect(d.extra.hourMonth.trim().length).toBeGreaterThan(0);
+      expect(d.extra.pairNotes.trim().length).toBeGreaterThan(0);
+    }
+  });
+
   it('quan hệ Tam Hợp đối xứng', () => {
     for (const slug of CON_GIAP_SLUGS) {
       const d = buildConGiap(slug)!;

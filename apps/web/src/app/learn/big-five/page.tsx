@@ -9,7 +9,7 @@ import {
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage, itemList } from '@/lib/seo/jsonld';
 import { buildTrait, BIG_FIVE_SLUGS } from '@/lib/big-five-trait-data';
 import {
   BigFiveFrame,
@@ -117,6 +117,12 @@ const JSONLD = [
     { name: 'Big Five', url: '/learn/big-five' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Big Five (OCEAN) — 5 chiều tính cách khoa học',
+    description:
+      'Big Five (OCEAN) — mô hình tính cách khoa học nhất, đo 5 chiều: Cởi mở, Tận tâm, Hướng ngoại, Dễ chịu, Nhạy cảm cảm xúc. Xu hướng, không nhãn.',
+    url: '/learn/big-five',
+  }),
   itemList(
     DIMENSIONS.map((d) => ({
       name: `${d.vi} (${d.en})`,

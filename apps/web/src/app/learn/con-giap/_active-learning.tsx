@@ -67,62 +67,118 @@ export function ConGiapFrame() {
 
 export function ConGiapDepth() {
   return (
-    <DepthTabs
-      topicId="con-giap"
-      concept="Con giáp thứ 4: người Việt là Mèo, người Trung Quốc là Thỏ — cùng một Địa Chi Mão"
-      levels={[
-        {
-          id: 'eli5',
-          label: 'Trẻ 5 tuổi',
-          content: (
-            <p>
-              Có 12 con vật thay phiên nhau làm “con giáp” mỗi năm. Con thứ tư ở Việt Nam là{' '}
-              {strong('con Mèo')} 🐰, còn ở Trung Quốc lại là con Thỏ. Hai nước kể hơi khác nhau một
-              chút, nhưng vẫn là cùng một ô trên vòng 12 con giáp.
-            </p>
-          ),
-        },
-        {
-          id: 'eli14',
-          label: 'Người 14 tuổi',
-          content: (
-            <>
+    <div className="space-y-6">
+      <DepthTabs
+        topicId="con-giap"
+        concept="Con giáp thứ 4: người Việt là Mèo, người Trung Quốc là Thỏ — cùng một Địa Chi Mão"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                12 con giáp thật ra là 12 {strong('Địa Chi')}: Tý, Sửu, Dần, Mão, Thìn, Tỵ, Ngọ, Mùi,
-                Thân, Dậu, Tuất, Hợi. Ô thứ tư tên chữ là {strong('Mão')}. Người Việt gán con Mèo cho ô
-                này, người Trung Quốc gán con Thỏ — nên khi ai đó nói “tuổi Thỏ”, với mình đó chính là{' '}
-                {strong('tuổi Mèo (Mão)')}.
+                Có 12 con vật thay phiên nhau làm “con giáp” mỗi năm. Con thứ tư ở Việt Nam là{' '}
+                {strong('con Mèo')} 🐰, còn ở Trung Quốc lại là con Thỏ. Hai nước kể hơi khác nhau một
+                chút, nhưng vẫn là cùng một ô trên vòng 12 con giáp.
               </p>
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  12 con giáp thật ra là 12 {strong('Địa Chi')}: Tý, Sửu, Dần, Mão, Thìn, Tỵ, Ngọ, Mùi,
+                  Thân, Dậu, Tuất, Hợi. Ô thứ tư tên chữ là {strong('Mão')}. Người Việt gán con Mèo cho ô
+                  này, người Trung Quốc gán con Thỏ — nên khi ai đó nói “tuổi Thỏ”, với mình đó chính là{' '}
+                  {strong('tuổi Mèo (Mão)')}.
+                </p>
+                <p>
+                  Điều quan trọng là dù gọi Mèo hay Thỏ, {strong('ngũ hành và các quan hệ vẫn giữ nguyên')}{' '}
+                  (Mão thuộc hành Mộc, nằm cùng một chỗ trên vòng). Tên con vật chỉ là cách kể của mỗi văn
+                  hoá, không đổi bản chất địa chi.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Hệ 12 con giáp gốc là 12 Địa Chi, mỗi chi mang một hành cố định (vd Tý – Thủy, Mão –
+                  Mộc, Ngọ – Hỏa). {strong('Tam Hợp')} là ba chi cách đều 4 ngôi hội thành một cục ngũ
+                  hành (Thân–Tý–Thìn = Thủy; Dần–Ngọ–Tuất = Hỏa; Tỵ–Dậu–Sửu = Kim; Hợi–Mão–Mùi = Mộc).
+                </p>
+                <p>
+                  {strong('Tứ hành xung')} là cách nói dân gian cho các cặp lục xung — hai chi đối xứng
+                  180° trên vòng (Tý–Ngọ, Sửu–Mùi, Dần–Thân, Mão–Dậu, Thìn–Tuất, Tỵ–Hợi). “Xung” chỉ là{' '}
+                  {strong('khác nhịp cần dung hoà')}, không phải điềm xấu. Việc con thứ tư là Mèo (VN) hay
+                  Thỏ (TQ) chỉ là khác biệt biểu tượng văn hoá — Địa Chi Mão, hành Mộc và mọi quan hệ Tam
+                  Hợp / xung của nó không hề đổi.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+      <DepthTabs
+        topicId="con-giap"
+        concept="Mỗi Chi ứng một giờ và một tháng — con giáp là cách chia thời gian"
+        levels={[
+          {
+            id: 'eli5',
+            label: 'Trẻ 5 tuổi',
+            content: (
               <p>
-                Điều quan trọng là dù gọi Mèo hay Thỏ, {strong('ngũ hành và các quan hệ vẫn giữ nguyên')}{' '}
-                (Mão thuộc hành Mộc, nằm cùng một chỗ trên vòng). Tên con vật chỉ là cách kể của mỗi văn
-                hoá, không đổi bản chất địa chi.
+                Mỗi con giáp còn là một “khung giờ” trong ngày. Giờ {strong('Tý')} là lúc nửa đêm, giờ{' '}
+                {strong('Ngọ')} là lúc giữa trưa. Ngày xưa chưa có đồng hồ, người ta gọi giờ bằng tên con
+                giáp cho dễ nhớ.
               </p>
-            </>
-          ),
-        },
-        {
-          id: 'expert',
-          label: 'Chuyên gia',
-          content: (
-            <>
-              <p>
-                Hệ 12 con giáp gốc là 12 Địa Chi, mỗi chi mang một hành cố định (vd Tý – Thủy, Mão –
-                Mộc, Ngọ – Hỏa). {strong('Tam Hợp')} là ba chi cách đều 4 ngôi hội thành một cục ngũ
-                hành (Thân–Tý–Thìn = Thủy; Dần–Ngọ–Tuất = Hỏa; Tỵ–Dậu–Sửu = Kim; Hợi–Mão–Mùi = Mộc).
-              </p>
-              <p>
-                {strong('Tứ hành xung')} là cách nói dân gian cho các cặp lục xung — hai chi đối xứng
-                180° trên vòng (Tý–Ngọ, Sửu–Mùi, Dần–Thân, Mão–Dậu, Thìn–Tuất, Tỵ–Hợi). “Xung” chỉ là{' '}
-                {strong('khác nhịp cần dung hoà')}, không phải điềm xấu. Việc con thứ tư là Mèo (VN) hay
-                Thỏ (TQ) chỉ là khác biệt biểu tượng văn hoá — Địa Chi Mão, hành Mộc và mọi quan hệ Tam
-                Hợp / xung của nó không hề đổi.
-              </p>
-            </>
-          ),
-        },
-      ]}
-    />
+            ),
+          },
+          {
+            id: 'eli14',
+            label: 'Người 14 tuổi',
+            content: (
+              <>
+                <p>
+                  Mười hai Địa Chi cũng là {strong('mười hai canh giờ')}, mỗi canh dài hai tiếng: Tý (23–1
+                  giờ), Sửu (1–3), Dần (3–5)… cứ thế hết vòng ngày. Mỗi Chi còn ứng một {strong('tháng')}{' '}
+                  và một {strong('phương vị')} — ví dụ Tý ở chính Bắc, giữa mùa đông.
+                </p>
+                <p>
+                  Nhờ vậy con giáp trở thành một cách{' '}
+                  {strong('chia thời gian và không gian')}, vượt xa việc xem tuổi. Đó cũng là lý do trong
+                  lá số, “giờ sinh” được ghi bằng tên con giáp chứ không phải con số.
+                </p>
+              </>
+            ),
+          },
+          {
+            id: 'expert',
+            label: 'Chuyên gia',
+            content: (
+              <>
+                <p>
+                  Vòng 12 Chi gắn với 12 canh giờ (Tý 23–1 giờ … Hợi 21–23 giờ) và 12 tháng theo lịch
+                  pháp cổ, với quy ước {strong('tháng Giêng ứng Chi Dần')} (đầu xuân) — nên Tý rơi vào
+                  tháng 11 (giữa đông) và Sửu vào tháng Chạp. Mỗi Chi cũng có một phương vị và tính
+                  âm/dương cố định.
+                </p>
+                <p>
+                  Điều này cho thấy con giáp gốc là một {strong('hệ ký hiệu lịch pháp')}: đánh dấu giờ,
+                  tháng, phương vị; 12 con vật là lớp biểu tượng gán thêm để dễ nhớ. Hiểu vậy sẽ thấy vì
+                  sao tên con vật có thể khác giữa các nước mà cấu trúc Địa Chi thì không đổi.
+                </p>
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
   );
 }
 
@@ -212,6 +268,40 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt: 'Giờ Tý ứng với khoảng nào trong ngày?',
+    choices: [
+      {
+        text: 'Từ 23 giờ đến 1 giờ, tức lúc nửa đêm',
+        correct: true,
+        note: 'Đúng — mười hai Địa Chi cũng là mười hai canh giờ, mỗi canh hai tiếng; Tý mở đầu vòng ngày lúc nửa đêm.',
+      },
+      {
+        text: 'Từ 11 giờ đến 13 giờ, tức giữa trưa',
+        note: 'Đó là giờ Ngọ (chính Nam, giữa hạ), không phải giờ Tý.',
+      },
+      {
+        text: 'Con giáp không liên quan gì đến giờ trong ngày',
+        note: 'Không — mỗi Chi ứng một canh giờ; đó là lý do lá số ghi “giờ sinh” bằng tên con giáp.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'open',
+    prompt:
+      'Truyền thuyết cuộc đua chọn 12 con giáp và phần “chắc chắn hơn” khác nhau ở chỗ nào?',
+    answer: (
+      <>
+        Cuộc đua của Ngọc Hoàng là {strong('truyền thuyết dân gian')}, có nhiều dị bản, dùng để giải
+        thích thứ tự con giáp cho dễ nhớ — không phải sử liệu. Phần chắc chắn hơn là hệ{' '}
+        {strong('12 Địa Chi')} của lịch pháp: bộ ký hiệu đánh dấu giờ, tháng, phương vị, còn 12 con vật
+        chỉ là lớp biểu tượng gán thêm (nên Việt Nam là Mèo, Trung Quốc là Thỏ).
+      </>
+    ),
+  },
 ];
 
 export function ConGiapRecall() {
@@ -258,6 +348,16 @@ const FACETS: UnderstandingFacet[] = [
     id: 'metacognition',
     facet: 'Tự biết chỗ hổng',
     can: 'Chỉ ra được khái niệm nào (vd Tam Hợp hội cục, tứ hành xung, hay ngũ hành của từng chi) bạn vẫn còn thấy mơ hồ.',
+  },
+  {
+    id: 'calendar',
+    facet: 'Chi là mốc thời gian',
+    can: 'Giải thích được mỗi Địa Chi ứng một giờ (Tý 23–1 giờ, Ngọ giữa trưa), một tháng và một phương vị — nên mỗi con giáp là một mốc trong cách chia thời gian và không gian của người xưa.',
+  },
+  {
+    id: 'origin',
+    facet: 'Truyền thuyết vs sử liệu',
+    can: 'Phân biệt được truyền thuyết cuộc đua (dân gian, nhiều dị bản, để dễ nhớ thứ tự) với phần chắc chắn hơn là hệ 12 Địa Chi của lịch pháp; con vật chỉ là lớp biểu tượng gán thêm.',
   },
 ];
 

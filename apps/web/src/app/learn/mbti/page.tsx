@@ -10,7 +10,7 @@ import { InfographicMBTI } from '@/components/learn/InfographicMBTI';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage, itemList } from '@/lib/seo/jsonld';
 import { listTypes, MBTI_GROUPS, type MbtiGroupKey } from '@/lib/mbti-type-data';
 import {
   MbtiFrame,
@@ -84,6 +84,15 @@ const JSONLD = [
     { name: 'MBTI', url: '/learn/mbti' },
   ]),
   faqPage(FAQS),
+  course({
+    // Course entity name = tên khoá sạch, KHÔNG gắn hậu tố chuyên mục
+    // "| Học huyền học": MBTI là mô hình tâm lý học, không phải huyền học.
+    // metadata.title (canonical) giữ nguyên — đổi title là quyết định của founder.
+    name: 'MBTI 16 loại tính cách',
+    description:
+      'MBTI dựa trên 4 trục: Hướng nội/ngoại (I/E), Trực giác/Cảm nhận (N/S), Lý trí/Cảm xúc (T/F), Nguyên tắc/Linh hoạt (J/P), tạo nên 16 nhóm tính cách.',
+    url: '/learn/mbti',
+  }),
   itemList(
     listTypes().map((t) => ({
       name: `${t.code} — ${t.nick}`,

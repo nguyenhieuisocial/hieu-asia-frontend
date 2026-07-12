@@ -10,7 +10,7 @@ import { LearnArticle } from '@/components/learn/LearnArticle';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import { SAO_ORDER, SAO_INFO, TYPE_LABEL, type SaoType } from '@/lib/sao-han';
 import {
   SaoHanFrame,
@@ -98,6 +98,12 @@ const JSONLD = [
     { name: 'Sao Hạn (Cửu Diệu)', url: '/learn/sao-han' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Sao Hạn Cửu Diệu — 9 sao chiếu mệnh theo tuổi',
+    description:
+      'Sao hạn Cửu Diệu: 9 sao chiếu mệnh theo tuổi và giới tính — La Hầu, Kế Đô, Thái Bạch, Thái Dương, Thái Âm… Góc nhìn tham khảo, không mê tín.',
+    url: '/learn/sao-han',
+  }),
 ];
 
 export default function LearnSaoHanPage() {

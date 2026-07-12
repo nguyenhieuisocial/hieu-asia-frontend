@@ -9,7 +9,7 @@ import {
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import {
   PhongThuyFrame,
   PhongThuyDepth,
@@ -83,6 +83,12 @@ const JSONLD = [
     { name: 'Phong Thủy', url: '/learn/phong-thuy' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Phong Thủy — hướng nhà, ngũ hành & chọn ngày',
+    description:
+      'Phong Thủy ứng dụng: hai nhánh Loan Đầu và Lý Khí; Bát Trạch (hướng nhà hợp tuổi, tính Cung Phi), Huyền Không Phi Tinh, bổ khuyết ngũ hành, chọn ngày–giờ, xem tuổi và thước Lỗ Ban. Quy tắc minh bạch để tham khảo, không phán số mệnh.',
+    url: '/learn/phong-thuy',
+  }),
 ];
 
 export default function LearnPhongThuyPage() {

@@ -9,7 +9,7 @@ import {
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { article, breadcrumb, faqPage, itemList } from '@/lib/seo/jsonld';
+import { article, breadcrumb, course, faqPage, itemList } from '@/lib/seo/jsonld';
 import { listTypes } from '@/lib/enneagram-type-data';
 import {
   EnneagramFrame,
@@ -243,6 +243,12 @@ const JSONLD = [
     { name: 'Enneagram', url: '/learn/enneagram' },
   ]),
   faqPage(FAQS),
+  course({
+    name: 'Enneagram — 9 nhóm tính cách & 3 trung tâm',
+    description:
+      'Enneagram: 9 nhóm tính cách theo động lực sâu (điều bạn sợ & khao khát), chia 3 trung tâm: Bản năng, Tình cảm, Lý trí. Bản đồ hiểu mình, không nhãn.',
+    url: '/learn/enneagram',
+  }),
   itemList(
     listTypes().map((t) => ({
       name: `Nhóm ${t.slug} — ${t.name}`,

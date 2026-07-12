@@ -12,6 +12,8 @@ import {
   Heart,
   Briefcase,
   CalendarDays,
+  Clock,
+  Link2,
 } from 'lucide-react';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
@@ -206,6 +208,24 @@ export default async function ConGiapDetailPage({
         <p className="text-base leading-relaxed text-foreground/85">{z.blurb}</p>
       </section>
 
+      {/* Chi trong vòng ngày và năm (giờ - tháng - phương vị) */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          <Clock className="h-5 w-5 text-gold" aria-hidden /> Địa Chi {z.ten} ứng giờ, tháng và phương
+          vị nào
+        </h2>
+        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+          Mỗi Địa Chi không chỉ là một con vật, mà là một mốc trong lịch pháp Á Đông: ứng một khung giờ
+          trong ngày, một tháng trong năm và một phương vị. Đây là nền của cách người xưa chia thời gian
+          và không gian.
+        </p>
+        <Card className="border-border bg-card/40">
+          <CardContent className="pt-6 text-base leading-relaxed text-foreground/85">
+            {extra.hourMonth}
+          </CardContent>
+        </Card>
+      </section>
+
       {/* Điểm mạnh + Điều nên luyện */}
       <section className="relative mx-auto max-w-3xl px-6 pb-10">
         <div className="grid gap-3 sm:grid-cols-2">
@@ -274,6 +294,22 @@ export default async function ConGiapDetailPage({
         <Card className="border-border bg-card/40">
           <CardContent className="pt-6 text-base leading-relaxed text-foreground/85">
             {extra.love}
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Điểm nhấn quan hệ (tam hợp + xung, khớp bảng Can Chi) */}
+      <section className="relative mx-auto max-w-3xl px-6 pb-10">
+        <h2 className="mb-2 flex items-center gap-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          <Link2 className="h-5 w-5 text-gold" aria-hidden /> Điểm nhấn quan hệ của tuổi {z.ten}
+        </h2>
+        <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+          Tuổi {z.ten} hợp nhất với nhóm nào, khác nhịp với ai, và cơ chế đằng sau là gì — tóm gọn theo
+          Can Chi. "Xung" ở đây chỉ là khác nhịp cần dung hoà, không phải điềm xấu.
+        </p>
+        <Card className="border-border bg-card/40">
+          <CardContent className="pt-6 text-base leading-relaxed text-foreground/85">
+            {extra.pairNotes}
           </CardContent>
         </Card>
       </section>

@@ -124,6 +124,67 @@ export function DatTenDepth() {
   );
 }
 
+export function DatTenDepthSinh() {
+  return (
+    <DepthTabs
+      topicId="dat-ten-ngu-hanh"
+      concept="Bổ hành thông minh: dùng chính hành thiếu, hoặc dùng hành SINH ra nó"
+      levels={[
+        {
+          id: 'eli5',
+          label: 'Trẻ 5 tuổi',
+          content: (
+            <p>
+              Nếu bé “thiếu lửa”, ta có thể cho thêm lửa, hoặc cho thêm {strong('củi')} — vì củi nuôi
+              lửa cháy. Trong ngũ hành, cây/củi (Mộc) {strong('nuôi')} lửa (Hỏa). Bổ bằng cái nuôi
+              dưỡng cũng là một cách hay, nhẹ nhàng hơn.
+            </p>
+          ),
+        },
+        {
+          id: 'eli14',
+          label: 'Người 14 tuổi',
+          content: (
+            <>
+              <p>
+                Ngũ hành có {strong('vòng tương sinh')}: Mộc → Hỏa → Thổ → Kim → Thủy → Mộc (mỗi hành
+                sinh ra, nuôi hành kế tiếp). Nên khi cần bổ một hành X, có hai hướng: dùng{' '}
+                {strong('chính hành X')} (bổ thẳng), hoặc dùng {strong('hành sinh ra X')} — kiểu “mẹ
+                nuôi con”.
+              </p>
+              <p>
+                Ví dụ bé thiếu Hỏa: có thể chọn chữ hành Hỏa, mà cũng có thể chọn chữ hành{' '}
+                {strong('Mộc')} vì Mộc sinh Hỏa. Cách thứ hai giống như “thêm củi cho lửa” — bồi dưỡng
+                hành thiếu thay vì dồn thẳng.
+              </p>
+            </>
+          ),
+        },
+        {
+          id: 'expert',
+          label: 'Chuyên gia',
+          content: (
+            <>
+              <p>
+                Đây là kỹ thuật {strong('phù dụng thần')}: hoặc bổ trực tiếp bằng đồng hành, hoặc phù
+                trợ bằng hành tương sinh (hành “mẹ” sinh ra hành cần bổ). Các trường phái không hoàn
+                toàn thống nhất — có phái ưu tiên bổ thẳng, có phái cho rằng khi hành thiếu quá yếu thì
+                phù bằng hành sinh sẽ bền hơn; và còn phải nhìn bối cảnh cả tứ trụ, không máy móc.
+              </p>
+              <p>
+                Chính công cụ gợi ý hành hợp của hieu.asia cũng đi theo hướng này: nó gợi ý cả{' '}
+                {strong('hành sinh ra mệnh')} lẫn {strong('hành đồng loại')}, chứ không chỉ một hành.
+                Dù vậy, hãy nhớ đây vẫn là lớp tham khảo — nghĩa đẹp và âm hay mới là gốc của một cái
+                tên.
+              </p>
+            </>
+          ),
+        },
+      ]}
+    />
+  );
+}
+
 const RECALL_QUESTIONS: RecallQuestion[] = [
   {
     id: 'q1',
@@ -197,6 +258,40 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       </>
     ),
   },
+  {
+    id: 'q6',
+    type: 'mcq',
+    prompt:
+      'Bé thiếu hành Hỏa. Ngoài chọn chữ hành Hỏa, theo nguyên tắc tương sinh còn cách bổ nào?',
+    choices: [
+      {
+        text: 'Chọn chữ hành Mộc — vì Mộc sinh Hỏa (mẹ nuôi con), bồi dưỡng hành Hỏa một cách gián tiếp',
+        correct: true,
+        note: 'Đúng — trong vòng tương sinh Mộc → Hỏa, dùng hành sinh ra hành thiếu là cách “thêm củi cho lửa”.',
+      },
+      {
+        text: 'Chọn chữ hành Thủy cho “mát”',
+        note: 'Không — Thủy khắc Hỏa, không bồi dưỡng mà làm hao hành Hỏa.',
+      },
+      {
+        text: 'Chọn chữ hành Kim',
+        note: 'Không — Kim không sinh Hỏa (ngược lại Hỏa khắc Kim); không phải hành “mẹ” của Hỏa.',
+      },
+    ],
+  },
+  {
+    id: 'q7',
+    type: 'open',
+    prompt: 'Tục kiêng huý là gì, và nên xem nó thế nào khi đặt tên cho con?',
+    answer: (
+      <>
+        Kiêng huý là tục {strong('tránh dùng thẳng tên')} người bậc trên — ông bà, cha mẹ, người đã
+        khuất trong họ; thời xưa còn kiêng cả tên vua quan. Vì thế nhiều nhà tránh đặt tên con trùng
+        tên người trên để giữ tôn ti và tránh phạm huý. Đây là {strong('phong tục')}, không phải luật
+        — nên tôn trọng nếp nhà, nhưng không cần lo sợ, và vẫn lấy nghĩa đẹp, âm hay làm gốc.
+      </>
+    ),
+  },
 ];
 
 export function DatTenRecall() {
@@ -220,6 +315,11 @@ const FACETS: UnderstandingFacet[] = [
     can: 'Nhận biết hành của một chữ qua bộ thủ chữ Hán (Thủy 氵, Mộc 木, Hỏa 火/日, Kim 金, Thổ 土/山) hoặc qua nghĩa/âm gợi hành.',
   },
   {
+    id: 'tuong-sinh',
+    facet: 'Tương sinh',
+    can: 'Giải thích được cách bổ hành theo tương sinh: dùng chính hành cần bổ (bổ thẳng), hoặc dùng hành SINH ra nó (mẹ nuôi con) — ví dụ thiếu Hỏa có thể dùng Mộc vì Mộc sinh Hỏa.',
+  },
+  {
     id: 'discrimination',
     facet: 'Phân biệt',
     can: 'Phân biệt được “tên hợp hành” với “tên hay”: một tên hay cần nghĩa đẹp + âm hài hoà + hợp phong tục, ngũ hành chỉ là lớp thêm.',
@@ -228,6 +328,11 @@ const FACETS: UnderstandingFacet[] = [
     id: 'boundary',
     facet: 'Ranh giới',
     can: 'Chỉ ra lớp số nét chữ (tam tài, tứ cách) chỉ là tham khảo phụ, tuỳ hệ; và ngũ hành trong tên là quan niệm văn hoá, không có bằng chứng quyết định vận mệnh.',
+  },
+  {
+    id: 'phong-tuc',
+    facet: 'Phong tục',
+    can: 'Nói được các phong tục quanh việc đặt tên (kiêng huý — tránh trùng tên bậc trên trong họ) là tập tục để cân nhắc, không phải luật, và nên tôn trọng mà không lo sợ.',
   },
   {
     id: 'guard',
