@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { ADMIN_SESSION_COOKIE, verifySession, safeNextPath } from '@/lib/auth';
+import { resolveLiveRole } from '@/lib/admin-user-store';
 
 /**
  * Admin middleware — gate every route except /login and Next internals.
@@ -27,6 +28,16 @@ export async function middleware(request: NextRequest) {
 
   const rawCookie = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
   const session = await verifySession(rawCookie);
+
+  // Instant revocation (2026-07-12 audit, step 3): a validly-signed cookie whose
+  // admin was demoted-away/deleted is treated as invalid, so they are bounced to
+  // /login instead of loading a shell they can no longer use. `unknown` (authority
+  // unreachable) keeps the session to preserve availability during a Worker outage.
+  const revoked = session
+    ? (await resolveLiveRole(session.email)).status === 'revoked'
+    : false;
+  const validSession = session && !revoked;
+
   const isLoginPage = pathname === '/login' || pathname.startsWith('/login/');
   // API routes must NEVER get an HTML redirect — fetch() callers parse the
   // response as JSON, and an HTML login page leaks as `Unexpected token '<',
@@ -38,10 +49,11 @@ export async function middleware(request: NextRequest) {
   // or secret rotated). Clear cookie + (for HTML) bounce to /login, or (for
   // API) return JSON 401. Never let them sit on a chrome-less page wondering
   // why everything is broken, and never feed HTML to a JSON parser.
-  if (rawCookie && !session) {
+  if (rawCookie && !validSession) {
+    const reason = revoked ? 'session_revoked' : 'session_invalid';
     if (isApi) {
       const res = NextResponse.json(
-        { ok: false, error: 'session_invalid' },
+        { ok: false, error: reason },
         { status: 401 },
       );
       res.cookies.set(ADMIN_SESSION_COOKIE, '', { maxAge: 0, path: '/' });
@@ -49,7 +61,7 @@ export async function middleware(request: NextRequest) {
     }
     const url = new URL('/login', request.url);
     if (!isLoginPage) url.searchParams.set('next', pathname);
-    url.searchParams.set('reason', 'session_invalid');
+    url.searchParams.set('reason', reason);
     const res = NextResponse.redirect(url);
     res.cookies.set(ADMIN_SESSION_COOKIE, '', { maxAge: 0, path: '/' });
     return res;
@@ -57,7 +69,7 @@ export async function middleware(request: NextRequest) {
 
   // Already authenticated → block /login to avoid loops.
   if (isLoginPage) {
-    if (session) {
+    if (validSession) {
       const target = safeNextPath(request.nextUrl.searchParams.get('next'));
       return NextResponse.redirect(new URL(target, request.url));
     }
@@ -65,7 +77,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Everything else needs a verified session.
-  if (!session) {
+  if (!validSession) {
     if (isApi) {
       return NextResponse.json(
         { ok: false, error: 'unauthenticated' },

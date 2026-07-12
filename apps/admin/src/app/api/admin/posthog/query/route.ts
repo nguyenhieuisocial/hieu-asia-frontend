@@ -14,7 +14,10 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
-  const auth = await requireAdminSession('admin');
+  // `read: true` despite the POST verb — this is a read-only HogQL query hitting
+  // PostHog directly (runExplorerQuery blocks mutating statements), so a slow
+  // /admin/users must not 503 it, matching its heatmap/recordings siblings.
+  const auth = await requireAdminSession('admin', { read: true });
   if ('error' in auth) return auth.error;
 
   const body = (await req.json().catch(() => ({}))) as { query?: unknown };

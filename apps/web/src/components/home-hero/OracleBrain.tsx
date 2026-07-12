@@ -482,7 +482,10 @@ export function OracleBrain(): React.JSX.Element {
           data-revealed={reveal ? true : undefined}
           data-lensopen={selected !== null || undefined}
           className="ob-graph"
-          role="img"
+          // role="group" (not "img"): this container holds the interactive lens-hub
+          // buttons, and role="img" must not have focusable descendants (axe
+          // nested-interactive). "group" labels the set of related controls. (T28)
+          role="group"
           aria-label="Năm nhóm công cụ hội tụ về Bạn"
           draggable={false}
           onDragStart={(e) => e.preventDefault()}

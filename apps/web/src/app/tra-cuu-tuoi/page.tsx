@@ -38,24 +38,24 @@ const TERMS: { term: string; body: string }[] = [
     body: 'Can Chi là tên năm âm lịch ghép từ 10 Thiên Can và 12 Địa Chi (ví dụ Canh Ngọ). Nạp âm là "mệnh" của năm theo vòng 60 Giáp Tý, gắn với một trong năm hành Kim – Mộc – Thủy – Hỏa – Thổ.',
   },
   {
-    term: 'Kim Lâu',
-    body: 'Tính theo tuổi mụ chia 9: dư 1/3/6/8 được coi là phạm (Kim Lâu Thân/Thê/Tử/Lục Súc). Dân gian hay xét khi cưới hỏi hoặc làm nhà.',
+    term: 'Kim Lâu — phạm thì sao?',
+    body: 'Tính theo tuổi mụ chia 9: dư 1/3/6/8 được coi là phạm (Kim Lâu Thân/Thê/Tử/Lục Súc), thường xét khi cưới hỏi hoặc làm nhà. Phạm nghĩa là năm đó kém thuận cho hai việc lớn này — chỉ là điểm cần lưu ý, không phải điềm xấu. Nếu không gấp, dân gian hoãn sang năm không phạm, hoặc theo tục mượn tuổi người hợp đứng ra lo việc. Tham khảo, quyết định là ở bạn.',
   },
   {
-    term: 'Tam Tai',
-    body: 'Mỗi nhóm ba con giáp (tam hợp) gặp Tam Tai vào ba năm liền nhau cố định. Đây là quan niệm về giai đoạn nên cẩn trọng hơn, không phải điềm dữ.',
+    term: 'Tam Tai — phạm thì sao?',
+    body: 'Mỗi nhóm ba con giáp (tam hợp) gặp Tam Tai vào ba năm liền nhau cố định. Phạm Tam Tai nghĩa là đang trong ba năm đó — giai đoạn nên cẩn trọng hơn, không phải điềm dữ. Nhiều người giữ ổn định, tránh khởi sự quá lớn (xây nhà, cưới hỏi, mở kinh doanh) trong ba năm này hoặc chọn thời điểm hợp lý hơn. Tham khảo.',
   },
   {
-    term: 'Hoang Ốc',
-    body: 'Tính theo tuổi mụ chia 6, đếm vòng sáu cung. Ba cung Tam Địa Sát, Ngũ Thọ Tử, Lục Hoang Ốc được dân gian kiêng khi khởi công xây nhà.',
+    term: 'Hoang Ốc — phạm thì sao?',
+    body: 'Tính theo tuổi mụ chia 6, đếm vòng sáu cung. Ba cung Tam Địa Sát, Ngũ Thọ Tử, Lục Hoang Ốc được coi là phạm, dân gian kiêng khi khởi công xây nhà. Nếu năm nay phạm mà vẫn muốn làm, thường hoãn sang năm đẹp hơn, hoặc mượn tuổi người không phạm đứng ra động thổ. Tham khảo, không bắt buộc.',
   },
   {
     term: 'Cung phi & hướng nhà',
-    body: 'Từ năm sinh và giới tính suy ra cung phi (mệnh quái), thuộc Đông tứ mệnh hoặc Tây tứ mệnh. Theo Bát Trạch, mỗi cung hợp bốn hướng tốt và tránh bốn hướng xấu.',
+    body: 'Từ năm sinh và giới tính suy ra cung phi (mệnh quái), thuộc Đông tứ mệnh hoặc Tây tứ mệnh. Theo Bát Trạch, mỗi cung hợp bốn hướng tốt và tránh bốn hướng xấu. Nên ưu tiên đặt cửa, bàn làm việc, giường ngủ theo hướng tốt của cung phi — đây là gợi ý để tham khảo, không phải quy tắc cứng.',
   },
   {
-    term: 'Sao hạn',
-    body: 'Cửu Diệu niên hạn — mỗi năm một sao chiếu mệnh theo tuổi mụ và giới tính. Có sao tốt, sao trung tính, sao cần thận trọng; đây là phong tục để tham khảo, không phải lời tiên tri.',
+    term: 'Sao hạn — gặp sao xấu thì sao?',
+    body: 'Cửu Diệu niên hạn — mỗi năm một sao chiếu mệnh theo tuổi mụ và giới tính. Có sao tốt, sao trung tính, sao cần thận trọng. Gặp sao xấu, dân gian giữ gìn sức khoẻ – tài chính và có tục dâng sao giải hạn đầu năm; đây là phong tục để tham khảo, không phải lời tiên tri.',
   },
 ];
 
@@ -82,7 +82,15 @@ const FAQS: FaqItem[] = [
   },
 ];
 
-export default function TraCuuTuoiPage() {
+export default async function TraCuuTuoiPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ year?: string; gender?: string }>;
+}) {
+  const sp = await searchParams;
+  const initialYear = typeof sp.year === 'string' ? sp.year : undefined;
+  const initialGender: 'nam' | 'nu' | undefined =
+    sp.gender === 'nu' ? 'nu' : sp.gender === 'nam' ? 'nam' : undefined;
   const JSONLD = [
     breadcrumb([
       { name: 'Trang chủ', url: '/' },
@@ -118,7 +126,7 @@ export default function TraCuuTuoiPage() {
           </p>
 
           <div className="mt-7">
-            <TraCuuTuoi />
+            <TraCuuTuoi initialYear={initialYear} initialGender={initialGender} />
           </div>
         </section>
 

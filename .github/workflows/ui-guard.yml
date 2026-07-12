@@ -1,0 +1,31 @@
+# UI anti-pattern guard (note 167 §C.6) — fails a PR only on NEW violations in the
+# lines it adds, so it never trips on pre-existing code. Pure node + git (no install),
+# so it is fast. Advisory: this is a SEPARATE check, not part of the required
+# "turbo lint + test + build" job, so a false positive never blocks a merge until
+# the founder chooses to add it to branch protection.
+name: ui-guard
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ui-guard:
+    name: ui-guard (note 167 §C.6)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # Full history so the guard can diff the PR against its base branch.
+          fetch-depth: 0
+      - name: Guard changed UI files for new anti-patterns
+        run: node apps/web/scripts/ui-guard.mjs "origin/${{ github.base_ref }}"

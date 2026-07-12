@@ -12,7 +12,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  const auth = await requireAdminSession('admin');
+  const auth = await requireAdminSession('admin', { read: true });
   if ('error' in auth) return auth.error;
 
   const sp = req.nextUrl.searchParams;

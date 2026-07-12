@@ -13,6 +13,7 @@ import {
 } from '@hieu-asia/ui';
 import { computeXuatHanh, type XuatHanhResult } from '@/lib/xuat-hanh';
 import { getVietnamTodayISO } from '@/lib/vn-date';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 
 function parseISO(value: string): { d: number; m: number; y: number } | null {
@@ -34,6 +35,7 @@ export function XuatHanhChecker() {
     () => (parsed ? computeXuatHanh(parsed.d, parsed.m, parsed.y) : null),
     [parsed],
   );
+  const { resultRef, armScroll } = useScrollToResult(result);
 
   return (
     <Card>
@@ -44,14 +46,25 @@ export function XuatHanhChecker() {
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1">
             <Label htmlFor="xhDate">Chọn ngày (dương lịch)</Label>
-            <Input id="xhDate" type="date" value={value} onChange={(e) => setValue(e.target.value)} />
+            <Input
+              id="xhDate"
+              type="date"
+              value={value}
+              onChange={(e) => {
+                armScroll();
+                setValue(e.target.value);
+              }}
+            />
           </div>
           <div className="flex items-end">
             <Button
               type="button"
               variant="outline"
               className="w-full sm:w-auto"
-              onClick={() => setValue(getVietnamTodayISO())}
+              onClick={() => {
+                armScroll();
+                setValue(getVietnamTodayISO());
+              }}
             >
               Về hôm nay
             </Button>
@@ -59,7 +72,7 @@ export function XuatHanhChecker() {
         </div>
 
         {result && (
-          <div className="space-y-4">
+          <div ref={resultRef} className="scroll-mt-24 space-y-4">
             <p className="text-sm text-muted-foreground">
               {parsed && (
                 <>

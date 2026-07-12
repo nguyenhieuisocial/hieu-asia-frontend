@@ -182,7 +182,7 @@ export function LaSoChecker({
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="space-y-1">
             <Label htmlFor="lsDate">Ngày sinh (dương lịch)</Label>
-            <Input id="lsDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            <Input id="lsDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} aria-invalid={!!error} aria-describedby={error ? 'ls-err' : undefined} />
           </div>
           <div className="space-y-1">
             <Label htmlFor="lsTime">Giờ sinh</Label>
@@ -209,7 +209,7 @@ export function LaSoChecker({
         <Button onClick={() => void onCast()} disabled={loading} size="lg">
           {loading ? 'Đang lập lá số…' : '✦ Lập lá số Tử Vi'}
         </Button>
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        {error && <p id="ls-err" role="alert" className="text-sm text-destructive">{error}</p>}
 
         {chart && (
           // `data-in` kích hoạt hệ reveal sẵn có (globals.css) → lá số + các ô

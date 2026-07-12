@@ -5,13 +5,15 @@
  * phạm không" luôn đúng theo năm hiện tại (không làm trang SSG bị stale).
  * Grounded 100% trên engine: canChiOfYear / checkTamTai / TAM_TAI_YEARS.
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@hieu-asia/ui';
 import {
   DownloadToolPdfButton,
   type ToolPdfPayload,
 } from '@/components/tools/DownloadToolPdfButton';
+import { readBirthProfile, saveBirthProfile } from '@/lib/birth-profile';
+import { SavedBirthInfoHint } from '@/components/tools/SavedBirthInfoHint';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 import {
   canChiOfYear,
@@ -59,6 +61,17 @@ export function TamTaiFinder() {
   const [value, setValue] = useState('');
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState('');
+  const [prefilled, setPrefilled] = useState(false);
+
+  // Tự điền từ hồ sơ ngày sinh dùng chung (nếu có) + hiện kết quả ngay.
+  useEffect(() => {
+    const p = readBirthProfile();
+    if (p.year && p.year >= 1900 && p.year <= 2100) {
+      setValue(String(p.year));
+      setResult(compute(p.year));
+      setPrefilled(true);
+    }
+  }, []);
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -70,6 +83,7 @@ export function TamTaiFinder() {
     }
     setError('');
     setResult(compute(y));
+    saveBirthProfile({ year: y });
   }
 
   return (
@@ -94,6 +108,8 @@ export function TamTaiFinder() {
             onChange={(e) => setValue(e.target.value)}
             min={1900}
             max={2100}
+            aria-invalid={!!error}
+            aria-describedby={error ? 'tamtai-err' : undefined}
             className="w-40 rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none focus:border-gold/50"
           />
         </label>
@@ -102,7 +118,13 @@ export function TamTaiFinder() {
         </Button>
       </form>
 
-      {error && <p className="mt-3 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
+      {prefilled && (
+        <div className="mt-3">
+          <SavedBirthInfoHint show onClear={() => setPrefilled(false)} />
+        </div>
+      )}
+
+      {error && <p id="tamtai-err" role="alert" className="mt-3 text-sm text-rose-600 dark:text-rose-400">{error}</p>}
 
       {result && (
         <div className="mt-5 space-y-3 rounded-xl border border-border bg-background/60 p-4 text-sm leading-relaxed">

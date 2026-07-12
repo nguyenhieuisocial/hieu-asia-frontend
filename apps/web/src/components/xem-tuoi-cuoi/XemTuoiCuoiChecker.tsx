@@ -23,6 +23,7 @@ import {
   DownloadToolPdfButton,
   type ToolPdfPayload,
 } from '@/components/tools/DownloadToolPdfButton';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 const VERDICT_CLASS: Record<WeddingYearResult['verdict'], string> = {
   'thuan': 'text-emerald-700 dark:text-emerald-300',
@@ -101,6 +102,8 @@ export function XemTuoiCuoiChecker({
     [brideYear, targetYear],
   );
 
+  const { resultRef, armScroll } = useScrollToResult(brideResult);
+
   return (
     <Card>
       <CardHeader>
@@ -116,7 +119,10 @@ export function XemTuoiCuoiChecker({
               inputMode="numeric"
               placeholder="Ví dụ: 1997"
               value={brideValue}
-              onChange={(e) => setBrideValue(e.target.value)}
+              onChange={(e) => {
+                armScroll();
+                setBrideValue(e.target.value);
+              }}
             />
           </div>
           <div className="space-y-1">
@@ -137,7 +143,10 @@ export function XemTuoiCuoiChecker({
               type="number"
               inputMode="numeric"
               value={targetValue}
-              onChange={(e) => setTargetValue(e.target.value)}
+              onChange={(e) => {
+                armScroll();
+                setTargetValue(e.target.value);
+              }}
             />
           </div>
         </div>
@@ -150,7 +159,7 @@ export function XemTuoiCuoiChecker({
         )}
 
         {brideResult && (
-          <div className="space-y-4">
+          <div ref={resultRef} className="scroll-mt-24 space-y-4">
             <PersonResult title="Cô dâu" result={brideResult} kimLauApplies />
             {groomResult && <PersonResult title="Chú rể" result={groomResult} kimLauApplies={false} />}
 

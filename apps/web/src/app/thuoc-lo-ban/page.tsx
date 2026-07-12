@@ -153,6 +153,8 @@ export default function ThuocLoBanPage() {
                     value={valueCm}
                     onChange={(e) => setValueCm(e.target.value)}
                     required
+                    aria-invalid={!!error}
+                    aria-describedby={error ? 'value_cm-err' : undefined}
                     className="bg-card/60 font-mono text-base"
                   />
                 </div>
@@ -178,6 +180,7 @@ export default function ThuocLoBanPage() {
                 </div>
                 {error && (
                   <p
+                    id="value_cm-err"
                     role="alert"
                     className="rounded-md border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-300"
                   >

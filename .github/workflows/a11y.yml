@@ -1,0 +1,64 @@
+name: a11y
+
+# Wave 60.80 (vault 167 T28) — scheduled axe-core WCAG 2.2 AA scan of production.
+#
+# Free quality tool, no SaaS account. The spec (apps/web/tests/a11y.spec.ts)
+# crawls LIVE URLs via PLAYWRIGHT_BASE_URL (default https://hieu.asia), so the
+# job does NOT build the app — it only needs Playwright + a browser.
+#
+# ADVISORY by design: it runs on `schedule` + `workflow_dispatch` only (no
+# `pull_request` trigger), so it never blocks a merge. A real regression turns
+# the scheduled run red — visible in the Actions tab + maintainer email — and
+# the fail-only-on serious/critical gate (in the spec) keeps the signal high.
+
+on:
+  schedule:
+    # 02:00 UTC daily = 09:00 ICT
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Base URL to scan (blank = production https://hieu.asia)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: a11y-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  axe:
+    name: axe-core WCAG scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      # action-setup@v6 with NO version key defers to packageManager
+      # (pnpm@9.12.0) in root package.json, matching ci.yml / weekly-eval.yml.
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: '22'
+          cache: pnpm
+      - name: Install deps
+        run: pnpm install --frozen-lockfile --filter web
+      # chromium-desktop + chromium-mobile(iPhone SE → webkit) projects → both engines.
+      - name: Install Playwright browsers
+        run: pnpm --filter web exec playwright install --with-deps chromium webkit
+      - name: Run axe-core a11y scan
+        run: pnpm --filter web test:a11y
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ inputs.base_url || 'https://hieu.asia' }}
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: a11y-report-${{ github.run_id }}
+          path: |
+            apps/web/playwright-report/
+            apps/web/test-results/
+          if-no-files-found: ignore
+          retention-days: 14

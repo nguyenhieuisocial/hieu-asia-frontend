@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Menu, ChevronDown, LogOut, UserCircle2 } from 'lucide-react';
 import {
   Button,
@@ -85,7 +85,9 @@ const PRIMARY_LINKS: readonly NavLink[] = [
   { href: '/cong-cu', label: 'Công cụ' },
   { href: '/methodology', label: 'Phương pháp' },
   { href: '/pricing', label: 'Giá' },
-  { href: '/about', label: 'Về chúng tôi' },
+  // §EE/quyết #9: ô "Về chúng tôi" intent thấp (đã có ở footer) → thay bằng
+  // "Học" (/learn, 19 bài + cẩm nang) — giữ chân + SEO.
+  { href: '/learn', label: 'Học' },
 ];
 
 /**
@@ -143,6 +145,7 @@ const MOBILE_DISCOVER: readonly NavLink[] = [
  */
 export function SiteNav() {
   const { user, loading } = useAuth();
+  const pathname = usePathname();
   const isAuthed = !!user && !loading;
   const needsCheckin = useCheckinNudge(isAuthed);
 
@@ -164,15 +167,26 @@ export function SiteNav() {
           className="hidden items-center gap-6 md:flex"
           aria-label="Điều hướng chính"
         >
-          {PRIMARY_LINKS.map((l) => (
-            <Link
-              key={l.label}
-              href={l.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-primary active:text-primary"
-            >
-              {l.label}
-            </Link>
-          ))}
+          {PRIMARY_LINKS.map((l) => {
+            // Trang hiện tại (khớp chính xác hoặc là trang con của hub) → đánh
+            // dấu aria-current + gạch chân vàng nhìn thấy (§EE / a11y điều hướng).
+            const isCurrent =
+              pathname === l.href || (l.href !== '/' && !!pathname?.startsWith(`${l.href}/`));
+            return (
+              <Link
+                key={l.label}
+                href={l.href}
+                aria-current={isCurrent ? 'page' : undefined}
+                className={`text-sm transition-colors hover:text-primary active:text-primary ${
+                  isCurrent
+                    ? 'text-primary underline decoration-gold decoration-2 underline-offset-8'
+                    : 'text-muted-foreground'
+                }`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-2">

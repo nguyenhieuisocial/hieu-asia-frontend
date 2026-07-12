@@ -423,6 +423,8 @@ export function FeaturePaywall({
                   }}
                   placeholder="Nhập mã giảm giá (nếu có)"
                   maxLength={32}
+                  aria-invalid={!!codeErr}
+                  aria-describedby={codeErr ? 'coupon-err' : undefined}
                   className="w-full rounded-md border border-gold/20 bg-card/60 px-3 py-2 text-sm uppercase text-foreground placeholder:normal-case placeholder:text-muted-foreground focus:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
                 />
                 <Button
@@ -435,7 +437,7 @@ export function FeaturePaywall({
               </div>
             )}
             {codeErr && (
-              <p className="text-xs text-red-300">{codeErr}</p>
+              <p id="coupon-err" role="alert" className="text-xs text-red-300">{codeErr}</p>
             )}
           </div>
 

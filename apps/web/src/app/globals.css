@@ -329,8 +329,12 @@ html {
 /* Same rationale for faint-gold LABEL text — the mono "eyebrow" tags above
  * headings (`text-gold/80|85|90`, ~11px) sit at ~2:1 on cream (gold #B8923D
  * at 0.8 over Paper), failing WCAG 1.4.3 small-text 4.5:1. Deepen to
- * antique-ochre on LIGHT (#7A5A1F ≈ 5:1); DARK restores the brand gold (fine
- * on charcoal). Only the label opacities /80–/90 are swept; decorative gold
+ * antique-ochre on LIGHT (#7A5A1F ≈ 5:1). On DARK the same reduced-opacity
+ * legacy gold composited only 3.97–4.32:1 over the charcoal/bark surfaces
+ * (#18191b–#222326) — also failing AA (axe, 2026-07-12) — so lift it to the
+ * night brand gold-soft #D4B373 (solid ≈ 7.9–8.8:1, the value that `.dark
+ * .text-gold-700` already uses below), mirroring the light block's single
+ * collapsed color. Only the label opacities /80–/90 are swept; decorative gold
  * (≤/70 dots/arrows, many aria-hidden) stays intentionally subtle.
  * Unlayered + descendant selector → wins over Tailwind's utility. */
 :root .text-gold\/80,
@@ -338,14 +342,10 @@ html {
 :root .text-gold\/90 {
   color: #7a5a1f;
 }
-.dark .text-gold\/80 {
-  color: rgb(184 146 61 / 0.8);
-}
-.dark .text-gold\/85 {
-  color: rgb(184 146 61 / 0.85);
-}
+.dark .text-gold\/80,
+.dark .text-gold\/85,
 .dark .text-gold\/90 {
-  color: rgb(184 146 61 / 0.9);
+  color: #d4b373;
 }
 
 /* AA contrast sweep — CONTINUED (light only). The block above handles the gold

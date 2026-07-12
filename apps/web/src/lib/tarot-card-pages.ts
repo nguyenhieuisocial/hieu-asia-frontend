@@ -15,6 +15,8 @@ export interface TarotCardPage {
   keyUp: string[]; // từ khóa nghĩa xuôi
   keyRev: string[]; // từ khóa nghĩa ngược
   image: string; // hình ảnh biểu tượng trên lá (hệ RWS)
+  symbols: string; // biểu tượng chính trên tranh RWS + nghĩa từng biểu tượng (mô tả bằng lời, không dùng hình có ©)
+  storyArc: string; // vị trí lá trong mạch bài: Ẩn chính theo 3 chặng Hành trình Gã Khờ · Ẩn phụ theo cốt truyện số/vai court trong chất
   up: string; // nghĩa xuôi — đoạn văn
   rev: string; // nghĩa ngược — đoạn văn (khung "mặt trầm", không phải điềm xấu)
   love: string; // góc tình cảm – quan hệ
@@ -33,6 +35,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['liều lĩnh', 'thiếu chuẩn bị', 'ngại bắt đầu'],
     image:
       'Một người trẻ đứng sát mép vực, mặt ngẩng lên trời, tay nải nhỏ trên vai và bông hồng trắng trên tay; chú chó nhỏ nhảy bên chân như vừa cảnh báo vừa cổ vũ. Mang số 0 — chưa là gì cả, nên có thể trở thành bất cứ điều gì.',
+    symbols:
+      'Mép vực là điểm quyết định: thêm một bước là vùng chưa biết. Bông hồng trắng trên tay chỉ sự trong sạch của động cơ; tay nải nhỏ nói hành trang còn ít mà vẫn dám đi. Chú chó bên chân là bản năng — vừa cảnh báo vừa cổ vũ. Số 0 nghĩa là chưa là gì cả, nên có thể trở thành bất cứ điều gì.',
+    storyArc:
+      'Lá số 0 mở đầu Hành trình Gã Khờ: chính nhân vật này đi qua 21 lá còn lại để trưởng thành. Chặng 1 (0–7) là thế giới bên ngoài — Gã Khờ bước vào đời và lần lượt gặp các nhân vật định hình bản thân.',
     up: 'Gã Khờ là lá của những khởi đầu chưa có gì bảo đảm: việc mới, nơi ở mới, một mối quan hệ vừa chớm, một ý tưởng chưa ai tin. Nó gợi tinh thần bước đi với sự tò mò thay vì chờ đủ 100% chắc chắn — vì hầu hết những điều đáng giá đều bắt đầu khi ta chưa sẵn sàng hoàn toàn. Lá này không bảo bạn nhắm mắt nhảy, nó hỏi: nếu bớt sợ đi một nửa, bạn sẽ bắt đầu từ đâu?',
     rev: 'Ở chiều ngược, năng lượng khởi đầu ấy đang lệch nhịp: hoặc bạn lao đi mà chưa nhìn xuống chân (hứa hẹn vội, ký vội, yêu vội), hoặc ngược lại — đứng mãi ở mép vực vì đợi một sự chắc chắn không bao giờ đến. Đáng xem lại: cái bạn gọi là "thận trọng" có thực sự là thận trọng, hay là sợ?',
     love: 'Trong tình cảm, Gã Khờ thường chạm vào giai đoạn mới quen hoặc cảm giác muốn làm mới một mối quan hệ đã cũ. Nó gợi sự chân thật không tính toán — nhưng cũng nhắc rằng hồn nhiên khác với vô tâm.',
@@ -40,6 +46,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Điều gì bạn đã muốn bắt đầu từ lâu nhưng cứ đợi "đủ sẵn sàng"?',
       'Nếu thất bại không ai biết, bạn có làm không? Câu trả lời nói gì về nỗi sợ của bạn?',
+      'Nếu bớt sợ đi một nửa, bạn sẽ bắt đầu từ đâu?',
     ],
   },
   {
@@ -51,6 +58,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['tài nguyên bỏ phí', 'nói nhiều làm ít', 'dùng sai chỗ'],
     image:
       'Một người đứng trước bàn bày đủ bốn biểu tượng — gậy, cốc, kiếm, đồng tiền — một tay chỉ trời, một tay chỉ đất, trên đầu là ký hiệu vô cực. Mọi nguyên liệu đã có mặt; việc còn lại là bắt tay làm.',
+    symbols:
+      'Bàn bày đủ bốn biểu tượng của bốn chất — gậy, cốc, kiếm, đồng tiền — tức bốn nguồn lực: ý chí, cảm xúc, tư duy, vật chất; nguyên liệu đã có mặt trên bàn. Một tay chỉ trời, một tay chỉ đất: nối ý tưởng với việc làm cụ thể. Ký hiệu vô cực trên đầu gợi khả năng chưa bị đóng khung — miễn là bắt tay làm.',
+    storyArc:
+      'Số 1, chặng 1 (0–7) của Hành trình Gã Khờ — thế giới bên ngoài. Đây là nhân vật định hình đầu tiên Gã Khờ gặp: bài học về ý chí chủ động, biến ý định thành hành động bằng chính những gì đang có trong tay.',
     up: 'Nhà Ảo Thuật nói một điều rất thực tế: bạn đã có đủ — kỹ năng, mối quan hệ, kinh nghiệm, công cụ — để bắt đầu điều đang nghĩ trong đầu. Lá này xuất hiện như lời nhắc rằng khoảng cách giữa ý tưởng và kết quả không nằm ở việc thiếu thứ gì, mà ở việc chưa xếp những thứ đang có thành một hành động cụ thể. Sức mạnh của nó là sự tập trung: một mục tiêu, một việc, làm tới nơi.',
     rev: 'Chiều ngược của lá này là cảm giác "có tiềm năng mà mãi chưa thành hình": tài nguyên rải rác, bắt đầu nhiều thứ nhưng không thứ nào tới đích, hoặc dùng sự khéo léo của mình vào việc không đáng. Đôi khi nó còn chạm vào kiểu người nói rất hay về dự định — và chỉ dừng ở nói.',
     love: 'Trong quan hệ, Nhà Ảo Thuật gợi sự chủ động: nói rõ điều mình muốn thay vì chờ người kia đoán. Ở mặt trầm, để ý xem có ai đang "diễn" nhiều hơn là thật — kể cả chính mình.',
@@ -69,6 +80,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['phớt lờ linh cảm', 'ồn ào lấn át', 'tự cắt khỏi cảm nhận'],
     image:
       'Người phụ nữ ngồi giữa hai cây cột sáng – tối, sau lưng là tấm rèm thêu lựu che một vùng nước sâu, tay giữ cuộn sách hé mở. Không phải mọi điều đáng biết đều được nói thành lời.',
+    symbols:
+      'Hai cây cột sáng – tối dựng hai mặt đối cực; người ngồi chính giữa, không nghiêng bên nào. Tấm rèm thêu quả lựu che một vùng nước sâu — phần chưa lộ ra của câu chuyện, và của chính mình. Cuộn sách hé mở trên tay: tri thức có đó nhưng không phô hết. Cả bức tranh nói một điều: không phải mọi điều đáng biết đều được nói thành lời.',
+    storyArc:
+      'Số 2, chặng 1 (0–7). Ngay sau bài học hành động của Nhà Ảo Thuật, Gã Khờ gặp bài học ngược lại: trực giác và im lặng quan sát — biết khi nào cần làm, và khi nào cần lắng nghe trước đã.',
     up: 'Nữ Tư Tế là lá của cái biết không cần lập luận: linh cảm rằng có gì đó chưa ổn, cảm giác rằng câu chuyện còn một lớp nữa phía sau. Lá này không khuyên hành động ngay — nó khuyên lùi lại, im lặng và quan sát thêm một nhịp, vì thông tin quan trọng nhất lúc này có thể chưa lộ ra. Trực giác của bạn đã ghi nhận nhiều hơn những gì lý trí kịp gọi tên.',
     rev: 'Ngược chiều, lá này hỏi: lần gần nhất bạn nghe thấy tiếng nói nhỏ bên trong — và gạt đi — là khi nào? Mặt trầm của Nữ Tư Tế là sống ồn quá mức để khỏi phải nghe chính mình: lúc nào cũng bận, lúc nào cũng lướt, quyết định theo ý người khác cho nhanh.',
     love: 'Trong tình cảm, lá này hay chạm vào những điều cả hai đều biết mà chưa ai nói. Một cuộc trò chuyện thật — chậm, không buộc tội — có thể là điều mối quan hệ đang chờ.',
@@ -87,6 +102,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['cho đi quá mức', 'bỏ bê bản thân', 'bóp nghẹt thay vì nuôi'],
     image:
       'Người phụ nữ ngồi thư thái giữa cánh đồng lúa chín, gối nệm thêu hình sao Kim, dòng suối chảy qua rừng phía sau. Mọi thứ quanh bà đều đang lớn — không thứ gì bị ép lớn.',
+    symbols:
+      'Cánh đồng lúa chín và dòng suối chảy qua rừng: sự sung túc đến từ nguồn nuôi dưỡng đều đặn, không phải từ ép buộc. Gối nệm thêu ký hiệu sao Kim gắn lá này với yêu thương và cái đẹp rất đời thường. Tư thế ngồi thư thái là chi tiết đắt nhất: mọi thứ quanh bà đều đang lớn, và không thứ gì bị ép lớn.',
+    storyArc:
+      'Số 3, chặng 1 (0–7). Trong các nhân vật định hình, Nữ Hoàng thường được đọc như hình ảnh người mẹ — bài học về nuôi dưỡng và để mọi thứ lớn theo nhịp, trước khi gặp cái khung kỷ luật của Hoàng Đế ở lá kế tiếp.',
     up: 'Nữ Hoàng là lá của sự nuôi dưỡng: chăm một dự án, một đứa trẻ, một khu vườn, một cơ thể, một ý tưởng — và để nó lớn theo nhịp của nó. Lá này gợi sự sung túc đến từ chăm sóc đều đặn chứ không phải từ ép buộc; nó cũng nhắc về sự dễ chịu vật chất rất đời thường: bữa ăn tử tế, giấc ngủ đủ, không gian sống dễ thở. Điều bạn kiên nhẫn chăm hôm nay là thứ sẽ nuôi lại bạn sau này.',
     rev: 'Mặt trầm của Nữ Hoàng là cho đi đến cạn: lo cho tất cả mọi người trừ chính mình, hoặc chăm kỹ đến mức thành kiểm soát — không để con người, dự án, mối quan hệ có chỗ tự thở. Cũng có khi nó chạm vào giai đoạn sáng tạo bị tắc vì bạn đang vắt kiệt thay vì bồi đắp.',
     love: 'Trong tình cảm, lá này gợi sự ấm áp, chăm sóc, có thể cả chuyện gia đình – con cái. Câu hỏi ngược lại đáng giá không kém: trong mối quan hệ này, ai đang chăm ai — và có cân không?',
@@ -105,6 +124,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['cứng nhắc', 'kiểm soát quá tay', 'sợ buông quyền'],
     image:
       'Vị vua ngồi thẳng trên ngai đá tạc đầu cừu núi, áo giáp ẩn dưới hoàng bào, sau lưng là dãy núi trơ. Mọi thứ ở đây đều vững — và đều do tay ông sắp đặt.',
+    symbols:
+      'Ngai đá tạc đầu cừu núi: quyền uy cứng cỏi, quyết đoán, không màu mè. Áo giáp ẩn dưới hoàng bào cho thấy trật tự này được giữ bằng kỷ luật và sự sẵn sàng bảo vệ. Dãy núi trơ phía sau vừa là sự vững chãi, vừa nhắc mặt trái: cái khung quá cứng thì khô cằn. Mọi thứ trong tranh đều do tay ông sắp đặt.',
+    storyArc:
+      'Số 4, chặng 1 (0–7). Đối trọng của Nữ Hoàng: nếu bà thường được đọc là hình ảnh người mẹ nuôi dưỡng thì Hoàng Đế là người cha — bài học về cấu trúc, kỷ luật và ranh giới rõ trên đường định hình bản thân.',
     up: 'Hoàng Đế là lá của trật tự do chính mình dựng lên: lịch sinh hoạt, nguyên tắc chi tiêu, ranh giới trong quan hệ, quy trình trong công việc. Nó xuất hiện khi điều bạn cần không phải cảm hứng mà là kỷ luật — một cái khung đủ vững để những thứ quan trọng không bị cuốn trôi theo cảm xúc từng ngày. Làm chủ ở đây nghĩa là: bạn quyết định luật chơi của đời mình, rồi tôn trọng chính luật đó.',
     rev: 'Ngược chiều, cái khung ấy đang siết quá chặt — với người khác (quản lý từng li, không tin ai làm được) hoặc với chính mình (tự ép đến mức mất hết mềm mại). Cũng có khi lá này chạm vào quan hệ với một người quyền uy: sếp, cha, người luôn "biết điều gì tốt nhất cho bạn".',
     love: 'Trong tình cảm, Hoàng Đế gợi sự đáng tin, che chở, cam kết rõ ràng. Mặt trầm là quan hệ nghiêng thành kiểm soát — yêu thương không cần phải đi kèm xin phép.',
@@ -123,6 +146,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['phá khuôn', 'nghi ngờ giáo điều', 'tự tìm đường'],
     image:
       'Vị giáo chủ ngồi giữa hai cột đá, tay nâng ba ngón ban phúc, dưới chân là hai chiếc chìa khóa bắt chéo và hai môn đồ quỳ nghe. Tri thức ở đây được trao truyền — từ người đi trước sang người đi sau.',
+    symbols:
+      'Hai cột đá đóng khung một không gian có phép tắc — tri thức ở đây đi theo lề lối. Bàn tay nâng ba ngón ban phúc là cử chỉ truyền dạy; hai chiếc chìa khóa bắt chéo dưới chân gợi rằng cánh cửa hiểu biết được mở bằng cái đã trao truyền qua nhiều đời. Hai môn đồ quỳ nghe: học từ người đi trước là một con đường có thật.',
+    storyArc:
+      'Số 5, chặng 1 (0–7). Sau hình ảnh mẹ và cha, Gã Khờ gặp truyền thống: trường lớp, lề lối, chuẩn mực chung. Bài học ở đây là biết học từ người đi trước — trước khi đủ lớn để chọn lối riêng.',
     up: 'Giáo Hoàng đại diện cho những con đường đã được nhiều người đi: học từ thầy, theo lề lối gia đình, làm theo chuẩn nghề, gắn mình vào một cộng đồng có quy tắc. Lá này nhắc rằng không phải bài học nào cũng cần tự trả giá mới có — kinh nghiệm của người đi trước là đường tắt hợp pháp. Nó cũng chạm vào nhu cầu thuộc về: một nhóm, một niềm tin, một nghi thức cho đời sống bớt chông chênh.',
     rev: 'Ngược chiều, lá này hỏi: quy tắc nào bạn đang theo chỉ vì "xưa nay vẫn thế"? Mặt trầm của Giáo Hoàng là giáo điều — làm theo đám đông để an toàn, hoặc một người "thầy" đòi được tin tuyệt đối. Có lúc trưởng thành nghĩa là kính trọng truyền thống mà vẫn chọn lối riêng.',
     love: 'Trong tình cảm, lá này hay gắn với các cột mốc chuẩn mực: ra mắt, cưới hỏi, kỳ vọng của hai gia đình. Đáng hỏi: hai bạn đang sống theo nhịp của nhau, hay theo kịch bản của người khác?',
@@ -130,6 +157,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Chuẩn mực nào đang nâng đỡ bạn — và chuẩn mực nào chỉ đang trói bạn?',
       'Nếu không sợ ai thất vọng, bạn có chọn khác đi không?',
+      'Quy tắc bạn đang theo — theo vì tin, hay vì tiện?',
     ],
   },
   {
@@ -141,6 +169,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['lệch giá trị', 'lưỡng lự', 'chọn theo người khác'],
     image:
       'Hai con người đứng dưới thiên thần dang cánh, sau người nữ là cây tri thức quấn rắn, sau người nam là cây bốc lửa. Một lựa chọn lớn luôn có hai phía: điều mình muốn và điều mình tin.',
+    symbols:
+      'Thiên thần dang cánh phía trên chứng giám cho một lựa chọn lớn. Sau người nữ là cây tri thức quấn rắn — ý thức về cám dỗ và hệ quả; sau người nam là cây bốc lửa — đam mê thúc đẩy. Hai con người không che giấu gì: lựa chọn thật đòi sự chân thật. Bức tranh đặt cạnh nhau điều mình muốn và điều mình tin.',
+    storyArc:
+      'Số 6, chặng 1 (0–7). Gã Khờ chạm bài học về tình yêu và lựa chọn: quyết định lớn đầu tiên không dựa vào một nhân vật định hình sẵn nào, mà dựa vào giá trị của chính mình.',
     up: 'Nhiều người nghĩ Đôi Tình Nhân chỉ nói chuyện yêu đương, nhưng cốt lõi của lá này là lựa chọn dựa trên giá trị: chọn người để gắn bó, chọn việc để theo, chọn điều để trung thực. Nó xuất hiện khi một quyết định đòi bạn trả lời câu hỏi sâu hơn "cái nào lợi hơn" — đó là "mình là người thế nào, và lựa chọn nào khớp với con người đó". Sự hòa hợp thật đến từ hai phía nhìn cùng một hướng, không phải hai phía nhìn nhau mãi.',
     rev: 'Ngược chiều, lá này chạm vào cảm giác lệch pha: điều bạn làm không còn khớp điều bạn tin, hoặc mối gắn kết đang duy trì bằng quán tính thay vì lựa chọn. Cũng có khi nó là sự lưỡng lự kéo dài — không chọn, thực ra, cũng là một lựa chọn.',
     love: 'Trong tình cảm, đây là lá của sự gắn kết có ý thức: ở lại vì muốn ở lại, không phải vì ngại đổi thay. Nếu đang phân vân giữa hai người hay hai hướng, hãy so bằng giá trị sống, đừng so bằng điều kiện.',
@@ -148,6 +180,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Lựa chọn trước mặt bạn: phương án nào khiến bạn tự hào hơn về chính mình sau 5 năm?',
       'Bạn đang chọn — hay đang để hoàn cảnh chọn giúp?',
+      'Lựa chọn trước mặt có khớp với giá trị của bạn không?',
     ],
   },
   {
@@ -159,6 +192,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['mất lái', 'hai lực kéo ngược', 'hùng hổ thiếu hướng'],
     image:
       'Chiến binh đứng trên cỗ xe do hai nhân sư đen – trắng kéo, mỗi con nhìn một hướng; không có dây cương, xe chạy bằng ý chí của người cầm lái. Tiến được hay không nằm ở việc giữ hai lực ngược cùng phục vụ một hướng.',
+    symbols:
+      'Hai nhân sư đen – trắng kéo xe, mỗi con nhìn một hướng: hai lực ngược chiều luôn có mặt trong cùng một con người. Chi tiết đắt nhất là không có dây cương — cỗ xe chạy bằng ý chí và sự tập trung của người cầm lái, không bằng ép buộc. Tiến được hay không nằm ở việc bắt hai lực ngược cùng phục vụ một hướng.',
+    storyArc:
+      'Số 7, khép chặng 1 (0–7) của Hành trình Gã Khờ. Sau khi gặp đủ các nhân vật định hình, Gã Khờ phải tự cầm cương và gom ý chí tiến lên — bài thi tốt nghiệp của chặng thế giới bên ngoài.',
     up: 'Cỗ Xe là lá của giai đoạn dồn lực: mục tiêu đã rõ, giờ là lúc gom hết những phần ngược chiều trong mình — ham muốn và lý trí, liều và sợ — bắt chúng cùng kéo về một phía. Nó gợi chiến thắng đến từ kỷ luật và tập trung, không phải từ may mắn. Nếu đang đà tiến, lá này bảo: giữ tay lái, đừng để chuyện bên đường làm chệch hướng.',
     rev: 'Ngược chiều, hai con nhân sư đang kéo về hai phía: bạn muốn hai điều mâu thuẫn cùng lúc, hoặc lao rất nhanh mà không chắc về đâu. Bận rộn không đồng nghĩa với tiến bộ — có khi cần dừng xe để xem lại bản đồ.',
     love: 'Trong tình cảm, Cỗ Xe gợi giai đoạn cần chủ động làm rõ: mối quan hệ này đang đi về đâu? Mặt trầm là kéo–đẩy liên tục, hai người hai nhịp không ai chịu khớp.',
@@ -166,6 +203,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Hai lực nào trong bạn đang kéo ngược nhau — và hướng nào bạn thật sự muốn?',
       'Tốc độ hiện tại là tiến lên, hay chỉ là chạy trốn cảm giác đứng yên?',
+      'Lúc này bạn đang cầm lái, hay đang bị cuốn đi?',
     ],
   },
   {
@@ -177,6 +215,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['tự nghi ngờ', 'mất bình tĩnh', 'cứng để che yếu'],
     image:
       'Người phụ nữ nhẹ nhàng khép miệng một con sư tử bằng hai bàn tay trần, trên đầu là ký hiệu vô cực. Không roi, không xích — con thú dữ được thuần bằng sự điềm tĩnh.',
+    symbols:
+      'Người phụ nữ khép miệng sư tử bằng hai bàn tay trần — không roi, không xích: bản năng được thuần bằng điềm tĩnh, không bằng trấn áp. Ký hiệu vô cực trên đầu (cùng biểu tượng với Nhà Ảo Thuật) gợi thứ sức mạnh không cạn, vì không phải gồng. Con sư tử không bị giết hay xua đuổi — nó được ngồi cùng.',
+    storyArc:
+      'Số 8, mở chặng 2 (8–14) — vào bên trong, đối diện chính mình, bắt đầu bằng sức mạnh nội tâm. Dị bản đáng biết: bộ Marseille cổ đánh lá này số 11 và Công Lý số 8; Waite theo Golden Dawn đổi thành Sức Mạnh = 8. hieu.asia theo RWS.',
     up: 'Sức Mạnh trong lá này không phải cơ bắp hay áp đảo, mà là sự điềm tĩnh trước thứ gầm gừ — cơn giận của chính mình, nỗi sợ, một người đang căng thẳng, một tình huống dễ bùng nổ. Nó gợi cách thắng bằng kiên nhẫn và lòng trắc ẩn: không phủ nhận phần bản năng, mà ngồi cùng nó đủ lâu để nó dịu xuống. Người mạnh nhất trong phòng thường là người không cần lớn tiếng.',
     rev: 'Ngược chiều, con sư tử đang thắng: bạn phản ứng thay vì hồi đáp, hoặc tỏ ra cứng cỏi bên ngoài để che sự tự nghi ngờ bên trong. Lá này nhắc rằng thừa nhận "mình đang đuối" với đúng người cũng là một dạng can đảm.',
     love: 'Trong tình cảm, Sức Mạnh gợi sự bao dung với phần chưa hoàn hảo của nhau — và của chính mình. Mặt trầm: nhịn không phải là dịu dàng; nhịn lâu sẽ thành nợ.',
@@ -184,6 +226,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       '"Con sư tử" của bạn lúc này là gì — cơn giận, nỗi sợ, hay sự sốt ruột?',
       'Bạn đang đối xử với chính mình bằng kỷ luật hay bằng roi vọt?',
+      'Trong chuyện này, sức mạnh thật là gồng lên — hay là mềm xuống?',
     ],
   },
   {
@@ -195,6 +238,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['cô lập quá mức', 'trốn trong đơn độc', 'từ chối giúp đỡ'],
     image:
       'Ông lão đứng trên đỉnh núi tuyết, tay nâng cây đèn có ngôi sao sáu cánh, tay kia chống gậy. Ngọn đèn chỉ soi vừa một bước chân — nhưng thế là đủ để đi tiếp.',
+    symbols:
+      'Đỉnh núi tuyết là chỗ đứng cao và vắng — lùi khỏi tiếng ồn để nhìn cho rõ. Cây đèn có ngôi sao sáu cánh chỉ soi vừa một bước chân: không cần thấy cả con đường, đủ sáng cho bước kế tiếp là đi được. Cây gậy chống là kinh nghiệm làm điểm tựa. Và người mang đèn cũng có thể trở thành người dẫn đường cho kẻ đi sau.',
+    storyArc:
+      'Số 9, chặng 2 (8–14). Sau bài học sức mạnh nội tâm, Gã Khờ lùi hẳn ra khỏi đám đông để tìm câu trả lời bên trong — bước "ở một mình có chủ đích" của chặng đi vào chính mình.',
     up: 'Ẩn Sĩ là lá của việc lùi ra khỏi tiếng ồn để nghe được câu trả lời của chính mình: tạm ngắt mạng xã hội, đi đâu đó một mình, hoặc đơn giản là từ chối vài cuộc vui để ở với câu hỏi đang treo. Nó cũng là lá của người dẫn đường — giai đoạn này bạn có thể đang cần một người từng trải, hoặc chính bạn đang trở thành ngọn đèn cho ai đó. Câu trả lời bạn tìm không nằm ở thêm ý kiến, mà ở bớt tiếng ồn.',
     rev: 'Ngược chiều, sự một mình đã chuyển từ lựa chọn thành lẩn trốn: né người vì ngại va chạm, tự cô lập rồi kết luận "không ai hiểu mình". Lá này hỏi thẳng: bạn đang rút lui để nhìn rõ, hay đang trốn để khỏi phải quyết?',
     love: 'Trong tình cảm, Ẩn Sĩ gợi nhu cầu không gian riêng — điều lành mạnh nếu nói rõ, dễ thành vết nứt nếu im lặng biến mất. Người đang độc thân: giai đoạn hiểu mình trước khi tìm người hiểu mình.',
@@ -202,6 +249,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Câu hỏi nào bạn cứ mang đi hỏi khắp nơi — trong khi thật ra bạn đã biết câu trả lời?',
       'Sự một mình hiện tại đang nạp năng lượng cho bạn, hay đang rút dần?',
+      'Bạn cần thêm im lặng, hay đang dùng im lặng để trốn?',
     ],
   },
   {
@@ -213,6 +261,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['cảm giác mắc kẹt', 'lặp lại vòng cũ', 'đổ cho số'],
     image:
       'Bánh xe lớn quay giữa trời, bốn góc là bốn sinh vật cầm sách, nhân sư ngồi trên đỉnh và rắn trườn xuống bên dưới. Có kẻ đang lên, có kẻ đang xuống — bánh xe không dừng cho riêng ai.',
+    symbols:
+      'Bánh xe lớn quay giữa trời: kẻ đang lên, kẻ đang xuống — không ai giữ mãi một chỗ. Nhân sư ngồi trên đỉnh như câu đố của thời vận; con rắn trườn xuống là chiều đi xuống của chu kỳ. Bốn sinh vật cầm sách ở bốn góc chứng kiến vòng quay từ bốn phía. Thông điệp của tranh: bánh xe không dừng cho riêng ai.',
+    storyArc:
+      'Số 10, chặng 2 (8–14), gần điểm giữa của 22 lá. Gã Khờ nhận ra có những lực nằm ngoài tay mình — chu kỳ, thời điểm, may rủi. Bài học thích nghi với cái đổi thay, trước khi học cân nhắc của lá Công Lý.',
     up: 'Bánh Xe Số Phận nhắc một sự thật vừa khiêm tốn vừa nhẹ nhõm: có những lực nằm ngoài tay mình — thời điểm, hoàn cảnh, may rủi — và đời đi theo chu kỳ chứ không theo đường thẳng. Khi lá này xuất hiện, thường một giai đoạn đang chuyển: việc cũ khép, cửa mới hé. Việc của bạn không phải điều khiển bánh xe, mà là nhận ra mình đang ở đoạn nào của vòng quay để hành xử cho hợp — lúc thuận thì tận dụng, lúc nghịch thì giữ sức.',
     rev: 'Ngược chiều, lá này chạm vào cảm giác kẹt trong vòng lặp: chuyện cũ tái diễn, người cũ kiểu cũ, lỗi cũ phạm lại. Đáng hỏi: trong vòng lặp đó, đâu là phần "số", đâu là phần kịch bản do chính mình diễn lại? Phần thứ hai — đổi được.',
     love: 'Trong tình cảm, Bánh Xe gợi những bước ngoặt đến từ thời điểm: gặp đúng người lúc không ngờ, hoặc mối quan hệ sang giai đoạn mới. Điều giữ được qua các mùa không phải may mắn mà là cách hai người cùng thích nghi.',
@@ -231,6 +283,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['né sự thật', 'thiên vị', 'đổ lỗi'],
     image:
       'Người ngồi giữa hai cột, một tay nâng cân, một tay dựng thẳng thanh kiếm. Cân để cân nhắc đủ phía; kiếm để khi đã rõ thì cắt dứt khoát.',
+    symbols:
+      'Một tay nâng cân — cân nhắc đủ mọi phía, không để cảm tình đặt ngón tay lên bàn cân; một tay dựng thẳng thanh kiếm — khi đã rõ thì cắt dứt khoát, không dùng dằng. Ngồi giữa hai cột, không nghiêng bên nào: sự công bằng đòi một vị trí đứng giữa. Cân trước, kiếm sau — thứ tự ấy chính là thông điệp của lá.',
+    storyArc:
+      'Số 11, chặng 2 (8–14): đối diện nhân quả của chính mình — kết quả hôm nay truy về lựa chọn hôm trước. Dị bản đánh số: Marseille cổ đặt Công Lý số 8; Waite theo Golden Dawn đổi thành 11. hieu.asia theo RWS.',
     up: 'Công Lý là lá của nhân quả và trách nhiệm: kết quả hôm nay phần lớn là tổng các lựa chọn hôm trước — của mình và của người. Nó xuất hiện khi bạn cần một quyết định tỉnh táo, đủ dữ kiện, không để cảm tình hay sợ hãi đặt ngón tay lên bàn cân. Lá này cũng gợi các việc giấy tờ, thỏa thuận, phân xử: làm cho đàng hoàng, rõ ràng, để sau này không ai phải nhớ lại trong ấm ức.',
     rev: 'Ngược chiều, đâu đó đang có sự né tránh: né nhìn phần lỗi của mình, hoặc ôm hết lỗi về mình để khỏi phải đối chất. Công bằng với người khác thì dễ nói; công bằng với chính mình — không tự bào chữa, cũng không tự hành — mới khó.',
     love: 'Trong tình cảm, Công Lý gợi sự sòng phẳng về công sức: ai đang gánh phần nặng hơn, điều đó có được nhìn nhận không? Một mối quan hệ bền là nơi cả hai cùng thấy "thế là công bằng".',
@@ -238,6 +294,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Trong chuyện đang cân nhắc, nếu bỏ hết thiện cảm và ác cảm, sự việc còn lại là gì?',
       'Có hậu quả nào bạn đang nhận mà chưa từng truy về lựa chọn gốc của chính mình?',
+      'Bạn có đang nhìn thẳng vào hệ quả của việc mình làm không?',
     ],
   },
   {
@@ -249,6 +306,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['trì hoãn vô ích', 'hy sinh không ai cần', 'kẹt mà không học'],
     image:
       'Một người treo ngược chân trên cây chữ T, chân kia gập thành số 4, hai tay sau lưng — và gương mặt bình thản, quanh đầu tỏa sáng. Bị treo, nhưng không khổ: từ tư thế này, thế giới hiện ra khác hẳn.',
+    symbols:
+      'Người treo ngược trên cây chữ T mà gương mặt bình thản, quanh đầu tỏa sáng: cái nhìn mới đến từ việc chịu nhìn ngược. Hai tay để sau lưng, chân kia gập lại thong thả — tư thế này được chọn, không phải tai nạn hay hình phạt. Bị treo mà không khổ: từ chỗ này, thế giới hiện ra khác hẳn.',
+    storyArc:
+      'Số 12, chặng 2 (8–14). Giữa chặng đi vào bên trong, Gã Khờ học cách dừng lại và đổi góc nhìn — buông kiểm soát một nhịp để hiểu khác đi, chuẩn bị cho bài học buông bỏ lớn hơn ở lá kế tiếp.',
     up: 'Người Treo Ngược là lá của sự tạm dừng có chủ đích: việc chưa xuôi, đẩy tiếp chỉ tốn sức — thay vào đó, dừng lại và nhìn từ phía ngược. Điều trông như thất bại có khi là dữ liệu; người trông như đối thủ có khi đang nói đúng. Lá này cũng chạm vào những hy sinh ngắn hạn để đổi lấy cái nhìn dài hạn: chậm một nhịp thăng tiến để học, lùi một bước trong tranh cãi để giữ điều lớn hơn.',
     rev: 'Ngược chiều, sự tạm dừng đã quá hạn thành trì hoãn, hoặc sự hy sinh đã thành thói quen không ai yêu cầu mà cũng chẳng đổi được gì. Nếu bạn đã nhìn đủ mọi góc rồi — lá này bảo: đến lúc thả chân xuống đất và làm.',
     love: 'Trong tình cảm, Người Treo Ngược gợi việc thử đứng hẳn về phía người kia một lần — không phải để nhường, mà để hiểu. Mặt trầm: một bên cứ "chịu đựng thêm chút nữa" năm này qua năm khác.',
@@ -256,6 +317,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Chuyện đang bế tắc — bạn đã thử nhìn nó bằng con mắt của phía bên kia chưa?',
       'Điều bạn đang "hy sinh vì..." — người đó/việc đó có thật sự cần sự hy sinh ấy không?',
+      'Nếu lật ngược vấn đề, nó trông thế nào?',
     ],
   },
   {
@@ -267,6 +329,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['níu kéo', 'sợ thay đổi', 'kết thúc kéo lê'],
     image:
       'Bộ xương mặc giáp cưỡi ngựa trắng cầm cờ hoa hồng trắng; vua gục dưới chân, em bé ngước nhìn không sợ, và phía xa mặt trời đang mọc giữa hai ngọn tháp. Một điều khép lại — và ánh sáng phía sau nó.',
+    symbols:
+      'Bộ xương mặc giáp cưỡi ngựa trắng: điều không thể mặc cả — nhưng lá cờ trong tay lại thêu hoa hồng trắng, sự sống thanh sạch nằm ngay trong kết thúc. Vua gục dưới chân: không địa vị nào miễn trừ trước đổi thay; em bé ngước nhìn không sợ: có thể đón nhận một cách hồn nhiên. Phía xa, mặt trời đang mọc giữa hai ngọn tháp — ánh sáng phía sau cái khép lại.',
+    storyArc:
+      'Số 13, chặng 2 (8–14) — trái tim của chặng đi vào bên trong: chấp nhận đổi thay và buông cái đã hết phận sự. Trong mạch Hành trình Gã Khờ, Cái Chết là bước cần thiết để đi tiếp, không phải điềm dữ.',
     up: 'Cái Chết trong Tarot gần như không bao giờ nói về cái chết thể xác — nó nói về sự khép lại của một chương: một vai trò đã hết vai, một mối quan hệ đã đi trọn đường của nó, một phiên bản của chính mình đã chật. Lá này gợi rằng thứ đang kết thúc không phải bị cướp đi, mà là đã xong; và chỗ trống nó để lại chính là nơi điều mới sẽ mọc. Chuyển hóa thật sự bắt đầu khi ta thôi hô hấp nhân tạo cho cái đã hết thở.',
     rev: 'Ngược chiều, lá này chạm vào sự níu kéo: biết là xong rồi mà chưa buông — vì tiếc công, vì sợ trống, vì "biết đâu". Kết thúc bị kéo lê thường đau hơn kết thúc được thừa nhận. Câu hỏi của lá: bạn đang giữ điều đó, hay điều đó đang giữ bạn?',
     love: 'Trong tình cảm, Death có thể là khép một mối quan hệ — nhưng cũng rất thường là khép một giai đoạn của cùng mối quan hệ ấy (hết tuần trăng mật, con cái ra riêng) để bước sang giai đoạn mới thật hơn.',
@@ -287,6 +353,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['thái quá', 'mất nhịp', 'vá víu cực đoan'],
     image:
       'Thiên thần một chân chạm nước một chân trên bờ, rót nước qua lại giữa hai chiếc ly theo dòng chảy không đứt. Phép màu ở đây rất lặng lẽ: đúng liều, đúng nhịp, đều đặn.',
+    symbols:
+      'Thiên thần đứng một chân chạm nước, một chân trên bờ — giữ được cả hai miền cảm xúc và thực tế cùng lúc. Dòng nước rót qua lại giữa hai chiếc ly không đứt đoạn: pha trộn và điều chỉnh liên tục, chứ không phải đạt một điểm cân bằng rồi đứng yên. Phép màu của lá này rất lặng lẽ: đúng liều, đúng nhịp, đều đặn.',
+    storyArc:
+      'Số 14, khép chặng 2 (8–14). Sau khi buông được cái cũ ở lá Cái Chết, bài học cuối của chặng đi vào bên trong là cân bằng — pha hai thái cực thành một nhịp sống được, trước khi bước vào vùng tối của chặng ba.',
     up: 'Tiết Độ là lá của sự vừa độ — thứ nghe tẻ nhạt nhưng là nền của mọi thứ bền: ăn ngủ điều độ, chi tiêu có nhịp, làm việc có nghỉ, nói chuyện có lắng nghe. Nó gợi việc pha trộn những thứ tưởng đối lập thành một hỗn hợp sống được: lý trí với cảm xúc, tham vọng với sức khỏe, cái tôi với cái chung. Đường dài không thuộc về người chạy nhanh nhất mà thuộc về người giữ được nhịp.',
     rev: 'Ngược chiều, đâu đó đang quá liều: làm quá, chơi quá, lo quá, kỳ vọng quá. Hoặc bạn đang vá một cực đoan này bằng một cực đoan khác — nhịn cả tuần rồi bùng một bữa, im lặng cả tháng rồi nổ một trận. Cân bằng không phải điểm đến, nó là động tác chỉnh liên tục.',
     love: 'Trong tình cảm, Tiết Độ gợi sự điều hòa hai nhịp sống khác nhau — người nhanh người chậm, người nói người nghĩ. Không ai phải biến thành người kia; chỉ cần cả hai cùng chỉnh về một nhịp chung.',
@@ -305,6 +375,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['bắt đầu cởi trói', 'tỉnh ra', 'lấy lại quyền chọn'],
     image:
       'Hình nhân sừng dơi ngồi trên bệ đá, dưới chân là hai con người bị xích — nhưng nhìn kỹ, vòng xích quanh cổ họ lỏng đến mức tự tháo được. Họ ở lại không phải vì xích chặt, mà vì đã quen.',
+    symbols:
+      'Hình nhân sừng dơi ngồi trên bệ đá trông dữ tợn — đúng kiểu nỗi sợ được phóng đại quá cỡ thật. Chi tiết đắt nhất nằm dưới chân: hai con người bị xích, nhưng vòng xích quanh cổ lỏng đến mức tự tháo được. Họ ở lại không phải vì xích chặt, mà vì đã quen. Ràng buộc trong tranh này do chính người trong tranh duy trì.',
+    storyArc:
+      'Số 15, mở chặng 3 (15–21) — vượt qua bóng tối để đến trọn vẹn. Cửa vào chặng cuối là đối diện ràng buộc do chính mình duy trì: gọi đúng tên xiềng xích trước, rồi mới đi tiếp tới ánh sáng được.',
     up: 'Ác Quỷ là lá can đảm nhất bộ bài: nó mời bạn nhìn thẳng vào thứ đang trói mình — một thói quen biết là hại mà chưa bỏ, một mối quan hệ ở lại vì sợ hơn vì thương, một món nợ, một cơn nghiện nhỏ (điện thoại, mua sắm, sự công nhận). Chi tiết đắt nhất nằm ở vòng xích lỏng: phần lớn ràng buộc tồn tại được nhờ ta thôi để ý đến nó. Gọi đúng tên xiềng xích là một nửa của tự do.',
     rev: 'Ngược chiều, lá này mang tin tốt: bạn đang tỉnh ra — thấy được trò chơi, thấy được cái giá, và bắt đầu nới xích. Giai đoạn cai bất cứ thứ gì đều xấu trời vài đoạn đầu; đừng nhầm cơn vật vã với dấu hiệu "mình không làm được".',
     love: 'Trong tình cảm, Ác Quỷ chạm vào những gắn bó nặng về chiếm hữu, ghen tuông, hoặc lệ thuộc — nhầm cảm giác "không sống thiếu nhau được" với tình thương. Thương nhau mà tự do mới khó; trói nhau thì dễ.',
@@ -312,6 +386,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Thói quen hay mối ràng buộc nào bạn vẫn bao biện là "không bỏ được" — xích đó chặt thật, hay bạn đã quen?',
       'Điều gì bạn đang đánh đổi để giữ sự dễ chịu trước mắt?',
+      'Sợi dây này thật sự trói bạn — hay chính tay bạn đang nắm nó?',
     ],
     ease:
       'Tên lá nghe đáng sợ nhưng đây không phải "quỷ ám" hay điềm dữ — nó là tấm gương soi thói quen và ràng buộc rất con người. Không có gì để cúng giải ở đây; chỉ có một câu hỏi để tự trả lời.',
@@ -325,6 +400,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['khủng hoảng tránh được', 'sợ đổ vỡ', 'trì hoãn cú sập'],
     image:
       'Tòa tháp trên đỉnh núi đá bị sét đánh bay vương miện, lửa bùng qua cửa sổ, hai người rơi xuống. Tháp sập không phải vì sét — sét chỉ phơi ra điều đã mục từ bên trong.',
+    symbols:
+      'Tia sét đánh bay chiếc vương miện trên đỉnh tháp: sự thật đánh trúng phần kiêu hãnh tự dựng. Lửa bùng qua cửa sổ — cái mục nát vốn nằm bên trong, sét chỉ phơi nó ra. Hai người rơi xuống: buộc phải rời cấu trúc cũ. Tháp xây trên đỉnh núi đá chênh vênh ngay từ đầu — nền móng sai thì sớm muộn cũng lộ.',
+    storyArc:
+      'Số 16, chặng 3 (15–21). Sau khi thấy xiềng xích ở lá Ác Quỷ, Gã Khờ đi qua khủng hoảng: cái nền giả sụp xuống. Trong mạch bài đây là bước phá để xây lại — ngay sau nó là Ngôi Sao, lá của hy vọng.',
     up: 'Tòa Tháp là lá của cú sốc nói thật: một niềm tin, một kế hoạch, một hình ảnh được dựng công phu bỗng lộ ra phần móng yếu — qua một tin bất ngờ, một sự thật vỡ lở, một biến cố không hẹn. Đau, nhưng lá này nhấn vào nửa sau của câu chuyện: thứ sập được là thứ vốn không vững, và cái còn đứng lại sau cơn rung mới là cái thật. Nhiều điều tốt nhất trong đời người được xây trên nền của một tòa tháp cũ đã sập.',
     rev: 'Ngược chiều, lá này gợi cú sập đang được trì hoãn: vết nứt đã thấy mà cứ trét sơn lên, hoặc chính bạn đang gồng giữ một thứ nên để nó tự sụp. Đổ vỡ chủ động — thừa nhận sớm, đập đi xây lại sớm — luôn rẻ hơn đổ vỡ bị động.',
     love: 'Trong tình cảm, Tòa Tháp hay chạm vào khoảnh khắc vỡ ra sự thật về nhau hoặc về chính mối quan hệ. Sau cơn rung, câu hỏi không phải "tại ai" mà là: phần nào của nền móng đáng được xây lại — và có xây lại không?',
@@ -345,6 +424,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['mất niềm tin tạm thời', 'kiệt quệ', 'hoài nghi mọi thứ'],
     image:
       'Sau cơn bão của Tòa Tháp, một người quỳ bên hồ nước dưới bầu trời đầy sao, hai bình nước rót xuống đất và xuống hồ, không che giấu, không phòng thủ. Trời đêm — nhưng đầy sao.',
+    symbols:
+      'Người quỳ bên hồ không che giấu, không phòng thủ — sau đổ vỡ, sự chân thật trần trụi lại là chỗ bắt đầu lành. Hai bình nước rót xuống đất và xuống hồ: cho đi cả hai phía, tưới lại đời sống bên ngoài lẫn phần sâu bên trong. Bầu trời đêm nhưng đầy sao — chưa sáng hẳn, nhưng đã có phương hướng.',
+    storyArc:
+      'Số 17, chặng 3 (15–21). Ngay sau cú sập của Tòa Tháp là quãng thở: tìm lại hy vọng và niềm tin. Mạch bài xếp Ngôi Sao ở đây như một lời nhắc — sau phơi bày là chữa lành, không phải tận cùng.',
     up: 'Ngôi Sao là quãng thở sau biến cố: vết thương bắt đầu lành, niềm tin bắt đầu mọc lại — nhỏ thôi, nhưng thật. Lá này gợi sự chữa lành đến từ việc thôi gồng: sống chậm lại, làm điều đơn giản tốt cho mình, ở cạnh người không bắt mình phải diễn. Nó cũng là lá của cảm hứng và phương hướng: giữa trời tối, bạn không cần thấy cả con đường — chỉ cần một ngôi sao để đi theo là đủ.',
     rev: 'Ngược chiều, lá này chạm vào giai đoạn cạn pin niềm tin: nỗ lực mãi chưa thấy hồi đáp, nên bắt đầu nghi ngờ cả những điều vốn quý. Đây không phải lúc quyết định lớn; đây là lúc nghỉ — niềm tin cũng như sức lực, hết thì nạp, không phải hết là mất.',
     love: 'Trong tình cảm, Ngôi Sao gợi sự hồi phục sau tổn thương: dám mở lòng lại, hoặc hai người hàn gắn bằng sự chân thật trần trụi hơn trước. Đừng vội — lành da non cần thời gian.',
@@ -363,6 +446,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['sương tan dần', 'sự thật hiện ra', 'bớt tự dọa mình'],
     image:
       'Mặt trăng lưỡi liềm ôm trong trăng tròn, nhỏ giọt sáng xuống con đường chạy giữa hai ngọn tháp; chó nhà và sói cùng tru, tôm hùm bò lên từ đáy nước. Mọi thứ đều thật một nửa — như mọi cảnh vật dưới ánh trăng.',
+    symbols:
+      'Ánh trăng chỉ đủ làm mọi vật thật một nửa: trăng lưỡi liềm ôm trong trăng tròn, con đường chạy giữa hai ngọn tháp về phía chưa rõ. Chó nhà và sói cùng tru — phần thuần và phần hoang của nỗi sợ cùng lên tiếng. Tôm hùm bò lên từ đáy nước: điều nằm sâu trong tiềm thức đang trồi dần lên mặt.',
+    storyArc:
+      'Số 18, chặng 3 (15–21). Sau ánh sao hy vọng, Gã Khờ vẫn phải đi qua vùng mơ hồ cuối cùng — nơi nỗi sợ chưa rõ tên. Mạch bài hứa sẵn lối ra: ngay sau Mặt Trăng là Mặt Trời.',
     up: 'Mặt Trăng là lá của những giai đoạn không nhìn rõ: thông tin nhiễu, người nói một đằng làm một nẻo, và nỗi bất an không gọi được tên. Lá này khuyên hai việc nghe có vẻ ngược nhau: đừng vội kết luận hay ký kết gì trong sương — nhưng cũng đừng gạt bỏ cảm giác "có gì đó không ổn", vì dưới trăng, trực giác thường thấy trước lý trí. Sợ nhất của con người là điều chưa rõ mặt; mà điều chưa rõ mặt thì hay được trí tưởng tượng vẽ to gấp ba.',
     rev: 'Ngược chiều, sương đang tan: hiểu lầm được giải, sự thật lộ dần, hoặc bạn nhận ra con quái vật mình sợ bấy lâu chỉ là cái bóng của chính nỗi lo. Đây là lúc tốt để kiểm chứng lại các giả định cũ — nhiều cái đã hết đúng.',
     love: 'Trong tình cảm, Mặt Trăng chạm vào những vùng chưa nói hết: cảm giác bất an, nghi ngờ chưa có bằng chứng, hoặc tự vẽ kịch bản trong đầu rồi tự đau. Thay vì đoán, hỏi thẳng — nhẹ nhàng, nhưng thẳng.',
@@ -370,7 +457,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Nỗi lo lớn nhất của bạn lúc này — bạn đang có bằng chứng nào, và đang tưởng tượng phần nào?',
       'Câu hỏi nào nếu dám hỏi thẳng sẽ làm tan một nửa màn sương?',
+      'Cái bạn đang sợ là chuyện thật, hay là cái bóng của nỗi lo?',
     ],
+    ease:
+      'Mặt Trăng hay bị đọc thành "điềm gở, có kẻ đang lừa mình" — không phải vậy. Nó chỉ nói: trời chưa đủ sáng để kết luận, đừng quyết việc lớn lúc này. Nỗi sợ chưa rõ tên thường được trí tưởng tượng vẽ to gấp ba; việc nên làm là kiểm chứng từng giả định, không phải đi tìm lễ giải.',
   },
   {
     slug: 'the-sun',
@@ -381,6 +471,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['lạc quan che mắt', 'vui gượng', 'quên mặt khuất'],
     image:
       'Mặt trời tỏa tia thẳng và tia sóng trên một em bé cởi trần cưỡi ngựa trắng, tay giương cờ đỏ, sau lưng là tường hoa hướng dương. Không ẩn dụ phức tạp — chỉ là ánh sáng, và niềm vui không cần lý do.',
+    symbols:
+      'Mặt trời tỏa cả tia thẳng lẫn tia sóng trên nền trời không gợn — ánh sáng ở đây đầy đủ, không giấu góc nào. Em bé cởi trần cưỡi ngựa trắng, tay giương cờ đỏ: niềm vui không phòng thủ và sức sống nguyên vẹn. Tường hoa hướng dương phía sau — thành quả nở về phía sáng. Đây là lá hiếm hoi không cần ẩn dụ phức tạp.',
+    storyArc:
+      'Số 19, chặng 3 (15–21). Ra khỏi vùng sương của Mặt Trăng, mọi thứ hiện rõ dưới nắng: sự thật, thành quả, niềm vui giản dị. Trong mạch bài, đây là phần thưởng cho việc dám đi qua mơ hồ.',
     up: 'Mặt Trời là lá sáng nhất bộ bài: mọi thứ ra ánh sáng — nỗ lực được nhìn nhận, hiểu lầm được giải, sức khỏe và tinh thần đi lên. Nó gợi kiểu niềm vui không cần điều kiện hoành tráng: làm xong việc tử tế, chơi với người mình quý, một ngày nắng đẹp. Lá này cũng nhắc về sự minh bạch: lúc này càng sống rõ ràng — nói thật, làm thật, khoe đúng cái có thật — mọi thứ càng thuận.',
     rev: 'Ngược chiều, ánh nắng hơi chói: lạc quan đến mức bỏ qua dữ kiện xấu, hoặc gồng vui trên mạng trong khi bên trong đang mỏi. Niềm vui thật chịu được câu hỏi; niềm vui diễn thì sợ câu hỏi.',
     love: 'Trong tình cảm, Mặt Trời gợi giai đoạn ấm và rõ: yêu mà không phải đoán, vui mà không phải diễn. Nếu đang tìm hiểu ai đó, sự thoải mái như trẻ con chơi với nhau là tín hiệu rất đáng tin.',
@@ -388,6 +482,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Điều gì khiến bạn vui kiểu giản dị — và sao lâu rồi bạn không xếp lịch cho nó?',
       'Niềm lạc quan hiện tại đang đứng trên dữ kiện, hay đứng trên mong muốn?',
+      'Niềm vui nào bạn đang có mà quên ghi nhận?',
     ],
   },
   {
@@ -399,6 +494,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['tự phán quá nặng', 'né nhìn lại', 'điếc với lời gọi'],
     image:
       'Thiên thần thổi kèn giữa trời, những con người vươn dậy từ các nấm mộ, tay mở về phía âm thanh. Không phải cảnh phán tội — là cảnh được đánh thức.',
+    symbols:
+      'Thiên thần thổi kèn giữa trời — một lời gọi lớn, không thể giả vờ không nghe. Những con người vươn dậy từ các nấm mộ: những phần đời tưởng đã chôn được đánh thức để nhìn lại. Tay họ mở về phía âm thanh — tư thế đáp lời, không phải tư thế chịu xét xử. Đây là cảnh được đánh thức, không phải cảnh phán tội.',
+    storyArc:
+      'Số 20, chặng 3 (15–21), lá áp chót. Trước khi khép vòng, Gã Khờ nhìn lại cả chặng đường: cái nào đáng giữ, cái nào nên khép, và mình muốn phần còn lại khác đi ra sao — thức tỉnh để hoàn tất.',
     up: 'Phán Xét là lá của khoảnh khắc nhìn lại cả chặng: đời mình đến đây là vì những lựa chọn nào, cái nào đáng giữ, cái nào nên khép — và mình muốn nửa chặng sau khác đi ra sao. Nó thường đến cùng một "lời gọi": cảm giác ngày càng rõ rằng mình được sinh ra để làm việc gì đó cụ thể hơn hiện tại. Tổng kết tử tế khác với tự hành: nhìn lỗi cũ để rút bài học, rồi tha cho mình mà đi tiếp.',
     rev: 'Ngược chiều, hoặc bạn đang tự xử mình quá nặng vì chuyện đã qua — bản án không ai tuyên ngoài chính bạn — hoặc đang né cuộc nhìn lại vì sợ thấy điều phải thay đổi. Lời gọi bên trong bị lờ đi không biến mất; nó chỉ chuyển thành cảm giác sống sai sai kéo dài.',
     love: 'Trong tình cảm, Phán Xét gợi cuộc nói chuyện tổng kết: mình đã đối xử với nhau thế nào, và muốn tiếp theo ra sao. Có những mối quan hệ "sống lại" thật sự — sau khi cả hai dám nhìn lại không né.',
@@ -406,6 +505,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Nếu phải tổng kết chặng vừa qua trong ba dòng, bạn viết gì?',
       'Lời gọi nào bên trong bạn đã nghe thấy nhiều lần mà vẫn giả vờ chưa nghe?',
+      'Nếu lần này đáp lời gọi ấy, bạn sẽ thay đổi điều gì trước tiên?',
     ],
   },
   {
@@ -417,6 +517,10 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     keyRev: ['gần xong bỏ dở', 'thiếu một mảnh', 'sợ khép lại'],
     image:
       'Người vũ công khoác dải lụa nhảy giữa vòng nguyệt quế khép kín, bốn góc trời là bốn gương mặt chứng kiến. Lá cuối của hành trình Ẩn chính: vòng tròn đã tròn.',
+    symbols:
+      'Vòng nguyệt quế khép kín thành vòng tròn — biểu tượng của sự hoàn tất: chặng đường đã đi trọn, không bỏ dở. Người vũ công khoác dải lụa nhảy giữa vòng: nhẹ nhõm thay vì kiệt sức, vì cái kết này xứng đáng. Bốn gương mặt ở bốn góc trời chứng kiến — thành quả lần này được cả bên ngoài lẫn bên trong công nhận.',
+    storyArc:
+      'Số 21, lá cuối của Hành trình Gã Khờ: chặng 3 khép lại ở sự trọn vẹn. Vòng tròn đã tròn — và trong cách đọc theo mạch, khép vòng tử tế chính là điều mở ra vòng mới cho lá số 0.',
     up: 'Thế Giới là lá của sự hoàn tất xứng đáng: một chặng dài — học hành, dự án, chữa lành, một giai đoạn đời — đi đến điểm trọn vẹn, và lần này có cả sự công nhận từ bên ngoài lẫn cảm giác "đủ" từ bên trong. Lá này nhắc một việc hay bị bỏ qua: ăn mừng và khép lại cho đàng hoàng. Vòng tròn nào được khép tử tế sẽ trả lại năng lượng sạch cho vòng mới; vòng nào bỏ lửng sẽ âm thầm rút điện mãi về sau.',
     rev: 'Ngược chiều, đích đã trong tầm mắt mà chân chùng lại: 90% rồi bỏ dở, hoặc xong việc mà không dám nhận là xong — cứ thấy thiếu một mảnh. Đôi khi mảnh thiếu là thật (một cuộc trò chuyện chưa nói, một lời cảm ơn chưa gửi); đôi khi nó chỉ là nỗi sợ phải bước sang chương mới.',
     love: 'Trong tình cảm, Thế Giới gợi độ chín của quan hệ: đi qua đủ mùa và thấy mình vẫn chọn nhau. Với người vừa khép một mối quan hệ dài: khép trọn — hiểu, tha, cảm ơn — trước khi mở cửa mới.',
@@ -424,6 +528,7 @@ export const MAJOR_PAGES: TarotCardPage[] = [
     reflect: [
       'Điều gì trong đời bạn đang ở mức 90% — và mảnh 10% còn lại thật ra là gì?',
       'Thành quả nào bạn đã đạt mà chưa từng cho phép mình ăn mừng tử tế?',
+      'Chặng này đã thật sự xong, hay bạn đang bỏ dở?',
     ],
   },
 ];

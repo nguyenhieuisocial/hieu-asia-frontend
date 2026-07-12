@@ -30,12 +30,15 @@ export default function NotFound() {
           Trang không tồn tại
         </h1>
         <p className="mt-4 text-sm text-muted-foreground sm:text-base">
-          Có thể link đã hết hạn hoặc gõ sai. Hãy quay về trang chủ hoặc xem lại
-          báo cáo của bạn.
+          Có thể link đã hết hạn hoặc gõ sai. Bạn quay về trang chủ, xem tất cả
+          công cụ, hoặc mở lại báo cáo của mình.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button asChild size="lg"><Link href="/">
             Về trang chủ
+          </Link></Button>
+          <Button asChild size="lg" variant="outline"><Link href="/cong-cu">
+            Xem tất cả công cụ
           </Link></Button>
           <Button asChild size="lg" variant="outline"><Link href="/account">
             

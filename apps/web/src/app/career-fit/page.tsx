@@ -222,6 +222,9 @@ export default function CareerFitPage() {
     }
   }
 
+  // Field-level error tied to the birthDate input (vs. general submit/network errors below).
+  const birthDateError = error === 'Cần ngày sinh.' ? error : null;
+
   return (
     <>
       <script
@@ -263,6 +266,8 @@ export default function CareerFitPage() {
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
                   required
+                  aria-invalid={!!birthDateError}
+                  aria-describedby={birthDateError ? 'cf-date-err' : undefined}
                   className="bg-card/60"
                 />
               </div>
@@ -320,6 +325,7 @@ export default function CareerFitPage() {
           {error && (
             <p
               role="alert"
+              id={birthDateError ? 'cf-date-err' : undefined}
               className="rounded-md border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-300"
             >
               {error}

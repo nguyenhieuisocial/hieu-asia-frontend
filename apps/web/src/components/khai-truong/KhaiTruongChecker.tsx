@@ -18,6 +18,7 @@ import {
   type OpeningYearResult,
 } from '@/lib/khai-truong';
 import { track } from '@/lib/analytics';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import {
   DownloadToolPdfButton,
@@ -93,6 +94,8 @@ export function KhaiTruongChecker({
     [ownerYear, targetYear],
   );
 
+  const { resultRef, armScroll } = useScrollToResult(ownerResult);
+
   return (
     <Card>
       <CardHeader>
@@ -108,7 +111,10 @@ export function KhaiTruongChecker({
               inputMode="numeric"
               placeholder="Ví dụ: 1990"
               value={ownerValue}
-              onChange={(e) => setOwnerValue(e.target.value)}
+              onChange={(e) => {
+                setOwnerValue(e.target.value);
+                armScroll();
+              }}
             />
           </div>
           <div className="space-y-1">
@@ -118,7 +124,10 @@ export function KhaiTruongChecker({
               type="number"
               inputMode="numeric"
               value={targetValue}
-              onChange={(e) => setTargetValue(e.target.value)}
+              onChange={(e) => {
+                setTargetValue(e.target.value);
+                armScroll();
+              }}
             />
           </div>
         </div>
@@ -131,7 +140,7 @@ export function KhaiTruongChecker({
         )}
 
         {ownerResult && (
-          <div className="space-y-4">
+          <div ref={resultRef} className="scroll-mt-24 space-y-4">
             <OwnerResult result={ownerResult} />
 
             {goodYears.length > 0 && ownerResult.verdict !== 'thuan' && (

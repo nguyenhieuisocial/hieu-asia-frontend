@@ -20,6 +20,7 @@ import { GoogleTags } from '@/components/analytics/GoogleTags';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
 import { FloatingMentor } from '@/components/marketing/FloatingMentor';
+import { BackToTop } from '@/components/BackToTop';
 import { WebMcpTools } from '@/components/marketing/WebMcpTools';
 import { Toaster } from '@hieu-asia/ui';
 import { AppShell } from '@/components/product/AppShell';
@@ -316,6 +317,8 @@ export default async function RootLayout({
                     experience routes). Surfaces the AI assistant like Bitget's
                     always-present GetAgent. */}
                 <FloatingMentor />
+                {/* Nút "về đầu trang" — mobile-only, hiện sau khi cuộn >2 màn. */}
+                <BackToTop />
                 {/* WebMCP — registers public read-only free tools with an
                     in-browser AI agent if the experimental
                     navigator.modelContext API exists. Feature-detected,

@@ -71,6 +71,8 @@ export function BanMenhFinder() {
           value={year}
           min={FROM_YEAR}
           max={TO_YEAR}
+          aria-invalid={!!error}
+          aria-describedby={error ? 'ban-menh-year-err' : undefined}
           onChange={(e) => setYear(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') handleCheck();
@@ -83,7 +85,7 @@ export function BanMenhFinder() {
       </div>
 
       {error && (
-        <p role="alert" className="mt-3 text-sm text-rose-400">
+        <p id="ban-menh-year-err" role="alert" className="mt-3 text-sm text-rose-400">
           {error}
         </p>
       )}

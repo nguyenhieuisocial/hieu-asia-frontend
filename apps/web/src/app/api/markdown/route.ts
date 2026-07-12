@@ -52,6 +52,12 @@ function validatePath(raw: string | null): string | null {
     return null;
   }
   if (!path.startsWith('/')) return null;
+  // Reject protocol-relative paths: `//host` is a scheme-relative reference, so
+  // `new URL('//host', origin)` resolves to a DIFFERENT host — turning this
+  // unauthenticated endpoint into an SSRF / open proxy. A legit page path is
+  // single-slash-rooted. (The `/\host` variant is already caught by the
+  // backslash check below.)
+  if (path.startsWith('//')) return null;
   if (path.includes('..') || path.includes('\\') || path.includes('\0')) return null;
   if (
     path.startsWith('/api/') ||
@@ -162,6 +168,12 @@ export async function GET(req: NextRequest) {
 
   const origin = req.nextUrl.origin;
   const target = new URL(path, origin);
+  // Defence in depth: the resolved URL MUST stay on our own origin. validatePath
+  // already blocks protocol-relative paths, but re-check the built URL so any
+  // future gap in path parsing can never turn this into an open proxy / SSRF.
+  if (target.origin !== origin) {
+    return markdownResponse(markdownError('Đường dẫn không hợp lệ.', path), 200);
+  }
 
   let html: string;
   try {

@@ -231,7 +231,7 @@ export function BangChungTool() {
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="space-y-1">
               <Label htmlFor="bcDate">Ngày sinh (dương lịch)</Label>
-              <Input id="bcDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <Input id="bcDate" type="date" value={date} onChange={(e) => setDate(e.target.value)} aria-invalid={!!error} aria-describedby={error ? 'bc-err' : undefined} />
             </div>
             <div className="space-y-1">
               <Label htmlFor="bcTime">Giờ sinh</Label>
@@ -332,7 +332,7 @@ export function BangChungTool() {
               Hệ thống tính lại lá số đúng như nó đứng ở từng năm bạn nhập — mất ~vài giây mỗi năm.
             </p>
           )}
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <p id="bc-err" role="alert" className="text-sm text-destructive">{error}</p>}
 
           <p className="text-xs leading-relaxed text-muted-foreground">
             Kết quả được lưu <strong>ẩn danh</strong> để đo độ chính xác công khai —{' '}
@@ -569,7 +569,7 @@ function ForecastSection({
                   : 'Đang xem…'
                 : `Lá số nhấn gì trong ${N} năm tới? →`}
             </Button>
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
           </>
         )}
         {forecast && (

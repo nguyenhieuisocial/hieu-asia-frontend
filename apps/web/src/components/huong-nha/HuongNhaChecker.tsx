@@ -25,6 +25,7 @@ import {
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { track } from '@/lib/analytics';
+import { useScrollToResult } from '@/lib/use-scroll-to-result';
 
 function parseYear(value: string): number | null {
   const y = Number(value);
@@ -61,6 +62,7 @@ export function HuongNhaChecker({
     () => (year ? computeHuongNha(year, gender) : null),
     [year, gender],
   );
+  const { resultRef, armScroll } = useScrollToResult(result);
 
   return (
     <Card>
@@ -77,12 +79,21 @@ export function HuongNhaChecker({
               inputMode="numeric"
               placeholder="Ví dụ: 1990"
               value={yearValue}
-              onChange={(e) => setYearValue(e.target.value)}
+              onChange={(e) => {
+                setYearValue(e.target.value);
+                armScroll();
+              }}
             />
           </div>
           <div className="space-y-1">
             <Label htmlFor="hnGender">Giới tính</Label>
-            <Select value={gender} onValueChange={(v) => setGender(v as Gender)}>
+            <Select
+              value={gender}
+              onValueChange={(v) => {
+                setGender(v as Gender);
+                armScroll();
+              }}
+            >
               <SelectTrigger id="hnGender">
                 <SelectValue />
               </SelectTrigger>
@@ -102,7 +113,7 @@ export function HuongNhaChecker({
         )}
 
         {result && (
-          <div className="space-y-5">
+          <div ref={resultRef} className="scroll-mt-24 space-y-5">
             <div className="rounded-lg border bg-card/40 p-4">
               <p className="text-sm text-muted-foreground">
                 Gia chủ sinh năm <strong className="text-foreground">{result.year}</strong> ({gender === 'nam' ? 'nam' : 'nữ'}) thuộc{' '}

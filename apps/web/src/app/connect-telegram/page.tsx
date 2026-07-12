@@ -105,7 +105,7 @@ function ConnectInner() {
           </>
         ) : (
           <>
-            {state.kind === 'error' && <p className="text-red-600">{state.message}</p>}
+            {state.kind === 'error' && <p role="alert" className="text-red-600">{state.message}</p>}
             <Button onClick={connect} disabled={state.kind === 'working' || !token}>
               {state.kind === 'working' ? 'Đang kết nối…' : 'Xác nhận kết nối'}
             </Button>

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Sparkles,
   CalendarClock,
@@ -23,6 +24,7 @@ import { ELEMENTS } from '@/lib/dat-ten-ngu-hanh';
 import { BIRTH_YEARS as HUONG_NHA_YEARS, slugOf as huongNhaSlug } from '@/app/huong-nha/years';
 import { BIRTH_YEARS as CUOI_YEARS, slugOf as cuoiSlug } from '@/app/xem-tuoi-cuoi/years';
 import { BIRTH_YEARS as LAM_NHA_YEARS, slugOf as lamNhaSlug } from '@/app/xem-tuoi-lam-nha/years';
+import { saveBirthProfile } from '@/lib/birth-profile';
 
 /**
  * TraCuuTuoi — công cụ tra cứu tuổi trọn đời (client-side 100%).
@@ -84,10 +86,12 @@ function Row({
   label,
   badge,
   detail,
+  action,
 }: {
   label: string;
   badge: React.ReactNode;
   detail: string;
+  action?: string;
 }) {
   return (
     <div className="flex flex-col gap-1 rounded-lg border border-border/60 bg-background/40 p-3">
@@ -96,6 +100,17 @@ function Row({
         {badge}
       </div>
       <p className="text-xs leading-relaxed text-muted-foreground">{detail}</p>
+      {action && (
+        <p className="mt-0.5 flex gap-1.5 text-xs leading-relaxed text-foreground/75">
+          <span aria-hidden className="shrink-0 text-gold">
+            →
+          </span>
+          <span>
+            <span className="font-medium text-foreground/85">Nên làm gì: </span>
+            {action}
+          </span>
+        </p>
+      )}
     </div>
   );
 }
@@ -187,16 +202,35 @@ const STATIC_LINKS: { href: string; label: string }[] = [
   { href: '/kim-lau', label: 'Kim Lâu — tính tuổi cưới / làm nhà' },
   { href: '/can-xuong', label: 'Cân xương tính số' },
   { href: '/hop-tuoi', label: 'Xem hợp tuổi (đôi lứa, làm ăn)' },
+  { href: '/tuong-hop-12-con-giap', label: 'Bản đồ tương hợp 12 con giáp' },
+  { href: '/luc-thap-hoa-giap', label: 'Lục Thập Hoa Giáp — bảng 60 Can Chi' },
 ];
 
-export function TraCuuTuoi(): React.JSX.Element {
-  const [year, setYear] = React.useState('');
-  const [gender, setGender] = React.useState<Gender>('nam');
-  const [revealed, setRevealed] = React.useState(false);
+export function TraCuuTuoi({
+  initialYear,
+  initialGender,
+}: {
+  initialYear?: string;
+  initialGender?: Gender;
+} = {}): React.JSX.Element {
+  // Prefill từ ?year=/?gender= (link nội bộ, vd từ /ban-menh/1990): nếu năm hợp
+  // lệ → hiện kết quả NGAY, khỏi bấm lại. KHÔNG armScroll ở mount → không giật
+  // khi mở trực tiếp; compute deterministic + cùng năm hiện tại server/client →
+  // không lệch hydrate.
+  const validInit =
+    !!initialYear &&
+    Number.isInteger(Number(initialYear)) &&
+    Number(initialYear) >= MIN_YEAR &&
+    Number(initialYear) <= MAX_YEAR &&
+    !!yearProfile(Number(initialYear));
+  const [year, setYear] = React.useState(initialYear ?? '');
+  const [gender, setGender] = React.useState<Gender>(initialGender ?? 'nam');
+  const [revealed, setRevealed] = React.useState(validInit);
   const [error, setError] = React.useState<string | null>(null);
   // Tính năm hiện tại 1 lần phía client. Chỉ dùng trong khối kết quả (hiện sau
   // khi bấm) nên không gây lệch hydrate.
   const [currentYear] = React.useState(() => new Date().getFullYear());
+  const router = useRouter();
   const { resultRef, armScroll } = useScrollToResult(revealed);
 
   const onChangeAny = React.useCallback(() => {
@@ -226,8 +260,15 @@ export function TraCuuTuoi(): React.JSX.Element {
       });
       armScroll();
       setRevealed(true);
+      // Lưu vào "hồ sơ ngày sinh dùng chung" (trên máy) để các công cụ khác
+      // (Sao hạn, Tam Tai...) tự điền, khỏi nhập lại.
+      saveBirthProfile({ year: y, gender });
+      // Ghi năm + giới tính vào địa chỉ để khi rời trang rồi bấm Back, kết quả
+      // được khôi phục (page.tsx đọc ?year/?gender → prefill + hiện lại), không
+      // phải nhập lại. scroll:false để không nhảy lên đầu, nhường armScroll.
+      router.replace(`/tra-cuu-tuoi?year=${y}&gender=${gender}`, { scroll: false });
     },
-    [year, armScroll],
+    [year, gender, armScroll, router],
   );
 
   const data = revealed ? buildResult(Number(year), gender, currentYear) : null;
@@ -258,6 +299,8 @@ export function TraCuuTuoi(): React.JSX.Element {
                 setYear(e.target.value);
                 onChangeAny();
               }}
+              aria-invalid={!!error}
+              aria-describedby={error ? 'tct-year-err' : undefined}
               className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-1 focus-visible:ring-gold"
             />
           </div>
@@ -291,7 +334,7 @@ export function TraCuuTuoi(): React.JSX.Element {
           ✦ Tra cứu
         </button>
         {error && (
-          <p className="mt-2 text-xs text-destructive" role="alert">
+          <p id="tct-year-err" className="mt-2 text-xs text-destructive" role="alert">
             {error}
           </p>
         )}
@@ -364,6 +407,11 @@ export function TraCuuTuoi(): React.JSX.Element {
                       detail={`Tuổi mụ ${data.kimLau.ageMu} chia 9 dư ${data.kimLau.remainder}${
                         data.kimLau.type ? ` — ${data.kimLau.note}` : ' — không rơi 1/3/6/8'
                       }.`}
+                      action={
+                        data.kimLau.type
+                          ? 'Cưới hỏi hay làm nhà năm nay: nếu không gấp, dân gian thường hoãn sang năm không phạm, hoặc mượn tuổi người hợp đứng ra lo việc. Tham khảo, không bắt buộc.'
+                          : 'Xét theo Kim Lâu, năm nay thuận cho cưới hỏi và làm nhà.'
+                      }
                     />
                     <Row
                       label="Tam Tai"
@@ -377,6 +425,11 @@ export function TraCuuTuoi(): React.JSX.Element {
                       detail={`Nhóm tuổi ${data.tamTai.birthChi} gặp Tam Tai vào 3 năm ${data.tamTai.tamTaiChis.join(
                         ', ',
                       )}. Năm nay là năm ${data.tamTai.yearChi}.`}
+                      action={
+                        data.tamTai.isTamTai
+                          ? 'Đang trong 3 năm Tam Tai: nên giữ ổn định, cân nhắc kỹ trước việc lớn (xây nhà, cưới hỏi, mở kinh doanh). Đây chỉ là giai đoạn nên thận trọng hơn, không phải điềm dữ.'
+                          : 'Năm nay không nằm trong 3 năm Tam Tai của nhóm tuổi bạn.'
+                      }
                     />
                     <Row
                       label="Xung năm / năm tuổi"
@@ -396,6 +449,13 @@ export function TraCuuTuoi(): React.JSX.Element {
                             ? `Năm nay trùng chi tuổi (${data.xung.birthChi}) — chỉ là lưu ý nhẹ, không phải hạn.`
                             : `Chi năm ${data.xung.yearChi} không xung với chi tuổi ${data.xung.birthChi}.`
                       }
+                      action={
+                        data.xung.isXung
+                          ? 'Năm xung Thái Tuế: việc trọng đại nên cẩn trọng và giữ hoà khí; nhiều người chọn năm khác cho việc lớn. Tham khảo.'
+                          : data.xung.isNamTuoi
+                            ? 'Chỉ là năm tuổi (trùng chi tuổi) — lưu ý nhẹ, không cần kiêng gì đặc biệt.'
+                            : 'Năm nay không xung với tuổi bạn.'
+                      }
                     />
                     <Row
                       label="Hoang Ốc"
@@ -407,6 +467,11 @@ export function TraCuuTuoi(): React.JSX.Element {
                         )
                       }
                       detail={`Tuổi mụ ${data.hoangOc.ageMu} đếm vòng Hoang Ốc rơi cung ${data.hoangOc.cung} (bước ${data.hoangOc.step}/6) — ${data.hoangOc.note}.`}
+                      action={
+                        data.hoangOc.isPham
+                          ? 'Định xây hay sửa nhà năm nay: dân gian thường hoãn, hoặc mượn tuổi người không phạm đứng ra khởi công / động thổ. Tham khảo.'
+                          : 'Xét theo Hoang Ốc, năm nay thuận cho việc khởi công xây nhà.'
+                      }
                     />
                     {data.saoHan && (
                       <Row
