@@ -19,7 +19,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const auth = await requireAdminSession('admin');
+  const auth = await requireAdminSession('admin', { read: true });
   if ('error' in auth) return auth.error;
 
   const overview = await fetchAhrefsOverview();

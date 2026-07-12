@@ -9,7 +9,7 @@ export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAdminSession('admin');
+  const auth = await requireAdminSession('admin', { read: true });
   if ('error' in auth) return auth.error;
   const { id } = await params;
   return proxyToGateway(req, {
