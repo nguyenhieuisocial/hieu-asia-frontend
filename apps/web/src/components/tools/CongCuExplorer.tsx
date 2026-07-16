@@ -90,7 +90,7 @@ function ToolCard({ tool, eyebrow }: { tool: ExplorerTool; eyebrow?: string }) {
       </div>
       <span
         aria-hidden="true"
-        className="mt-auto font-mono text-xs text-primary/60 transition-colors duration-200 group-hover:text-primary"
+        className="mt-auto font-mono text-xs text-primary/85 transition-colors duration-200 group-hover:text-primary"
       >
         Khám phá →
       </span>
@@ -207,7 +207,7 @@ export function CongCuExplorer({
                 >
                   <span aria-hidden="true">{c.icon}</span>
                   {c.label}
-                  <span className="text-muted-foreground/60">· {count}</span>
+                  <span className="text-muted-foreground">· {count}</span>
                 </a>
               );
             })}
