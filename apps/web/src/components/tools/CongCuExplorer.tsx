@@ -90,7 +90,7 @@ function ToolCard({ tool, eyebrow }: { tool: ExplorerTool; eyebrow?: string }) {
       </div>
       <span
         aria-hidden="true"
-        className="mt-auto font-mono text-xs text-primary/85 transition-colors duration-200 group-hover:text-primary"
+        className="mt-auto font-mono text-xs text-primary/85 transition-colors duration-200 group-hover:text-primary group-focus-within:text-primary"
       >
         Khám phá →
       </span>
