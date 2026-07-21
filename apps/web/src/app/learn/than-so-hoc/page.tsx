@@ -296,8 +296,9 @@ export default function LearnThanSoHocPage() {
                 <strong>Không có bằng chứng lịch sử</strong> nào cho thấy nhà toán học Pythagoras
                 (khoảng 570–495 TCN) lập ra bảng chữ cái quy đổi thành số mà ta dùng hôm nay. Hệ thống
                 tính toán hiện hành chủ yếu được định hình ở thế kỷ 20, bởi các tác giả như{' '}
-                <strong>L. Dow Balliett</strong> và <strong>Juno Jordan</strong> (thường gọi là trường
-                phái California), rồi <strong>Hans Decoz</strong> hệ thống hóa lại. hieu.asia bám biến
+                <strong>L. Dow Balliett</strong> (người tiên phong định hình thần số học Pythagoras hiện
+                đại ở Mỹ, đầu thế kỷ 20) và <strong>Juno Jordan</strong> (gắn với trường phái
+                California), rồi <strong>Hans Decoz</strong> hệ thống hóa lại. hieu.asia bám biến
                 thể Decoz: Đường Đời rút gọn theo từng thành phần, bộ Nợ Nghiệp 13/14/16/19, và Bài Học
                 Nghiệp là chữ số thiếu trong tên.
               </p>
