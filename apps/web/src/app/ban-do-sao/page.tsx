@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SunMoonChecker } from '@/components/ban-do-sao/SunMoonChecker';
@@ -99,7 +100,9 @@ export default async function BanDoSaoPage({
         relatedSlug="/ban-do-sao"
       >
         <section className="space-y-8">
-          <SunMoonChecker initialDate={initialDate} initialTime={initialTime} />
+          <React.Suspense fallback={null}>
+            <SunMoonChecker initialDate={initialDate} initialTime={initialTime} />
+          </React.Suspense>
 
           {/* 12 cung hoàng đạo */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
