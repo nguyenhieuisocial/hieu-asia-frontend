@@ -19,7 +19,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "chromatic": "chromatic --exit-zero-on-changes",
-    "clean": "rm -rf .next .turbo storybook-static node_modules"
+    "clean": "rm -rf .next .turbo storybook-static node_modules",
+    "test:journey": "playwright test tests/journey-smoke.spec.ts"
   },
   "dependencies": {
     "@ai-sdk/gateway": "^3.0.120",

@@ -61,6 +61,24 @@ const OWNER_PATH_PREFIXES = [
   'admin/infra/supabase/rows',  // raw table rows (PII); table-stats GET at admin/infra/supabase stays viewer
 ] as const;
 
+/**
+ * GET paths that SPEND MONEY (billed LLM calls) or are otherwise expensive.
+ *
+ * The default below is `GET → viewer` so dashboards stay readable. That default
+ * is FAIL-OPEN for new endpoints: anything added upstream is viewer-readable
+ * until someone remembers to classify it. `admin/cockpit/attention` slipped
+ * through exactly that way — it is a GET, so `viewer` could reach it, and this
+ * proxy injects the master admin token, so the worker's own `requireAdmin`
+ * cannot tell a viewer apart from an owner. Result: the lowest role could
+ * trigger billed AI calls, unmetered, just by loading a page.
+ *
+ * Anything that costs money per request belongs here, regardless of method.
+ */
+const AI_SPEND_PATH_PREFIXES = [
+  'admin/cockpit/attention', // GET → gathers signals + summarises via the AI gateway
+  'admin/copilot/ask',       // POST (already admin by default) — listed so the rule is explicit, not incidental
+] as const;
+
 /** True when `path` equals `prefix` or is a sub-path of it (respects '/' boundaries). */
 function underPrefix(path: string, prefix: string): boolean {
   return path === prefix || path.startsWith(prefix + '/');
@@ -90,7 +108,17 @@ function requiredRank(method: string, segments: string[]): number {
   ) {
     return ROLE_RANK.owner;
   }
+  // Money-spending reads are NOT free reads. A GET that bills an LLM call per
+  // request is a write against the AI budget, so it needs `admin` even though
+  // it returns data. Placed before the default so it wins over `GET → viewer`.
+  if (AI_SPEND_PATH_PREFIXES.some((p) => underPrefix(path, p))) return ROLE_RANK.admin;
   // Default: reads open to viewer; any write needs admin.
+  // ⚠️ FAIL-OPEN BY DESIGN, and deliberately left that way: flipping unknown
+  // GETs to `admin` would silently break every viewer dashboard that has not
+  // been enumerated here, which is a worse failure at this size. The mitigation
+  // is the explicit lists above — when adding a worker endpoint that costs money
+  // or exposes PII, add it to OWNER_PATH_PREFIXES or AI_SPEND_PATH_PREFIXES in
+  // the SAME change. Revisit the default if a real `viewer` user ever exists.
   return method === 'GET' ? ROLE_RANK.viewer : ROLE_RANK.admin;
 }
 

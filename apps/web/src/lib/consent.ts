@@ -182,6 +182,27 @@ export async function shouldShowBanner(): Promise<boolean> {
   // determine the user is OUTSIDE VN/EU, auto-apply legitimate-interest
   // defaults without showing the banner.
   try {
+    // ⚠️ QUAN SÁT CHƯA GIẢI THÍCH ĐƯỢC (2026-07-21) — ĐỌC TRƯỚC KHI "SỬA".
+    //
+    // Trên WebKit/Safari (ngữ cảnh iPhone SE), request này thỉnh thoảng ném ra
+    // console: `Fetch API cannot load .../api/edge/geo due to access control
+    // checks.` Chromium không tái hiện.
+    //
+    // ĐÃ LOẠI TRỪ, đừng mất công thử lại:
+    //   • KHÔNG phải do `cache: "force-cache"` — gọi tay cả hai kiểu (có/không
+    //     force-cache), ngay trong ngữ cảnh iPhone SE, đều trả 200. Một bản vá
+    //     trước đó gỡ `force-cache` với lý do "route force-dynamic nên luôn
+    //     no-store" — LÝ DO ĐÓ SAI: handler tự đặt `private, max-age=3600`,
+    //     tức là cache được. Đã hoàn lại nguyên trạng.
+    //   • KHÔNG phải CSP — `connect-src` có `'self'`.
+    //   • KHÔNG phải lá chắn chống bot Cloudflare — đo không thấy challenge nào.
+    //
+    // TÁC ĐỘNG THẬT: nhỏ. `catch` bên dưới bắt được và rơi về mặc định AN TOÀN
+    // (hiện banner). Không vi phạm quyền riêng tư, không hỏng tính năng — chỉ là
+    // trên iOS thì phần tự-nhận-quốc-gia có thể không chạy.
+    //
+    // ⇒ CHƯA SỬA vì chưa biết nguyên nhân. Sửa mò vào đường đồng-ý-cookie là
+    // rủi ro hơn cái lỗi đang có. Ai tìm ra nguyên nhân thì cập nhật khối này.
     const res = await fetch("/api/edge/geo", { cache: "force-cache" });
     if (res.ok) {
       const data = (await res.json()) as { country?: string };
