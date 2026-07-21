@@ -38,6 +38,22 @@ export default defineConfig({
       },
     },
     {
+      // ⚠️ TÊN GÂY HIỂU NHẦM — ĐỌC TRƯỚC KHI TIN KẾT QUẢ CI.
+      // Project này tên "chromium-mobile" nhưng KHÔNG chạy Chromium: preset
+      // `devices["iPhone SE"]` mang `defaultBrowserType: "webkit"`, nên nó chạy
+      // **WebKit (Safari)**. Ai đọc log CI thấy "chromium-mobile" rồi kết luận
+      // "Chrome mobile đã pass/fail" là hiểu SAI engine.
+      //
+      // Chuyện này có thật, không phải giả định: 2026-07-21 journey-smoke đỏ đúng
+      // ở project này với 2 lỗi mà chromium desktop KHÔNG tái hiện được — vì đó là
+      // lỗi riêng của Safari (chặn fetch `cache:"force-cache"` trên route
+      // no-store; và rơi RSC payload khiến mọi lần bấm link trên iPhone là tải lại
+      // cả trang).
+      //
+      // KHÔNG đổi tên project: 8 ảnh mẫu VRT đang gắn chuỗi "chromium-mobile" trong
+      // tên file, đổi là mất baseline. Giữ tên + ghi chú này là lựa chọn ít rủi ro
+      // hơn. Nếu sau này thật sự cần Chrome-mobile, THÊM project mới
+      // (`...devices["Pixel 7"]`) chứ đừng sửa cái này.
       name: "chromium-mobile",
       use: { ...devices["iPhone SE"] },
     },
