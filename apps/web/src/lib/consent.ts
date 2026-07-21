@@ -182,7 +182,16 @@ export async function shouldShowBanner(): Promise<boolean> {
   // determine the user is OUTSIDE VN/EU, auto-apply legitimate-interest
   // defaults without showing the banner.
   try {
-    const res = await fetch("/api/edge/geo", { cache: "force-cache" });
+    // KHÔNG dùng `cache: "force-cache"`: route /api/edge/geo khai báo
+    // `dynamic = "force-dynamic"` nên phản hồi luôn `no-store` — ép cache là tự
+    // mâu thuẫn, không bao giờ cache được. Chrome bỏ qua mâu thuẫn đó; WebKit/
+    // Safari CHẶN request ("due to access control checks") và ném lỗi ra console
+    // ở MỌI lần tải trang trên iPhone. Hệ quả: nhận-diện-quốc-gia không bao giờ
+    // chạy trên iOS (luôn rơi về mặc định an toàn = hiện banner), và tiếng ồn đó
+    // che mất lỗi thật trong console.
+    // Phát hiện bởi journey-smoke chạy trên WebKit/iPhone SE (2026-07-21) —
+    // chromium desktop KHÔNG tái hiện được.
+    const res = await fetch("/api/edge/geo");
     if (res.ok) {
       const data = (await res.json()) as { country?: string };
       const country = (data.country ?? "").toUpperCase();
