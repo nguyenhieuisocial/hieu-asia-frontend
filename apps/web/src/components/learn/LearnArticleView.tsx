@@ -241,7 +241,13 @@ export function LearnArticleView({
                           : 'border-border text-muted-foreground hover:text-foreground',
                       )}
                     >
-                      <span aria-hidden="true" className="text-[12px] opacity-70">
+                      {/* Số thứ tự trang trí. KHÔNG dùng `opacity-70`: ở chế độ tối,
+                          nó làm chữ vàng (khi mục đang active) pha xuống #886e33 trên
+                          nền tối = tương phản 3.62, dưới chuẩn WCAG AA 4.5. Cả hai màu
+                          nền (gold / muted-foreground) đều đạt AA ở độ mờ đầy đủ, nên
+                          bỏ opacity là đủ mà vẫn giữ được sắc thái. (a11y-dark sweep,
+                          2026-07-22.) */}
+                      <span aria-hidden="true" className="text-[12px]">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span>{item.label}</span>
