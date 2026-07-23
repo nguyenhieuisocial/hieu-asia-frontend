@@ -18,6 +18,7 @@
 
 import { NextResponse, type NextRequest } from 'next/server';
 import { getSessionFromRequest } from '@/lib/reasoning/session-auth';
+import { safeErrorDetail } from '@/lib/safe-error';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -97,7 +98,7 @@ export async function POST(
     });
   } catch (err) {
     return NextResponse.json(
-      { ok: false, error: 'pdf_proxy_failed', detail: err instanceof Error ? err.message : String(err) },
+      { ok: false, error: 'pdf_proxy_failed', detail: safeErrorDetail('reading/[id]/export-pdf', err) },
       { status: 502 },
     );
   }

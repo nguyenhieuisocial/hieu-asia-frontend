@@ -4,6 +4,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { safeErrorDetail } from '@/lib/safe-error';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -50,7 +51,7 @@ export async function POST(
       {
         ok: false,
         error: 'upstream_fetch_failed',
-        detail: err instanceof Error ? err.message : String(err),
+        detail: safeErrorDetail('mentor/conversations/[id]/messages', err),
       },
       { status: 502 },
     );
