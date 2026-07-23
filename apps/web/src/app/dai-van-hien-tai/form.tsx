@@ -217,7 +217,7 @@ export function DaiVanHienTaiForm() {
                 </div>
 
                 {error && (
-                  <p className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+                  <p role="alert" className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
                     {error}
                   </p>
                 )}
@@ -451,7 +451,7 @@ export function DaiVanHienTaiForm() {
           >
             Câu hỏi thường gặp
           </h2>
-          <dl className="space-y-3">
+          <div className="space-y-3">
             {FAQ.map((f) => (
               <details
                 key={f.q}
@@ -465,7 +465,7 @@ export function DaiVanHienTaiForm() {
                 </p>
               </details>
             ))}
-          </dl>
+          </div>
         </section>
         <div className="mx-auto max-w-6xl px-6 pb-12">
           <RelatedTools current="/dai-van-hien-tai" />

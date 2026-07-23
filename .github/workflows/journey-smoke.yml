@@ -1,0 +1,69 @@
+name: journey-smoke
+
+# vault 167 §I / T28 — đi TRỌN hành trình khách trên production.
+#
+# Khác a11y.yml (quét tiêu chuẩn từng trang), file này kiểm LỖI TÍCH HỢP: dữ
+# liệu có mang được sang bước sau không, deep-link có giữ đích đến không, mã
+# giới thiệu có sống qua điều hướng không. Đọc code tĩnh không thấy được nhóm
+# lỗi này.
+#
+# VÌ SAO ƯU TIÊN: 2026-07-21 xác nhận chưa từng có giao dịch nào đi trọn từ đầu
+# đến cuối (5 lần ngân hàng báo tiền, 0 lần thành đơn). Không ai đi bộ hết luồng
+# thì không ai biết nó gãy ở đâu.
+#
+# CHẠY SAU MỖI LẦN LÊN BẢN (deploy prod) + theo lịch. ADVISORY: không gắn vào
+# `pull_request` nên không chặn merge — hỏng thì lần chạy theo lịch đỏ lên, hiện
+# trong tab Actions + email. Cùng triết lý a11y.yml.
+#
+# ⚠️ PHẠM VI: hành trình 2 và 3 chỉ kiểm tới CỔNG đăng nhập (CI không giữ thông
+# tin đăng nhập). Phần sau đăng nhập VẪN CHƯA có ai đi — đừng đọc job xanh thành
+# "3 hành trình đã được phủ".
+
+on:
+  schedule:
+    # 02:30 UTC = 09:30 ICT — sau a11y.yml (02:00) 30 phút.
+    - cron: '30 2 * * *'
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Base URL để đi (bỏ trống = production https://hieu.asia)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: journey-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  journey:
+    name: journey smoke (prod)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: '22'
+          cache: pnpm
+      - name: Install deps
+        run: pnpm install --frozen-lockfile --filter web
+      - name: Install Playwright browsers
+        run: pnpm --filter web exec playwright install --with-deps chromium webkit
+      - name: Run journey smoke
+        run: pnpm --filter web test:journey
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ inputs.base_url || 'https://hieu.asia' }}
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: journey-smoke-${{ github.run_id }}
+          path: |
+            apps/web/playwright-report/
+            apps/web/test-results/
+          if-no-files-found: ignore
+          retention-days: 14

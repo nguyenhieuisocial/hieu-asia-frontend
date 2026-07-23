@@ -166,8 +166,11 @@ export default function ThanSoHocLandingPage() {
           </Card>
         </div>
 
-        <aside className="lg:col-span-2">
-          <h2 className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+        <aside className="lg:col-span-2" aria-labelledby="tsh-ban-se-nhan-duoc">
+          <h2
+            id="tsh-ban-se-nhan-duoc"
+            className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700"
+          >
             Bạn sẽ nhận được
           </h2>
           <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-1">
@@ -240,7 +243,7 @@ export default function ThanSoHocLandingPage() {
         >
           Câu hỏi thường gặp
         </h2>
-        <dl className="mt-4 space-y-3">
+        <div className="mt-4 space-y-3">
           {FAQ.map((f) => (
             <details
               key={f.q}
@@ -254,7 +257,7 @@ export default function ThanSoHocLandingPage() {
               </p>
             </details>
           ))}
-        </dl>
+        </div>
       </section>
       </RevealOnScroll>
     </ToolPageShell>

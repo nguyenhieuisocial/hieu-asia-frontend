@@ -78,6 +78,12 @@ export interface LearnArticleProps {
   standfirst: React.ReactNode;
   /** optional reading meta line (e.g. "8 phút đọc · Cập nhật 2026"). */
   readMeta?: React.ReactNode;
+  /**
+   * Optional block rendered right after the header, before the first section
+   * (vault 144 §c — khối "Trang này cho bạn"). Deliberately NOT a `section`
+   * so it stays out of the TOC: it is orientation copy, not a lesson.
+   */
+  afterHeader?: React.ReactNode;
   /** breadcrumb trail; last item is the current page (no href). */
   breadcrumb: LearnBreadcrumbItem[];
   /** the article body, in order. The TOC is built from these. */
@@ -99,6 +105,7 @@ export function LearnArticleView({
   title,
   standfirst,
   readMeta,
+  afterHeader,
   breadcrumb,
   sections,
   tryCta,
@@ -214,6 +221,8 @@ export function LearnArticleView({
           ) : null}
         </header>
 
+        {afterHeader ? <div className="mb-10 max-w-2xl">{afterHeader}</div> : null}
+
         {/* Two-column editorial layout: sticky TOC sidebar + article body.
             Sidebar collapses on < lg (mobile uses the FloatingTOC sheet). */}
         <div className="lg:grid lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-12">
@@ -241,7 +250,13 @@ export function LearnArticleView({
                           : 'border-border text-muted-foreground hover:text-foreground',
                       )}
                     >
-                      <span aria-hidden="true" className="text-[12px] opacity-70">
+                      {/* Số thứ tự trang trí. KHÔNG dùng `opacity-70`: ở chế độ tối,
+                          nó làm chữ vàng (khi mục đang active) pha xuống #886e33 trên
+                          nền tối = tương phản 3.62, dưới chuẩn WCAG AA 4.5. Cả hai màu
+                          nền (gold / muted-foreground) đều đạt AA ở độ mờ đầy đủ, nên
+                          bỏ opacity là đủ mà vẫn giữ được sắc thái. (a11y-dark sweep,
+                          2026-07-22.) */}
+                      <span aria-hidden="true" className="text-[12px]">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span>{item.label}</span>

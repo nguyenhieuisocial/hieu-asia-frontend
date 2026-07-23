@@ -137,7 +137,11 @@ export default function ThuocLoBanPage() {
         <div className="lg:col-span-2">
           <Card className="border-gold/20 bg-card/60 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="font-heading text-lg">Nhập kích thước</CardTitle>
+              {/* h2: đây là tiêu đề mục ĐẦU TIÊN dưới h1 của trang — để mặc
+                  định h3 của CardTitle sẽ nhảy cấp h1 → h3 (heading-order). */}
+              <CardTitle as="h2" className="font-heading text-lg">
+                Nhập kích thước
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <form className="space-y-5" onSubmit={onSubmit}>

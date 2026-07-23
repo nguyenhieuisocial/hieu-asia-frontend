@@ -1,6 +1,6 @@
 import { toolOgImage, OG_SIZE, OG_CONTENT_TYPE } from '@/lib/og';
 
-export const alt = 'Bát Tự — Tám chữ định mệnh — hieu.asia';
+export const alt = 'Bát Tự — Tám chữ định hình bạn — hieu.asia';
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 

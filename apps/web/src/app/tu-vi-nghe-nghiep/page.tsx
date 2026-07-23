@@ -277,7 +277,7 @@ export default function TuViNgheNghiepPage() {
           <h2 className="mb-5 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Câu hỏi thường gặp
           </h2>
-          <dl className="space-y-3">
+          <div className="space-y-3">
             {FAQ.map((f) => (
               <details
                 key={f.q}
@@ -291,7 +291,7 @@ export default function TuViNgheNghiepPage() {
                 </p>
               </details>
             ))}
-          </dl>
+          </div>
         </section>
 
         <section className="relative mx-auto max-w-3xl px-6 pb-12">

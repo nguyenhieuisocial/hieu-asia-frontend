@@ -317,6 +317,9 @@ export default function PricingPage() {
               ctaHref: '/onboarding',
               primary: true,
               recommended: true,
+              // vault 144 §b — "xem trước, trả sau". Đúng cơ chế thật: lập lá
+              // số miễn phí trước, cổng QR mở ngay trên trang báo cáo.
+              ctaNote: 'Xem lá số đầy đủ trước, trả tiền sau.',
               refundDays: 14,
             },
             {

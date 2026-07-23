@@ -1115,7 +1115,7 @@ export default function MethodologyTuViPage() {
           </section>
 
           {/* Sticky table of contents (desktop only) */}
-          <aside className="hidden lg:block">
+          <aside className="hidden lg:block" aria-label="Mục lục">
             <nav
               aria-label="Mục lục"
               className="sticky top-20 rounded-lg border border-border bg-card/40 p-4"

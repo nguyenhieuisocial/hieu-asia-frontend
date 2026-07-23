@@ -2,8 +2,8 @@
  * Accessibility (WCAG 2.2 AA) scan via axe-core on Playwright.
  * Wave 60.80 — free quality stack (no SaaS account required).
  *
- * Runs across 8 marketing + auth + checkout pages. Fails the PR
- * only on `serious` + `critical` violations; `minor` + `moderate`
+ * Runs across marketing + auth + checkout + funnel/tool pages. Fails the
+ * run only on `serious` + `critical` violations; `minor` + `moderate`
  * are logged as warnings to keep signal high.
  *
  * Local run: `pnpm --filter web test:a11y`
@@ -21,6 +21,19 @@ const PAGES = [
   { path: "/signin", name: "Sign in" },
   { path: "/checkout/premium", name: "Checkout premium" },
   { path: "/checkout/mentor", name: "Checkout mentor" },
+  // Funnel/tool surface — the free-tool + hub + learn pages organic traffic
+  // lands on before converting. Uncovered until now; scanned at rest (the
+  // animation-freeze below neutralises staggered entrance fades).
+  { path: "/cong-cu", name: "Tools hub" },
+  { path: "/la-so-tu-vi", name: "Tu Vi tool" },
+  { path: "/la-so-bat-tu", name: "Bat Tu tool" },
+  { path: "/mbti", name: "MBTI tool" },
+  { path: "/enneagram", name: "Enneagram tool" },
+  { path: "/disc", name: "DISC tool" },
+  { path: "/big-five", name: "Big Five tool" },
+  { path: "/sample-report", name: "Sample report" },
+  { path: "/learn", name: "Learn hub" },
+  { path: "/tu-vi-hom-nay", name: "Daily horoscope" },
 ];
 
 for (const p of PAGES) {
@@ -47,7 +60,7 @@ for (const p of PAGES) {
       `,
     });
     // /signin has long-polling auth retry that never reaches networkidle;
-    // 2s settle window is reliable across all 8 pages.
+    // 2s settle window is reliable across all pages.
     await page.waitForTimeout(2000);
 
     const results = await new AxeBuilder({ page })

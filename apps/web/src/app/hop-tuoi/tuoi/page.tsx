@@ -127,7 +127,7 @@ export default function HopTuoiTuoiHubPage() {
           />
         </div>
 
-        <p className="mt-10 text-center text-xs text-foreground/40">
+        <p className="mt-10 text-center text-xs text-muted-foreground">
           Tham khảo tổng quan theo con giáp — không bói toán, không quyết định số phận.
           Yếu tố con người và lá số chi tiết quan trọng hơn.
         </p>

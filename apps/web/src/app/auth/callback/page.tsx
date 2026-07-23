@@ -62,7 +62,36 @@ function parseHashError(): { error: string; code?: string } | null {
   return { error, code };
 }
 
+/**
+ * Ranh giới Suspense cho `useSearchParams`.
+ *
+ * Trước 2026-07-21, next-intl đọc `cookies()` khi render nên MỌI trang bị đánh
+ * dấu dynamic — Next không bao giờ prerender trang này, và việc thiếu Suspense
+ * quanh `useSearchParams` không bao giờ lộ ra. Khi locale được chốt tĩnh để cả
+ * site cache được ở CDN, Next bắt đầu prerender và build FAIL ngay tại đây.
+ *
+ * Đây là yêu cầu chuẩn của Next: `useSearchParams` phải nằm trong Suspense thì
+ * phần còn lại của trang mới prerender được. Bọc lại thay vì ép trang dynamic —
+ * ép dynamic sẽ lại làm mất cache đúng như vấn đề đang sửa.
+ */
 export default function AuthCallbackPage() {
+  return (
+    <React.Suspense
+      fallback={
+        <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
+          <h1 className="sr-only">Xác thực tài khoản</h1>
+          <div className="text-center">
+            <p className="font-heading text-gold text-lg">Đang xác thực…</p>
+          </div>
+        </main>
+      }
+    >
+      <AuthCallbackInner />
+    </React.Suspense>
+  );
+}
+
+function AuthCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 

@@ -376,7 +376,10 @@ export default function JournalEntryPage() {
                 </div>
               </div>
 
-              <aside className="space-y-4 sm:sticky sm:top-24">
+              <aside
+                aria-label="Thông tin bên lề của nhật ký"
+                className="space-y-4 sm:sticky sm:top-24"
+              >
                 <div className="rounded-lg border border-gold/25 bg-gold/[0.04] p-4">
                   <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-gold-700">
                     <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
