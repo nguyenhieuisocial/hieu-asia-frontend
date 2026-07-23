@@ -952,7 +952,7 @@ export default function LearnTuViPage() {
           tocLabel: 'Giải thích chi tiết',
           heading: 'Giải thích chi tiết',
           children: (
-            <dl className="space-y-2">
+            <div className="space-y-2">
               {FAQS.map((f, i) => (
                 <details
                   key={i}
@@ -969,7 +969,7 @@ export default function LearnTuViPage() {
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
                 </details>
               ))}
-            </dl>
+            </div>
           ),
         },
         {

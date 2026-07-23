@@ -31,6 +31,29 @@
     text-underline-offset: 0.2em;
   }
 
+  /* WCAG 1.4.1 (axe `link-in-text-block`) — link NẰM TRONG đoạn văn phải phân
+   * biệt được bằng dấu hiệu KHÔNG-PHẢI-MÀU. Quy ước site là
+   * `class="text-gold hover:underline"` (~215 chỗ): gạch chân chỉ hiện khi rê
+   * chuột, nên ở trạng thái mặc định link chỉ khác chữ xung quanh bằng MÀU —
+   * và độ tương phản giữa hai màu đó chỉ ~1.4:1 ở nền tối (gold #B8923D vs
+   * muted #B5B2AB) và ~1.15:1 ở nền sáng (#7A5A1F vs #5B564D), dưới ngưỡng 3:1
+   * mà quy tắc đòi. Vì vậy sửa ở MỘT nguồn: bật sẵn gạch chân cho đúng những
+   * link mang class `hover:underline` (tức tác giả ĐÃ định gạch chân, chỉ hoãn
+   * tới hover) khi chúng nằm trong khối chữ (p/li/dd/dt/nav/blockquote/…).
+   * KHÔNG áp cho link dạng nút/thẻ/ô lưới — chúng không nằm trong khối chữ nên
+   * quy tắc axe không xét, và gạch chân ở đó sẽ xấu.
+   * Cả hai chế độ sáng + tối đều vi phạm nên KHÔNG khoá riêng `.dark`.
+   *
+   * Loại trừ link dạng NÚT/CTA đứng một mình: trong kho mã chúng luôn mang một
+   * class hộp (`inline-block` / `inline-flex` / `block` / `rounded-*`), còn link
+   * chạy trong câu văn thì chỉ có class màu. Lọc theo dấu hiệu đó nên gạch chân
+   * chỉ rơi đúng vào link nằm giữa chữ — không đụng nút, thẻ, ô lưới.
+   * Đặt trong @layer base để utility `no-underline` viết tay vẫn thắng được. */
+  a.hover\:underline:not([class*='block']):not([class*='flex']):not([class*='rounded']) {
+    text-decoration-line: underline;
+    text-underline-offset: 0.2em;
+  }
+
   /* iOS Safari inflates <input type="date"> past its declared height (h-11 /
    * 44px) and ignores the box model — the native value pseudo-element carries
    * intrinsic sizing until appearance is reset. Symptom: the date box renders
@@ -526,6 +549,32 @@ html {
 :root:not(.dark) [class^="text-sky-300/"], :root:not(.dark) [class*=" text-sky-300/"],
 :root:not(.dark) [class^="text-blue-300/"], :root:not(.dark) [class*=" text-blue-300/"] { color: #1e5a8a; }
 
+/* ROUND 6 (2026-07-23, đợt vá nợ trợ năng nền tối — quét lại CẢ nền sáng).
+ * Năm vòng trên dừng ở tầng -300 (cộng thêm rose-400), nên tầng -400/-600 của
+ * amber + emerald vẫn lọt: axe trên nền SÁNG bắt được
+ *   • `/tu-vi-hom-nay` — điểm số 12 con giáp cỡ 24px đậm: emerald-400 #00D492
+ *     chỉ 1.87:1, amber-400 #FFB900 chỉ 1.66:1 trên nền giấy (chuẩn chữ lớn 3:1);
+ *   • `/sample-report` — nhãn "Mục G1 …" amber-600 #E17100 chỉ 2.94:1.
+ * Cùng bản chất với các vòng trước (màu accent sáng vốn soạn cho nền tối), nên
+ * dùng lại đúng hai màu neo đã kiểm: ochre #785312 và emerald #176046. Chỉ áp
+ * cho nền sáng qua :root:not(.dark) → các route ép nền tối (mang sẵn class
+ * `.dark`) không bao giờ khớp, giữ nguyên màu thương hiệu rực. */
+:root:not(.dark) .text-amber-400,
+:root:not(.dark) .text-amber-600 {
+  color: #785312;
+}
+:root:not(.dark) .text-emerald-400 {
+  color: #176046;
+}
+/* Cùng vòng: pha mờ 0.8 của chữ phụ (`text-muted-foreground/80`) trên nền sáng
+ * chỉ còn 4.29:1 ở cỡ 12px (đo trên /learn/mbti/intj — chú thích dưới mỗi thẻ).
+ * Trước đây mới gỡ pha mờ cho /70 (toàn site) và /80 (riêng /methodology); nay
+ * gỡ /80 cho cả nền sáng, đúng một cách làm. Nền tối vẫn đạt (≈5.6:1) nên không
+ * đụng tới. */
+:root:not(.dark) .text-muted-foreground\/80 {
+  color: hsl(var(--muted-foreground));
+}
+
 /* ────────────────────────────────────────────────────────────────────────
  * AA contrast sweep — ROUND 3 (2026-06-14, founder "fix màu toàn site, cả
  * sáng/tối"). A Playwright audit (both themes, 39 template families) surfaced
@@ -543,6 +592,16 @@ html {
  * design already uses. LIGHT keeps gold-700 (AA on cream) via the .dark scope. */
 .dark .text-gold-700 {
   color: #d4b373;
+}
+
+/* (1b) DARK mode — cùng lỗi với `text-muted-foreground/70` mà khối "light only"
+ * phía trên đã xử cho nền sáng. Trên nền TỐI, pha 0.7 kéo #B5B2AB xuống #888682;
+ * đặt trên mặt thẻ `bg-card` (#1F2023) chỉ còn 4.48:1 — dưới AA 4.5 cho chữ 12px
+ * (đo bằng axe trên /xem-tuong, khối chú thích dưới ô tải ảnh; 47 chỗ dùng class
+ * này nên vá ở nguồn thay vì từng trang). Bỏ pha mờ → về đúng --muted-foreground
+ * (7.5:1 trên nền tối), giống hệt cách nền sáng đang làm. */
+.dark .text-muted-foreground\/70 {
+  color: hsl(var(--muted-foreground));
 }
 
 /* (2) LIGHT mode — filled gold CTA buttons (`bg-gold` + `text-background`) put

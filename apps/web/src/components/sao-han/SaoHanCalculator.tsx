@@ -133,7 +133,7 @@ export function SaoHanCalculator() {
         <SavedBirthInfoHint show={prefilled} onClear={() => setPrefilled(false)} />
 
         {error && (
-          <div className="rounded-md border border-rose-300 bg-rose-50 p-3 text-sm text-rose-800 dark:border-rose-700 dark:bg-rose-950/30 dark:text-rose-200">
+          <div role="alert" className="rounded-md border border-rose-300 bg-rose-50 p-3 text-sm text-rose-800 dark:border-rose-700 dark:bg-rose-950/30 dark:text-rose-200">
             {error}
           </div>
         )}
