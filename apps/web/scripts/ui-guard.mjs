@@ -47,7 +47,11 @@ export function parseAddedLines(diff) {
   for (const line of diff.split('\n')) {
     if (line.startsWith('+++ b/')) { file = line.slice(6); continue; }
     if (line.startsWith('+++ ')) { file = null; continue; }
-    if (line.startsWith('+') && !line.startsWith('+++') && file && /\.(tsx?|jsx?)$/.test(file)) {
+    // Test files are skipped: a guard's own test fixtures deliberately contain
+    // the anti-patterns it looks for (e.g. `<div className="text-black" />`),
+    // so scanning them makes the guard fail on itself.
+    if (line.startsWith('+') && !line.startsWith('+++') && file
+        && /\.(tsx?|jsx?)$/.test(file) && !/\.(test|spec)\.(tsx?|jsx?)$/.test(file)) {
       added.push({ file, text: line.slice(1) });
     }
   }

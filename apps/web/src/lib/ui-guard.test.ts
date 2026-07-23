@@ -35,6 +35,22 @@ describe('ui-guard — đọc diff', () => {
   it('diff rỗng → không có dòng nào', () => {
     expect(parseAddedLines('')).toEqual([]);
   });
+
+  // Chính file này cố ý chứa các mẫu sai để thử guard. Không loại trừ file
+  // kiểm thử thì guard sẽ báo lỗi lên chính nó và chặn mọi PR đụng vào nó.
+  it('bỏ qua file .test.ts / .spec.tsx (fixture cố ý chứa mẫu sai)', () => {
+    const diff = [
+      '+++ b/apps/web/src/lib/ui-guard.test.ts',
+      '+  expect(lines(\'<div className="text-black" />\')).toHaveLength(1);',
+      '+++ b/apps/web/src/components/Foo.spec.tsx',
+      '+  <div className="bg-white" />',
+      '+++ b/apps/web/src/components/Foo.tsx',
+      '+  <div className="text-black" />',
+    ].join('\n');
+    expect(parseAddedLines(diff)).toEqual([
+      { file: 'apps/web/src/components/Foo.tsx', text: '  <div className="text-black" />' },
+    ]);
+  });
 });
 
 const lines = (text: string, file = 'apps/web/src/components/A.tsx') =>
