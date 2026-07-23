@@ -55,8 +55,8 @@ export function ReferralCard() {
       </div>
 
       <p className="mb-3 text-sm text-foreground/70">
-        Gửi link mời cho bạn bè. Khi bạn của bạn tham gia, <strong className="font-semibold text-foreground/90">cả hai</strong> cùng
-        nhận một voucher giảm giá.
+        Gửi link mời cho bạn bè. Bạn của bạn tham gia, <strong className="font-semibold text-foreground/90">cả hai cùng
+        được giảm 20%</strong> cho lần mua tiếp theo.
       </p>
 
       <div className="mb-3 flex items-center gap-2 rounded-lg border border-border bg-background/40 px-3 py-2">
@@ -75,7 +75,7 @@ export function ReferralCard() {
         <ShareResultButton
           path={`/r/${info.code}`}
           title="Mình mời bạn dùng hieu.asia"
-          text="Cùng khám phá Tử Vi · MBTI · Mentor AI trên hieu.asia — tham gia qua link của mình để cả hai cùng nhận ưu đãi nhé!"
+          text="Cùng khám phá Tử Vi · MBTI · Mentor AI trên hieu.asia — vào bằng link của mình thì cả hai cùng được giảm 20% nhé!"
           trackId="referral-invite"
         />
         {info.invited_count > 0 && (

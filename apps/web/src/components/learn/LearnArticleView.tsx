@@ -78,6 +78,12 @@ export interface LearnArticleProps {
   standfirst: React.ReactNode;
   /** optional reading meta line (e.g. "8 phút đọc · Cập nhật 2026"). */
   readMeta?: React.ReactNode;
+  /**
+   * Optional block rendered right after the header, before the first section
+   * (vault 144 §c — khối "Trang này cho bạn"). Deliberately NOT a `section`
+   * so it stays out of the TOC: it is orientation copy, not a lesson.
+   */
+  afterHeader?: React.ReactNode;
   /** breadcrumb trail; last item is the current page (no href). */
   breadcrumb: LearnBreadcrumbItem[];
   /** the article body, in order. The TOC is built from these. */
@@ -99,6 +105,7 @@ export function LearnArticleView({
   title,
   standfirst,
   readMeta,
+  afterHeader,
   breadcrumb,
   sections,
   tryCta,
@@ -213,6 +220,8 @@ export function LearnArticleView({
             </p>
           ) : null}
         </header>
+
+        {afterHeader ? <div className="mb-10 max-w-2xl">{afterHeader}</div> : null}
 
         {/* Two-column editorial layout: sticky TOC sidebar + article body.
             Sidebar collapses on < lg (mobile uses the FloatingTOC sheet). */}

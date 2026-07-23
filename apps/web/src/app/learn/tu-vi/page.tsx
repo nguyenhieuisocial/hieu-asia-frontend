@@ -209,6 +209,34 @@ export default function LearnTuViPage() {
         </>
       }
       readMeta="15 phút đọc · Cập nhật 2026 · Đối chiếu cổ thư"
+      /* vault 144 §c — khối định hướng "Trang này cho bạn". Trang lăng kính
+         này là cửa SEO nhưng thiên về dạy; 4 dòng giá trị + CTA cho người đọc
+         một lối chuyển sang lập lá số thật. */
+      afterHeader={
+        <aside
+          aria-labelledby="trang-nay-cho-ban"
+          className="rounded-xl border border-border bg-card/50 p-5"
+        >
+          <h2
+            id="trang-nay-cho-ban"
+            className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700"
+          >
+            Trang này cho bạn
+          </h2>
+          <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
+            <li>· Hiểu 12 cung trên lá số soi những lĩnh vực nào của đời bạn</li>
+            <li>· Đọc lá số riêng của bạn, không phải câu chung chung ai đọc cũng đúng</li>
+            <li>· Thấy mỗi kết luận dẫn từ cung và sao nào, không phán bừa</li>
+            <li>· Lập lá số miễn phí trong 30 giây, không cần thẻ</li>
+          </ul>
+          <Link
+            href="/tu-vi"
+            className="mt-4 inline-flex items-center rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-sm font-medium text-gold-700 transition hover:border-gold/60 hover:bg-gold/15"
+          >
+            Lập lá số Tử Vi miễn phí →
+          </Link>
+        </aside>
+      }
       breadcrumb={[
         { label: 'Trang chủ', href: '/' },
         { label: 'Học huyền học', href: '/learn' },
