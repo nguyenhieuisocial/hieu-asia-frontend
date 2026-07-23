@@ -11,6 +11,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { safeErrorDetail } from '@/lib/safe-error';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -58,7 +59,7 @@ async function forward(req: Request, target: string): Promise<NextResponse> {
       {
         ok: false,
         error: 'upstream_fetch_failed',
-        detail: err instanceof Error ? err.message : String(err),
+        detail: safeErrorDetail('mentor/conversations', err),
       },
       { status: 502 },
     );

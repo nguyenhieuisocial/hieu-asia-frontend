@@ -86,7 +86,10 @@ const FEATURED: FeaturedConfig = {
 // MIỄN PHÍ — hành động giá-trị-cao nhất — thay vì để trống. Ở mobile panel ẩn
 // (CongCuExplorer hiện 2 thẻ này), nên không trùng lặp.
 const commandPanel = (
-  <aside className="rounded-2xl border border-gold/30 bg-card p-5 shadow-sm">
+  <aside
+    aria-label="Bắt đầu miễn phí"
+    className="rounded-2xl border border-gold/30 bg-card p-5 shadow-sm"
+  >
     <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
       Bắt đầu miễn phí · 30 giây
     </p>

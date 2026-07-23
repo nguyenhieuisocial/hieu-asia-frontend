@@ -17,6 +17,10 @@ on:
         description: 'rubric-only | rubric-plus-llm | llm-only'
         required: false
         default: 'rubric-plus-llm'
+      max_samples:
+        description: 'Cap the number of samples (keeps the run within the 75-min budget + bounds gateway cost). 0 = all. Default 6.'
+        required: false
+        default: '6'
 
 permissions:
   contents: read
@@ -74,7 +78,13 @@ jobs:
             PERSONA_ARG="--persona ${{ inputs.persona_filter }}"
           fi
           JUDGE_ARG="--judge-mode ${{ inputs.judge_mode || 'rubric-plus-llm' }}"
-          pnpm dlx tsx tests/eval/runner.ts $PERSONA_ARG $JUDGE_ARG
+          # Cap samples so the run COMPLETES within timeout-minutes (75) instead of
+          # being cancelled mid-run (each sample = 1 full prod reading, up to ~10 min).
+          # The uncapped run timed out for weeks → the gate produced no Avg AND burned
+          # ~75 min of scarce gateway budget weekly for nothing (see #652). 0 = all
+          # (pass max_samples=0 on a manual dispatch for a deep run).
+          MAXSAMPLES_ARG="--max-samples ${{ inputs.max_samples || '6' }}"
+          pnpm dlx tsx tests/eval/runner.ts $PERSONA_ARG $JUDGE_ARG $MAXSAMPLES_ARG
         continue-on-error: true
 
       - name: Upload eval results

@@ -23,6 +23,7 @@ export function PinnedInsights({
 }: PinnedInsightsProps) {
   return (
     <aside
+      aria-label="Insights đã ghim"
       className={cn(
         'flex h-full flex-col border-l border-gold/15 bg-card/40',
         className,

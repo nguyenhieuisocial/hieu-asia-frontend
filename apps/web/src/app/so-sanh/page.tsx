@@ -73,7 +73,7 @@ export default function SoSanhHubPage() {
           ))}
         </section>
 
-        <p className="mt-10 text-center text-xs text-foreground/40">
+        <p className="mt-10 text-center text-xs text-muted-foreground">
           So sánh để chọn công cụ phù hợp — không khẳng định phương pháp nào "đúng hơn"
           tuyệt đối.
         </p>

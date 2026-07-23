@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Bảng giá',
+  // vault 147 §a — nỗi đau VOC lớn nhất ở màn giá là "bẫy thanh toán" và
+  // "giá mờ ám". Nói thẳng giá + không tự động gia hạn ngay trong description.
   description:
-    'Premium 99.000đ một lần · Mentor Monthly 199.000đ / tháng · Mentor Yearly 1.990.000đ / năm (tiết kiệm 17%) · Lifetime 4.990.000đ trọn đời.',
+    'Giá rõ ràng, không bẫy thuê bao: Premium 99.000đ một lần · Mentor 199.000đ/tháng, huỷ bất cứ lúc nào · Lifetime 4.990.000đ trọn đời. Bắt đầu miễn phí, xem lá số trước rồi mới quyết.',
   alternates: { canonical: 'https://hieu.asia/pricing' },
   // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
   // openGraph (Next.js merge semantics), so we must re-declare `images` here

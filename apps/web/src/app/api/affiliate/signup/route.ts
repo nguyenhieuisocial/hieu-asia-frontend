@@ -6,6 +6,7 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { safeErrorDetail } from '@/lib/safe-error';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     return NextResponse.json(
-      { ok: false, error: 'upstream_fetch_failed', detail: err instanceof Error ? err.message : String(err) },
+      { ok: false, error: 'upstream_fetch_failed', detail: safeErrorDetail('affiliate/signup', err) },
       { status: 502 },
     );
   }

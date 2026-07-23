@@ -12,6 +12,7 @@
 
 import { NextResponse, type NextRequest } from 'next/server';
 import { checkBotId } from 'botid/server';
+import { safeErrorDetail } from '@/lib/safe-error';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -83,7 +84,7 @@ export async function POST(req: NextRequest) {
       {
         ok: false,
         error: 'upstream_fetch_failed',
-        detail: err instanceof Error ? err.message : String(err),
+        detail: safeErrorDetail('payment/intent', err),
       },
       { status: 502 },
     );

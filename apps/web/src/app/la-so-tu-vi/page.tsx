@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Metadata } from 'next';
 import { LaSoChecker } from '@/components/la-so-tu-vi/LaSoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
@@ -132,12 +133,14 @@ export default async function LaSoTuViPage({
         relatedSlug="/la-so-tu-vi"
       >
         <section className="space-y-8">
-          <LaSoChecker
-            initialDate={d}
-            initialTime={t}
-            initialGender={g}
-            autoCast={Boolean(d)}
-          />
+          <React.Suspense fallback={null}>
+            <LaSoChecker
+              initialDate={d}
+              initialTime={t}
+              initialGender={g}
+              autoCast={Boolean(d)}
+            />
+          </React.Suspense>
 
           {/* 12 cung */}
           <RevealOnScroll>

@@ -199,7 +199,24 @@ function summarizePersonality(a: SurveyAnswers): string {
   return JSON.stringify(a, null, 2);
 }
 
+/**
+ * Ranh giới Suspense cho `useSearchParams`.
+ *
+ * Trước 2026-07-21 next-intl đọc `cookies()` khi render nên MỌI trang bị đánh
+ * dấu dynamic — Next không prerender trang này, và việc thiếu Suspense quanh
+ * `useSearchParams` không bao giờ lộ. Khi locale được chốt tĩnh để site cache
+ * được ở CDN, Next bắt đầu prerender và build fail tại đây. Bọc Suspense thay vì
+ * ép trang dynamic — ép dynamic sẽ lại mất cache đúng như vấn đề đang sửa.
+ */
 export default function SurveyPage() {
+  return (
+    <React.Suspense fallback={null}>
+      <SurveyPageInner />
+    </React.Suspense>
+  );
+}
+
+function SurveyPageInner() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const search = useSearchParams();

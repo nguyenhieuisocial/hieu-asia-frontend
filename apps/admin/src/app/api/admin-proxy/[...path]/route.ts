@@ -28,8 +28,7 @@ export const dynamic = 'force-dynamic';
 const GATEWAY = process.env.HIEU_API_GATEWAY_URL ?? 'https://api.hieu.asia';
 const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 
-// Per-user role enforcement (mirrors ROLE_RANK in lib/auth-server.ts; redefined
-// inline so the edge proxy doesn't pull in `cookies()`/sbServer from that module).
+// Per-user role enforcement (mirrors ROLE_RANK in lib/auth-server.ts).
 //
 // WHY THIS EXISTS (Wave 64.x security fix): the backend `requireAdmin` only
 // constant-time-compares the shared X-Admin-Token and never reads a per-user
@@ -38,61 +37,12 @@ const TOKEN = process.env.HIEU_API_ADMIN_TOKEN;
 // `viewer` (intended read-only) could issue refunds, grant comped paid-reading
 // access, reveal/rotate production secrets, retry paid pipelines, etc. Per-user
 // authorization MUST happen in the proxy — there is no backend fallback.
-const ROLE_RANK = { viewer: 0, admin: 1, owner: 2 } as const;
-
-// Backend path prefixes that require OWNER for EVERY method (read included).
-// This list MUST mirror every dedicated apps/admin/src/app/api/admin/**/route.ts
-// that calls requireAdminSession('owner'); the Worker is role-blind so this
-// proxy is the only per-user authz point, and any owner path missing here is
-// reachable at mere ADMIN rank through /api/admin-proxy/<path> (e.g. before
-// this fix, POST admin/users {role:'owner'} was an admin→owner self-escalation).
-// Each entry matches the exact path OR any deeper sub-path (segment-boundary
-// safe — 'admin/users' matches 'admin/users' and 'admin/users/set-plan' but
-// NOT 'admin/usersX').
-const OWNER_PATH_PREFIXES = [
-  'admin/secrets',              // production secrets (read or write)
-  'admin/users',                // admin-user CRUD (role=owner self-escalation) + end-user plan comp (admin/users/set-plan)
-  'admin/ledger/journal',       // manual journal entry + journal/void (accounting integrity)
-  'admin/ledger/close',         // period close / trial-balance snapshot
-  'ai/keys',                    // provider API keys (Anthropic/OpenAI/Google) — production secrets
-  'admin/sepay/refund',         // SePay money movement
-  'admin/sepay/reconcile',      // SePay money reconcile
-  'admin/sepay/drift/fix',      // SePay drift correction (money)
-  'admin/infra/supabase/rows',  // raw table rows (PII); table-stats GET at admin/infra/supabase stays viewer
-] as const;
-
-/** True when `path` equals `prefix` or is a sub-path of it (respects '/' boundaries). */
-function underPrefix(path: string, prefix: string): boolean {
-  return path === prefix || path.startsWith(prefix + '/');
-}
-
-/**
- * Minimum role required to forward a given request.
- *   - GET (read)                     → viewer  (dashboards stay readable)
- *   - mutations (POST/PATCH/DELETE)  → admin
- *   - OWNER_PATH_PREFIXES (any method), comped paid-access grants, and
- *     destructive settings writes    → owner
- */
-function requiredRank(method: string, segments: string[]): number {
-  const path = segments.join('/');
-  // Owner-only surfaces (all methods): secrets, admin-user mgmt, money, keys, PII.
-  if (OWNER_PATH_PREFIXES.some((p) => underPrefix(path, p))) return ROLE_RANK.owner;
-  // Comped paid-access grants: admin/sessions/:id/access → owner.
-  if (segments[0] === 'admin' && segments[1] === 'sessions' && segments[3] === 'access') {
-    return ROLE_RANK.owner;
-  }
-  // Settings WRITES are owner-only; reads (GET) stay viewer. Loosening a
-  // retention window or alert threshold silences production signal. Mirrors the
-  // dedicated /api/admin/settings/{retention,alert-thresholds} owner gates.
-  if (
-    method !== 'GET' &&
-    (path === 'admin/settings/alert-thresholds' || path === 'admin/settings/retention')
-  ) {
-    return ROLE_RANK.owner;
-  }
-  // Default: reads open to viewer; any write needs admin.
-  return method === 'GET' ? ROLE_RANK.viewer : ROLE_RANK.admin;
-}
+//
+// The classification tables + requiredRank live in `./_authz` so they are
+// unit-testable (a Next route file may only export HTTP handlers). The
+// invariant "money/PII endpoints must be classified" has been violated twice;
+// _authz.test.ts now guards it in CI.
+import { ROLE_RANK, requiredRank } from './_authz';
 
 async function forward(
   req: NextRequest,

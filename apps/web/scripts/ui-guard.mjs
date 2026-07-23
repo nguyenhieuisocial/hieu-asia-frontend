@@ -4,13 +4,16 @@
  *
  * Runs on the lines a PR ADDS (git diff) and fails ONLY on NEW anti-patterns, so
  * it never trips on pre-existing code. Advisory by design (its own workflow, not a
- * required check) until promoted. Patterns (1-5; the §D route-registry guard #6
- * lands with T10):
+ * required check) until promoted — promotion is a GitHub branch-protection setting
+ * ("Require status checks" → add `ui-guard (note 167 §C.6)`), not a file change.
+ * Patterns (all 6):
  *   1. <input type="time">            → use the Time24 component (CLAUDE.md)
  *   2. new `group-hover:` in a file with no `group-focus-within:` (hover→focus a11y)
  *   3. `text-sm`/`text-xs` on an input/select/textarea (iOS zoom / legibility)
  *   4. new `fixed bottom-` with no `safe-area-inset-bottom` in the file
  *   5. raw `bg-white`/`text-black` (no `dark:`) — breaks dark mode (QR/print exempt)
+ *   6. §D route-registry: a NEW static public page.tsx that is registered in
+ *      neither app/sitemap.ts nor lib/site-registry.ts → orphan page
  *
  * Usage: node apps/web/scripts/ui-guard.mjs [baseRef]   (default: origin/main)
  */
@@ -24,9 +27,11 @@ function git(cmd) {
 }
 
 let diff = '';
-for (const range of [`${base}...HEAD`, `${base}`, 'HEAD~1']) {
+let range = null;
+for (const r of [`${base}...HEAD`, `${base}`, 'HEAD~1']) {
   try {
-    diff = git(`git diff --unified=0 ${range} -- ${SRC}`);
+    diff = git(`git diff --unified=0 ${r} -- ${SRC}`);
+    range = r;
     if (diff) break;
   } catch {
     /* try next range (shallow clone / no base) */
@@ -81,6 +86,59 @@ for (const f of changed) {
   if (/\bfixed\b[^"'`]*\bbottom-/.test(addedIn) &&
       !/(safe-area-inset-bottom|env\(safe-area|pb-safe|safe-bottom|safe-area-pb)/.test(content)) {
     push(f, 'fixed bottom- mới không kèm safe-area-inset-bottom (che nội dung trên iPhone notch)', 'fixed bottom-');
+  }
+}
+
+// 6. §D route-registry — a NEW public page must be registered somewhere, or it
+// ships as an orphan: Google never discovers it and no nav/related link points
+// at it. `site-registry.guard.test.ts` already covers the OTHER direction
+// (registry entry → page must exist); this closes the loop at PR time.
+// Deliberately narrow, so it can't nag on legitimate work:
+//   - only page.tsx files the PR ADDS (never pre-existing pages),
+//   - dynamic segments (`[slug]`) are skipped — sitemap.ts generates those from
+//     data lists, so there is no literal route string to look for,
+//   - a page that opts out with `robots: { index: false }` is skipped (noindex
+//     pages must NOT be in the sitemap — conflicting signal in Search Console).
+const APP = `${SRC}/app`;
+let addedPages = [];
+if (range) {
+  try {
+    addedPages = git(`git diff --diff-filter=A --name-only ${range} -- ${APP}`)
+      .split('\n')
+      .filter((f) => /\/page\.tsx$/.test(f));
+  } catch {
+    /* no usable range → skip guard 6 rather than guess */
+  }
+}
+if (addedPages.length > 0) {
+  let registrySrc = '';
+  let sitemapSrc = '';
+  try { registrySrc = git(`git show HEAD:${SRC}/lib/site-registry.ts`); } catch { /* optional */ }
+  try { sitemapSrc = git(`git show HEAD:${APP}/sitemap.ts`); } catch { /* optional */ }
+
+  for (const f of addedPages) {
+    const route =
+      '/' +
+      f
+        .slice(APP.length + 1)
+        .replace(/(^|\/)page\.tsx$/, '')
+        .split('/')
+        .filter((seg) => seg && !/^\(.*\)$/.test(seg)) // drop route groups `(marketing)`
+        .join('/');
+    if (route === '/' || route.includes('[')) continue;
+
+    let body = '';
+    try { body = git(`git show HEAD:${f}`); } catch { continue; }
+    if (/index\s*:\s*false/.test(body)) continue; // robots noindex → intentionally unlisted
+
+    const listed = new RegExp(`${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'\`]`);
+    if (!listed.test(sitemapSrc) && !listed.test(registrySrc)) {
+      push(
+        f,
+        `trang mới ${route} chưa đăng ký ở app/sitemap.ts hoặc lib/site-registry.ts → trang mồ côi (Google không thấy, không có link nội bộ dẫn tới). Nếu CỐ Ý ẩn thì đặt robots { index: false } trong metadata.`,
+        route,
+      );
+    }
   }
 }
 

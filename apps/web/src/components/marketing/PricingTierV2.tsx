@@ -64,6 +64,12 @@ export type PricingTierV2Tier = {
   /** If set, render the "{n} NGÀY HOÀN TIỀN" jade caption beneath the CTA. */
   refundDays?: number;
   /**
+   * Optional risk-reversal microcopy rendered between the CTA and the refund
+   * caption (vault 144 §b — "xem trước, trả sau"). Keep it to one short line;
+   * the refund promise already has its own caption below.
+   */
+  ctaNote?: string;
+  /**
    * Wave 60.95.a — "Bạn nên chọn gói này nếu..." guidance line (vault 130
    * §3 P1-9). Rendered as a muted italic block between description and price
    * so buyers can self-select against the persona that matches them.
@@ -370,6 +376,12 @@ export function PricingTierV2({
                   >
                     {tier.ctaLabel}
                   </Link>
+                )}
+
+                {tier.ctaNote && (
+                  <p className="mt-3 text-center font-sans text-xs leading-relaxed text-muted-foreground">
+                    {tier.ctaNote}
+                  </p>
                 )}
 
                 {tier.refundDays !== undefined && (
