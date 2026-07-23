@@ -27,6 +27,8 @@ import { MBTI_SLUGS } from '@/lib/mbti-type-data';
 import { DISC_SLUGS } from '@/lib/disc-type-data';
 import { BIG_FIVE_SLUGS } from '@/lib/big-five-trait-data';
 import { CON_GIAP_SLUGS } from '@/lib/con-giap-data';
+import { TAI_LIEU } from '@/lib/tai-lieu/registry';
+import { futureMonths, monthSlug } from '@/lib/tu-vi-thang-data';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -275,6 +277,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     { url: `${BASE_URL}/sao-han`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/cong-cu`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+  ];
+
+  // Tài liệu tặng miễn phí (lead magnet) — hub + 4 trang đích. Trang lịch tháng
+  // đổi nội dung theo tháng hiện tại nên để changeFrequency 'monthly'.
+  const taiLieu: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/tai-lieu`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...TAI_LIEU.map((doc) => ({
+      url: `${BASE_URL}/tai-lieu/${doc.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
+    })),
   ];
 
   // Xem ngày tốt theo mục đích — SEO landings (engine: worker /tools/lich-van-nien/check).
@@ -597,7 +611,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  const allRoutes = [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...huongBanUrls, ...cungHopUrls, ...enneagramTypeUrls, ...conGiapUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
+  // Tử vi tháng theo con giáp — cụm SINH DẦN THEO LỊCH. `futureMonths()` chỉ
+  // trả về các tháng còn ở phía trước tại thời điểm build, nên tháng vừa hết tự
+  // rụng khỏi sitemap ở lần build kế (file route vẫn giữ và 308 về evergreen).
+  const tuViThangMonths = futureMonths();
+  const tuViThang: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/tu-vi-thang`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    ...tuViThangMonths.flatMap((k) => {
+      const slug = monthSlug(k);
+      return [
+        {
+          url: `${BASE_URL}/tu-vi-thang/${slug}`,
+          lastModified: now,
+          changeFrequency: 'monthly' as const,
+          priority: 0.65,
+        },
+        ...ZODIAC_LIST.map((z) => ({
+          url: `${BASE_URL}/tu-vi-thang/${slug}/${z}`,
+          lastModified: now,
+          changeFrequency: 'monthly' as const,
+          priority: 0.6,
+        })),
+      ];
+    }),
+  ];
+
+  const allRoutes = [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...taiLieu, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...tuViThang, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...huongBanUrls, ...cungHopUrls, ...enneagramTypeUrls, ...conGiapUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
   // S10 mùa vụ: rụng trang thời-điểm đã hết hạn khỏi sitemap (vẫn giữ file).
   return allRoutes.filter((e) => expiredSeasonalTarget(e.url.replace(BASE_URL, '')) === null);
 }
