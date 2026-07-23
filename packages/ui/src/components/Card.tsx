@@ -24,10 +24,18 @@ export const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
   },
 );
 
-export const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  function CardTitle({ className, ...props }, ref) {
+/** Cấp thẻ tiêu đề cho CardTitle. Mặc định `h3` (giữ nguyên hành vi cũ), nhưng
+ * trang nào có Card là MỤC ĐẦU TIÊN ngay dưới `h1` thì phải hạ về `h2` — nhảy
+ * h1 → h3 là lỗi trợ năng `heading-order` (WCAG 1.3.1). Sửa ở đây một nguồn để
+ * mọi trang chọn được đúng cấp thay vì chép tay `<h2>` với class của CardTitle. */
+export type CardTitleProps = React.HTMLAttributes<HTMLHeadingElement> & {
+  as?: 'h2' | 'h3' | 'h4';
+};
+
+export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
+  function CardTitle({ className, as: Tag = 'h3', ...props }, ref) {
     return (
-      <h3
+      <Tag
         ref={ref}
         className={cn('font-heading text-xl font-semibold leading-none tracking-tight text-foreground', className)}
         {...props}

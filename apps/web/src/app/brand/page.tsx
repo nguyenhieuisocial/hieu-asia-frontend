@@ -107,7 +107,7 @@ export default function BrandPage() {
       <div className="mx-auto max-w-6xl px-6 py-12">
         <div className="grid gap-12 lg:grid-cols-[220px_1fr]">
           {/* TOC */}
-          <aside className="hidden lg:block">
+          <aside className="hidden lg:block" aria-label="Mục lục">
             <nav className="sticky top-24 space-y-1" aria-label="Mục lục">
               <div className="px-3 pb-2 font-mono text-[12px] uppercase tracking-[0.3em] text-gold-700">
                 Mục lục

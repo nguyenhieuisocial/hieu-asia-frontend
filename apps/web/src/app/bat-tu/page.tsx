@@ -94,7 +94,7 @@ const FAQ: readonly FaqItem[] = [
         vực (sự nghiệp, hôn nhân, tài chính); Bát Tự mạnh ở cân bằng năng lượng tổng thể. Hai
         hệ bổ sung cho nhau — hieu.asia đọc cả hai để đối chiếu chéo kết luận, không nhân danh
         một hệ duy nhất. Xem{' '}
-        <Link href="/so-sanh" className="text-gold hover:text-gold-soft">
+        <Link href="/so-sanh" className="text-gold hover:underline">
           so sánh lăng kính
         </Link>{' '}
         để chọn công cụ hợp với câu hỏi của bạn.
@@ -120,7 +120,7 @@ const FAQ: readonly FaqItem[] = [
         ngũ hành nạp âm, hiện dùng làm lớp đối chiếu chéo với Tử Vi — chưa tự đưa ra kết
         luận Bát Tự thuần. Khi đủ 100 lá số được chuyên gia kiểm chứng, phần này sẽ chuyển
         sang bản chính thức. Xem{' '}
-        <Link href="/methodology/bat-tu" className="text-gold hover:text-gold-soft">
+        <Link href="/methodology/bat-tu" className="text-gold hover:underline">
           /methodology/bat-tu
         </Link>{' '}
         để biết chi tiết.

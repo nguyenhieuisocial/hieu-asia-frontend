@@ -338,17 +338,21 @@ export default function SampleReportPage() {
 
             {/* Locked items — blurred */}
             <div className="relative mt-4">
+              {/* WCAG 1.4.3 — danh sách "mục còn khoá" trước đây pha mờ tới
+                  /40–/60 (đo được 2.67:1). Dấu hiệu "đang khoá" đã do blur +
+                  lớp phủ gradient + ổ khoá đảm nhiệm, nên bỏ pha mờ trên MÀU CHỮ
+                  là đủ đạt AA mà nhìn vẫn y như cũ. */}
               <ul className="space-y-1.5 blur-[3px] select-none" aria-hidden="true">
                 {TOC_LOCKED.slice(0, 8).map((item) => (
                   <li key={item.id} className="flex items-start gap-2 text-sm text-foreground/60">
-                    <Circle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/40" />
+                    <Circle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                     <span>
-                      <span className="font-mono text-[12px] text-muted-foreground/60">{item.id}.</span>{' '}
+                      <span className="font-mono text-[12px] text-muted-foreground">{item.id}.</span>{' '}
                       {item.name}
                     </span>
                   </li>
                 ))}
-                <li className="flex items-start gap-2 text-sm text-muted-foreground/40">
+                <li className="flex items-start gap-2 text-sm text-muted-foreground">
                   <Circle className="mt-0.5 h-4 w-4 shrink-0" />
                   <span>... và {TOC_LOCKED.length - 8} mục nữa</span>
                 </li>
