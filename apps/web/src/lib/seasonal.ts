@@ -19,6 +19,12 @@ export interface SeasonalPage {
 export const SEASONAL_PAGES: Record<string, SeasonalPage> = {
   '/thang-co-hon-2026': { redirectFrom: '2027-01-01', evergreen: '/lich-van-nien' },
   '/xuat-hanh-2027': { redirectFrom: '2028-01-01', evergreen: '/xuat-hanh' },
+  // Dịp tình duyên. Thất Tịch 2026 = 7/7 âm = 19/8/2026; hết năm thì trỏ về
+  // /hop-tuoi (tool evergreen mà trang này dẫn tới).
+  '/that-tich-2026': { redirectFrom: '2027-01-01', evergreen: '/hop-tuoi' },
+  // Valentine 2027 = 14/2/2027. Mùa vụ kết thúc sau ngày lễ, không cần đợi
+  // hết năm — sau 01/3 thì trang thành lỗi thời.
+  '/valentine-2027': { redirectFrom: '2027-03-01', evergreen: '/hop-tuoi' },
 };
 
 /**
