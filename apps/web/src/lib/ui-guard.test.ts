@@ -5,7 +5,6 @@
 // không còn bảo vệ gì. Test này khoá lại cả hai chiều: BẮT đúng cái xấu và
 // KHÔNG bắt nhầm cái tốt.
 import { describe, it, expect } from 'vitest';
-// @ts-expect-error — script thuần JS, không có khai báo kiểu.
 import {
   parseAddedLines,
   scanAddedLines,
