@@ -71,9 +71,9 @@ const beVietnam = Be_Vietnam_Pro({
 // Italic-capable (signature `<em>verb</em>` spans in hero/section headers).
 // Wave 62.01 — kept as TRANSITIONAL fallback alongside Newsreader Variable.
 // Wave 62.05e — `preload: false`. Newsreader is now the canonical editorial
-// display; Instrument Serif only sits in `font-marketing-display` fallback
-// chain for legacy consumers (BentoLens, PullQuote, MarketingHero). Don't
-// burn critical-path preload budget on a transitional fallback.
+// display; Instrument Serif is no longer referenced by any Tailwind font
+// utility (the VN-diacritics fix pointed every display token at Newsreader),
+// so it must never burn critical-path preload budget.
 const instrumentSerif = Instrument_Serif({
   weight: '400',
   subsets: ['latin', 'latin-ext'],
@@ -108,7 +108,10 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   metadataBase: new URL('https://hieu.asia'),
   title: {
-    default: 'hieu.asia — Tử Vi & MBTI bằng AI',
+    // Tiêu đề mặc định phủ đủ 5 lăng kính (Tử Vi · Bát Tự · MBTI · Big Five ·
+    // Xem Tướng) thay vì chỉ 2 — trước đây các trang không tự đặt title đều
+    // hiện "Tử Vi & MBTI", bỏ sót 3 lăng kính còn lại.
+    default: 'hieu.asia — Tử Vi, Bát Tự, MBTI, Big Five & Xem Tướng bằng AI',
     template: '%s · hieu.asia',
   },
   description:
