@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { ShimmerText } from '@/components/fx/ShimmerText';
 import { AuroraBackdrop } from '@/components/fx/AuroraBackdrop';
 import { Time24 } from '@/components/Time24';
@@ -214,6 +215,17 @@ export function InstantChartHero(): React.JSX.Element {
               Không nhớ giờ sinh — để <strong>12:00</strong> (ba trụ năm/tháng/ngày vẫn đúng).
             </span>
           </label>
+
+          {/* Không biết giờ sinh → công cụ Hồi cứu giờ sinh (BTR). Trang chủ
+              trước đây không có lối vào nào tới /tu-vi/rectify. */}
+          <p className="mt-2 text-xs text-foreground/70">
+            <Link
+              href="/tu-vi/rectify"
+              className="text-gold underline underline-offset-4 hover:text-gold-400"
+            >
+              Không biết giờ sinh? → Làm Hồi cứu giờ sinh (BTR)
+            </Link>
+          </p>
 
           <button
             type="submit"
