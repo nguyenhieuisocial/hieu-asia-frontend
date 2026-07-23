@@ -1,9 +1,12 @@
 /**
- * API types mirroring backend/core/schemas.py (Pydantic).
+ * API types mirroring what the backend actually returns.
  *
- * Source of truth: `backend/core/schemas.py`. When backend schemas change,
- * update this file manually until `pydantic2ts` auto-gen is wired up
- * (see README in this package).
+ * ⚠️ The old pointer here (`backend/core/schemas.py`, Pydantic) is DEAD — that
+ * Python/FastAPI tree was retired, and with it the `pydantic2ts` auto-gen plan.
+ * Real source of truth today is the Cloudflare Worker in the sibling repo:
+ *   backend/infra/cloudflare/workers/api-gateway/src/index.ts (+ src/*)
+ * It carries no runtime schema (no zod/valibot/ajv), so these shapes are
+ * mirrored BY HAND and nothing verifies the two sides agree. See README.md.
  */
 
 // ---------- Consent / context ----------
