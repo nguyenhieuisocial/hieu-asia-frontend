@@ -10,6 +10,13 @@ name: a11y
 # `pull_request` trigger), so it never blocks a merge. A real regression turns
 # the scheduled run red — visible in the Actions tab + maintainer email — and
 # the fail-only-on serious/critical gate (in the spec) keeps the signal high.
+#
+# Dark-mode sweep (tests/a11y-dark.spec.ts) is CẢNH BÁO, không chặn: it logs
+# every violation but only fails when A11Y_DARK_STRICT is set. Left unset on
+# purpose — vault note 171 still tracks ~25 trang nợ trợ năng chế độ tối, and a
+# check that is red forever teaches everyone to ignore it.
+# BẬT CHẶN SAU KHI NỢ TRỢ NĂNG ĐƯỢC VÁ XONG: run this workflow with the
+# `dark_strict` input = true to try it, then flip the default below to 'true'.
 
 on:
   schedule:
@@ -21,6 +28,11 @@ on:
         description: 'Base URL to scan (blank = production https://hieu.asia)'
         required: false
         default: ''
+      dark_strict:
+        description: 'Fail the run on dark-mode a11y violations (bật sau khi vá xong nợ note 171)'
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -52,6 +64,10 @@ jobs:
         run: pnpm --filter web test:a11y
         env:
           PLAYWRIGHT_BASE_URL: ${{ inputs.base_url || 'https://hieu.asia' }}
+          # Empty string = advisory (dark violations are logged, not fatal).
+          # Change the fallback to '1' to make the dark sweep blocking for
+          # every run once note 171's backlog is at 0.
+          A11Y_DARK_STRICT: ${{ inputs.dark_strict && '1' || '' }}
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
