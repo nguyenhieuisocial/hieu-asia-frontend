@@ -37,7 +37,7 @@ export const PRICING_PILLARS: readonly Pillar[] = [
     Icon: ShieldCheck,
     value: '14 ngày',
     label: 'Bảo đảm hoàn tiền',
-    detail: 'Báo cáo chưa tạo: hoàn 100% trong 24 giờ, không hỏi lý do.',
+    detail: 'Chưa tạo báo cáo: hoàn 100% trong 24 giờ, không hỏi lý do. Sau đó: 14 ngày nếu lỗi kỹ thuật hoặc không đúng mô tả.',
   },
   {
     Icon: Globe2,

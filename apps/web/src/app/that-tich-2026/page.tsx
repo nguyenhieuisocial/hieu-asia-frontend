@@ -140,7 +140,11 @@ export default function ThatTich2026Page() {
             <Link href="/lich-van-nien" className="text-gold hover:underline">
               Lịch vạn niên 2026
             </Link>{' '}
-            có đủ.
+            có đủ. Thất Tịch nằm trong tháng 7 âm — xem thêm{' '}
+            <Link href="/thang-co-hon-2026" className="text-gold hover:underline">
+              tháng cô hồn 2026
+            </Link>{' '}
+            nếu bạn đang cân nhắc việc trọng đại trong tháng này.
           </p>
         </section>
 
