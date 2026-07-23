@@ -73,7 +73,7 @@ export function MultiHero(): React.JSX.Element {
 
       <div className="mh-wrap">
         <div className="mh-copy">
-          <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />NĂM LĂNG KÍNH · AI HỢP NHẤT THÀNH MỘT</p>
+          <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />LÁ SỐ THẬT · KHÔNG BÓI MÙ</p>
           <h2 className="mh-h1">
             <span className="mh-line mh-l1">Hiểu mình rõ hơn,</span>
             <span className="mh-line mh-l2">rồi quyết định cho{' '}
@@ -86,7 +86,7 @@ export function MultiHero(): React.JSX.Element {
               </span>
             </span>
           </h2>
-          <p className="mh-deck">Năm hệ soi cùng một người: Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng. Mỗi hệ một góc nhìn; ghép lại, bạn thấy mình rõ hơn khi chỉ nhìn từ một hệ.</p>
+          <p className="mh-deck">Năm hệ soi cùng một người: Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng. Lá số tính thật từ ngày giờ sinh của bạn, AI đọc đúng những gì lá số ghi — chỗ nào chưa khớp cũng nói thẳng. Không hù dọa, không bán giải hạn.</p>
         </div>
 
         {/* mobile-first: CTA TRƯỚC la bàn → user bấm được ngay màn 1 (above-fold).
@@ -97,10 +97,10 @@ export function MultiHero(): React.JSX.Element {
               phí" (phần đó trả phí) → trung thực, không over-claim. */}
           <p className="mh-gift"><span className="mh-gift-mk" aria-hidden="true">✦</span> Quà mở đầu: <strong>lá số Tử Vi 12 cung, 14 chính tinh</strong>, miễn phí, của bạn để giữ.</p>
           <div className="mh-cta-row">
-            <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Tôi đang phân vân → xem lá số gợi ý gì</a>
+            <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Lập lá số miễn phí</a>
             <Link className="mh-cta mh-cta-ghost" href="/tu-vi-2026"><span className="mh-cta-num">②</span>Xem Tử Vi 2026<span className="mh-cta-sub">&amp; hợp tuổi của tôi</span></Link>
           </div>
-          <p className="mh-micro">KHÔNG CẦN THẺ · 1 PHÚT · KHÔNG SPAM</p>
+          <p className="mh-micro">MIỄN PHÍ · KHÔNG CẦN THẺ · LÁ SỐ DỰNG TRONG 30 GIÂY</p>
         </div>
 
         <div className="mh-vis">

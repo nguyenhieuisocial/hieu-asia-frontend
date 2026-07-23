@@ -134,7 +134,10 @@ export default function ThangCoHon2026Page() {
             <Link href="/lich-van-nien" className="text-gold hover:underline">
               Lịch vạn niên 2026
             </Link>{' '}
-            cho bạn ngày âm, can-chi và giờ hoàng đạo từng ngày.
+            cho bạn ngày âm, can-chi và giờ hoàng đạo từng ngày. Riêng ngày 7/7 âm trong tháng này là{' '}
+            <Link href="/that-tich-2026" className="text-gold hover:underline">
+              Thất Tịch 2026
+            </Link>.
           </p>
         </section>
 

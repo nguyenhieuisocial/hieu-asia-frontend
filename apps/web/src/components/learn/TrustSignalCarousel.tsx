@@ -47,7 +47,7 @@ const CARDS: readonly TrustCard[] = [
         <path d="M 18 24 L 22 28 L 30 20" />
       </svg>
     ),
-    headline: 'Bảo mật theo Nghị định 13',
+    headline: 'Bảo mật theo Luật 91/2025',
     desc: 'GDPR-grade, mã hóa at rest, audit log đầy đủ. Dữ liệu cá nhân được tôn trọng.',
     href: '/privacy',
   },

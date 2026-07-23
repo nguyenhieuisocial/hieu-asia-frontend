@@ -7,8 +7,10 @@ import { itemList, breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Học huyền học & khoa học tính cách',
+  // vault 147 §a — khách hoài nghi hỏi "có cơ sở không". Đưa câu trả lời đó
+  // vào ngay meta thay vì chỉ liệt kê số chủ đề.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, chiêm tinh, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 18 chủ đề chia 4 nhóm, đọc ba tầng độ sâu và tự kiểm tra bằng quiz.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 18 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa. Đọc ba tầng độ sâu và tự kiểm tra bằng quiz.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 

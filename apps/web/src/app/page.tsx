@@ -50,8 +50,10 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Tử Vi & Bát Tự AI — hieu.asia | Cẩm nang hiểu mình',
   },
+  // vault 147 §a — dùng đúng cụm khách hay nói ("chung chung", "có cơ sở",
+  // "riêng tư") để bắt intent hoài nghi thay vì mô tả tính năng chung chung.
   description:
-    'Kết hợp Tử Vi, Bát Tự, MBTI, Big Five, DISC, Enneagram, Xem Tướng, Tarot… cùng AI Mentor để hiểu bản thân, đặt câu hỏi đúng và tự quyết định có trách nhiệm.',
+    'Lá số Tử Vi, Bát Tự thật tính từ ngày giờ sinh của bạn — không bói chung chung, không hù dọa, không bán giải hạn. Mỗi kết luận đều chỉ rõ cung và sao làm căn cứ. Lá số của bạn là riêng tư.',
   alternates: { canonical: 'https://hieu.asia/' },
   openGraph: {
     title: 'hieu.asia — Hiểu mình. Quyết định mình.',

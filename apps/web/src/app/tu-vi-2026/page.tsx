@@ -161,6 +161,65 @@ export default function TuVi2026Page() {
           </div>
         </section>
 
+        {/* "Năm Bính Ngọ" giải nghĩa — trước đây trang chỉ nhắc tên năm mà không
+            nói vì sao. Đặc biệt cần đoạn Hỏa vs Thiên Hà Thủy: người tra "mệnh
+            năm 2026" ở nơi khác sẽ thấy "Thủy" và tưởng site sai. Can-chi + nạp
+            âm dưới đây khớp computeBanMenh() của repo. */}
+        <section className="relative mx-auto max-w-3xl px-6 pb-12">
+          <h2 className="mb-4 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+            Vì sao 2026 gọi là năm Bính Ngọ?
+          </h2>
+          <p className="leading-relaxed text-foreground/85">
+            Lịch can-chi ghép 10 Thiên Can với 12 Địa Chi thành vòng 60 năm. Năm âm lịch 2026
+            rơi đúng vào cặp <strong className="text-foreground">Bính</strong> (can) –{' '}
+            <strong className="text-foreground">Ngọ</strong> (chi), nên gọi là Bính Ngọ. Ngọ
+            ứng với con Ngựa, vì vậy 2026 là năm con Ngựa. Năm âm lịch này chạy từ 17/02/2026
+            đến 05/02/2027 — không trùng mốc 1/1 dương lịch, nên ai sinh tháng 1 hoặc đầu
+            tháng 2/2026 vẫn thuộc năm Ất Tỵ.
+          </p>
+          <p className="mt-4 leading-relaxed text-foreground/85">
+            Có một chỗ dễ gây nhầm, nói rõ luôn cho khỏi mất công tra chéo:{' '}
+            <strong className="text-foreground">Bính và Ngọ đều thuộc Hỏa</strong>, nên xét ở
+            tầng can-chi thì đây là năm Hỏa vượng — đó là nghĩa của "năng lượng cao" nói ở
+            trên. Nhưng xét theo <strong className="text-foreground">nạp âm</strong> (một bảng
+            quy ước khác, ghép từng cặp can-chi thành một hành), Bính Ngọ lại là{' '}
+            <strong className="text-foreground">Thiên Hà Thủy</strong> — hành Thủy. Hai con số
+            này không đá nhau: chúng là hai tầng khác nhau của cùng một hệ, và các trang khác
+            thường chỉ trích một tầng rồi không nói rõ. Khi bạn thấy chỗ ghi "2026 mệnh Thủy",
+            đó là đang nói nạp âm.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border border-border bg-card/40 p-4">
+              <p className="font-mono text-[12px] uppercase tracking-widest text-gold/80">
+                Năm tuổi (Thái Tuế)
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">
+                Người tuổi <strong className="text-foreground">Ngọ</strong> gặp năm tuổi trong
+                2026. Dân gian coi đây là năm cần cẩn trọng hơn, không phải năm xui cố định —
+                nó chỉ nghĩa là chi năm trùng chi tuổi bạn.
+              </p>
+            </div>
+            <div className="rounded-lg border border-border bg-card/40 p-4">
+              <p className="font-mono text-[12px] uppercase tracking-widest text-gold/80">
+                Tam Tai
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">
+                Nhóm tuổi <strong className="text-foreground">Hợi – Mão – Mùi</strong> (Lợn,
+                Mèo, Dê) bước vào chu kỳ Tam Tai có năm Ngọ.{' '}
+                <Link href="/tam-tai" className="text-gold hover:underline">
+                  Tra Tam Tai theo tuổi
+                </Link>{' '}
+                để xem bạn đang ở năm thứ mấy.
+              </p>
+            </div>
+          </div>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            Cả hai mục trên đều là khung chung theo năm sinh — chúng nói về nhóm tuổi, không
+            nói về bạn. Muốn biết năm 2026 chạm vào cung nào của riêng mình thì phải xem lá số,
+            vì cùng tuổi Ngọ nhưng khác giờ sinh là khác cung Mệnh.
+          </p>
+        </section>
+
         <section className="relative mx-auto max-w-3xl px-6 pb-12">
           <h2 className="mb-4 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
             Tử Vi 2026 theo tuổi của bạn
