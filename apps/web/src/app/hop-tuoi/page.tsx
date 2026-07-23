@@ -283,7 +283,7 @@ export default function HopTuoiLandingPage() {
         </div>
       </section>
 
-      <p className="mt-10 text-center text-xs text-foreground/40">
+      <p className="mt-10 text-center text-xs text-muted-foreground">
         Công cụ tham khảo — không thay thế tư vấn chuyên gia. Quyết định cuối cùng thuộc về bạn.
       </p>
     </ToolPageShell>

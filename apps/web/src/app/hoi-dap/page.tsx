@@ -310,7 +310,7 @@ export default function HoiDapPage() {
           </div>
         </section>
 
-        <p className="mt-10 text-center text-xs text-foreground/40">
+        <p className="mt-10 text-center text-xs text-muted-foreground">
           hieu.asia — Hiểu mình. Quyết định mình. Tham khảo, không bói toán.
         </p>
       </ToolPageShell>
