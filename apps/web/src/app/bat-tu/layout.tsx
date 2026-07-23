@@ -13,13 +13,13 @@ import type { Metadata } from 'next';
  * Beta-engine page is still indexed (matches /methodology/bat-tu policy).
  */
 export const metadata: Metadata = {
-  title: 'Bát Tự — Tám chữ định mệnh',
+  title: 'Bát Tự — Tám chữ định hình bạn',
   description:
     'Bát Tự (Tứ Trụ) đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ sinh. Engine chính xác + AI đối chiếu cùng Tử Vi, MBTI, Big Five, DISC, Enneagram… Miễn phí.',
   alternates: { canonical: 'https://hieu.asia/bat-tu' },
   robots: { index: true, follow: true },
   openGraph: {
-    title: 'Bát Tự — Tám chữ định mệnh',
+    title: 'Bát Tự — Tám chữ định hình bạn',
     description:
       'Đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ. Engine tính 4 trụ, AI đối chiếu Tử Vi.',
     url: 'https://hieu.asia/bat-tu',
@@ -30,19 +30,19 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'hieu.asia — Bát Tự: tám chữ định mệnh, bản đồ ngũ hành',
+        alt: 'hieu.asia — Bát Tự: tám chữ định hình bạn, bản đồ ngũ hành',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bát Tự — Tám chữ định mệnh',
+    title: 'Bát Tự — Tám chữ định hình bạn',
     description:
       'Đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ. Engine + AI đối chiếu 4 trường phái.',
     images: [
       {
         url: '/og-image.jpg',
-        alt: 'hieu.asia — Bát Tự: tám chữ định mệnh, bản đồ ngũ hành',
+        alt: 'hieu.asia — Bát Tự: tám chữ định hình bạn, bản đồ ngũ hành',
       },
     ],
   },

@@ -63,7 +63,7 @@ const FAQ_JSONLD = {
       name: 'Có cần biết giờ sinh chính xác không?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Có, càng chính xác càng tốt. Trụ giờ quyết định hậu vận và nhật can ổn định khi giờ rõ. Nếu chỉ biết khoảng (sáng/trưa/chiều/tối), hieu.asia vẫn lập được 3 trụ chính với confidence thấp hơn cho phần liên quan giờ. Sinh quanh 23:00–01:00 cần xác định kỹ.',
+        text: 'Có, càng chính xác càng tốt. Trụ giờ quyết định hậu vận và nhật can ổn định khi giờ rõ. Nếu chỉ biết khoảng (sáng/trưa/chiều/tối), hieu.asia vẫn lập được 3 trụ chính, nhưng phần liên quan tới giờ sẽ có độ tin cậy thấp hơn. Sinh quanh 23:00–01:00 cần xác định kỹ.',
       },
     },
     {
@@ -71,7 +71,7 @@ const FAQ_JSONLD = {
       name: 'Bát Tự ở hieu.asia có phải bản hoàn chỉnh chưa?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Engine đang ở trạng thái beta: tính được 4 trụ, thập thần và ngũ hành mệnh nạp âm, đóng vai trò lớp đối chiếu phụ với Tử Vi — chưa tự sinh kết luận Bát Tự thuần. Khi đạt 100 lá số được chuyên gia kiểm chứng thì engine chuyển sang bản chính thức.',
+        text: 'Chưa. Phần tính Bát Tự đang hoàn thiện: đã tính được 4 trụ, thập thần và ngũ hành nạp âm, hiện dùng làm lớp đối chiếu chéo với Tử Vi — chưa tự đưa ra kết luận Bát Tự thuần. Khi đủ 100 lá số được chuyên gia kiểm chứng, phần này sẽ chuyển sang bản chính thức.',
       },
     },
   ],
@@ -116,10 +116,10 @@ const FAQ: readonly FaqItem[] = [
     q: 'Bát Tự ở hieu.asia có phải bản hoàn chỉnh chưa?',
     a: (
       <>
-        Engine đang ở trạng thái <em>beta</em>: tính được 4 trụ, thập thần và ngũ hành mệnh
-        nạp âm, đóng vai trò lớp đối chiếu phụ với Tử Vi — chưa tự sinh kết luận Bát Tự
-        thuần. Khi đạt 100 lá số được chuyên gia kiểm chứng thì engine chuyển sang bản chính
-        thức. Xem{' '}
+        Chưa. Phần tính Bát Tự <em>đang hoàn thiện</em>: đã tính được 4 trụ, thập thần và
+        ngũ hành nạp âm, hiện dùng làm lớp đối chiếu chéo với Tử Vi — chưa tự đưa ra kết
+        luận Bát Tự thuần. Khi đủ 100 lá số được chuyên gia kiểm chứng, phần này sẽ chuyển
+        sang bản chính thức. Xem{' '}
         <Link href="/methodology/bat-tu" className="text-gold hover:text-gold-soft">
           /methodology/bat-tu
         </Link>{' '}
@@ -189,7 +189,7 @@ export default function BatTuLandingPage() {
                 Phương pháp luận
               </Link>
               <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground/70 sm:ml-2">
-                Engine beta · đối chiếu với Tử Vi
+                Đang hoàn thiện · đối chiếu chéo với Tử Vi
               </span>
             </div>
           </div>
