@@ -433,7 +433,7 @@ export default function CanXuongPage() {
         >
           Câu hỏi thường gặp
         </h2>
-        <dl className="mt-4 space-y-3">
+        <div className="mt-4 space-y-3">
           {FAQ.map((f) => (
             <details
               key={f.q}
@@ -447,7 +447,7 @@ export default function CanXuongPage() {
               </p>
             </details>
           ))}
-        </dl>
+        </div>
       </section>
     </ToolPageShell>
     <StickyMobileCta trackId="can-xuong" />

@@ -128,7 +128,10 @@ export default async function CaseStudyPage({ params }: PageProps) {
             </ul>
           </Section>
 
-          <aside className="mt-12 rounded-2xl border border-border bg-card/40 p-6">
+          <aside
+            aria-label="Lưu ý về nội dung minh hoạ"
+            className="mt-12 rounded-2xl border border-border bg-card/40 p-6"
+          >
             <div className="flex items-start gap-3">
               <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-gold/80" aria-hidden="true" />
               <div className="text-sm leading-relaxed text-muted-foreground">

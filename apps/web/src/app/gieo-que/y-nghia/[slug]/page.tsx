@@ -110,7 +110,15 @@ export default async function QueMeaningPage({ params }: Props) {
       <div className="mx-auto max-w-3xl space-y-6">
         <div className="rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/10 to-transparent p-6">
           <div className="flex flex-wrap items-center justify-between gap-6">
-            <div className="flex flex-col gap-1.5" aria-label={`Hình quẻ ${q.nameVi}: 6 hào từ trên xuống`}>
+            {/* <div aria-label> cần có role (W3C: aria-label bị cấm trên vai trò
+                generic) — đây là hình 6 hào vẽ bằng div, tự thân là một hình
+                đồ hoạ có tên gọi → role="img", cùng cách đã dùng ở
+                compatibility/page.tsx và QRDisplay.tsx. */}
+            <div
+              className="flex flex-col gap-1.5"
+              role="img"
+              aria-label={`Hình quẻ ${q.nameVi}: 6 hào từ trên xuống`}
+            >
               {q.binary.split('').map((bit, i) => (
                 <HaoLine key={i} duong={bit === '1'} />
               ))}

@@ -50,7 +50,10 @@ export function MentorSkeleton() {
           </div>
         </section>
 
-        <aside className="hidden w-80 shrink-0 border-l border-gold/15 bg-card/40 p-4 lg:block">
+        <aside
+          aria-label="Insights đã ghim"
+          className="hidden w-80 shrink-0 border-l border-gold/15 bg-card/40 p-4 lg:block"
+        >
           <Skeleton className="mb-4 h-5 w-24" />
           <div className="space-y-3">
             {Array.from({ length: 4 }).map((_, i) => (
