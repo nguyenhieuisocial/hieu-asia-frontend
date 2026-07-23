@@ -116,6 +116,15 @@ if (addedPages.length > 0) {
   try { registrySrc = git(`git show HEAD:${SRC}/lib/site-registry.ts`); } catch { /* optional */ }
   try { sitemapSrc = git(`git show HEAD:${APP}/sitemap.ts`); } catch { /* optional */ }
 
+  // sitemap.ts often lists a page cluster by mapping over a registry module
+  // (`import { TAI_LIEU } from '@/lib/tai-lieu/registry'`) instead of writing
+  // each route as a literal. Those pages ARE registered — the slug just lives
+  // one file away. Follow sitemap's own `@/lib/...` imports so the check reads
+  // the same sources sitemap does, instead of flagging a false orphan.
+  for (const m of sitemapSrc.matchAll(/from\s+['"]@\/(lib\/[\w./-]+)['"]/g)) {
+    try { registrySrc += '\n' + git(`git show HEAD:${SRC}/${m[1]}.ts`); } catch { /* optional */ }
+  }
+
   for (const f of addedPages) {
     const route =
       '/' +
