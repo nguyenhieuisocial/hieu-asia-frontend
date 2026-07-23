@@ -1,8 +1,14 @@
 # UI anti-pattern guard (note 167 §C.6) — fails a PR only on NEW violations in the
 # lines it adds, so it never trips on pre-existing code. Pure node + git (no install),
-# so it is fast. Advisory: this is a SEPARATE check, not part of the required
+# so it is fast. All 6 patterns are live (1-5 UI anti-patterns + §D route-registry:
+# a new public page must be listed in app/sitemap.ts or lib/site-registry.ts).
+#
+# Advisory: this is a SEPARATE check, not part of the required
 # "turbo lint + test + build" job, so a false positive never blocks a merge until
 # the founder chooses to add it to branch protection.
+# To PROMOTE it to a required check (no code change needed):
+#   GitHub → Settings → Branches → main → Require status checks to pass →
+#   add "ui-guard (note 167 §C.6)".
 name: ui-guard
 
 on:
