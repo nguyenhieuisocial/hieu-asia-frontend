@@ -9,6 +9,7 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { safeErrorDetail } from '@/lib/safe-error';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -51,7 +52,7 @@ async function proxy(req: NextRequest, method: 'GET' | 'POST') {
     });
   } catch (err) {
     return NextResponse.json(
-      { ok: false, error: 'upstream_fetch_failed', detail: err instanceof Error ? err.message : String(err) },
+      { ok: false, error: 'upstream_fetch_failed', detail: safeErrorDetail('affiliate/tax-profile', err) },
       { status: 502 },
     );
   }

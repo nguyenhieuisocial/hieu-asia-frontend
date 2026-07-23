@@ -9,6 +9,7 @@
 
 import { NextResponse, type NextRequest } from 'next/server';
 import { getSessionFromRequest } from '@/lib/reasoning/session-auth';
+import { safeErrorDetail } from '@/lib/safe-error';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest) {
       {
         ok: false,
         error: 'upstream_fetch_failed',
-        detail: err instanceof Error ? err.message : String(err),
+        detail: safeErrorDetail('account/export', err),
       },
       { status: 502 },
     );
