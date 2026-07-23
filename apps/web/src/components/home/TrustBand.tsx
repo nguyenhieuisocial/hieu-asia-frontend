@@ -53,7 +53,7 @@ export function TrustBand() {
             <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Bằng Chứng
             </span>
-            <p className="mt-1 font-marketing-display text-xl leading-snug text-foreground sm:text-2xl">
+            <p className="mt-1 font-editorial-display text-xl leading-snug text-foreground sm:text-2xl">
               Đừng vội tin. Kiểm chứng bằng <span className="italic">quá khứ của chính bạn</span>.
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -80,7 +80,7 @@ export function TrustBand() {
                 <span className="w-fit rounded-lg bg-primary/10 p-1.5">
                   <Icon className="h-6 w-6 text-primary" aria-hidden />
                 </span>
-                <h3 className="font-marketing-display text-base leading-snug text-foreground">
+                <h3 className="font-editorial-display text-base leading-snug text-foreground">
                   {p.title}
                 </h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">

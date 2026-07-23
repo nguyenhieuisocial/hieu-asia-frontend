@@ -18,7 +18,7 @@ export default meta;
 export const ItalicSpanDemo: StoryObj = {
   render: () => (
     <div className="bg-warm-dark-50 p-12">
-      <p className="font-marketing-display text-4xl text-cream-50">
+      <p className="font-editorial-display text-4xl text-cream-50">
         Hiểu mình. <ItalicSpan goldDotAfter>Quyết định</ItalicSpan> mình.
       </p>
     </div>

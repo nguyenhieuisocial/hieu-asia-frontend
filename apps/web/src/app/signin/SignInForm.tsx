@@ -142,7 +142,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
             role="status"
             aria-live="polite"
             aria-busy="true"
-            className="font-marketing-display italic text-primary"
+            className="font-editorial-display italic text-primary"
           >
             Đang kiểm tra phiên đăng nhập…
           </p>
@@ -208,7 +208,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
     <>
       {!authAvailable ? (
         <div className="rounded-card-editorial border border-amber-500/40 bg-amber-500/10 p-6 text-sm text-amber-800 dark:text-amber-200">
-          <p className="font-marketing-display text-lg italic">
+          <p className="font-editorial-display text-lg italic">
             Đăng nhập tạm thời chưa khả dụng
           </p>
           <p className="mt-2 text-amber-700 dark:text-amber-200/80">
@@ -222,7 +222,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
         </div>
       ) : sent ? (
         <div className="rounded-card-editorial border border-emerald-500/40 bg-emerald-500/10 p-6 text-sm text-emerald-800 dark:text-emerald-200">
-          <p className="font-marketing-display text-lg italic">
+          <p className="font-editorial-display text-lg italic">
             Đã gửi liên kết đăng nhập
           </p>
           <p className="mt-2 text-emerald-700 dark:text-emerald-200/80">

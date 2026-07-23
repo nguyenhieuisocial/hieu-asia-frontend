@@ -40,7 +40,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
  * inline mobile and visually-hidden desktop (still in DOM for crawlers).
  *
  * Tokens (Wave 60.56 P1, no new colors): warm-dark-{50,100} / cream-{50,300,500}
- * / gold / gold-soft / font-marketing-display / font-mono / text-eyebrow /
+ * / gold / gold-soft / font-editorial-display / font-mono / text-eyebrow /
  * text-section-display / max-w-marketing / ease-editorial.
  */
 

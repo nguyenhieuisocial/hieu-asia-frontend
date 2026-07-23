@@ -51,30 +51,18 @@ const config: Config = {
         'gold-dot-glow': '0 0 16px rgba(229,198,138,0.18)',
       },
       fontFamily: {
-        // Marketing-only display serif. Outfit/Be Vietnam Pro/JetBrains Mono
-        // preset entries kept for in-app UI.
-        'marketing-display': [
-          // 2026-06-22 VN-FIX: Instrument Serif thiếu glyph tiếng Việt → ký tự
-          // có dấu (ả, ộ, ệ, đ…) rớt sang Be Vietnam Pro (sans) = LẪN FONT trong
-          // cùng một từ (founder báo). Trỏ sang Newsreader (serif CÓ tiếng Việt)
-          // → `font-marketing-display` render tiếng Việt SẠCH toàn site, đồng bộ
-          // với editorial-display. (var --font-marketing-display/Instrument vẫn
-          // định nghĩa nhưng không còn utility nào dùng.)
-          'var(--font-newsreader)',
-          // Fallback an toàn nếu thiếu glyph (hiếm, Newsreader đã phủ TV).
-          'var(--font-be-vietnam)',
-          // Han chars → self-hosted Noto Serif SC subset (unicode-range gated).
-          'Noto Serif SC Han',
-          'Georgia',
-          'serif',
-        ],
         // Wave 62.01 — editorial display serif per "Như giấy cũ" spec.
         // Newsreader Variable (300–800, normal+italic) replaces Instrument
         // Serif's role for hero / H1 / H2 / pull quote. VN diacritics outside
         // latin-ext fall back to Be Vietnam Pro (already loaded in root layout).
         // Use via `font-editorial-display` Tailwind class on Newsreader-led
-        // surfaces. `font-marketing-display` kept transitional until 62.04
-        // hero rewrite migrates BentoLens + MarketingHero + PullQuote.
+        // surfaces.
+        //
+        // `font-marketing-display` (token cũ) đã bị GỠ: sau VN-FIX 2026-06-22
+        // nó trỏ về đúng cùng một stack với `editorial-display`, nên hai tên
+        // cho một thứ chỉ gây lệch. Mọi chỗ dùng đã đổi sang
+        // `font-editorial-display` (không đổi hiển thị); luật ESLint
+        // `no-legacy-font-class` chặn tên cũ quay lại.
         'editorial-display': [
           'var(--font-newsreader)',
           'var(--font-be-vietnam)',

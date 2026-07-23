@@ -11,7 +11,7 @@ import type { ReactNode } from 'react';
  *
  * Tokens (Wave 60.56 P1 commit 0b38173):
  *   bg-background / bg-muted/40
- *   font-marketing-display / text-section-display / text-eyebrow
+ *   font-editorial-display / text-section-display / text-eyebrow
  *   text-foreground / text-muted-foreground / text-muted-foreground/70
  *   text-gold / max-w-marketing-text
  */

@@ -15,7 +15,7 @@ import Link from 'next/link';
  * Tokens (from `apps/web/tailwind.config.ts`, Wave 60.56 P1 commit 0b38173):
  *   bg-card / border-border / text-foreground / text-foreground/95 /
  *   text-muted-foreground / text-muted-foreground/70 / text-gold / text-gold-soft /
- *   border-gold-soft / font-marketing-display / font-mono / text-eyebrow /
+ *   border-gold-soft / font-editorial-display / font-mono / text-eyebrow /
  *   rounded-card-editorial / rounded-pill / ease-editorial
  */
 export type PreviewReadingCardProps = {
@@ -69,7 +69,7 @@ export function PreviewReadingCard({
         — LÁ SỐ MẪU · DEMO
       </p>
 
-      <h3 className="mt-4 font-marketing-display text-3xl italic text-foreground">
+      <h3 className="mt-4 font-editorial-display text-3xl italic text-foreground">
         {cungName}
       </h3>
 
@@ -91,7 +91,7 @@ export function PreviewReadingCard({
       )}
 
       <blockquote className="mt-8 border-l-2 border-gold-soft pl-6">
-        <p className="font-marketing-display text-xl italic leading-relaxed text-foreground/95">
+        <p className="font-editorial-display text-xl italic leading-relaxed text-foreground/95">
           {insightQuote}
         </p>
         {insightAuthor && (

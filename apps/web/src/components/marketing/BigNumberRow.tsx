@@ -44,7 +44,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
  *     rule kills CSS transitions)
  *
  * Tokens (Wave 60.56 P1, no new colors): warm-dark-{50,100} / cream-{50,300,500}
- * / gold / gold-soft / font-marketing-display / max-w-marketing /
+ * / gold / gold-soft / font-editorial-display / max-w-marketing /
  * max-w-marketing-text / rounded-pill / ease-editorial.
  */
 
@@ -217,7 +217,7 @@ function BigNumberCell({ item, delayMs }: { item: BigNumber; delayMs: number }) 
         ceiling) but smooth 8vw ramp through the middle. Consistent with hero-display
         token bump in tailwind.config.ts.
       */}
-      <p className="font-marketing-display text-[clamp(3rem,8vw,6rem)] font-semibold leading-none tracking-tight text-foreground">
+      <p className="font-editorial-display text-[clamp(3rem,8vw,6rem)] font-semibold leading-none tracking-tight text-foreground">
         {/*
           Wave 60.95 BUG FIX — sr-only previously contained "1.243 BÁO CÁO MỘT
           THÁNG QUA" (number + label). The label is also rendered visibly in
