@@ -28,7 +28,7 @@ import { DISC_SLUGS } from '@/lib/disc-type-data';
 import { BIG_FIVE_SLUGS } from '@/lib/big-five-trait-data';
 import { CON_GIAP_SLUGS } from '@/lib/con-giap-data';
 import { TAI_LIEU } from '@/lib/tai-lieu/registry';
-import { futureMonths, monthSlug } from '@/lib/tu-vi-thang-data';
+import { liveMonths, monthSlug } from '@/lib/tu-vi-thang-data';
 
 const BASE_URL = 'https://hieu.asia';
 
@@ -611,10 +611,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  // Tử vi tháng theo con giáp — cụm SINH DẦN THEO LỊCH. `futureMonths()` chỉ
+  // Tử vi tháng theo con giáp — cụm SINH DẦN THEO LỊCH. `liveMonths()` chỉ
   // trả về các tháng còn ở phía trước tại thời điểm build, nên tháng vừa hết tự
   // rụng khỏi sitemap ở lần build kế (file route vẫn giữ và 308 về evergreen).
-  const tuViThangMonths = futureMonths();
+  const tuViThangMonths = liveMonths();
   const tuViThang: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/tu-vi-thang`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     ...tuViThangMonths.flatMap((k) => {

@@ -37,3 +37,29 @@ export function expiredSeasonalTarget(path: string, now: Date = new Date()): str
   if (!s) return null;
   return now >= new Date(`${s.redirectFrom}T00:00:00Z`) ? s.evergreen : null;
 }
+
+// ── Cụm trang mùa vụ THEO THÁNG (/tu-vi-thang/…) ────────────────────
+// Khác các trang ở trên: URL sinh theo lịch nên không liệt kê từng path được
+// (SEASONAL_PAGES là bảng path cố định). Cùng ý tưởng: hết tháng → trang rụng
+// khỏi sitemap + 308 về evergreen, file vẫn giữ nguyên.
+
+/** Evergreen thay thế khi một trang tử vi tháng hết hạn. */
+export const MONTHLY_EVERGREEN = '/tu-vi-hom-nay';
+
+/**
+ * Tháng (year, month 1–12) đã kết thúc so với `now` chưa?
+ * Hết tháng = sang ngày 1 của tháng kế (giờ UTC — lệch tối đa 7h so với VN,
+ * chấp nhận được vì trang chỉ rụng khỏi sitemap chứ không mất nội dung).
+ */
+export function monthEnded(year: number, month: number, now: Date = new Date()): boolean {
+  return now >= new Date(Date.UTC(month === 12 ? year + 1 : year, month === 12 ? 0 : month, 1));
+}
+
+/** Trang tử vi tháng đã qua → đích evergreen để 308; còn hạn → null. */
+export function expiredMonthTarget(
+  year: number,
+  month: number,
+  now: Date = new Date(),
+): string | null {
+  return monthEnded(year, month, now) ? MONTHLY_EVERGREEN : null;
+}
