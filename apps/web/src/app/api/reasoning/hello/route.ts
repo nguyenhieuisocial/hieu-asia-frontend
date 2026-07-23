@@ -19,6 +19,7 @@ import { NextResponse, after, type NextRequest } from 'next/server';
 import { checkBotId } from 'botid/server';
 import { reasoningGenerate } from '@/lib/reasoning/llm';
 import { startTrace } from '@/lib/reasoning/observability';
+import { safeErrorDetail } from '@/lib/safe-error';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -98,6 +99,9 @@ export async function POST(req: NextRequest) {
     span.end({ error: message });
     trace.end({ error: message });
     after(() => trace.flush());
-    return NextResponse.json({ ok: false, error: 'llm_failed', detail: message }, { status: 502 });
+    return NextResponse.json(
+      { ok: false, error: 'llm_failed', detail: safeErrorDetail('reasoning/hello', err) },
+      { status: 502 },
+    );
   }
 }

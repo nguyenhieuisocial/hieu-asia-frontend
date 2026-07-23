@@ -39,6 +39,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { timingSafeEqual, createHmac } from 'node:crypto';
+import { GENERIC_ERROR_DETAIL } from '@/lib/safe-error';
 
 import WelcomeEmail from '@/emails/wave58/welcome';
 import CareersEmail from '@/emails/wave58/careers';
@@ -292,7 +293,8 @@ export async function POST(req: NextRequest) {
       err: sendResult.error.message,
     });
     return NextResponse.json(
-      { ok: false, error: 'send_failed', detail: sendResult.error.message },
+      // Resend's wording stays in the console.warn above; client gets generic.
+      { ok: false, error: 'send_failed', detail: GENERIC_ERROR_DETAIL },
       { status: 502 },
     );
   }
