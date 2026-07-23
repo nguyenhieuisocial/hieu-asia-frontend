@@ -13,6 +13,7 @@
 
 import { NextResponse } from 'next/server';
 import { checkBotId } from 'botid/server';
+import { isKillswitchActive } from '@/lib/edge-config';
 import { resolveReadingOwnerIds } from '@/lib/reasoning/session-auth';
 import type {
   MentorMessage,
@@ -80,6 +81,15 @@ export async function POST(req: Request) {
   const bot = await checkBotId();
   if (bot.isBot) {
     return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
+  }
+
+  // Nút tắt khẩn (Edge Config `killswitch_mentor`) — xem lib/edge-config.ts.
+  const kill = await isKillswitchActive('mentor');
+  if (kill.active) {
+    return NextResponse.json(
+      { ok: false, error: 'mentor_disabled', reason: kill.reason },
+      { status: 503, headers: { 'Retry-After': '300' } },
+    );
   }
 
   if (!HIEU_API_SERVICE_TOKEN) {

@@ -31,6 +31,7 @@ import { createClient } from '@supabase/supabase-js';
 import { buildTuViGraph, type ChartInput } from '@/lib/reasoning/tu-vi-graph';
 import { startTrace } from '@/lib/reasoning/observability';
 import { assertCostGuard } from '@/lib/reasoning/cost-guard';
+import { isKillswitchActive } from '@/lib/edge-config';
 import { getSessionFromRequest } from '@/lib/reasoning/session-auth';
 import { assertFreeQuota } from '@/lib/reasoning/free-quota';
 
@@ -86,6 +87,17 @@ export async function POST(req: NextRequest) {
   const botCheck = await checkBotId();
   if (botCheck.isBot) {
     return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
+  }
+
+  // 1b. Nút tắt khẩn riêng cho Tử Vi (Edge Config `killswitch_tuvi`). Kill
+  // switch của cost-guard tắt TOÀN BỘ reasoning; cờ này cho phép tắt riêng
+  // luồng Tử Vi (luồng đắt nhất) mà vẫn giữ Bát Tự/Palm chạy.
+  const kill = await isKillswitchActive('tuvi');
+  if (kill.active) {
+    return NextResponse.json(
+      { ok: false, error: 'tuvi_disabled', reason: kill.reason },
+      { status: 503, headers: { 'Retry-After': '300' } },
+    );
   }
 
   // 2. Wave 58 — authed-only. Anon callers get 401 with a signin redirect URL
