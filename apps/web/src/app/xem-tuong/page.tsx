@@ -16,6 +16,7 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
@@ -477,6 +478,12 @@ export default function XemTuongPage() {
                       };
                     }}
                   />
+                </div>
+                {/* Lời mời bạn bè ngay tại lúc khách vừa thấy kết quả — trước đây
+                    chỉ nằm ở /account nên gần như không ai thấy. Thẻ tự ẩn khi
+                    khách chưa đăng nhập. */}
+                <div className="pt-2">
+                  <ReferralCard hideWhileLoading />
                 </div>
 
                 <p className="rounded-lg border border-border bg-card/20 px-4 py-3 text-xs leading-relaxed text-muted-foreground">

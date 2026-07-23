@@ -13,6 +13,7 @@ import {
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
@@ -570,6 +571,12 @@ export default function GieoQuePage() {
                       };
                     }}
                   />
+                </div>
+                {/* Lời mời bạn bè ngay tại lúc khách vừa thấy kết quả — trước đây
+                    chỉ nằm ở /account nên gần như không ai thấy. Thẻ tự ẩn khi
+                    khách chưa đăng nhập. */}
+                <div className="pt-2">
+                  <ReferralCard hideWhileLoading />
                 </div>
 
                 <p className="px-1 text-xs leading-relaxed text-muted-foreground">

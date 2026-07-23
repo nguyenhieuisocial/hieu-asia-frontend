@@ -9,6 +9,7 @@ import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS 
 // chuỗi engine, có test bao phủ. KHÔNG viết map mới ở đây.
 import { CAN_PLAIN, TEN_GOD_PLAIN, NGU_HANH_PLAIN } from '@/lib/bat-tu-plain';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { ProofDisclosure } from '@/components/la-so-bat-tu/ProofDisclosure';
 import { UnifiedProfile } from '@/components/la-so-bat-tu/UnifiedProfile';
@@ -450,6 +451,11 @@ export function BatTuChecker({
                 />
               </div>
             </div>
+
+            {/* Lời mời bạn bè ngay tại lúc khách vừa thấy lá số — trước đây chỉ
+                nằm ở /account nên gần như không ai thấy. Thẻ tự ẩn khi khách
+                chưa đăng nhập. */}
+            <ReferralCard hideWhileLoading />
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
               <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">

@@ -9,6 +9,7 @@ import { TuViChart12Palaces } from '@/components/tuvi/TuViChart12Palaces';
 import { NguHanhRemedyCard } from '@/components/ngu-hanh/NguHanhRemedyCard';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { PRICING, formatVND } from '@/lib/pricing';
 import { useScrollToResult } from '@/lib/use-scroll-to-result';
 import {
@@ -511,6 +512,11 @@ export function LaSoChecker({
                 label="Chia sẻ lá số"
               />
             </div>
+
+            {/* Lời mời bạn bè ngay tại lúc khách vừa thấy lá số — trước đây chỉ
+                nằm ở /account nên gần như không ai thấy. Thẻ tự ẩn khi khách
+                chưa đăng nhập. */}
+            <ReferralCard hideWhileLoading />
 
             {/* Funnel → AI deep reading (free chart here; the AI interpretation is the product) */}
             <div className="rv-up rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-transparent p-5 text-center" style={{ animationDelay: '380ms' }}>

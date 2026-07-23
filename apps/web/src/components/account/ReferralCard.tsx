@@ -10,8 +10,13 @@ import { CountUp } from '@/components/fx/CountUp';
  * "Mời bạn" card on /account — shows the user's invite link, a copy/share
  * affordance, how many friends have joined, and any voucher earned. Hides
  * itself when the user isn't signed in or the endpoint is unavailable.
+ *
+ * `hideWhileLoading` — dùng khi nhúng NGAY DƯỚI kết quả của công cụ công khai:
+ * đa số khách ở đó chưa đăng nhập nên thẻ sẽ ẩn hẳn; hiện khung xương trước rồi
+ * biến mất chỉ làm trang giật. Ở /account thì ngược lại (chắc chắn đã đăng
+ * nhập), giữ khung xương để tránh nhảy bố cục.
  */
-export function ReferralCard() {
+export function ReferralCard({ hideWhileLoading = false }: { hideWhileLoading?: boolean } = {}) {
   const [info, setInfo] = React.useState<ReferralInfo | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [copied, setCopied] = React.useState(false);
@@ -31,6 +36,7 @@ export function ReferralCard() {
   }, []);
 
   if (loading) {
+    if (hideWhileLoading) return null;
     return <div aria-hidden className="h-[148px] w-full animate-pulse rounded-xl bg-card/30" />;
   }
   if (!info) return null;

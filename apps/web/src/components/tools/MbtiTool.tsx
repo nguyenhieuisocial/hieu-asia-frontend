@@ -7,6 +7,7 @@ import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { PersonalityQuiz } from '@/components/tools/PersonalityQuiz';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { track } from '@/lib/analytics';
@@ -348,6 +349,12 @@ export function MbtiTool() {
             <Button variant="outline" onClick={() => setResult(null)}>
               Làm lại
             </Button>
+          </div>
+          {/* Lời mời bạn bè ngay tại lúc khách vừa thấy kết quả — trước đây
+              chỉ nằm ở /account nên gần như không ai thấy. Thẻ tự ẩn khi
+              khách chưa đăng nhập. */}
+          <div className="pt-2">
+            <ReferralCard hideWhileLoading />
           </div>
         </div>
       )}
