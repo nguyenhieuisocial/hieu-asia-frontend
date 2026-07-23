@@ -4,7 +4,9 @@
  * 3 fact-based pillars (NOT fabricated user counts — honest brand voice
  * "Hiểu mình. Quyết định mình.").
  *
- * - 24h refund: real policy (vault 80 / pricing page hero already cites)
+ * - 14-day refund: real policy (matches /terms §4 + pricing trustLine). The
+ *   24h "no questions asked" window is the sub-clause for readings not yet
+ *   generated — kept in the detail line, never as the headline number.
  * - Cloudflare edge: real infra (vault 88 cloud-first architecture)
  * - Transparent methodology: real product principle (every reading shows
  *   the AI prompt + source data used; not a black box)
@@ -33,9 +35,9 @@ export interface Pillar {
 export const PRICING_PILLARS: readonly Pillar[] = [
   {
     Icon: ShieldCheck,
-    value: '24 giờ',
-    label: 'Hoàn tiền không hỏi',
-    detail: 'Trước khi báo cáo tạo xong, hoàn 100% chỉ với 1 click.',
+    value: '14 ngày',
+    label: 'Bảo đảm hoàn tiền',
+    detail: 'Báo cáo chưa tạo: hoàn 100% trong 24 giờ, không hỏi lý do.',
   },
   {
     Icon: Globe2,
