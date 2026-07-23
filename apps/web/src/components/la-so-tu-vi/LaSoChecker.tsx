@@ -11,6 +11,12 @@ import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/D
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { PRICING, formatVND } from '@/lib/pricing';
 import { useScrollToResult } from '@/lib/use-scroll-to-result';
+import {
+  readBirthProfile,
+  birthProfileToDateTime,
+  saveBirthDateTime,
+} from '@/lib/birth-profile';
+import { SavedBirthInfoHint } from '@/components/tools/SavedBirthInfoHint';
 
 /**
  * Cách cục (hệ chính tinh hội về Mệnh) — ported from the backend reading engine
@@ -118,6 +124,7 @@ export function LaSoChecker({
   const [triet, setTriet] = React.useState<TrietLo | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [prefilled, setPrefilled] = React.useState(false);
   const { resultRef, armScroll } = useScrollToResult(chart);
 
   const onCast = React.useCallback(async () => {
@@ -144,6 +151,9 @@ export function LaSoChecker({
       setCachCuc(cc);
       setTuanKhong(tk);
       setTriet(tr);
+      // PROFILE-CARRY — ghi vào hồ sơ ngày sinh dùng chung (chỉ trên máy) để
+      // các công cụ khác tự điền, khách không phải gõ lại.
+      saveBirthDateTime(date, time, gender === 'female' ? 'nu' : 'nam');
     } catch {
       setError('Chưa lập được lá số — thử lại sau giây lát.');
     } finally {
@@ -159,6 +169,22 @@ export function LaSoChecker({
     if (!autoCast || !initialDate || !/^\d{4}-\d{1,2}-\d{1,2}$/.test(initialDate)) return;
     void onCast();
     // chỉ chạy 1 lần khi mount với giá trị khởi tạo từ link
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // PROFILE-CARRY đợt 2 — không mở từ link chia sẻ thì tự điền từ hồ sơ ngày
+  // sinh dùng chung. KHÔNG tự lập lá số (lá số Tử Vi gọi worker — chỉ chạy khi
+  // khách chủ động bấm).
+  React.useEffect(() => {
+    if (initialDate) return;
+    const p = readBirthProfile();
+    const dt = birthProfileToDateTime(p);
+    if (!dt) return;
+    setDate(dt.date);
+    setTime(dt.time);
+    if (p.gender) setGender(p.gender === 'nu' ? 'female' : 'male');
+    setPrefilled(true);
+    // chỉ chạy 1 lần lúc mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -205,6 +231,8 @@ export function LaSoChecker({
           Giờ sinh càng đúng, việc an cung càng chính xác. Không nhớ giờ? Để <strong>12:00</strong> (giờ Ngọ)
           — phần lớn cách an cung vẫn đúng, một số sao theo giờ có thể lệch.
         </p>
+
+        {prefilled && <SavedBirthInfoHint show onClear={() => setPrefilled(false)} />}
 
         <Button onClick={() => void onCast()} disabled={loading} size="lg">
           {loading ? 'Đang lập lá số…' : '✦ Lập lá số Tử Vi'}

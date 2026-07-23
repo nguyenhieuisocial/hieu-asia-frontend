@@ -20,6 +20,12 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { track } from '@/lib/analytics';
 import { safeJson } from '@/lib/safe-json';
 import { describeApiError } from '@/lib/api-error';
+import {
+  readBirthProfile,
+  birthProfileToDateTime,
+  saveBirthDateTime,
+} from '@/lib/birth-profile';
+import { SavedBirthInfoHint } from '@/components/tools/SavedBirthInfoHint';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -110,6 +116,20 @@ export default function CanXuongPage() {
   const [result, setResult] = React.useState<CanXuongResult | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [prefilled, setPrefilled] = React.useState(false);
+
+  // PROFILE-CARRY — tự điền từ hồ sơ ngày sinh dùng chung (localStorage). Đọc
+  // trong effect để không lệch hydrate. Không tự gọi API: chỉ điền sẵn, khách
+  // bấm mới tính.
+  React.useEffect(() => {
+    const p = readBirthProfile();
+    const dt = birthProfileToDateTime(p);
+    if (!dt) return;
+    setBirthDate(dt.date);
+    setBirthHour(String(p.hour ?? 12));
+    if (p.gender) setGender(p.gender === 'nu' ? 'F' : 'M');
+    setPrefilled(true);
+  }, []);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,6 +155,12 @@ export default function CanXuongPage() {
       const json = parsed.data;
       if (!json.ok || !json.result) throw new Error(json.error ?? 'Không tính được kết quả');
       setResult(json.result);
+      // PROFILE-CARRY — ghi lại để công cụ khác tự điền (chỉ lưu trên máy).
+      saveBirthDateTime(
+        birthDate,
+        `${String(Number(birthHour)).padStart(2, '0')}:00`,
+        gender === 'F' ? 'nu' : 'nam',
+      );
       track('tool_used', { tool: 'can-xuong', result: 'ok' });
     } catch (e) {
       setError(describeApiError(e));
@@ -221,6 +247,9 @@ export default function CanXuongPage() {
                     Cân Xương chỉ dùng cấp giờ (không cần phút). Nếu không nhớ giờ chính
                     xác, có thể chọn giờ gần đúng nhất.
                   </p>
+                  {prefilled && (
+                    <SavedBirthInfoHint show onClear={() => setPrefilled(false)} />
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label className="text-foreground/85">Giới tính</Label>

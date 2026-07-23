@@ -8,6 +8,7 @@ import { AuroraBackdrop } from '@/components/fx/AuroraBackdrop';
 import { Time24 } from '@/components/Time24';
 import { useScrollToResult } from '@/lib/use-scroll-to-result';
 import { track } from '@/lib/analytics';
+import { saveBirthDateTime } from '@/lib/birth-profile';
 
 // BatTuChecker (engine Bát Tự + bảng 4 trụ + Nhật Chủ + đại vận + Thần Sát + nút
 // PDF, ~716 LOC) CHỈ render sau khi khách bấm "Lập lá số" (state `revealed`).
@@ -89,10 +90,13 @@ export function InstantChartHero(): React.JSX.Element {
         time_to_submit_ms: startedAt ? Date.now() - startedAt : null,
       });
       track('tool_used', { tool: 'home-instant-bat-tu', result: 'ok' });
+      // PROFILE-CARRY — trang chủ là nơi khách nhập ngày sinh ĐẦU TIÊN. Ghi vào
+      // hồ sơ dùng chung (chỉ trên máy) để mọi công cụ sau đó tự điền sẵn.
+      saveBirthDateTime(date, unknownTime ? '12:00' : time, gender === 'F' ? 'nu' : 'nam');
       armScroll();
       setRevealed(true);
     },
-    [date, armScroll],
+    [date, time, unknownTime, gender, armScroll],
   );
 
   const effectiveTime = unknownTime ? '12:00' : time;
