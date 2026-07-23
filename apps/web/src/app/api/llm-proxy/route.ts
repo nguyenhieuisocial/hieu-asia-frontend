@@ -17,6 +17,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { generateText, type ModelMessage } from 'ai';
 import { createGateway } from '@ai-sdk/gateway';
+import { safeErrorDetail } from '@/lib/safe-error';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -68,7 +69,9 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : String(e);
-    return NextResponse.json({ error: `gateway: ${msg}` }, { status: 502 });
+    return NextResponse.json(
+      { error: `gateway: ${safeErrorDetail('llm-proxy', e)}` },
+      { status: 502 },
+    );
   }
 }
