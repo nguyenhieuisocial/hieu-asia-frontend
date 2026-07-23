@@ -31,8 +31,16 @@ const PATTERN = new RegExp(
 function findRetired(text) {
   if (typeof text !== 'string' || text.length === 0) return null;
   PATTERN.lastIndex = 0;
-  const m = PATTERN.exec(text);
-  return m ? m[1] : null;
+  let m;
+  while ((m = PATTERN.exec(text)) !== null) {
+    // A CSS custom property name (`--font-marketing-display`) is not a Tailwind
+    // class — next/font emits it via `variable:`, and Tailwind never sees it.
+    // Flagging it sends people to rename a variable that has nothing to do with
+    // the retired utility class.
+    if (text.slice(Math.max(0, m.index - 2), m.index) === '--') continue;
+    return m[1];
+  }
+  return null;
 }
 
 export default {

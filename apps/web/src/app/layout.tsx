@@ -8,7 +8,7 @@ import type { Metadata, Viewport } from 'next';
 // `font-mono` on home — those size-adjust gracefully to `ui-monospace` from
 // the Tailwind fallback stack). Removing it cuts 3 woff2 files (latin-ext +
 // latin + vietnamese subsets) from every page's critical path.
-import { Be_Vietnam_Pro, Instrument_Serif, Newsreader } from 'next/font/google';
+import { Be_Vietnam_Pro, Newsreader } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { ThemeProvider } from '@/components/providers/theme-provider';
@@ -67,21 +67,13 @@ const beVietnam = Be_Vietnam_Pro({
 // fonts. Headings now use Be Vietnam Pro (see tailwind-preset heading token).
 // Dropping the import also removes an unused webfont from the build.
 
-// Wave 60.56 Phase 1 — Option D "Warm-Dark Editorial" marketing display serif.
-// Italic-capable (signature `<em>verb</em>` spans in hero/section headers).
-// Wave 62.01 — kept as TRANSITIONAL fallback alongside Newsreader Variable.
-// Wave 62.05e — `preload: false`. Newsreader is now the canonical editorial
-// display; Instrument Serif is no longer referenced by any Tailwind font
-// utility (the VN-diacritics fix pointed every display token at Newsreader),
-// so it must never burn critical-path preload budget.
-const instrumentSerif = Instrument_Serif({
-  weight: '400',
-  subsets: ['latin', 'latin-ext'],
-  style: ['normal', 'italic'],
-  variable: '--font-marketing-display',
-  display: 'swap',
-  preload: false,
-});
+// 2026-07-23 — Instrument Serif REMOVED. It was kept as a transitional fallback
+// (Wave 62.01) and demoted to `preload: false` (Wave 62.05e), but the VN-
+// diacritics fix pointed every display token at Newsreader, and the
+// `font-marketing-display` utility was then dropped from tailwind.config.ts.
+// Grep confirms nothing reads `var(--font-marketing-display)` — the font was
+// downloaded and its variable attached to <html> for no consumer. Newsreader is
+// the canonical editorial display; re-add only with a real consumer.
 
 // Wave 62.01 — Newsreader Variable. Founder-locked editorial display serif
 // per spec "Như giấy cũ": italic 300–800 with full diacritics, free via
@@ -245,7 +237,7 @@ export default async function RootLayout({
       // silence its dev warning + stay correct in a future Next version).
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${beVietnam.variable} ${instrumentSerif.variable} ${newsreader.variable}`}
+      className={`${beVietnam.variable} ${newsreader.variable}`}
     >
       <head>
         {/* Wave 55 LCP #3 — dropped 3 unused preconnects.
