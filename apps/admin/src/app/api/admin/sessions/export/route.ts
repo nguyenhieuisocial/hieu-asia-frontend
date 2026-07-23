@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
   try {
     const r = await fetch(`${GATEWAY}/admin/sessions/export${url.search}`, {
       cache: 'no-store',
-      headers: { 'X-Admin-Token': TOKEN },
+      // Audit header: without it the worker logs the shared service token
+      // instead of the human who exported the session data.
+      headers: { 'X-Admin-Token': TOKEN, 'X-Admin-Email': auth.session.email },
     });
     if (!r.ok || !r.body) {
       const text = await r.text();

@@ -39,6 +39,9 @@ export async function POST(
       headers: {
         'content-type': 'application/json',
         'X-Admin-Token': TOKEN,
+        // Audit header: without it the worker logs the shared service token
+        // instead of the human who cleared the fraud flag.
+        'X-Admin-Email': auth.session.email,
       },
       body: body || '{}',
       cache: 'no-store',
