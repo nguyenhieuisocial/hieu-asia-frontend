@@ -42,7 +42,7 @@ function formatToday(): string {
 export const metadata: Metadata = {
   title: 'Tử Vi 12 con giáp hôm nay',
   description:
-    'Tử Vi hàng ngày cho 12 con giáp: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký nhận thông báo mỗi sáng 6h.',
+    'Tử Vi hôm nay tính theo can chi ngày cho 12 con giáp: hôm nay nên làm gì, nên hoãn gì — không hù dọa, không bán giải hạn. Nhận nhắc mỗi sáng 6h.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-hom-nay' },
   // Wave 60.96.1 — route-level openGraph REPLACES root-layout openGraph
   // (Next.js merge semantics), so we must re-declare `images` here or Zalo/
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Tử Vi 12 con giáp hôm nay',
     description:
-      'Tử Vi hàng ngày 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe.',
+      'Tử Vi hôm nay theo can chi ngày cho 12 con giáp — nên làm gì, nên hoãn gì. Không hù dọa, không bán giải hạn.',
     url: 'https://hieu.asia/tu-vi-hom-nay',
     type: 'website',
     locale: 'vi_VN',
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Tử Vi 12 con giáp hôm nay',
-    description: 'Tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe — cập nhật mỗi ngày.',
+    description: 'Theo can chi ngày — nên làm gì, nên hoãn gì. Cập nhật mỗi sáng.',
     images: [
       {
         url: '/og-image.jpg',
@@ -84,7 +84,7 @@ const JSONLD = [
   webPage({
     name: 'Tử Vi 12 con giáp hôm nay',
     description:
-      'Tử Vi hàng ngày cho 12 con giáp — tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe. Đăng ký push notification mỗi sáng 6h.',
+      'Tử Vi hôm nay theo can chi ngày cho 12 con giáp — nên làm gì, nên hoãn gì. Không hù dọa, không bán giải hạn. Nhận nhắc mỗi sáng 6h.',
     url: '/tu-vi-hom-nay',
   }),
 ];
