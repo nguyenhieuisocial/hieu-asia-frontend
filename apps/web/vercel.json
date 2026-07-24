@@ -2,10 +2,14 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm turbo build --filter=web",
   "installCommand": "pnpm install --frozen-lockfile",
-  "ignoreCommand": "npx --yes turbo-ignore web",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "regions": ["sin1"],
+  "git": {
+    "deploymentEnabled": {
+      "dependabot/**": false
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
