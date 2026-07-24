@@ -472,6 +472,47 @@ function solarYearOf(Y: number, M: number, D: number): number {
   return jd >= lx ? Y : Y - 1;
 }
 
+export interface MonthPillarInfo {
+  /** Năm can chi (Bát Tự) chứa ngày — đổi tại Lập Xuân, KHÔNG theo 01/01. */
+  solarYear: number;
+  /** Cung tiết: 0 = tháng Dần … 11 = tháng Sửu. */
+  sector: number;
+  can: string;
+  chi: string;
+  canElement: Element;
+  chiElement: Element;
+  napAm: { name: string; element: Element };
+  /** Ví dụ "Bính Thân". */
+  label: string;
+}
+
+/**
+ * Trụ THÁNG (Bát Tự) của một ngày dương, lấy mốc 12h trưa giờ VN.
+ *
+ * Dùng ĐÚNG phép tính tiết khí của `calculateBazi` ở trên (cùng hằng số, cùng
+ * `solarTermJD`) — tách ra để các trang SEO theo tháng dùng lại thay vì dựng
+ * lại phép tính tiết khí ở chỗ khác rồi lệch nhau.
+ */
+export function monthPillarOf(Y: number, M: number, D: number): MonthPillarInfo {
+  const jdUTC = julianDay(Y, M, D, 5); // 12h trưa giờ VN (UTC+7)
+  const lapXuan = solarTermJD(Y, 315, 2, 4);
+  const solarYear = jdUTC >= lapXuan ? Y : Y - 1;
+  const yearCan = mod(solarYear - 4, 10);
+  const sector = Math.floor(mod(sunLongitude(jdUTC) - 315, 360) / 30);
+  const chiIdx = mod(sector + 2, 12);
+  const canIdx = mod(NGU_HO_DAN_STEM[yearCan]! + sector, 10);
+  return {
+    solarYear,
+    sector,
+    can: CAN[canIdx]!,
+    chi: CHI[chiIdx]!,
+    canElement: CAN_ELEMENT[canIdx]!,
+    chiElement: CHI_ELEMENT[chiIdx]!,
+    napAm: napAmOf(canIdx, chiIdx),
+    label: `${CAN[canIdx]} ${CHI[chiIdx]}`,
+  };
+}
+
 /**
  * Đại vận (vận 10 năm). Hướng: dương-nam / âm-nữ → thuận; âm-nam / dương-nữ → nghịch.
  * Tuổi khởi vận = số ngày từ sinh tới tiết kế (thuận) / tiết trước (nghịch) chia 3.
