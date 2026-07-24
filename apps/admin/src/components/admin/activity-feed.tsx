@@ -43,11 +43,13 @@ async function fetchAudit(): Promise<AuditEntry[] | null> {
     }>};
     if (!data?.ok || !Array.isArray(data.entries)) return null;
     return data.entries
-      // Drop malformed audit rows — a missing id/ts/action would render a
-      // keyless <li>, a NaN timestamp, or a blank action.
-      .filter((e) => e && typeof e.id === 'string' && typeof e.ts === 'string' && typeof e.action === 'string')
+      // Drop malformed audit rows (missing ts/action → NaN timestamp / blank
+      // action). The worker audit select returns NO `id` column, so the old
+      // `typeof e.id === 'string'` guard silently dropped EVERY row → the feed
+      // was always empty. Key rows on ts+action instead.
+      .filter((e) => e && typeof e.ts === 'string' && typeof e.action === 'string')
       .map((e): AuditEntry => ({
-      id: e.id,
+      id: `${e.ts}:${e.action}`,
       ts: e.ts,
       actor: e.actor,
       action: e.action,

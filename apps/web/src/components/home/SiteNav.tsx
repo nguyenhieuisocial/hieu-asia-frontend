@@ -331,7 +331,7 @@ function DrawerGroup({
   onNavigate: () => void;
 }) {
   const linkCls =
-    'rounded-md px-3 py-2 text-sm text-foreground/70 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15';
+    'flex min-h-11 items-center rounded-md px-3 py-2 text-sm text-foreground/70 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15';
   return (
     <details className="group">
       <summary className="flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-sm text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15 [&::-webkit-details-marker]:hidden">

@@ -127,7 +127,7 @@ const HOWTO_JSONLD = {
       '@type': 'HowToStep',
       position: 2,
       name: 'AI phân tích trong 30 giây',
-      text: 'Hệ thống tổng hợp Tử Vi, Bát Tự, MBTI, Big Five và Xem Tướng (cùng các công cụ như Thần Số Học) thành một bức tranh rõ ràng.',
+      text: 'Hệ thống tổng hợp Tử Vi, Bát Tự, MBTI, Big Five và Xem Tướng (cùng các công cụ như Thần Số Học) thành một bản tổng hợp rõ ràng.',
       url: 'https://hieu.asia/#how',
     },
     {
