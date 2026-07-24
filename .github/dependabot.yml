@@ -1,12 +1,12 @@
 # Wave 60.42 — GitHub Pro Dependabot (auto-PR for dependency updates).
 #
-# Strategy:
-# - pnpm (npm ecosystem) on root + each app/package — minor + patch only,
-#   monthly cadence to avoid PR noise. Major bumps deferred to manual
-#   review (we hit webpack 5.94+ wave 60.39 manually after audit).
-# - GitHub Actions — weekly, all updates (low blast radius).
-# - Group related ecosystem deps to reduce PR count (Next.js + React,
-#   Tailwind + tooling).
+# Strategy (trimmed to cut bot-triggered CI/build volume):
+# - pnpm (npm ecosystem) — DIRECT deps only, minor + patch, monthly.
+#   Everything not in a named group collapses into one "misc" PR/month.
+#   Major bumps + indirect (transitive) deps deferred to manual review;
+#   security fixes still land automatically via Dependabot security updates.
+# - GitHub Actions — monthly (was weekly), grouped into a single PR.
+# - Group related ecosystem deps to minimise PR/build count.
 #
 # Reviewers: nguyenhieuisocial (founder solo); auto-approve disabled —
 # every Dependabot PR still needs human eyeballs before merge.
@@ -21,11 +21,10 @@ updates:
       day: "tuesday"
       time: "09:00"
       timezone: "Asia/Ho_Chi_Minh"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     versioning-strategy: "increase-if-necessary"
     allow:
       - dependency-type: "direct"
-      - dependency-type: "indirect"
     ignore:
       # Major bumps require manual review (per Wave 60.30 footnote pattern)
       - dependency-name: "*"
@@ -56,6 +55,10 @@ updates:
       types:
         patterns:
           - "@types/*"
+      # Catch-all: collapse every remaining direct dep into ONE PR/month
+      misc:
+        patterns:
+          - "*"
     labels:
       - "dependencies"
       - "dependabot"
@@ -64,11 +67,15 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       day: "monday"
       time: "09:00"
       timezone: "Asia/Ho_Chi_Minh"
-    open-pull-requests-limit: 3
+    open-pull-requests-limit: 2
+    groups:
+      actions:
+        patterns:
+          - "*"
     labels:
       - "dependencies"
       - "github-actions"
