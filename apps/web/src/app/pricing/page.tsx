@@ -251,12 +251,12 @@ export default function PricingPage() {
           eyebrow="GÓI THÀNH VIÊN · 2026"
           title={
             <>
-              Chọn gói phù hợp với{' '}
-              <em className="italic text-primary/80">nhịp sống</em> của bạn
+              Bắt đầu miễn phí. Trả tiền khi bạn thấy{' '}
+              <em className="italic text-primary/80">đúng là mình</em>
               <span className="text-primary">.</span>
             </>
           }
-          subtitle="Bắt đầu miễn phí — chuyển gói khi sẵn sàng. Mọi gói trả phí đều bảo đảm hoàn tiền."
+          subtitle="Mọi công cụ tra cứu đều miễn phí. Khi muốn một bản đọc sâu bám đúng lá số riêng của bạn, mở khoá một lần là xong. Mọi gói trả phí đều có bảo đảm hoàn tiền 14 ngày."
           primaryCta={{ label: 'Bắt đầu miễn phí', href: '/onboarding' }}
           trustLine="14 ngày hoàn tiền · Không cần thẻ trước"
         />
@@ -287,7 +287,9 @@ export default function PricingPage() {
                 'Tử Vi · Bát Tự · MBTI · Big Five · Tarot · Thần Số…',
                 'Lưu hồ sơ cá nhân',
               ],
-              ctaLabel: 'Bắt đầu miễn phí',
+              // vault 144 §b bậc 1 — "Lập lá số miễn phí" nói rõ hành động và
+              // thứ nhận được, thay nhãn chung chung "Bắt đầu miễn phí".
+              ctaLabel: 'Lập lá số miễn phí',
               ctaHref: '/onboarding',
             },
             {

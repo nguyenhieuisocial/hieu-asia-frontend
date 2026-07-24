@@ -141,6 +141,12 @@ export default function QuaPage() {
                 Khám phá công cụ →
               </Link>
               <Link
+                href="/tai-lieu"
+                className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-gold"
+              >
+                Tài liệu tặng miễn phí →
+              </Link>
+              <Link
                 href="/pricing"
                 className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-gold"
               >
