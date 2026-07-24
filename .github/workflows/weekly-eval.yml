@@ -42,7 +42,7 @@ jobs:
       # required so reading-create/reading-get pass the Edge Function verify_jwt gate.
       EVAL_SUPABASE_ANON_KEY: ${{ secrets.EVAL_SUPABASE_ANON_KEY }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # action-setup@v4 with NO version key — defers to packageManager
       # (pnpm@9.12.0) in root package.json, matching ci.yml. v5 + an explicit
       # `version: 10` hard-errors ERR_PNPM_BAD_PM_VERSION (dual-spec conflict).
