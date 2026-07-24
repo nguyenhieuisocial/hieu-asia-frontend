@@ -140,8 +140,23 @@ if (addedPages.length > 0) {
     try { body = git(`git show HEAD:${f}`); } catch { continue; }
     if (/index\s*:\s*false/.test(body)) continue; // robots noindex → intentionally unlisted
 
-    const listed = new RegExp(`${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'\`]`);
-    if (!listed.test(sitemapSrc) && !listed.test(registrySrc)) {
+    const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const listed = new RegExp(`${esc(route)}["'\`]`);
+
+    // A cluster listed via `.map()` over a registry never contains the full path
+    // as a literal — sitemap builds it as `${BASE}/tai-lieu/${doc.slug}` and the
+    // registry stores `slug: 'ba-cau-hoi'` alone. Accept that shape when BOTH
+    // halves are present: the parent prefix used as a template in sitemap, and
+    // the leaf segment quoted in a source sitemap imports.
+    const seg = route.split('/');
+    const leaf = seg.pop();
+    const parent = seg.join('/');
+    const viaRegistry =
+      parent.length > 1 &&
+      new RegExp(`${esc(parent)}/\\$\\{`).test(sitemapSrc) &&
+      new RegExp(`["'\`]${esc(leaf)}["'\`]`).test(registrySrc);
+
+    if (!listed.test(sitemapSrc) && !listed.test(registrySrc) && !viaRegistry) {
       push(
         f,
         `trang mới ${route} chưa đăng ký ở app/sitemap.ts hoặc lib/site-registry.ts → trang mồ côi (Google không thấy, không có link nội bộ dẫn tới). Nếu CỐ Ý ẩn thì đặt robots { index: false } trong metadata.`,
