@@ -28,6 +28,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { TurnstileWidget } from '@/components/auth/TurnstileWidget';
 import { sendMagicLink, signInWithOAuth } from '@/lib/auth-client';
+import { safeNextPath } from '@/lib/safe-next';
 import { useAuth } from '@/hooks/use-auth';
 import { track } from '@/lib/analytics';
 
@@ -93,17 +94,10 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
   React.useEffect(() => {
     if (!authLoading && authedUser) {
       const next = nextProp ?? searchParams.get('next');
-      // Open-redirect guard: same-origin relative path only. `//evil.com` and
-      // `/\evil.com` are protocol-relative — browsers treat them as absolute —
-      // so `startsWith('/')` alone is not enough; reject those too.
-      router.replace(
-        next &&
-          next.startsWith('/') &&
-          !next.startsWith('//') &&
-          !next.startsWith('/\\')
-          ? next
-          : '/account',
-      );
+      // Open-redirect guard (safeNextPath): same-origin relative path only —
+      // rejects `//evil.com`, `/\evil.com`, and tab/newline-smuggled cross-origin
+      // targets; fallback to `/account`.
+      router.replace(safeNextPath(next) ?? '/account');
     }
   }, [authLoading, authedUser, router, searchParams, nextProp]);
 
