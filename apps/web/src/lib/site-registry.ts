@@ -320,6 +320,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "relatedLabel": "Tử Vi hôm nay",
     "related": [
       "/tu-vi",
+      "/tu-vi-thang",
       "/tu-vi-2026",
       "/tu-vi-2027",
       "/lich-van-nien"
@@ -346,6 +347,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "related": [
       "/tu-vi",
       "/tu-vi-2027",
+      "/tu-vi-thang",
       "/sao-han",
       "/tu-vi-hom-nay",
       "/bang-chung"
@@ -375,6 +377,32 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi-hom-nay",
       "/tu-vi-2026",
       "/lich-van-nien"
+    ]
+  },
+  {
+    "href": "/tu-vi-thang",
+    "quick": {
+      "label": "Tử Vi tháng",
+      "tier": "free",
+      "group": "theo-mua"
+    },
+    "catalog": {
+      "cat": "van-trinh",
+      "emoji": "🗓️",
+      "name": "Tử Vi tháng",
+      "desc": "Trụ tháng theo tiết khí, hợp xung với chi tuổi và ngày đáng chú ý trong tháng."
+    },
+    "surfaces": [
+      "drawer",
+      "catalog"
+    ],
+    "relatedLabel": "Tử Vi tháng",
+    "related": [
+      "/tu-vi-hom-nay",
+      "/tu-vi-2026",
+      "/xem-ngay",
+      "/lich-van-nien",
+      "/hop-tuoi"
     ]
   },
   {
