@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 const HUB_FAQS = [
   {
     q: 'Thất Tịch 2026 là ngày nào dương lịch?',
-    a: 'Thất Tịch là ngày 7 tháng 7 âm lịch. Năm 2026, ngày này rơi vào thứ Tư 19/8/2026 dương lịch. Đây cũng là tuần thứ hai của tháng 7 âm — tháng mà dân gian quen gọi là tháng cô hồn.',
+    a: 'Thất Tịch là ngày 7 tháng 7 âm lịch. Năm 2026, ngày này rơi vào thứ Tư 19/8/2026 dương lịch. Đây cũng là những ngày đầu (thượng tuần) của tháng 7 âm — tháng mà dân gian quen gọi là tháng cô hồn.',
   },
   {
     q: 'Thất Tịch có phải Valentine của người châu Á không?',

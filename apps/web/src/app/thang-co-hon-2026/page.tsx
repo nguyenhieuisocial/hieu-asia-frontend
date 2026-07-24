@@ -14,12 +14,12 @@ import { expiredSeasonalTarget } from '@/lib/seasonal';
 export const metadata: Metadata = {
   title: 'Tháng cô hồn 2026 — lịch âm & cách nhìn',
   description:
-    'Tháng cô hồn 2026 (tháng 7 âm lịch): từ 13/8 đến 11/9, Rằm Vu Lan 27/8. Nguồn gốc, điều thường kiêng và góc nhìn không mê tín — hiểu để chủ động.',
+    'Tháng cô hồn 2026 (tháng 7 âm lịch): từ 13/8 đến 10/9, Rằm Vu Lan 27/8. Nguồn gốc, điều thường kiêng và góc nhìn không mê tín — hiểu để chủ động.',
   alternates: { canonical: 'https://hieu.asia/thang-co-hon-2026' },
   openGraph: {
     title: 'Tháng cô hồn 2026 — tháng nào, kiêng gì, nên hiểu thế nào',
     description:
-      'Tháng 7 âm lịch 2026: 13/8–11/9 dương lịch, Vu Lan 27/8. Phân biệt rõ tín ngưỡng và dữ kiện — không phán định mệnh.',
+      'Tháng 7 âm lịch 2026: 13/8–10/9 dương lịch, Vu Lan 27/8. Phân biệt rõ tín ngưỡng và dữ kiện — không phán định mệnh.',
     url: 'https://hieu.asia/thang-co-hon-2026',
     type: 'article',
     locale: 'vi_VN',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Tháng cô hồn 2026 — tháng nào, kiêng gì, hiểu thế nào',
-    description: 'Tháng 7 âm lịch 2026 (13/8–11/9), Vu Lan 27/8. Hiểu để chủ động, không phải để sợ.',
+    description: 'Tháng 7 âm lịch 2026 (13/8–10/9), Vu Lan 27/8. Hiểu để chủ động, không phải để sợ.',
     images: [{ url: '/og-image.jpg', alt: 'hieu.asia — Tháng cô hồn 2026' }],
   },
 };
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 const HUB_FAQS = [
   {
     q: 'Tháng cô hồn 2026 là tháng nào, từ ngày nào đến ngày nào?',
-    a: 'Tháng cô hồn là cách gọi dân gian của tháng 7 âm lịch. Năm 2026, mùng 1 tháng 7 âm rơi vào thứ Năm 13/8/2026 dương lịch; tháng này đủ 30 ngày nên kéo dài đến khoảng 11/9/2026. Rằm tháng 7 — lễ Vu Lan — là ngày 27/8/2026.',
+    a: 'Tháng cô hồn là cách gọi dân gian của tháng 7 âm lịch. Năm 2026, mùng 1 tháng 7 âm rơi vào thứ Năm 13/8/2026 dương lịch; tháng này là tháng thiếu (chỉ 29 ngày) nên kết thúc vào 10/9/2026. Rằm tháng 7 — lễ Vu Lan — là ngày 27/8/2026.',
   },
   {
     q: 'Lễ Vu Lan 2026 vào ngày nào dương lịch?',
@@ -63,7 +63,7 @@ const JSONLD = [
   article({
     headline: 'Tháng cô hồn 2026 là tháng nào? Lịch âm, ý nghĩa và cách nhìn bình tĩnh',
     description:
-      'Tháng cô hồn 2026 (tháng 7 âm lịch): 13/8–11/9 dương lịch, Vu Lan 27/8. Nguồn gốc, điều dân gian thường kiêng, và góc nhìn không mê tín.',
+      'Tháng cô hồn 2026 (tháng 7 âm lịch): 13/8–10/9 dương lịch, Vu Lan 27/8. Nguồn gốc, điều dân gian thường kiêng, và góc nhìn không mê tín.',
     url: '/thang-co-hon-2026',
     type: 'Article',
   }),
@@ -98,8 +98,8 @@ export default function ThangCoHon2026Page() {
           </h1>
           <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">
             "Tháng cô hồn" là cách gọi dân gian của tháng 7 âm lịch. Năm 2026, tháng này
-            bắt đầu từ <strong className="text-foreground">13/8</strong> và kéo dài tới khoảng{' '}
-            <strong className="text-foreground">11/9</strong> (dương lịch), với Rằm tháng 7 —
+            bắt đầu từ <strong className="text-foreground">13/8</strong> và kéo dài tới{' '}
+            <strong className="text-foreground">10/9</strong> (dương lịch), với Rằm tháng 7 —
             lễ Vu Lan — vào <strong className="text-foreground">27/8/2026</strong>. Trang này
             nói thẳng một điều: tháng cô hồn là một nét văn hóa, không phải một bản án. Bạn nên
             biết để ứng xử có hiểu biết, chứ không phải để sợ.
@@ -123,8 +123,8 @@ export default function ThangCoHon2026Page() {
                   <td className="px-4 py-3 font-medium text-foreground">Thứ Năm, 27/8/2026</td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 text-muted-foreground">Cuối tháng 7 âm (tháng đủ 30 ngày)</td>
-                  <td className="px-4 py-3 font-medium text-foreground">Khoảng 11/9/2026</td>
+                  <td className="px-4 py-3 text-muted-foreground">Cuối tháng 7 âm (tháng thiếu 29 ngày)</td>
+                  <td className="px-4 py-3 font-medium text-foreground">10/9/2026</td>
                 </tr>
               </tbody>
             </table>
