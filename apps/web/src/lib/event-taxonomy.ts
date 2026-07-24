@@ -190,6 +190,35 @@ export interface EventPropertyMap {
     type: string;
   };
 
+  // ── 4 sự kiện chuẩn của phễu (mọi kênh dùng CHUNG 4 tên này) ────
+  //
+  // Vấn đề trước đây: mỗi công cụ/trang bắn một tên riêng
+  // (`lead_capture_hop_tuoi`, `cuoi_lead_captured`, `tool_used`,
+  // `payment_intent_created`…) nên trong PostHog không có MỘT phễu chung
+  // "dùng thử → để lại email → vào thanh toán → mua". 4 sự kiện dưới đây là
+  // lớp chuẩn hoá đó.
+  //
+  // KHÔNG bắn tay 4 sự kiện này ở component: `analytics.ts` tự suy ra chúng
+  // từ các sự kiện chi tiết sẵn có (xem CANONICAL_MIRROR). Bắn tay sẽ đếm 2
+  // lần. Sự kiện chi tiết vẫn giữ nguyên để phân tích sâu theo từng công cụ.
+  /** Khách hoàn tất một công cụ miễn phí và thấy kết quả. */
+  free_tool_completed: { tool: string; source_event: string };
+  /** Khách để lại email (newsletter, nhắc theo mùa, tải PDF chặn-email…). */
+  email_captured: { source: string; source_event: string };
+  /** Khách bắt đầu luồng thanh toán (bấm mua / tạo yêu cầu thanh toán). */
+  checkout_started: {
+    tier?: string;
+    amount_vnd?: number;
+    source_event: string;
+  };
+  /** Thanh toán thành công. */
+  purchase: {
+    tier?: string;
+    amount_vnd?: number;
+    method?: string;
+    source_event: string;
+  };
+
   // ── Wave 41 — Consent ───────────────────────────────────────────
   consent_changed: {
     analytics: boolean;

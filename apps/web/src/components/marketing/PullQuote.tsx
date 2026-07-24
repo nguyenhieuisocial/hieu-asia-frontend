@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
  *
  * Editorial pull-quote between sections — large Instrument Serif italic body
  * with optional mono attribution + CSS reveal on first in-view. One of three
- * preserved decorative roles for `font-marketing-display` post Wave 60.66.P5
+ * preserved decorative roles for `font-editorial-display` post Wave 60.66.P5
  * sweep (numerals in BigNumberRow + price amounts in PricingTierV2, this
  * pull-quote body, and § glyph in SectionDivider).
  *
@@ -26,7 +26,7 @@ import { useEffect, useRef, useState } from 'react';
  * Phase 5 budget gate. CSS + IntersectionObserver = 0 KB delta, same visual.
  *
  * Tokens (Wave 60.56 P1, no new colors): bg-warm-dark-{50,100} /
- * text-foreground / text-gold / text-gold-soft / font-marketing-display /
+ * text-foreground / text-gold / text-gold-soft / font-editorial-display /
  * max-w-marketing-text / ease-editorial.
  */
 

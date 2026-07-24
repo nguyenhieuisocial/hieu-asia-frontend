@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@hieu-asia/ui';
 import { ArrowRight } from 'lucide-react';
 import { buildBanMenh, COLOR_HEX, FROM_YEAR, TO_YEAR, type BanMenhData } from '@/lib/ban-menh-data';
+import { readBirthProfile, saveBirthProfile } from '@/lib/birth-profile';
+import { SavedBirthInfoHint } from '@/components/tools/SavedBirthInfoHint';
 
 function Chips({ colors }: { colors: string[] }) {
   return (
@@ -34,6 +36,20 @@ export function BanMenhFinder() {
   const [year, setYear] = useState('');
   const [result, setResult] = useState<BanMenhData | null>(null);
   const [error, setError] = useState('');
+  const [prefilled, setPrefilled] = useState(false);
+
+  // PROFILE-CARRY — tự điền từ hồ sơ ngày sinh dùng chung (localStorage) để
+  // khách đã nhập ở công cụ khác không phải gõ lại. Đọc trong effect (không
+  // phải lúc render) để tránh lệch hydrate giữa server và client.
+  useEffect(() => {
+    const p = readBirthProfile();
+    if (!p.year) return;
+    const d = buildBanMenh(p.year);
+    if (!d) return;
+    setYear(String(p.year));
+    setResult(d);
+    setPrefilled(true);
+  }, []);
 
   function handleCheck() {
     setError('');
@@ -50,6 +66,7 @@ export function BanMenhFinder() {
       return;
     }
     setResult(d);
+    saveBirthProfile({ year: y });
   }
 
   return (
@@ -88,6 +105,12 @@ export function BanMenhFinder() {
         <p id="ban-menh-year-err" role="alert" className="mt-3 text-sm text-rose-400">
           {error}
         </p>
+      )}
+
+      {prefilled && (
+        <div className="mt-3">
+          <SavedBirthInfoHint show onClear={() => setPrefilled(false)} />
+        </div>
       )}
 
       {result && (

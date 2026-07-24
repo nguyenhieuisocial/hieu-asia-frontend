@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 import noServerToClientFunctionProp from './eslint-rules/no-server-to-client-function-prop.mjs';
 import noSearchParamsInChildrenWrapper from './eslint-rules/no-search-params-in-children-wrapper.mjs';
+import noLegacyFontClass from './eslint-rules/no-legacy-font-class.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,11 +31,18 @@ const rscDisciplinePlugin = {
   },
 };
 
+const typographyDisciplinePlugin = {
+  rules: {
+    'no-legacy-font-class': noLegacyFontClass,
+  },
+};
+
 export default [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     plugins: {
       'rsc-discipline': rscDisciplinePlugin,
+      'typography-discipline': typographyDisciplinePlugin,
     },
     rules: {
       '@typescript-eslint/no-unused-vars': [
@@ -55,6 +63,10 @@ export default [
       // component — it intermittently de-opts hydration of the whole route.
       // Isolate it in a Suspense-wrapped leaf. See PR #470 + the rule's header.
       'rsc-discipline/no-search-params-in-children-wrapper': 'error',
+      // Typography discipline: chặn class font đã bị gỡ khỏi tailwind.config.ts.
+      // Tailwind im lặng khi gặp class lạ → chữ rơi về font mặc định mà không
+      // có lỗi build. Xem packages/config/eslint-rules/no-legacy-font-class.mjs.
+      'typography-discipline/no-legacy-font-class': 'error',
     },
   },
   {

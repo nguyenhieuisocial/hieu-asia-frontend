@@ -24,7 +24,7 @@ export function Methodology(): React.JSX.Element {
         <p className="rv-fade font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           CÁCH HIEU.ASIA GIẢI MÃ
         </p>
-        <h2 className="rv-up mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>
+        <h2 className="rv-up mt-3 font-editorial-display text-3xl leading-tight text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>
           Năm lăng kính, <em className="italic text-primary">một bức tranh</em>.
         </h2>
         <p className="rv-up mt-3 max-w-[34em] leading-relaxed text-muted-foreground" style={{ animationDelay: '160ms' }}>

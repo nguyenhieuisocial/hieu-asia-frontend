@@ -81,7 +81,7 @@ export function MarketingHero({
         // exception applies).
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-5 bottom-0 z-0 select-none font-marketing-display italic text-foreground/10"
+          className="pointer-events-none absolute -right-5 bottom-0 z-0 select-none font-editorial-display italic text-foreground/10"
           style={{ fontSize: 'clamp(240px, 30vw, 400px)', lineHeight: 0.9 }}
         >
           {watermark}

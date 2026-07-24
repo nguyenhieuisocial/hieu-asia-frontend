@@ -121,7 +121,7 @@ export function AstroTickerLive() {
               <span className="my-3 hidden w-px shrink-0 bg-primary/10 sm:block" />
 
               <Cell label={`Ngày · ${state.dateLabel}`} className="shrink-0">
-                <span className="font-marketing-display text-lg leading-tight text-foreground">
+                <span className="font-editorial-display text-lg leading-tight text-foreground">
                   {state.result.dayCanChi.label}
                 </span>
               </Cell>
@@ -130,7 +130,7 @@ export function AstroTickerLive() {
 
               <Cell label="Giờ này" className="shrink-0">
                 <span className="flex items-baseline gap-2">
-                  <span className="font-marketing-display text-lg leading-tight text-foreground">
+                  <span className="font-editorial-display text-lg leading-tight text-foreground">
                     {state.currentHour.canChi}
                   </span>
                   <span
@@ -153,12 +153,12 @@ export function AstroTickerLive() {
               <Cell label="Giờ tốt kế tiếp" className="shrink-0">
                 {state.next ? (
                   state.next.active ? (
-                    <span className="font-marketing-display text-lg leading-tight text-[color:var(--hanh-moc,#6B8154)]">
+                    <span className="font-editorial-display text-lg leading-tight text-[color:var(--hanh-moc,#6B8154)]">
                       Đang trong giờ tốt
                     </span>
                   ) : (
                     <>
-                      <span className="font-marketing-display text-lg leading-tight text-foreground">
+                      <span className="font-editorial-display text-lg leading-tight text-foreground">
                         Giờ {state.next.hour.branch}
                       </span>
                       <span className="block truncate text-xs text-muted-foreground">
@@ -167,7 +167,7 @@ export function AstroTickerLive() {
                     </>
                   )
                 ) : (
-                  <span className="font-marketing-display text-lg leading-tight text-muted-foreground">
+                  <span className="font-editorial-display text-lg leading-tight text-muted-foreground">
                     Hết giờ tốt hôm nay
                   </span>
                 )}
@@ -176,7 +176,7 @@ export function AstroTickerLive() {
               <span className="my-3 hidden w-px shrink-0 bg-primary/10 md:block" />
 
               <Cell label="Hôm nay" className="shrink-0 sm:hidden md:flex">
-                <span className="font-marketing-display text-lg leading-tight text-foreground">
+                <span className="font-editorial-display text-lg leading-tight text-foreground">
                   <CountUp value={state.goodCount} /> giờ hoàng đạo
                 </span>
               </Cell>

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Mail, Check } from 'lucide-react';
 import { Button, Input } from '@hieu-asia/ui';
 import { ShimmerText } from '@/components/fx/ShimmerText';
+import { track } from '@/lib/analytics';
 
 interface NewsletterSignupProps {
   id?: string;
@@ -46,6 +47,13 @@ export function NewsletterSignup({
         throw new Error(data.error ?? 'Đăng ký không thành công');
       }
       setAlreadySubscribed(Boolean(data.alreadySubscribed));
+      // Ô đăng ký newsletter trước đây KHÔNG bắn sự kiện nào → phễu "để lại
+      // email" thiếu hẳn nguồn này. Tên `lead_capture_*` khớp quy ước sẵn có
+      // nên analytics.ts tự quy về sự kiện chuẩn `email_captured`.
+      track('lead_capture_newsletter', {
+        id,
+        alreadySubscribed: Boolean(data.alreadySubscribed),
+      });
       setState('sent');
     } catch (err) {
       setState('error');

@@ -9,11 +9,18 @@ import { calculateBazi, type BaziChart, type BaziPillar, type Element, ELEMENTS 
 // chuỗi engine, có test bao phủ. KHÔNG viết map mới ở đây.
 import { CAN_PLAIN, TEN_GOD_PLAIN, NGU_HANH_PLAIN } from '@/lib/bat-tu-plain';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { ProofDisclosure } from '@/components/la-so-bat-tu/ProofDisclosure';
 import { UnifiedProfile } from '@/components/la-so-bat-tu/UnifiedProfile';
 import { PRICING, formatVND } from '@/lib/pricing';
 import { useScrollToResult } from '@/lib/use-scroll-to-result';
+import {
+  readBirthProfile,
+  birthProfileToDateTime,
+  saveBirthDateTime,
+} from '@/lib/birth-profile';
+import { SavedBirthInfoHint } from '@/components/tools/SavedBirthInfoHint';
 
 /**
  * Công cụ Bát Tự (Tứ Trụ) bấm-thử miễn phí. Engine `lib/bazi.ts` chạy NGAY trong
@@ -134,6 +141,7 @@ export function BatTuChecker({
   const [gender, setGender] = React.useState<'M' | 'F'>(initialGender ?? 'M');
   const [chart, setChart] = React.useState<BaziChart | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const [prefilled, setPrefilled] = React.useState(false);
   const { resultRef, armScroll } = useScrollToResult(chart);
 
   const onCast = React.useCallback(() => {
@@ -153,6 +161,10 @@ export function BatTuChecker({
         const qs = new URLSearchParams({ d: date, t: time, g: gender }).toString();
         window.history.replaceState(null, '', `/la-so-bat-tu?${qs}`);
       }
+      // PROFILE-CARRY — ghi ngày/giờ/giới tính vào hồ sơ dùng chung để các
+      // công cụ khác (lá số Tử Vi, sao hạn, tam tai…) tự điền, khách không
+      // phải gõ lại. Chỉ lưu trên máy, không gửi đi đâu.
+      saveBirthDateTime(date, time, gender === 'F' ? 'nu' : 'nam');
     } catch {
       setError('Chưa lập được lá số — kiểm tra lại ngày sinh.');
     }
@@ -177,6 +189,25 @@ export function BatTuChecker({
     } catch {
       /* link hỏng — bỏ qua, người dùng tự nhập */
     }
+  }, [embedded]);
+
+  // PROFILE-CARRY đợt 2 — không có link chia sẻ thì tự điền từ hồ sơ ngày sinh
+  // dùng chung (khách đã nhập ở công cụ khác). Đọc trong effect để không lệch
+  // hydrate. KHÔNG tự lập lá số: chỉ điền sẵn rồi để khách bấm, tránh đổ một
+  // lá số khách không chủ động yêu cầu.
+  React.useEffect(() => {
+    if (embedded || typeof window === 'undefined') return;
+    if (initialDate) return;
+    if (new URLSearchParams(window.location.search).get('d')) return;
+    const p = readBirthProfile();
+    const dt = birthProfileToDateTime(p);
+    if (!dt) return;
+    setDate(dt.date);
+    setTime(dt.time);
+    if (p.gender) setGender(p.gender === 'nu' ? 'F' : 'M');
+    setPrefilled(true);
+    // chỉ chạy 1 lần lúc mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [embedded]);
 
   // Hero trang chủ: lời mời đã thu ngày–giờ–giới tính → lập lá số ngay khi nhúng.
@@ -265,6 +296,8 @@ export function BatTuChecker({
               Giờ sinh quyết định trụ giờ. Không nhớ giờ? Để <strong>12:00</strong> — ba trụ năm/tháng/ngày vẫn
               đúng, chỉ trụ giờ là ước lượng.
             </p>
+
+            {prefilled && <SavedBirthInfoHint show onClear={() => setPrefilled(false)} />}
 
             <Button onClick={onCast} size="lg">
               ✦ Lập lá số Bát Tự
@@ -418,6 +451,11 @@ export function BatTuChecker({
                 />
               </div>
             </div>
+
+            {/* Lời mời bạn bè ngay tại lúc khách vừa thấy lá số — trước đây chỉ
+                nằm ở /account nên gần như không ai thấy. Thẻ tự ẩn khi khách
+                chưa đăng nhập. */}
+            <ReferralCard hideWhileLoading />
 
             <div className="rounded-xl border border-gold/20 bg-card/40 p-4">
               <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">

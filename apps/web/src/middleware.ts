@@ -16,8 +16,11 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { isMaintenanceMode } from '@/lib/edge-config';
 
 const COOKIE_NAME = 'hieu_ref';
+/** Trang thông báo bảo trì — không được tự chuyển hướng về chính nó. */
+const MAINTENANCE_PATH = '/maintenance';
 const COOKIE_TTL = 60 * 60 * 24 * 30; // 30 days
 // Accept short codes (3-32 chars, alphanum + _ -). Broader than legacy uppercase
 // scheme so we don't reject codes minted by the new affiliate worker.
@@ -103,7 +106,7 @@ function cookieOpts() {
   };
 }
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Skip excluded paths. The matcher already filters most of these but we
@@ -128,6 +131,25 @@ export function middleware(req: NextRequest) {
     pathname === '/favicon.ico'
   ) {
     return NextResponse.next();
+  }
+
+  // Chế độ bảo trì (Edge Config `maintenance_mode`). Khi DB sập hoặc đang di
+  // trú dữ liệu, bật cờ này là mọi trang chuyển sang /maintenance — khách thấy
+  // thông báo tử tế thay vì màn hình lỗi. Cache 30s trong lib/edge-config.ts
+  // nên hầu hết request không phải gọi Edge Config. Đọc lỗi → coi như TẮT
+  // (không bao giờ tự làm sập site vì Edge Config trục trặc).
+  if (pathname !== MAINTENANCE_PATH && (await isMaintenanceMode())) {
+    const url = req.nextUrl.clone();
+    url.pathname = MAINTENANCE_PATH;
+    url.search = '';
+    // Rewrite (không redirect) để giữ nguyên URL khách đang mở — bấm tải lại
+    // là quay về đúng trang cũ ngay khi tắt bảo trì.
+    const res = NextResponse.rewrite(url);
+    res.headers.set('Cache-Control', 'no-store');
+    res.headers.set('Retry-After', '600');
+    // Không để bộ máy tìm kiếm lập chỉ mục nội dung bảo trì dưới URL thật.
+    res.headers.set('X-Robots-Tag', 'noindex');
+    return res;
   }
 
   // "Markdown for Agents" content negotiation. If a GET page request explicitly

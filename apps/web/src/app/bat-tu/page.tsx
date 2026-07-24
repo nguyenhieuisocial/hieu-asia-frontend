@@ -289,7 +289,7 @@ export default function BatTuLandingPage() {
             <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">
               — Một đoạn đọc Bát Tự nghe thế nào
             </p>
-            <blockquote className="mt-6 border-l-2 border-gold/50 pl-6 font-marketing-display text-xl leading-relaxed text-foreground md:text-2xl">
+            <blockquote className="mt-6 border-l-2 border-gold/50 pl-6 font-editorial-display text-xl leading-relaxed text-foreground md:text-2xl">
               <p>
                 "Nhật can Giáp Mộc sinh tháng Thân — Kim vượng khắc Mộc. Bạn cần Thủy để hoá
                 Kim sinh Mộc; điều đó đọc thành xu hướng tìm cố vấn, học vấn, môi trường ôn

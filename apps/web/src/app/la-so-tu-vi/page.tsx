@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { LaSoChecker } from '@/components/la-so-tu-vi/LaSoChecker';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -177,6 +178,16 @@ export default async function LaSoTuViPage({
               ta nhận ra <strong>cách cục</strong> (Sát Phá Tham, Cơ Nguyệt Đồng Lương, Tử Phủ Vũ Tướng, Tử
               Phủ Đồng Cung, Cự Cơ Đồng Cung…) — khuôn hình thiên hướng của lá số. Khi bạn bấm chọn một cung ở trên, các cung trong tam
               phương tứ chính sẽ được tô sáng để dễ đọc.
+            </p>
+            {/* Nối ngược về trang học: trang công cụ này trước đây không có
+                link nào về /learn/tu-vi, nên người mới đọc xong lá số là hết
+                đường tìm hiểu thêm. */}
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Chưa quen cách đọc?{' '}
+              <Link href="/learn/tu-vi" className="text-primary underline underline-offset-4">
+                Học Tử Vi 12 cung từ đầu
+              </Link>{' '}
+              — giải thích từng cung, từng sao bằng tiếng Việt dễ hiểu.
             </p>
           </section>
           </RevealOnScroll>
