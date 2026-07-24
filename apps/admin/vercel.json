@@ -2,10 +2,14 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm --filter admin extract:sitemap && pnpm turbo build --filter=admin",
   "installCommand": "pnpm install --frozen-lockfile",
-  "ignoreCommand": "npx --yes turbo-ignore admin",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "regions": ["sin1"],
+  "git": {
+    "deploymentEnabled": {
+      "dependabot/**": false
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
