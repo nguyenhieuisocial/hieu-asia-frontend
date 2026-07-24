@@ -330,7 +330,12 @@ function FlagRow({
         >
           {flag.enabled ? 'ON' : 'OFF'}
         </span>
-        <Switch checked={flag.enabled} disabled={pending} onCheckedChange={handleToggle} />
+        <Switch
+          checked={flag.enabled}
+          disabled={pending}
+          onCheckedChange={handleToggle}
+          aria-label={`${flag.enabled ? 'Tắt' : 'Bật'} tính năng ${flag.key}`}
+        />
       </div>
     </div>
   );

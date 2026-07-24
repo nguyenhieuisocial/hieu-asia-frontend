@@ -474,9 +474,11 @@ export default function InfraGithubPage() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
+              aria-label="Mở workflow run trên GitHub"
+              title="Mở trên GitHub"
               className="inline-flex items-center gap-1 text-gold hover:underline"
             >
-              <ExternalLink className="h-3.5 w-3.5" />
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden />
             </a>
           ) : (
             <span className="text-muted-foreground">—</span>

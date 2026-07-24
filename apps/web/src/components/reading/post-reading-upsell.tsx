@@ -9,7 +9,7 @@
  *     - `control`           → null (baseline conversion measurement)
  *     - `mentor-focus`      → "Mở khoá Mentor chat — Hỏi sâu bất kỳ lúc nào"
  *     - `unlimited-focus`   → "Đọc không giới hạn — 199.000đ/tháng"
- *     - `lifetime-discount` → "Trọn đời 4.990.000đ — Tiết kiệm so với 2 năm"
+ *     - `lifetime-discount` → "Trọn đời 4.990.000đ — trả một lần, dùng mãi mãi"
  *   - Free users at quota-exhausted (had 1 reading, next would 402) → always
  *     show the "Upgrade ngay" panel regardless of flag — they hit a wall.
  *
@@ -94,7 +94,7 @@ function copyForVariant(variant: Variant, quotaExhausted: boolean): CopyBlock | 
       };
     case 'lifetime-discount':
       return {
-        headline: `Trọn đời ${formatVND(PRICING.lifetime.vnd)} — tiết kiệm so với 2 năm`,
+        headline: `Trọn đời ${formatVND(PRICING.lifetime.vnd)} — trả một lần, dùng mãi mãi`,
         subtext: 'Không bao giờ phải gia hạn. 7 sản phẩm + Mentor không giới hạn + ưu tiên đề xuất tính năng. Quà tặng bản thân hoặc người thân.',
         ctaLabel: `Xem Lifetime — ${formatVND(PRICING.lifetime.vnd)}`,
         ctaHref: '/pricing#lifetime',
