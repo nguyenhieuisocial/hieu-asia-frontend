@@ -1,7 +1,6 @@
 /**
  * /affiliates/[id] — affiliate detail page (admin).
- * Shows full record, recent events, payouts (with approve/reject buttons),
- * and ban toggle.
+ * Shows full record, recent events, and ban toggle.
  */
 
 'use client';
@@ -10,7 +9,7 @@ import * as React from 'react';
 import { use } from 'react';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, StatusBadge } from '@hieu-asia/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, StatusBadge } from '@hieu-asia/ui';
 import { PageHeader } from '@/components/admin/page-header';
 import { EmptyState } from '@/components/admin/empty-state';
 import { TaxKycCard } from '@/components/admin/affiliates/TaxKycCard';
@@ -55,22 +54,10 @@ interface TrackEvent {
   ts: string;
 }
 
-interface PayoutRecord {
-  id: string;
-  amount: number;
-  method: string;
-  destination: string;
-  status: 'pending' | 'paid' | 'rejected';
-  requested_at: string;
-  paid_at?: string;
-  rejected_reason?: string;
-}
-
 interface DetailResponse {
   ok: true;
   affiliate: AffiliateRecord;
   stats: Stats;
-  payouts: PayoutRecord[];
   recent: TrackEvent[];
 }
 
@@ -87,8 +74,6 @@ export default function AdminAffiliateDetailPage({
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
-  const [rejectReason, setRejectReason] = React.useState('');
-  const [rejectingId, setRejectingId] = React.useState<string | null>(null);
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -124,47 +109,6 @@ export default function AdminAffiliateDetailPage({
     load();
     loadFraud();
   }, [load, loadFraud]);
-
-  async function approve(payoutId: string) {
-    if (!window.confirm('Duyệt + đánh dấu đã trả payout này?')) return;
-    setBusy(true);
-    try {
-      const r = await fetch(`/api/admin/affiliates/${id}/approve-payout`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ payout_id: payoutId }),
-        signal: AbortSignal.timeout(15000),
-      });
-      const d = await r.json();
-      if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
-      await load();
-    } catch (e) {
-      setError((e as Error).name === 'TimeoutError' ? 'Quá lâu, thử lại' : (e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function reject(payoutId: string) {
-    setBusy(true);
-    try {
-      const r = await fetch(`/api/admin/affiliates/${id}/reject-payout`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ payout_id: payoutId, reason: rejectReason || null }),
-        signal: AbortSignal.timeout(15000),
-      });
-      const d = await r.json();
-      if (!r.ok || !d.ok) throw new Error(d.error ?? `HTTP ${r.status}`);
-      setRejectingId(null);
-      setRejectReason('');
-      await load();
-    } catch (e) {
-      setError((e as Error).name === 'TimeoutError' ? 'Quá lâu, thử lại' : (e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
 
   async function toggleBan() {
     if (!data) return;
@@ -424,94 +368,6 @@ export default function AdminAffiliateDetailPage({
                 Xem audit log →
               </Link>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Payouts */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Yêu cầu rút tiền</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {data.payouts.length === 0 ? (
-              <EmptyState compact title="Chưa có yêu cầu." />
-            ) : (
-              <div className="space-y-2">
-                {data.payouts.map((p) => (
-                  <div
-                    key={p.id}
-                    className="rounded border border-border p-3"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div>
-                        <span className="font-mono text-gold">{fmtVnd(p.amount)}</span>{' '}
-                        <span className="text-muted-foreground">· {p.method.toUpperCase()}</span>{' '}
-                        <span className="font-mono text-xs text-muted-foreground">{p.destination}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        {p.status === 'pending' && <StatusBadge status="warning" label="Đang chờ" />}
-                        {p.status === 'paid' && (
-                          <>
-                            <StatusBadge status="success" label="Đã trả" />
-                            <span className="text-xs text-muted-foreground">{fmtDateTime(p.paid_at ?? '')}</span>
-                          </>
-                        )}
-                        {p.status === 'rejected' && <StatusBadge status="error" label="Từ chối" />}
-                      </div>
-                    </div>
-                    {p.rejected_reason && (
-                      <div className="mt-1 text-xs text-muted-foreground">Lý do: {p.rejected_reason}</div>
-                    )}
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      Yêu cầu lúc {fmtDateTime(p.requested_at)}
-                    </div>
-                    {p.status === 'pending' && (
-                      <div className="mt-2 flex gap-2">
-                        <Button size="sm" disabled={busy} onClick={() => approve(p.id)}>
-                          Duyệt + đã trả
-                        </Button>
-                        {rejectingId === p.id ? (
-                          <>
-                            <Input
-                              placeholder="Lý do"
-                              value={rejectReason}
-                              onChange={(e) => setRejectReason(e.target.value)}
-                              className="max-w-xs"
-                            />
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={busy}
-                              onClick={() => reject(p.id)}
-                            >
-                              Xác nhận từ chối
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => {
-                                setRejectingId(null);
-                                setRejectReason('');
-                              }}
-                            >
-                              Hủy
-                            </Button>
-                          </>
-                        ) : (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => setRejectingId(p.id)}
-                          >
-                            Từ chối
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
           </CardContent>
         </Card>
 

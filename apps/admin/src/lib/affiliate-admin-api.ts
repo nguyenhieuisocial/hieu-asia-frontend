@@ -36,17 +36,9 @@ export interface Affiliate {
   };
 }
 
-export interface PendingPayout {
-  id: string;
-  affiliate_id: string;
-  amount: number;
-  requested_at: string;
-}
-
 export interface AffiliatesListResponse {
   ok: true;
   affiliates: Affiliate[];
-  pending_payouts: PendingPayout[];
 }
 
 export interface FraudFlag {
