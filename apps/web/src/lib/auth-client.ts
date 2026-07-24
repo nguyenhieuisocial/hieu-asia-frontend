@@ -13,6 +13,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { getPostHog } from './posthog';
 import { clearAnonState } from './anon-cleanup';
+import { safeNextPath } from './safe-next';
 
 let _client: SupabaseClient | null = null;
 let _disabled = false;
@@ -194,20 +195,15 @@ function resolveSiteOrigin(): string | undefined {
  */
 function withNextParam(callbackUrl: string | undefined, next: string | null | undefined): string | undefined {
   if (!callbackUrl) return undefined;
-  // Reject protocol-relative (`//evil.com`, `/\evil.com`) — they pass
-  // startsWith('/') but browsers resolve them cross-origin. Defense in depth:
-  // /auth/callback guards the actual redirect, but don't propagate a hostile
-  // value through the magic-link/OAuth roundtrip either (mirrors that guard).
-  if (
-    !next ||
-    typeof next !== 'string' ||
-    !next.startsWith('/') ||
-    next.startsWith('//') ||
-    next.startsWith('/\\')
-  )
-    return callbackUrl;
+  // Reject anything that isn't a safe same-origin path (protocol-relative
+  // `//evil.com` / `/\evil.com` and tab/newline-smuggled cross-origin targets).
+  // Defense in depth: /auth/callback guards the actual redirect, but don't
+  // propagate a hostile value through the magic-link/OAuth roundtrip either
+  // (same safeNextPath guard).
+  const safe = safeNextPath(next);
+  if (!safe) return callbackUrl;
   const sep = callbackUrl.includes('?') ? '&' : '?';
-  return `${callbackUrl}${sep}next=${encodeURIComponent(next)}`;
+  return `${callbackUrl}${sep}next=${encodeURIComponent(safe)}`;
 }
 
 export async function sendMagicLink(

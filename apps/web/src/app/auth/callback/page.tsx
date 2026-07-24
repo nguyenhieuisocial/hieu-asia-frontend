@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getSupabaseAuth } from '@/lib/auth-client';
+import { safeNextPath } from '@/lib/safe-next';
 import { identifyUser } from '@/lib/identify';
 import { onboardAffiliateFromRef } from '@/lib/affiliate-onboard';
 import { readAffiliateRef } from '@/lib/affiliate-ref';
@@ -207,20 +208,10 @@ function AuthCallbackInner() {
       }
 
       // Wave 44.4 (#251): honor `?next=` param from signin → magic-link
-      // → callback roundtrip. Open-redirect guard: only allow same-origin
-      // relative paths (must start with `/`); fallback to `/account`.
-      const nextParam = searchParams.get('next');
-      const dest =
-        // Open-redirect guard: same-origin relative path only. `//evil.com` and
-        // `/\evil.com` are protocol-relative — browsers treat them as absolute — so
-        // `startsWith('/')` alone is not enough; reject those too.
-        nextParam &&
-        typeof nextParam === 'string' &&
-        nextParam.startsWith('/') &&
-        !nextParam.startsWith('//') &&
-        !nextParam.startsWith('/\\')
-          ? nextParam
-          : '/account';
+      // → callback roundtrip. Open-redirect guard (safeNextPath): same-origin
+      // relative path only — rejects `//evil.com`, `/\evil.com`, and
+      // tab/newline-smuggled cross-origin targets; fallback to `/account`.
+      const dest = safeNextPath(searchParams.get('next')) ?? '/account';
       router.replace(dest);
     })();
 
