@@ -8,6 +8,7 @@ import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { PersonalityQuiz, type QuizPage } from '@/components/tools/PersonalityQuiz';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
@@ -304,6 +305,12 @@ export default function BigFivePage() {
                 <Button asChild>
                   <a href="/onboarding">Luận giải sâu cùng AI Mentor →</a>
                 </Button>
+              </div>
+              {/* Lời mời bạn bè ngay tại lúc khách vừa thấy kết quả — trước đây
+                  chỉ nằm ở /account nên gần như không ai thấy. Thẻ tự ẩn khi
+                  khách chưa đăng nhập. */}
+              <div className="pt-2">
+                <ReferralCard hideWhileLoading />
               </div>
 
               <p className="px-1 text-xs leading-relaxed text-muted-foreground">

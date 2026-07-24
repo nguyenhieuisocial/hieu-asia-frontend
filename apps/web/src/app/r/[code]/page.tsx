@@ -29,6 +29,7 @@ export const metadata = {
 const CODE_REGEX = /^[A-Z2-9]{6,16}$/;
 const SAFE_TARGETS = new Set([
   '/', '/onboarding', '/pricing', '/features',
+  '/bang-chung',
   '/tu-vi-hom-nay', '/lich-van-nien',
   '/than-so-hoc', '/can-xuong', '/thuoc-lo-ban', '/hop-tuoi',
 ]);
@@ -124,34 +125,23 @@ export default async function ReferralLandingPage({
           Chào mừng đến <span className="text-gold">hieu.asia</span>
         </h1>
         <p className="mx-auto max-w-md text-sm text-muted-foreground">
-          Tử Vi · MBTI · Xem Tướng · Mentor AI — tất cả trong một. Đăng ký tài khoản để mở khoá phân
-          tích cao cấp; mã giới thiệu đã được tự động áp dụng.
+          Đừng vội tin lá số — hãy kiểm chứng nó trước. Nhập vài mốc đã xảy ra trong đời bạn, hệ
+          thống đối chiếu với lá số đúng như nó đứng ở từng năm đó, và nói thật cả khi không khớp.
+          Mã giới thiệu đã được áp dụng sẵn.
         </p>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="flex flex-col items-stretch gap-3">
           <Link
-            href={`/onboarding?ref=${code}`}
+            href={`/bang-chung?ref=${code}`}
             className="rounded bg-gold px-4 py-3 font-semibold text-ink hover:bg-gold/90"
           >
-            Bắt đầu phân tích
+            Kiểm chứng lá số của bạn
           </Link>
           <Link
-            href={`/tu-vi-hom-nay?ref=${code}`}
-            className="rounded border border-border px-4 py-3 hover:bg-muted/5"
+            href={`/onboarding?ref=${code}`}
+            className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
           >
-            Tử Vi hôm nay
-          </Link>
-          <Link
-            href={`/than-so-hoc?ref=${code}`}
-            className="rounded border border-border px-4 py-3 hover:bg-muted/5"
-          >
-            Thần số học
-          </Link>
-          <Link
-            href={`/lich-van-nien?ref=${code}`}
-            className="rounded border border-border px-4 py-3 hover:bg-muted/5"
-          >
-            Lịch vạn niên
+            Hoặc lập lá số đầy đủ trước
           </Link>
         </div>
 

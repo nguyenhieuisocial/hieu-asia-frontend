@@ -235,6 +235,18 @@ export default function LearnTuViPage() {
           >
             Lập lá số Tử Vi miễn phí →
           </Link>
+          {/* Nối trang học ↔ công cụ lá số free: trước đây trang học không có
+              lối nào sang /la-so-tu-vi (12 cung + 121 sao) nên người đọc học
+              xong lý thuyết là hết đường đi. */}
+          <p className="mt-3 text-sm text-muted-foreground">
+            Muốn xem trực tiếp 12 cung và 121 sao trên lá số của mình?{' '}
+            <Link
+              href="/la-so-tu-vi"
+              className="text-gold-700 underline-offset-4 hover:underline"
+            >
+              Xem lá số Tử Vi chi tiết →
+            </Link>
+          </p>
         </aside>
       }
       breadcrumb={[

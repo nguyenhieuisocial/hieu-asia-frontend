@@ -16,6 +16,7 @@
 
 import type { NextRequest } from 'next/server';
 import { checkBotId } from 'botid/server';
+import { isKillswitchActive } from '@/lib/edge-config';
 import { resolveReadingOwnerIds } from '@/lib/reasoning/session-auth';
 import type {
   MentorMessage,
@@ -125,6 +126,20 @@ export async function POST(req: NextRequest) {
       status: 403,
       headers: { 'content-type': 'application/json' },
     });
+  }
+
+  // Nút tắt khẩn (Edge Config `killswitch_mentor`) — chặn TRƯỚC khi gọi model
+  // để khi chi phí AI vọt lên hoặc worker quá tải thì bật một cờ là dừng ngay,
+  // không cần deploy lại.
+  const kill = await isKillswitchActive('mentor');
+  if (kill.active) {
+    return new Response(
+      JSON.stringify({ ok: false, error: 'mentor_disabled', reason: kill.reason }),
+      {
+        status: 503,
+        headers: { 'content-type': 'application/json', 'Retry-After': '300' },
+      },
+    );
   }
 
   if (!HIEU_API_SERVICE_TOKEN) {

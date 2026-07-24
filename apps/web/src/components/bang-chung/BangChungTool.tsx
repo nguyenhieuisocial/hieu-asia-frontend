@@ -16,6 +16,7 @@ import { CATEGORY_LABEL, controlCategory } from '@/lib/backtest/palace-map';
 import { buildCalibrationTuple, type CalibrationTuple } from '@/lib/backtest/calibration';
 import { captureCalibration, isCaptureOptedOut, setCaptureOptedOut } from '@/lib/bang-chung/capture-client';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { readSavedProfile, describeProfile } from '@/lib/saved-profile';
 import { track } from '@/lib/analytics';
@@ -462,6 +463,12 @@ function ResultsView({ results }: { results: ScoredEvent[] }) {
                     };
                   }}
                 />
+              </div>
+              {/* Lời mời bạn bè ngay TẠI khoảnh khắc khách vừa thấy kết quả —
+                  trước đây chỉ nằm ở /account nên gần như không ai thấy. Thẻ tự
+                  ẩn khi khách chưa đăng nhập. */}
+              <div className="pt-2">
+                <ReferralCard hideWhileLoading />
               </div>
             </>
           ) : (

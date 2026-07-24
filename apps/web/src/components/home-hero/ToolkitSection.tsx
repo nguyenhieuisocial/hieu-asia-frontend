@@ -15,7 +15,7 @@ export function ToolkitSection(): React.JSX.Element {
         <p className="rv-fade font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           KHÔNG CHỈ NĂM LĂNG KÍNH
         </p>
-        <h2 className="rv-up mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>
+        <h2 className="rv-up mt-3 font-editorial-display text-3xl leading-tight text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>
           Cả một <em className="italic text-primary">bộ công cụ</em> — cổ học Á Đông gặp tâm lý hiện đại.
         </h2>
         <p className="rv-up mt-3 max-w-[36em] leading-relaxed text-muted-foreground" style={{ animationDelay: '160ms' }}>

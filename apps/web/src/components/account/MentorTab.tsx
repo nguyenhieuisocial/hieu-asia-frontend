@@ -98,7 +98,14 @@ export function MentorTab() {
         if (j.ok && j.data.memory) {
           setMemory(j.data.memory);
         } else if (!j.ok) {
-          setMemoryError(`HTTP ${j.status}`);
+          // 404/405 = máy chủ CHƯA có phần bộ nhớ mentor (`/api/mentor` mới chỉ
+          // nhận POST; chưa kho nào phục vụ `?action=memory`). Đó là tính năng
+          // chưa làm xong, KHÔNG phải sự cố — hiện mã lỗi HTTP ra cho khách chỉ
+          // làm họ tưởng hỏng. Rơi về trạng thái rỗng trung tính; chỉ báo lỗi
+          // khi thật sự trục trặc (5xx, mạng).
+          if (j.status !== 404 && j.status !== 405) {
+            setMemoryError(`HTTP ${j.status}`);
+          }
         }
       } catch (err) {
         if (cancelled) return;

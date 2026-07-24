@@ -10,6 +10,7 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 import { getPersonalitySummary } from '@/lib/personality-store';
 import { ReadingRitual } from '@/components/tools/ReadingRitual';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
+import { ReferralCard } from '@/components/account/ReferralCard';
 import { TarotSpread } from '@/components/tools/TarotSpread';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { aiReadingToSections } from '@/lib/pdf/ai-reading-sections';
@@ -322,6 +323,12 @@ export function TarotTool() {
             <a href="/onboarding" className="inline-block rounded-md border border-gold/30 px-5 py-2.5 text-sm text-gold transition active:scale-[0.98] hover:bg-gold/10">
               Ghép với Tử Vi + Bát Tự của tôi →
             </a>
+          </div>
+          {/* Lời mời bạn bè ngay tại lúc khách vừa thấy kết quả — trước đây
+              chỉ nằm ở /account nên gần như không ai thấy. Thẻ tự ẩn khi
+              khách chưa đăng nhập. */}
+          <div className="pt-2">
+            <ReferralCard hideWhileLoading />
           </div>
         </div>
       )}

@@ -36,6 +36,58 @@ const HIGH_VALUE_EVENTS: ReadonlySet<string> = new Set<EventName>([
 ]);
 
 /**
+ * 4 sự kiện chuẩn của phễu — suy ra TỰ ĐỘNG từ các sự kiện chi tiết đã có.
+ *
+ * Lý do làm ở đây chứ không sửa ~40 chỗ gọi: mỗi công cụ/trang đang bắn một
+ * tên riêng (`lead_capture_hop_tuoi`, `cuoi_lead_captured`, `tool_used`…) nên
+ * PostHog không dựng được MỘT phễu chung cho cả site. Ánh xạ ở một nơi duy
+ * nhất thì mọi chỗ gọi cũ tự động khớp chuẩn, và chỗ gọi mới cũng vậy mà
+ * không ai phải nhớ thêm luật gì.
+ *
+ * Trả null = sự kiện không thuộc 4 nhóm chuẩn.
+ */
+function canonicalMirror(
+  event: string,
+  props: Record<string, unknown> | undefined,
+): { name: string; props: Record<string, unknown> } | null {
+  const p = props ?? {};
+
+  // Dùng xong một công cụ miễn phí (mọi công cụ đều bắn `tool_used`).
+  if (event === 'tool_used' && (p.result ?? 'ok') === 'ok' && typeof p.tool === 'string') {
+    return { name: 'free_tool_completed', props: { tool: p.tool, source_event: event } };
+  }
+
+  // Để lại email: 2 quy ước tên đang tồn tại song song trong code.
+  if (/^lead_capture_/.test(event) || /_lead_captured$/.test(event)) {
+    return {
+      name: 'email_captured',
+      props: { source: event.replace(/^lead_capture_/, '').replace(/_lead_captured$/, ''), source_event: event },
+    };
+  }
+  if (event === 'daily_horoscope_subscribed' && p.channel === 'email') {
+    return { name: 'email_captured', props: { source: 'daily_horoscope', source_event: event } };
+  }
+
+  // Vào luồng thanh toán.
+  if (event === 'payment_intent_created') {
+    return {
+      name: 'checkout_started',
+      props: { tier: p.tier, amount_vnd: p.amount_vnd, source_event: event },
+    };
+  }
+
+  // Mua thành công.
+  if (event === 'payment_completed') {
+    return {
+      name: 'purchase',
+      props: { tier: p.tier, amount_vnd: p.amount_vnd, method: p.method, source_event: event },
+    };
+  }
+
+  return null;
+}
+
+/**
  * Fire-and-forget analytics event.
  *
  * Layers:
@@ -67,6 +119,19 @@ export function track(event: string, properties?: Record<string, unknown>): void
       console.warn('[analytics] dropped event with empty name', { event, properties });
     }
     return;
+  }
+
+  // 0. Sự kiện chuẩn của phễu — CHỈ gửi sang PostHog (nơi dựng phễu), KHÔNG
+  //    gửi sang Worker: worker kiểm tên sự kiện theo danh sách riêng của nó
+  //    (kho khác) và trả 400 cho tên lạ — đúng loại nhiễu mà bộ lọc `$` phía
+  //    dưới đã phải thêm để dập. Sự kiện chi tiết vẫn đi đủ cả 4 lớp như cũ.
+  const mirror = canonicalMirror(event, properties);
+  if (mirror) {
+    try {
+      getPostHog()?.capture(mirror.name, mirror.props);
+    } catch {
+      /* ignore */
+    }
   }
 
   // 1. Plausible (custom event tag) — silent no-op if script absent

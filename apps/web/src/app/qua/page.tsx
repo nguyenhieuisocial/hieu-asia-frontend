@@ -58,7 +58,7 @@ export default function QuaPage() {
             <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
               Quà của bạn
             </span>
-            <h1 className="mt-3 font-marketing-display text-3xl leading-tight text-foreground sm:text-5xl">
+            <h1 className="mt-3 font-editorial-display text-3xl leading-tight text-foreground sm:text-5xl">
               Làm tới đâu,{' '}
               <span className="bg-gold-gradient bg-clip-text italic text-transparent">
                 mở quà tới đó

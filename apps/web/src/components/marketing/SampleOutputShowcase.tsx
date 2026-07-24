@@ -21,7 +21,7 @@ import { ShimmerText } from '@/components/fx/ShimmerText';
  *
  * Brand tokens (Wave 60.56 P1 — vault 108 Option E):
  *   bg-background / text-cream-{50,300,500} / text-primary/ text-primary/80
- *   font-marketing-display / Instrument Serif italic for sample year numerals
+ *   font-editorial-display / Instrument Serif italic for sample year numerals
  *   rounded-card-editorial / max-w-marketing
  *
  * Wave 60.95.j P2-#19 — converted to `'use client'` to apply scale-up reveal
@@ -48,7 +48,7 @@ const CARDS: SampleCard[] = [
     body: (
       <p>
         “Mệnh tại{' '}
-        <em className="font-marketing-display italic text-primary/80">Dần</em>{' '}
+        <em className="font-editorial-display italic text-primary/80">Dần</em>{' '}
         có Tử Vi đồng cung Thiên Phủ — khí chất ổn định, giữ chữ tín, hợp vai
         trò chuyên gia. Khi căng thẳng, bạn dễ rút vào nội tâm thay vì bộc lộ.”
       </p>
@@ -67,7 +67,7 @@ const CARDS: SampleCard[] = [
     body: (
       <p>
         “Đại vận{' '}
-        <em className="font-marketing-display italic text-primary/80">28–37</em>{' '}
+        <em className="font-editorial-display italic text-primary/80">28–37</em>{' '}
         tuổi đi qua cung Tham Lang Hoá Quyền — giai đoạn xây nền chuyên môn,
         không vội chuyển ngành. Quý 1 năm 2026 cần thận trọng với quyết định
         nóng.”

@@ -34,7 +34,7 @@ import { ItalicSpan } from './ItalicSpan';
  * Tokens (Wave 60.56 P1):
  *   bg-warm-dark-{50,100,200,300} / border-border / border-gold
  *   text-cream-{50,300,500} / text-primary/ text-gold-soft
- *   rounded-card-editorial / ease-editorial / font-marketing-display
+ *   rounded-card-editorial / ease-editorial / font-editorial-display
  *   text-section-display / text-eyebrow / max-w-marketing-tight
  */
 

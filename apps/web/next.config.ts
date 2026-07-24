@@ -201,6 +201,10 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Giữ ảnh đã tối ưu trong cache 31 ngày (mặc định Next.js chỉ 60 giây).
+    // Ảnh của site là ảnh tĩnh/OG hầu như không đổi, nên hạ số lần ghi cache
+    // ảnh xuống rất nhiều mà không ảnh hưởng nội dung hiển thị.
+    minimumCacheTTL: 2_678_400,
     remotePatterns: [
       { protocol: 'https', hostname: '**.hieu.asia' },
       { protocol: 'https', hostname: 'img.vietqr.io' },

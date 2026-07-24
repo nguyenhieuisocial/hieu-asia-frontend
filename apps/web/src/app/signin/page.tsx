@@ -75,7 +75,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
             <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold/80">
               — HIEU.ASIA · ĐĂNG NHẬP
             </p>
-            <h1 className="mt-4 font-marketing-display text-4xl leading-tight text-foreground md:text-5xl">
+            <h1 className="mt-4 font-editorial-display text-4xl leading-tight text-foreground md:text-5xl">
               Đăng nhập để được{' '}
               <span className="italic text-primary">hiểu</span>.
             </h1>

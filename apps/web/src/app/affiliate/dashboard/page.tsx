@@ -185,6 +185,14 @@ export default function AffiliateDashboardPage() {
   const load = React.useCallback(async () => {
     setLoading(true);
     setError(null);
+    // NGUYÊN NHÂN CHẬM THẬT (không phải thư viện biểu đồ — giả thuyết đó đã bị
+    // bác): trang phải chờ HAI vòng gọi mạng NỐI ĐUÔI nhau mới bỏ khung xương —
+    // /api/affiliate/me (hồ sơ) xong mới bắt đầu /aff/me (số dư), mà /aff/me còn
+    // phải chờ Supabase getSession() trước đó nữa. Hai lời gọi này KHÔNG phụ
+    // thuộc nhau: số dư chỉ cần token Supabase, hồ sơ chỉ cần cookie KV. Cho
+    // chạy song song → thời gian chờ bằng cái chậm hơn thay vì tổng của cả hai.
+    // Số dư có sẵn trạng thái rỗng riêng nên không cần chặn khung xương.
+    const balancePending = loadBalance().catch(() => setBalance(null));
     try {
       // KV cookie path: profile (payout method/destination), performance
       // counters, recent events, payout history. NOT money totals.
@@ -210,12 +218,12 @@ export default function AffiliateDashboardPage() {
         return;
       }
       setData(d);
-      // Money comes from System B; fire after the profile resolves.
-      await loadBalance();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Lỗi mạng');
     } finally {
       setLoading(false);
+      // Đợi nốt lời gọi song song để không rò promise treo khi component unmount.
+      await balancePending;
     }
   }, [loadBalance, tryRestoreSession]);
 

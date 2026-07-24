@@ -17,8 +17,9 @@
  * granular-toggles state so user can save in one step). Desktop is
  * unaffected — `sm:` breakpoint forces the full layout.
  *
- * Granular toggles: Necessary (always on), Analytics (default ON),
- * Marketing (default OFF), Personalization (default ON).
+ * Granular toggles: Necessary (always on), Analytics (default OFF),
+ * Marketing (default OFF), Personalization (default OFF) — non-essential
+ * cookies are never pre-ticked (GDPR/CJEU Planet49 C-673/17).
  *
  * Buttons:
  *   - "Chấp nhận tất cả"  → all three ON
@@ -66,9 +67,9 @@ export function ConsentBanner(): React.ReactElement | null {
       if (cancelled) return;
       if (show) {
         const current = getConsent();
-        // Wave 60.73: only hydrate draft from storage if user has previously
-        // made a choice. First-time visitors keep the all-true useState
-        // defaults (founder decision — see comment block above).
+        // Only hydrate draft from storage if user has previously made a
+        // choice. First-time visitors keep the all-FALSE useState defaults
+        // (explicit opt-in required — see comment block above).
         if (current.shown) {
           setDraft({
             analytics: current.analytics,
