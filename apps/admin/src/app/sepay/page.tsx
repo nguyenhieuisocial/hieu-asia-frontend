@@ -462,8 +462,8 @@ function AdminSepayPageInner() {
       cell: (t) => {
         const amtIn = parseFloat(t.amount_in || '0');
         return amtIn > 0 ? (
-          <Button size="sm" variant="ghost" onClick={() => openRefund(t)} title="Tạo yêu cầu hoàn tiền">
-            <Undo2 className="h-3.5 w-3.5" />
+          <Button size="sm" variant="ghost" onClick={() => openRefund(t)} aria-label="Tạo yêu cầu hoàn tiền" title="Tạo yêu cầu hoàn tiền">
+            <Undo2 className="h-3.5 w-3.5" aria-hidden />
           </Button>
         ) : null;
       },
@@ -552,8 +552,8 @@ function AdminSepayPageInner() {
                 <Button size="sm" variant="outline" disabled={busy} onClick={() => actionMut.mutate({ id: r.id, action: 'accept' })}>
                   <Check className="mr-1 h-3 w-3" />Duyệt
                 </Button>
-                <Button size="sm" variant="ghost" disabled={busy} onClick={() => { if (confirm('Từ chối yêu cầu hoàn tiền này?')) actionMut.mutate({ id: r.id, action: 'reject' }); }}>
-                  <XIcon className="h-3 w-3" />
+                <Button size="sm" variant="ghost" disabled={busy} aria-label="Từ chối yêu cầu hoàn tiền" title="Từ chối" onClick={() => { if (confirm('Từ chối yêu cầu hoàn tiền này?')) actionMut.mutate({ id: r.id, action: 'reject' }); }}>
+                  <XIcon className="h-3 w-3" aria-hidden />
                 </Button>
               </>
             )}
