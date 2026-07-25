@@ -5,47 +5,58 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { XongDatGuideBuilder } from '@/components/tai-lieu/XongDatGuideBuilder';
+import { yearProfile } from '@/lib/sinh-con';
+import { defaultTargetYear, tetMoc } from '@/lib/xong-dat';
 import {
-  HOW_TO_CHOOSE,
+  howToChoose,
   DO_AND_DONT,
   XONG_DAT_DISCLAIMER,
-  TET_2027_MUNG_1,
 } from '@/lib/tai-lieu/xong-dat-guide';
 
 /**
- * /tai-lieu/tuoi-xong-dat — tài liệu tặng "Tuổi xông đất Tết Đinh Mùi 2027".
+ * /tai-lieu/tuoi-xong-dat — tài liệu tặng "Tuổi xông đất Tết <can chi> <năm>".
  *
  * Khác /xong-dat (công cụ tra cứu nhanh): trang này là TÀI LIỆU — dạy cách
  * chọn, rồi mới tính danh sách riêng cho gia chủ và đóng gói thành PDF mang về.
  * Số liệu tính bằng engine `lib/xong-dat.ts`; phần chữ ở `lib/tai-lieu/
  * xong-dat-guide.ts` để trang đọc và PDF không bao giờ lệch nhau.
  *
- * Mốc mùa vụ: Tết 2026 (Bính Ngọ) đã qua — tài liệu này nhắm Tết 2027.
+ * Mốc mùa vụ KHÔNG còn gõ tay: năm Tết lấy từ `defaultTargetYear()` nên tự lật
+ * vào mùng 1 Tết. Vì vậy mọi chỗ dùng năm phải tính lúc render và route phải
+ * khai `revalidate`.
  */
 
 // SEO-FIX: DESC 208 → 160 ký tự — dài nhất toàn site, Google cắt mất gần 50 ký
 // tự. Gộp "nhóm tuổi nên cân nhắc kèm lý do" vào "kèm lý do" và rút câu cuối.
-const DESC =
-  'Tài liệu miễn phí về tuổi xông đất Tết Đinh Mùi 2027: 5 bước chọn người xông đất, danh sách tuổi hợp theo tuổi gia chủ, kèm lý do. Tham khảo theo tập tục.';
+const DESC = (canChi: string, y: number) =>
+  `Tài liệu miễn phí về tuổi xông đất Tết ${canChi} ${y}: 5 bước chọn người xông đất, danh sách tuổi hợp theo tuổi gia chủ, kèm lý do. Tham khảo theo tập tục.`;
 
-export const metadata: Metadata = {
-  // SEO-FIX: 51 ký tự + hậu tố ' · hieu.asia' = 63 → bị Google cắt.
-  title: 'Tuổi xông đất Tết Đinh Mùi 2027 — miễn phí',
-  description: DESC,
-  alternates: { canonical: 'https://hieu.asia/tai-lieu/tuoi-xong-dat' },
-  openGraph: {
-    title: 'Tuổi xông đất Tết Đinh Mùi 2027 — hieu.asia',
-    description: DESC,
-    url: 'https://hieu.asia/tai-lieu/tuoi-xong-dat',
-    type: 'article',
-    images: OG_DEFAULT_IMAGES,
-  },
-};
+// SEO-FIX: 51 ký tự + hậu tố ' · hieu.asia' = 63 → bị Google cắt.
+const TITLE = (canChi: string, y: number) => `Tuổi xông đất Tết ${canChi} ${y} — miễn phí`;
 
-const FAQS = [
+export const revalidate = 86400;
+
+export function generateMetadata(): Metadata {
+  const y = defaultTargetYear();
+  const canChi = yearProfile(y)!.canChi;
+  return {
+    title: TITLE(canChi, y),
+    description: DESC(canChi, y),
+    alternates: { canonical: 'https://hieu.asia/tai-lieu/tuoi-xong-dat' },
+    openGraph: {
+      title: `Tuổi xông đất Tết ${canChi} ${y} — hieu.asia`,
+      description: DESC(canChi, y),
+      url: 'https://hieu.asia/tai-lieu/tuoi-xong-dat',
+      type: 'article' as const,
+      images: OG_DEFAULT_IMAGES,
+    },
+  };
+}
+
+const FAQS = (canChi: string, ngayMung1: string) => [
   {
-    q: 'Mùng 1 Tết Đinh Mùi là ngày nào dương lịch?',
-    a: `Mùng 1 Tết Đinh Mùi nhằm ngày ${TET_2027_MUNG_1} dương lịch. Tục xông đất diễn ra từ sau giao thừa đến sáng mùng 1 — người đầu tiên bước vào nhà được xem là người mở đầu năm mới cho gia đình.`,
+    q: `Mùng 1 Tết ${canChi} là ngày nào dương lịch?`,
+    a: `Mùng 1 Tết ${canChi} nhằm ngày ${ngayMung1} dương lịch. Tục xông đất diễn ra từ sau giao thừa đến sáng mùng 1 — người đầu tiên bước vào nhà được xem là người mở đầu năm mới cho gia đình.`,
   },
   {
     q: 'Mời sai tuổi xông đất thì có xui cả năm không?',
@@ -66,36 +77,42 @@ const FAQS = [
 ];
 
 export default function TaiLieuXongDatPage() {
+  // Đọc một lần đầu hàm render rồi dùng lại — không gán ra cấp module.
+  const TARGET_YEAR = defaultTargetYear();
+  const target = yearProfile(TARGET_YEAR)!;
+  const tet = tetMoc(TARGET_YEAR);
+  const faqs = FAQS(target.canChi, tet.ngay);
+
   return (
     <>
       <JsonLd
         data={[
           webPage({
-            name: 'Tuổi xông đất Tết Đinh Mùi 2027 — tài liệu miễn phí',
-            description: DESC,
+            name: `Tuổi xông đất Tết ${target.canChi} ${TARGET_YEAR} — tài liệu miễn phí`,
+            description: DESC(target.canChi, TARGET_YEAR),
             url: '/tai-lieu/tuoi-xong-dat',
           }),
           breadcrumb([
             { name: 'Trang chủ', url: '/' },
             { name: 'Tài liệu tặng', url: '/tai-lieu' },
-            { name: 'Tuổi xông đất 2027', url: '/tai-lieu/tuoi-xong-dat' },
+            { name: `Tuổi xông đất ${TARGET_YEAR}`, url: '/tai-lieu/tuoi-xong-dat' },
           ]),
-          faqPage(FAQS),
+          faqPage(faqs),
         ]}
       />
       <ToolPageShell
-        eyebrow="Tài liệu tặng · Tết Đinh Mùi 2027"
+        eyebrow={`Tài liệu tặng · Tết ${target.canChi} ${TARGET_YEAR}`}
         icon={<span aria-hidden="true">🧧</span>}
         title={
           <>
-            Tuổi <GoldAccent>xông đất</GoldAccent> Tết Đinh Mùi 2027
+            Tuổi <GoldAccent>xông đất</GoldAccent> Tết {target.canChi} {TARGET_YEAR}
           </>
         }
-        description={`Mùng 1 nhằm ngày ${TET_2027_MUNG_1}. Tài liệu này chỉ cách chọn người xông đất, rồi tính danh sách tuổi hợp riêng cho tuổi gia chủ của bạn. Tham khảo theo tập tục — không có chuyện mời sai tuổi thì xui cả năm.`}
+        description={`Mùng 1 nhằm ngày ${tet.ngay}. Tài liệu này chỉ cách chọn người xông đất, rồi tính danh sách tuổi hợp riêng cho tuổi gia chủ của bạn. Tham khảo theo tập tục — không có chuyện mời sai tuổi thì xui cả năm.`}
         breadcrumb={[
           { label: 'Trang chủ', href: '/' },
           { label: 'Tài liệu tặng', href: '/tai-lieu' },
-          { label: 'Tuổi xông đất 2027' },
+          { label: `Tuổi xông đất ${TARGET_YEAR}` },
         ]}
       >
         <div className="mx-auto max-w-2xl space-y-8">
@@ -104,7 +121,7 @@ export default function TaiLieuXongDatPage() {
               Năm bước chọn người xông đất
             </h2>
             <div className="mt-4 space-y-4">
-              {HOW_TO_CHOOSE.map((s) => (
+              {howToChoose(target).map((s) => (
                 <div key={s.heading} className="rounded-2xl border border-border bg-card/30 p-5">
                   <h3 className="font-heading text-base font-semibold text-foreground">
                     {s.heading}
@@ -140,7 +157,7 @@ export default function TaiLieuXongDatPage() {
               Câu hỏi hay gặp
             </h2>
             <dl className="mt-3 space-y-4">
-              {FAQS.map((f) => (
+              {faqs.map((f) => (
                 <div key={f.q}>
                   <dt className="text-sm font-medium text-foreground">{f.q}</dt>
                   <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>

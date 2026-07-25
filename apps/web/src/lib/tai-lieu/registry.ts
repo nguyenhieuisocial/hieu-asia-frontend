@@ -35,7 +35,7 @@ export const TAI_LIEU: readonly TaiLieuEntry[] = [
   },
   {
     slug: 'tuoi-xong-dat',
-    title: 'Tuổi xông đất Tết Đinh Mùi 2027',
+    title: 'Tuổi xông đất Tết',
     blurb:
       'Cách chọn người xông đất cho đúng, danh sách tuổi hợp tính riêng theo tuổi gia chủ, và nhóm tuổi thường được kiêng — kèm lý do cụ thể của từng trường hợp.',
     gets: [
@@ -44,7 +44,7 @@ export const TAI_LIEU: readonly TaiLieuEntry[] = [
       'Cách chấm công khai, không giấu quy tắc',
     ],
     emoji: '🧧',
-    cadence: 'Cho Tết 06/02/2027',
+    cadence: 'Cho dịp Tết',
   },
   {
     slug: 'lich-ngay-tot',

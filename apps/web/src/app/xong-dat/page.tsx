@@ -7,50 +7,77 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { ELEMENTS } from '@/lib/dat-ten-ngu-hanh';
-import { yearChiGroups } from '@/lib/xong-dat';
-import { HOST_YEARS, TARGET_YEAR, slugOf } from './years';
+import { yearProfile } from '@/lib/sinh-con';
+import { yearChiGroups, tetMoc, type TetMoc } from '@/lib/xong-dat';
+import { HOST_YEARS, targetYear, slugOf } from './years';
 
-const DESC =
-  'Gợi ý tuổi xông đất 2027 theo năm sinh gia chủ: chấm 3 lớp — tam hợp/lục hợp chi năm, tuổi gia chủ và ngũ hành. Tham khảo phong tục, không phán định.';
+// Năm mục tiêu lật vào mùng 1 Tết nên MỌI chỗ dùng nó phải tính lúc render —
+// hằng số cấp module chỉ được tính một lần cho mỗi tiến trình máy chủ. Vì vậy
+// tiêu đề/mô tả/FAQ đều là HÀM nhận năm, và metadata dùng `generateMetadata()`.
+const DESC = (y: number) =>
+  `Gợi ý tuổi xông đất ${y} theo năm sinh gia chủ: chấm 3 lớp — tam hợp/lục hợp chi năm, tuổi gia chủ và ngũ hành. Tham khảo phong tục, không phán định.`;
+const TITLE = (y: number) => `Tuổi xông đất Tết ${y} — tam hợp & ngũ hành`;
+const OG_TITLE = (y: number, canChi: string) =>
+  `Xem tuổi xông đất Tết ${y} (${canChi}) — gợi ý theo tam hợp & ngũ hành`;
 
-export const metadata: Metadata = {
-  title: 'Tuổi xông đất Tết 2027 — tam hợp & ngũ hành',
-  description: DESC,
-  alternates: { canonical: 'https://hieu.asia/xong-dat' },
-  openGraph: {
-    title: 'Xem tuổi xông đất Tết 2027 (Đinh Mùi) — gợi ý theo tam hợp & ngũ hành',
-    description: DESC,
-    url: 'https://hieu.asia/xong-dat',
-    type: 'website',
-    images: OG_DEFAULT_IMAGES,
-  },
+// Không có dòng này thì năm vẫn bị nướng vào HTML từ lúc build và Tết qua rồi
+// trang vẫn ghi năm cũ — đúng lỗi đang sửa.
+export const revalidate = 86400;
+
+export function generateMetadata(): Metadata {
+  const y = targetYear();
+  const canChi = yearProfile(y)!.canChi;
+  return {
+    title: TITLE(y),
+    description: DESC(y),
+    alternates: { canonical: 'https://hieu.asia/xong-dat' },
+    openGraph: {
+      title: OG_TITLE(y, canChi),
+      description: DESC(y),
+      url: 'https://hieu.asia/xong-dat',
+      type: 'website' as const,
+      images: OG_DEFAULT_IMAGES,
+    },
+  };
+}
+
+type ChiGroups = NonNullable<ReturnType<typeof yearChiGroups>>;
+
+// Nhận năm mục tiêu + nhóm chi của năm đó làm tham số vì chúng lật vào Tết.
+const FAQS = (TARGET_YEAR: number, g: ChiGroups, tet: TetMoc) => {
+  const ten = (zs: { ten: string }[]) => zs.map((z) => z.ten).join(', ');
+  const canChi = g.target.canChi;
+  const namTruoc = yearProfile(TARGET_YEAR - 1)!;
+  return [
+    {
+      q: 'Chọn tuổi xông đất dựa trên quy tắc nào?',
+      a: `Ba lớp quy tắc cổ điển, công khai thang điểm: (1) chi của người xông đất so với chi năm — Tết ${TARGET_YEAR} là năm ${canChi}, nên tuổi ${ten(g.tamHop)} (tam hợp) và ${ten(g.lucHop)} (lục hợp) được điểm cộng; tuổi ${ten(g.xung)} (xung), ${ten(g.hai)} (hại), ${ten(g.trung)} (trùng Thái Tuế) bị điểm trừ; (2) chi của người xông đất so với tuổi gia chủ — tam hợp/lục hợp cộng, xung/hại trừ; (3) mệnh nạp âm hai bên — khách mang mệnh tương sinh cho mệnh gia chủ được chuộng nhất. Nhập cùng dữ liệu luôn ra cùng kết quả, không "bói mù".`,
+    },
+    {
+      q: `Mùng 1 Tết ${canChi} ${TARGET_YEAR} là ngày nào dương lịch?`,
+      a: `Mùng 1 Tết ${canChi} rơi vào ${tet.thu}, ngày ${tet.ngay} dương lịch. Tục xông đất diễn ra từ sau giao thừa đến sáng mùng 1 — người đầu tiên bước vào nhà được xem là "mở khí" cho cả năm.`,
+    },
+    {
+      q: `Năm ${TARGET_YEAR} tuổi nào đẹp để xông đất (xét theo chi năm)?`,
+      a: `Xét riêng với chi năm ${g.target.zodiac.ten}: tuổi ${g.tamHop.map((z) => z.ten).join(' và ')} thuộc nhóm tam hợp ${g.boTamHop.map((z) => z.ten).join(' – ')}, tuổi ${ten(g.lucHop)} tạo cặp lục hợp ${g.capLucHop.map((z) => z.ten).join(' – ')} — đều là tín hiệu tham khảo đẹp. Ngược lại tuổi ${ten(g.xung)} (lục xung), ${ten(g.hai)} (lục hại) và ${ten(g.trung)} (trùng chi năm — dân gian gọi là phạm Thái Tuế) thường được cân nhắc. Còn hợp với từng gia chủ thế nào thì cần đối chiếu thêm tuổi và mệnh của gia chủ — nhập năm sinh ở công cụ trên trang.`,
+    },
+    {
+      q: 'Tuổi tính theo năm dương hay năm âm?',
+      a: `Theo năm ÂM lịch — đúng quy ước dân gian. Người sinh vào tháng 1 hoặc đầu tháng 2 dương lịch, trước mùng 1 Tết, thuộc năm âm liền trước. Ví dụ: sinh ngày ${tet.ngayTruoc} vẫn thuộc năm ${namTruoc.canChi} ${TARGET_YEAR - 1} vì mùng 1 Tết ${canChi} là ${tet.ngay}.`,
+    },
+    {
+      q: 'Không tìm được người "đúng tuổi đẹp" thì sao?',
+      a: 'Hoàn toàn không sao. Xông đất là tập tục "đầu xuôi đuôi lọt" để cả nhà vui và yên tâm — không phải quy luật về phúc hoạ, và không có chuyện "mời sai tuổi thì xui cả năm". Người vui vẻ, xởi lởi, thật lòng quý gia đình là lựa chọn quý nhất; bảng tuổi chỉ là một góc nhìn phong tục để tham khảo thêm khi gia đình đằng nào cũng đang cân nhắc giữa vài người.',
+    },
+  ];
 };
 
-const FAQS = [
-  {
-    q: 'Chọn tuổi xông đất dựa trên quy tắc nào?',
-    a: 'Ba lớp quy tắc cổ điển, công khai thang điểm: (1) chi của người xông đất so với chi năm — Tết 2027 là năm Đinh Mùi, nên tuổi Mão, Hợi (tam hợp) và Ngọ (lục hợp) được điểm cộng; tuổi Sửu (xung), Tý (hại), Mùi (trùng Thái Tuế) bị điểm trừ; (2) chi của người xông đất so với tuổi gia chủ — tam hợp/lục hợp cộng, xung/hại trừ; (3) mệnh nạp âm hai bên — khách mang mệnh tương sinh cho mệnh gia chủ được chuộng nhất. Nhập cùng dữ liệu luôn ra cùng kết quả, không "bói mù".',
-  },
-  {
-    q: 'Mùng 1 Tết Đinh Mùi 2027 là ngày nào dương lịch?',
-    a: 'Mùng 1 Tết Đinh Mùi rơi vào thứ Bảy, ngày 06/02/2027 dương lịch. Tục xông đất diễn ra từ sau giao thừa đến sáng mùng 1 — người đầu tiên bước vào nhà được xem là "mở khí" cho cả năm.',
-  },
-  {
-    q: 'Năm 2027 tuổi nào đẹp để xông đất (xét theo chi năm)?',
-    a: 'Xét riêng với chi năm Mùi: tuổi Mão và Hợi thuộc nhóm tam hợp Hợi – Mão – Mùi, tuổi Ngọ tạo cặp lục hợp Ngọ – Mùi — đều là tín hiệu tham khảo đẹp. Ngược lại tuổi Sửu (lục xung), Tý (lục hại) và Mùi (trùng chi năm — dân gian gọi là phạm Thái Tuế) thường được cân nhắc. Còn hợp với từng gia chủ thế nào thì cần đối chiếu thêm tuổi và mệnh của gia chủ — nhập năm sinh ở công cụ trên trang.',
-  },
-  {
-    q: 'Tuổi tính theo năm dương hay năm âm?',
-    a: 'Theo năm ÂM lịch — đúng quy ước dân gian. Người sinh vào tháng 1 hoặc đầu tháng 2 dương lịch, trước mùng 1 Tết, thuộc năm âm liền trước. Ví dụ: sinh ngày 05/02/2027 vẫn thuộc năm Bính Ngọ 2026 vì mùng 1 Tết Đinh Mùi là 06/02/2027.',
-  },
-  {
-    q: 'Không tìm được người "đúng tuổi đẹp" thì sao?',
-    a: 'Hoàn toàn không sao. Xông đất là tập tục "đầu xuôi đuôi lọt" để cả nhà vui và yên tâm — không phải quy luật về phúc hoạ, và không có chuyện "mời sai tuổi thì xui cả năm". Người vui vẻ, xởi lởi, thật lòng quý gia đình là lựa chọn quý nhất; bảng tuổi chỉ là một góc nhìn phong tục để tham khảo thêm khi gia đình đằng nào cũng đang cân nhắc giữa vài người.',
-  },
-];
-
 export default function XongDatPage() {
+  // Đọc một lần đầu hàm render rồi dùng lại — không gán ra cấp module.
+  const TARGET_YEAR = targetYear();
   const groups = yearChiGroups(TARGET_YEAR)!;
+  const tet = tetMoc(TARGET_YEAR);
+  const faqs = FAQS(TARGET_YEAR, groups, tet);
   const names = (zs: { ten: string }[]) => zs.map((z) => z.ten).join(', ');
 
   return (
@@ -58,15 +85,15 @@ export default function XongDatPage() {
       <JsonLd
         data={[
           webPage({
-            name: 'Xem tuổi xông đất Tết 2027 (Đinh Mùi) — gợi ý theo tam hợp & ngũ hành',
-            description: DESC,
+            name: OG_TITLE(TARGET_YEAR, groups.target.canChi),
+            description: DESC(TARGET_YEAR),
             url: '/xong-dat',
           }),
           breadcrumb([
             { name: 'Trang chủ', url: '/' },
             { name: 'Tuổi xông đất', url: '/xong-dat' },
           ]),
-          faqPage(FAQS),
+          faqPage(faqs),
         ]}
       />
       <ToolPageShell
@@ -74,10 +101,10 @@ export default function XongDatPage() {
         icon={<span aria-hidden="true">🧧</span>}
         title={
           <>
-            Tuổi xông đất Tết 2027 — <GoldAccent>gợi ý minh bạch</GoldAccent>
+            Tuổi xông đất Tết {TARGET_YEAR} — <GoldAccent>gợi ý minh bạch</GoldAccent>
           </>
         }
-        description="Nhập năm sinh gia chủ để nhận gợi ý tuổi xông đất Tết Đinh Mùi 2027 — chấm công khai theo tam hợp, lục hợp và ngũ hành tương sinh. Tham khảo phong tục, không phán định."
+        description={`Nhập năm sinh gia chủ để nhận gợi ý tuổi xông đất Tết ${groups.target.canChi} ${TARGET_YEAR} — chấm công khai theo tam hợp, lục hợp và ngũ hành tương sinh. Tham khảo phong tục, không phán định.`}
         breadcrumb={[
           { label: 'Trang chủ', href: '/' },
           { label: 'Tuổi xông đất' },
@@ -103,7 +130,7 @@ export default function XongDatPage() {
             </div>
           </nav>
 
-          {/* Năm Đinh Mùi — nhóm chi tính từ engine */}
+          {/* Năm đích — nhóm chi tính từ engine */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
             <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
               Năm {groups.target.canChi} {TARGET_YEAR} — nhóm tuổi xét theo chi năm
@@ -115,7 +142,7 @@ export default function XongDatPage() {
               <strong className="text-gold">
                 {ELEMENTS[groups.target.element].name} — {groups.target.napAmName}
               </strong>
-              . Mùng 1 Tết rơi vào <strong className="text-foreground">06/02/2027</strong> dương lịch.
+              . Mùng 1 Tết rơi vào <strong className="text-foreground">{tet.ngay}</strong> dương lịch.
             </p>
             <ul className="mt-3 space-y-1.5 pl-5 text-sm text-muted-foreground list-disc">
               <li>
@@ -182,7 +209,7 @@ export default function XongDatPage() {
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
-              {FAQS.map((f, i) => (
+              {faqs.map((f, i) => (
                 <div key={i}>
                   <dt className="font-medium text-foreground">{f.q}</dt>
                   <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>

@@ -21,8 +21,8 @@ import { yearProfile, type RelationTone } from '@/lib/sinh-con';
 import {
   checkXongDat,
   topCandidates,
-  DEFAULT_TARGET_YEAR,
-  TARGET_YEARS,
+  defaultTargetYear,
+  targetYears,
   TIER_META,
   type XongDatResult,
 } from '@/lib/xong-dat';
@@ -78,7 +78,9 @@ function GuestDetail({ check }: { check: XongDatResult }) {
 
 export function XongDatChecker({ defaultHostYear }: { defaultHostYear?: number } = {}) {
   const [hostYear, setHostYear] = React.useState(defaultHostYear ? String(defaultHostYear) : '');
-  const [targetYear, setTargetYear] = React.useState(String(DEFAULT_TARGET_YEAR));
+  // Năm Tết lật vào mùng 1 Tết ⇒ tính LÚC RENDER, không gán ra cấp module.
+  const [targetYear, setTargetYear] = React.useState(() => String(defaultTargetYear()));
+  const chonNam = React.useMemo(() => targetYears(), []);
   const [guestYear, setGuestYear] = React.useState('');
   const [reportInterest, setReportInterest] = React.useState(false);
 
@@ -127,7 +129,7 @@ export function XongDatChecker({ defaultHostYear }: { defaultHostYear?: number }
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {TARGET_YEARS.map((y) => {
+                {chonNam.map((y) => {
                   const p = yearProfile(y);
                   return (
                     <SelectItem key={y} value={String(y)}>

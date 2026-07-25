@@ -6,10 +6,14 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
-import { HOST_YEARS, TARGET_YEAR, buildHostPage, slugOf, yearFromSlug } from '../years';
+import { HOST_YEARS, targetYear, buildHostPage, slugOf, yearFromSlug } from '../years';
 
 // Fixed set of SEO landing slugs — unknown slugs 404 instead of rendering.
 export const dynamicParams = false;
+
+// Năm mục tiêu lật vào mùng 1 Tết: không có dòng này thì năm bị nướng vào HTML
+// từ lúc build và Tết qua rồi 30 trang con vẫn ghi năm cũ.
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return HOST_YEARS.map((y) => ({ tuoi: slugOf(y) }));
@@ -49,6 +53,8 @@ export default async function XongDatHostYearPage({
   const year = yearFromSlug(tuoi);
   if (!year) notFound();
   const data = buildHostPage(year);
+  // Đọc một lần đầu hàm render rồi dùng lại — không gán ra cấp module.
+  const TARGET_YEAR = targetYear();
   const neighbors = HOST_YEARS.filter((y) => y !== year && Math.abs(y - year) <= 2);
 
   return (

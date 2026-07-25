@@ -8,7 +8,8 @@ import {
   topCandidates,
   cautionChis,
   yearChiGroups,
-  DEFAULT_TARGET_YEAR,
+  defaultTargetYear,
+  tetMoc,
   TIER_META,
   type XongDatResult,
 } from '@/lib/xong-dat';
@@ -18,10 +19,9 @@ import {
   type ToolPdfPayload,
 } from '@/components/tools/DownloadToolPdfButton';
 import {
-  HOW_TO_CHOOSE,
+  howToChoose,
   DO_AND_DONT,
   XONG_DAT_DISCLAIMER,
-  TET_2027_MUNG_1,
 } from '@/lib/tai-lieu/xong-dat-guide';
 
 /**
@@ -33,8 +33,6 @@ import {
  * tập tục tham khảo. Toàn bộ số liệu lấy từ engine `lib/xong-dat.ts` — không có
  * bảng tra viết tay, nhập cùng dữ liệu luôn ra cùng kết quả.
  */
-
-const TARGET_YEAR = DEFAULT_TARGET_YEAR; // 2027 — Tết Đinh Mùi, mùng 1 = 06/02/2027
 
 /** Các điểm cộng của một gợi ý, cho dòng tóm tắt. */
 function plusLabels(r: XongDatResult): string {
@@ -49,6 +47,9 @@ function parseYear(value: string): number | null {
 
 export function XongDatGuideBuilder() {
   const [hostYear, setHostYear] = React.useState('');
+  // Năm Tết lật vào mùng 1 Tết ⇒ tính LÚC RENDER, không gán ra cấp module.
+  const TARGET_YEAR = React.useMemo(() => defaultTargetYear(), []);
+  const tet = React.useMemo(() => tetMoc(TARGET_YEAR), [TARGET_YEAR]);
 
   const host = React.useMemo(() => {
     const y = parseYear(hostYear);
@@ -58,14 +59,14 @@ export function XongDatGuideBuilder() {
   const top = React.useMemo(() => {
     const y = parseYear(hostYear);
     return y ? topCandidates(y, TARGET_YEAR, 12) : [];
-  }, [hostYear]);
+  }, [hostYear, TARGET_YEAR]);
 
   const caution = React.useMemo(() => {
     const y = parseYear(hostYear);
     return y ? cautionChis(y, TARGET_YEAR) : [];
-  }, [hostYear]);
+  }, [hostYear, TARGET_YEAR]);
 
-  const groups = React.useMemo(() => yearChiGroups(TARGET_YEAR), []);
+  const groups = React.useMemo(() => yearChiGroups(TARGET_YEAR), [TARGET_YEAR]);
   const { resultRef, armScroll } = useScrollToResult(host);
 
   const buildPayload = (): ToolPdfPayload | null => {
@@ -73,7 +74,7 @@ export function XongDatGuideBuilder() {
 
     const sections: ToolPdfPayload['sections'] = [
       {
-        heading: `Năm ${groups.target.canChi} ${TARGET_YEAR} — mùng 1 nhằm ngày ${TET_2027_MUNG_1}`,
+        heading: `Năm ${groups.target.canChi} ${TARGET_YEAR} — mùng 1 nhằm ngày ${tet.ngay}`,
         text:
           `Chi của năm: ${groups.target.zodiac.ten}. Mệnh nạp âm của năm: ${groups.target.napAmName}.\n` +
           `Nhóm tam hợp với chi năm: ${groups.tamHop.map((z) => z.ten).join(', ') || 'không có'}.\n` +
@@ -81,7 +82,7 @@ export function XongDatGuideBuilder() {
           `Xung với chi năm: ${groups.xung.map((z) => z.ten).join(', ') || 'không có'}.\n` +
           `Trùng chi năm (dân gian gọi là phạm Thái Tuế): ${groups.trung.map((z) => z.ten).join(', ') || 'không có'}.`,
       },
-      ...HOW_TO_CHOOSE.map((s) => ({ heading: s.heading, text: s.body })),
+      ...howToChoose(groups.target).map((s) => ({ heading: s.heading, text: s.body })),
       {
         heading: `Tuổi nên chọn — tính riêng cho gia chủ sinh ${host.year} (${host.canChi})`,
         rows: top.map((r) => ({
@@ -111,11 +112,11 @@ export function XongDatGuideBuilder() {
     sections.push({ heading: 'Giới hạn của tài liệu này', text: XONG_DAT_DISCLAIMER });
 
     return {
-      title: 'Tuổi xông đất Tết Đinh Mùi 2027',
+      title: `Tuổi xông đất Tết ${groups.target.canChi} ${TARGET_YEAR}`,
       subtitle: `Tài liệu tặng của hieu.asia — tính riêng cho gia chủ sinh năm ${host.year}`,
       hero: {
         big: `Gia chủ ${host.year} — ${host.canChi}, tuổi ${host.zodiac.ten}`,
-        small: `Mệnh ${ELEMENTS[host.element].name} (${host.napAmName}) · Đón Tết ${groups.target.canChi}, mùng 1 ngày ${TET_2027_MUNG_1}`,
+        small: `Mệnh ${ELEMENTS[host.element].name} (${host.napAmName}) · Đón Tết ${groups.target.canChi}, mùng 1 ngày ${tet.ngay}`,
       },
       sections,
       cta: { text: 'Lập lá số miễn phí tại hieu.asia', url: 'https://hieu.asia/onboarding' },
@@ -158,7 +159,7 @@ export function XongDatGuideBuilder() {
                 {ELEMENTS[host.element].name} — {host.napAmName}
               </strong>
               . Đón Tết <strong className="text-foreground">{groups.target.canChi}</strong>, mùng 1
-              nhằm ngày {TET_2027_MUNG_1}.
+              nhằm ngày {tet.ngay}.
             </div>
 
             {top.length > 0 && (

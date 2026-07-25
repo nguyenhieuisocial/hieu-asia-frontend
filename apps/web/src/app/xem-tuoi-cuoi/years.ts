@@ -17,8 +17,20 @@ import {
   type WeddingYearResult,
 } from '@/lib/xem-tuoi-cuoi';
 
-/** Năm cưới chính của cụm trang (cập nhật mỗi mùa cưới). */
-export const TARGET_YEAR = 2026;
+/**
+ * Năm cưới chính của cụm trang.
+ *
+ * Trước đây là hằng số gõ tay kèm ghi chú "cập nhật mỗi mùa cưới" — nhưng không
+ * ai nhắc thì không ai cập nhật, và dựng lại web KHÔNG chữa được vì đó là
+ * literal trong mã. Nay lật tự động vào **mùng 1 Tết** (lựa chọn của founder:
+ * cụm này xem theo tuổi âm, mà tuổi âm chỉ tăng khi sang năm âm mới).
+ *
+ * ⚠️ Phải gọi LÚC RENDER, đừng gán vào hằng số cấp module — xem ghi chú dài
+ * trong `lib/nam-muc-tieu.ts`. Route dùng nó cũng phải khai `revalidate`.
+ */
+import { namMucTieu } from '@/lib/nam-muc-tieu';
+
+export { namMucTieu as targetYear };
 
 /** Các năm sinh có trang riêng — nhóm tuổi cưới phổ biến. */
 export const BIRTH_YEARS: number[] = Array.from({ length: 16 }, (_, i) => 1990 + i); // 1990–2005
@@ -68,6 +80,9 @@ function verdictShortOf(r: WeddingYearResult): string {
 }
 
 export function buildYearPage(birthYear: number): YearPageData {
+  // Đọc năm mục tiêu MỘT LẦN ngay đầu hàm rồi dùng biến cục bộ: hàm này được
+  // gọi lúc render nên giá trị luôn đúng, mà phần chữ bên dưới không phải sửa.
+  const TARGET_YEAR = namMucTieu();
   const main = checkWeddingYear(birthYear, TARGET_YEAR);
   const next = checkWeddingYear(birthYear, TARGET_YEAR + 1);
   const scan = scanYears(birthYear, TARGET_YEAR, 6);
