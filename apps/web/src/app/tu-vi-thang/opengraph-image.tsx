@@ -1,6 +1,6 @@
 import { toolOgImage, OG_SIZE, OG_CONTENT_TYPE } from '@/lib/og';
 
-export const alt = 'Tử vi tháng theo con giáp — tra can chi từng tháng — hieu.asia';
+export const alt = 'Tử vi tháng theo con giáp — tra can chi — hieu.asia';
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 

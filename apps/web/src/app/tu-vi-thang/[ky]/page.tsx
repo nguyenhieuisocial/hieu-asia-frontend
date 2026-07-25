@@ -14,6 +14,9 @@ import {
   buildMonthTable,
   buildableMonths,
   liveMonths,
+  metaTitle,
+  monthPageDescription,
+  monthPageTitle,
   monthSlug,
   parseMonthSlug,
   spanNote,
@@ -37,11 +40,14 @@ export async function generateMetadata({
   const k = parseMonthSlug(ky);
   if (!k) notFound();
   const m = buildMonthOverview(k);
-  const title = `Tử vi tháng ${k.month}/${k.year} cho 12 con giáp (tháng ${m.main.label})`;
-  const description = `Tháng ${k.month}/${k.year} mang trụ tháng ${m.main.label} — can ${m.main.can} hành ${m.main.canElement}, chi ${m.main.chi} hành ${m.main.chiElement}. Bảng đối chiếu 12 con giáp với chi tháng và số ngày hợp/xung trong tháng.`;
+  // Mẫu chuỗi nằm trong lib để test khoá được ngưỡng SERP — xem ghi chú ở
+  // `tu-vi-thang-data.ts`. `absolute` để hậu tố thương hiệu không bị root layout
+  // cộng thêm lần nữa (và để og:title trùng khít <title>).
+  const title = metaTitle(monthPageTitle(m));
+  const description = monthPageDescription(m);
   const url = `https://hieu.asia/tu-vi-thang/${m.slug}`;
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url, type: 'article', locale: 'vi_VN' },
