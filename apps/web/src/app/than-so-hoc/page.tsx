@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button, Card, CardContent, CardHeader, Input, Label } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { track } from '@/lib/analytics';
@@ -45,15 +47,22 @@ const FAQ: { q: string; a: string }[] = [
   },
 ];
 
-const FAQ_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQ.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
-};
+// SEO-FIX: bộ schema riêng của trang /than-so-hoc — trước đây nằm ở layout.tsx
+// nên rớt xuống mọi route con. Dùng builder chung nên node WebSite giờ trỏ @id về
+// node phát site-wide qua siteGraph(), bỏ được node WebSite ẩn danh trùng lặp.
+const PAGE_JSONLD = [
+  webPage({
+    url: '/than-so-hoc',
+    name: 'Thần Số Học — Số chủ đạo theo Pythagoras',
+    description:
+      'Phân tích số chủ đạo, số vận mệnh, số linh hồn, năm cá nhân 2026 theo phương pháp Pythagoras — miễn phí, AI cá nhân hoá theo ngày sinh + họ tên.',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Thần Số Học', url: '/than-so-hoc' },
+  ]),
+  faqPage(FAQ),
+];
 
 export default function ThanSoHocLandingPage() {
   const router = useRouter();
@@ -77,10 +86,7 @@ export default function ThanSoHocLandingPage() {
 
   return (
     <>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-    />
+    <JsonLd data={PAGE_JSONLD} />
     <ToolPageShell
       eyebrow="Thần Số Học · Pythagoras"
         relatedSlug="/than-so-hoc"
