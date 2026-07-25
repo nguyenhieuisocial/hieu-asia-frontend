@@ -53,8 +53,14 @@ export const metadata: Metadata = {
   },
   // vault 147 §a — dùng đúng cụm khách hay nói ("chung chung", "có cơ sở",
   // "riêng tư") để bắt intent hoài nghi thay vì mô tả tính năng chung chung.
+  //
+  // SEO 2026-07-26: bản cũ 188 ký tự nên Google CẮT MẤT vế cuối — đo trên
+  // production, phần biến mất đúng là "…căn cứ. Lá số của bạn là riêng tư.",
+  // tức mất luôn 1 trong 3 cụm intent mà §a cố ý chọn. Rút còn 155 ký tự bằng
+  // cách gọn phần giữa, GIỮ ĐỦ cả ba cụm ("chung chung" · "căn cứ" · "riêng
+  // tư"). Ngưỡng 160 là chốt chung của mọi agent (seo-guard).
   description:
-    'Lá số Tử Vi, Bát Tự thật tính từ ngày giờ sinh của bạn — không bói chung chung, không hù dọa, không bán giải hạn. Mỗi kết luận đều chỉ rõ cung và sao làm căn cứ. Lá số của bạn là riêng tư.',
+    'Lá số Tử Vi, Bát Tự tính thật từ ngày giờ sinh — không bói chung chung, không hù dọa, không bán giải hạn. Có căn cứ cung và sao. Lá số của bạn là riêng tư.',
   alternates: { canonical: 'https://hieu.asia/' },
   openGraph: {
     title: 'hieu.asia — Hiểu mình. Quyết định mình.',

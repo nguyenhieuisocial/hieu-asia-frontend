@@ -248,6 +248,58 @@ export function checkNodeUrls(url, nodes, noindex) {
 }
 
 /**
+ * Hai trang KHÁC nhau dùng CHUNG một `<title>` (hoặc chung một mô tả).
+ *
+ * VÌ SAO CẦN: `checkPage` đã canh ĐỘ DÀI title/description, nhưng chưa ai canh
+ * tính DUY NHẤT. Với site sinh trang từ khuôn mẫu (145 cặp tuổi, 79 lá bài, 65
+ * quẻ…), chỉ cần sửa mẫu tiêu đề mà bỏ sót phần biến là CẢ CỤM dùng chung một
+ * tiêu đề — Google không phân biệt được trang nào với trang nào, các trang tự
+ * cạnh tranh nhau, và Search Console báo "Duplicate title tags". Trang vẫn
+ * chạy, không có lỗi nào hiện ra ở đâu.
+ *
+ * Đo 2026-07-26 (1.074 trang cho-index): 0 tiêu đề trùng, 0 mô tả trùng. Thêm
+ * luật lúc bằng 0 nên không chặn việc của ai.
+ *
+ * Báo theo NHÓM chứ không theo từng trang: một mẫu hỏng sinh 145 trang trùng,
+ * in 145 dòng thì không ai đọc. Mỗi nhóm một dòng, kèm số trang và vài ví dụ.
+ *
+ * @param {{url: string, title: string|null, description: string|null, noindex: boolean}[]} pages
+ */
+export function checkDuplicateMeta(pages) {
+  const out = [];
+  const byTitle = new Map();
+  const byDesc = new Map();
+  for (const p of pages) {
+    if (p.noindex) continue;
+    if (p.title) {
+      if (!byTitle.has(p.title)) byTitle.set(p.title, []);
+      byTitle.get(p.title).push(p.url);
+    }
+    if (p.description) {
+      if (!byDesc.has(p.description)) byDesc.set(p.description, []);
+      byDesc.get(p.description).push(p.url);
+    }
+  }
+  const report = (map, rule, what) => {
+    for (const [value, urls] of map) {
+      if (urls.length < 2) continue;
+      const sorted = [...urls].sort();
+      out.push({
+        url: sorted[0],
+        rule,
+        detail:
+          `${urls.length} trang dùng chung ${what} "${value.slice(0, 60)}" — ` +
+          `Google không phân biệt được các trang này, chúng tự cạnh tranh nhau. ` +
+          `Ví dụ: ${sorted.slice(0, 3).join(' · ')}`,
+      });
+    }
+  };
+  report(byTitle, 'duplicate-title', 'tiêu đề');
+  report(byDesc, 'duplicate-description', 'mô tả');
+  return out;
+}
+
+/**
  * Khoá miễn trừ khớp URL không? Hỗ trợ 2 dạng:
  *   "/khai-truong"        → khớp đúng URL đó
  *   "/tarot/y-nghia/*"    → khớp mọi URL trong cụm (dùng cho route template)
@@ -461,11 +513,6 @@ export const ALLOWLIST = {
     owner: 'agent SEO sweep (cụm Bản mệnh + Phong thuỷ)',
     note: 'tiêu đề 63 · mô tả bị clamp cắt',
   },
-  '/': {
-    rules: ['description-too-long'],
-    owner: 'founder / agent SEO sweep',
-    note: 'trang chủ, mô tả 188 ký tự — không agent nào được tự sửa app/page.tsx',
-  },
   // 5 trang dưới đây KHÔNG tự khai tiêu đề nên thừa hưởng tiêu đề MẶC ĐỊNH của
   // site trong `app/layout.tsx` — mà chuỗi đó dài 61 ký tự, TỰ NÓ đã vượt.
   // Sửa 1 dòng ở root là hết cả 5. Nhưng câu hỏi thật là: /auth/callback,
@@ -553,6 +600,7 @@ function main() {
 
   const violations = [];
   const canonPages = [];
+  const metaPages = [];
   // Sitemap: `next build` render nội dung ra `sitemap.xml.body` — còn
   // `sitemap.xml` là THƯ MỤC (chứa route.js). Đọc đúng cái tên `.xml` sẽ luôn
   // ném lỗi và luật cần sitemap bị tắt ÂM THẦM. Thử `.body` trước.
@@ -586,15 +634,17 @@ function main() {
     for (const v of checkJsonLd(jsonld)) violations.push({ url, ...v });
     for (const v of checkNodeUrls(url, jsonld.nodes, noindex)) violations.push({ url, ...v });
     canonPages.push({ url, canonical, noindex });
+    metaPages.push({ url, title, description, noindex });
   }
 
   for (const v of checkCanonicalGraph(canonPages, sitemapUrls)) violations.push(v);
+  for (const v of checkDuplicateMeta(metaPages)) violations.push(v);
 
   const { blocking, allowed, stale } = applyAllowlist(violations, ALLOWLIST);
 
   console.log(`seo-guard: đã kiểm ${files.length} trang tĩnh.`);
   console.log(
-    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · đúng 1 <h1> (trang cho-index) · canonical không trỏ vào hư không/vòng tròn/sitemap · JSON-LD hợp lệ, url khai đúng trang, không trùng loại, FAQ/breadcrumb đủ trường`,
+    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · đúng 1 <h1> (trang cho-index) · canonical không trỏ vào hư không/vòng tròn/sitemap · JSON-LD hợp lệ, url khai đúng trang, không trùng loại, title/mô tả không trùng giữa các trang, FAQ/breadcrumb đủ trường`,
   );
   console.log(`  vi phạm mới: ${blocking.length} · miễn trừ (có chủ): ${allowed.length}`);
 
