@@ -62,13 +62,15 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
     let local: Record<string, boolean> = {};
     try {
       const raw = window.localStorage.getItem(understandingKey(topicId));
-      if (raw) {
-        local = JSON.parse(raw) as Record<string, boolean>;
-        apply(local);
-      }
+      if (raw) local = JSON.parse(raw) as Record<string, boolean>;
     } catch {
       /* ignore */
     }
+    // Gọi cả khi không có gì trong storage: `liveRef` phải LUÔN khớp chủ đề đang
+    // xem. Nếu chỉ đặt khi có dữ liệu thì lúc đổi topicId mà chủ đề mới chưa
+    // từng tick, ref còn giữ map của chủ đề CŨ và bước union bên dưới sẽ bê tick
+    // của bài khác sang.
+    apply(local);
     setHydrated(true);
     // Ghi tóm tắt {done,total} cho hub /learn (learn:summary:<slug>) — cả khi
     // done=0, để hub biết tổng số dòng của bài (trang là nơi duy nhất biết).
