@@ -8,7 +8,7 @@ import { webPage, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { DESK_USE } from '@/lib/huong-ban-data';
 
 const url = 'https://hieu.asia/huong-ban-lam-viec';
-const title = 'Hướng bàn làm việc, bàn học hợp tuổi: tra theo năm sinh';
+const title = 'Hướng bàn làm việc, bàn học hợp tuổi theo năm sinh';
 const description =
   'Bạn nên ngồi quay mặt về hướng nào khi làm việc và khi học? Nhập năm sinh và giới tính để tra theo Bát Trạch (cung phi) — minh bạch cách tính, để tham khảo, không phán số mệnh.';
 
