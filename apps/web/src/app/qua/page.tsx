@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Gift, CalendarCheck, Users, Ticket, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 import { StartupPath } from '@/components/home/StartupPath';
 import { StreakCard } from '@/components/account/StreakCard';
 import { ReferralCard } from '@/components/account/ReferralCard';
@@ -156,6 +158,23 @@ export default function QuaPage() {
           </div>
         </section>
       </main>
+      {/* SEO-FIX: trang này không phát schema nào (chỉ có Organization/WebSite
+          site-wide). Bổ sung cùng lúc với việc đưa /qua vào sitemap — đưa trang
+          cho Google tìm thì phải khai đủ để nó hiểu và hiện được phân cấp. */}
+      <JsonLd
+        data={[
+          webPage({
+            url: '/qua',
+            name: 'Quà tặng & lộ trình cá nhân hoá',
+            description:
+              'Hoàn thành lộ trình khởi đầu, điểm danh mỗi ngày và mời bạn bè để mở thêm quà tặng cá nhân hoá tại hieu.asia.',
+          }),
+          breadcrumb([
+            { name: 'Trang chủ', url: '/' },
+            { name: 'Quà tặng', url: '/qua' },
+          ]),
+        ]}
+      />
       <SiteFooter />
     </>
   );

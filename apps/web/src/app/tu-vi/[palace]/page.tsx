@@ -5,7 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@hieu-asia/ui'
 import { ChevronRight, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { PALACES_CONTENT, findPalaceContent, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
+import {
+  PALACES_CONTENT,
+  findPalaceContent,
+  ALL_STARS_CONTENT,
+  palaceMetaDescription,
+} from '@/lib/tuvi-content';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { clampDescription } from '@/lib/seo/description';
 
@@ -21,11 +26,15 @@ export async function generateMetadata(
   if (!data) return {};
   return {
     title: `Cung ${data.name} trong Tử Vi Đẩu Số`,
-    description: clampDescription(data.overview, 160),
+    // Mẫu nằm trong lib để test canh được ngưỡng — xem ghi chú ở tuvi-content.ts.
+    description: clampDescription(palaceMetaDescription(data), 160),
     alternates: { canonical: `https://hieu.asia/tu-vi/${data.slug}` },
     openGraph: {
       title: `Cung ${data.name}`,
-      description: data.overview.slice(0, 200),
+      // `.slice()` cắt cứng giữa chữ — đúng lỗi mà clampDescription sinh ra để
+      // dẹp (#936), còn sót ở đây. og:description không bị Google giới hạn 160
+      // nên vẫn giữ đoạn overview dài hơn, chỉ cắt cho gọn ở ranh giới từ.
+      description: clampDescription(data.overview, 200),
       url: `https://hieu.asia/tu-vi/${data.slug}`,
       type: 'article',
       images: OG_DEFAULT_IMAGES,

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@hieu-asia/ui'
 import { ChevronRight, ArrowRight, Sparkles, ShieldAlert } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { ALL_STARS_CONTENT, findStarContent } from '@/lib/tuvi-content';
+import { ALL_STARS_CONTENT, findStarContent, starMetaDescription } from '@/lib/tuvi-content';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { clampDescription } from '@/lib/seo/description';
 
@@ -21,10 +21,8 @@ export async function generateMetadata(
   if (!data) return {};
   return {
     title: `Sao ${data.name} trong Tử Vi Đẩu Số`,
-    description: clampDescription(
-      `Sao ${data.name} — ${data.archetype} Ý nghĩa khi toạ cung Mệnh, Quan Lộc, Tài Bạch và cách luận trên lá số Tử Vi.`,
-      160,
-    ),
+    // Mẫu nằm trong lib để test canh được ngưỡng — xem ghi chú ở tuvi-content.ts.
+    description: clampDescription(starMetaDescription(data), 160),
     alternates: { canonical: `https://hieu.asia/tu-vi/sao/${data.slug}` },
     openGraph: {
       title: `Sao ${data.name}`,

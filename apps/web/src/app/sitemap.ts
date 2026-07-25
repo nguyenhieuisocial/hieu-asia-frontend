@@ -73,6 +73,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // /journal/new, /affiliate/assets all set `robots.index:false`, so listing them in the
     // sitemap is a conflicting signal (Google: "Submitted URL marked noindex"). Don't re-add.
     { url: `${BASE_URL}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    // SEO-FIX: /mentor bị sót khỏi sitemap dù `index, follow` + canonical đầy đủ.
+    // Đây là trang được liên kết nội bộ nhiều thứ 2 toàn site (1951 link) → thiếu
+    // trong sitemap là mất tín hiệu ưu tiên crawl cho một trang sản phẩm chính.
+    { url: `${BASE_URL}/mentor`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/features`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/community`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
@@ -120,6 +124,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/hop-tuoi`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/can-xuong`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/thuoc-lo-ban`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    // SEO-FIX: /phi-tinh (Huyền Không Phi Tinh — lập bàn 9 cung) bị sót khỏi
+    // sitemap dù là trang công cụ thật, `index, follow` + canonical đầy đủ.
+    { url: `${BASE_URL}/phi-tinh`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/xem-tuong`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/ban-do-sao`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/la-so-tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
@@ -150,6 +157,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/lo-trinh/hieu-ban-than`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
     // Gộp (B) 2026-06-21: su-nghiep/tinh-cam/hang-ngay redirect 301 → /tu-vi-* → bỏ khỏi sitemap.
     { url: `${BASE_URL}/lo-trinh/ke-hoach-nam`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
+    // SEO-FIX: /qua (Quà tặng & lộ trình cá nhân hoá) bị sót khỏi sitemap dù
+    // `index, follow` + canonical đầy đủ và được liên kết từ 976 trang.
+    { url: `${BASE_URL}/qua`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/ban-do`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
     { url: `${BASE_URL}/decisions`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },    { url: `${BASE_URL}/methodology/tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/methodology/algorithm-changelog`, lastModified: now, changeFrequency: 'monthly', priority: 0.55 },
