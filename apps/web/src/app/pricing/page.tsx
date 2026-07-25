@@ -25,6 +25,7 @@
  * template. Survey + comparison table removed (PricingTierV2 has hybrid built-in).
  */
 
+import Link from 'next/link';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
@@ -34,7 +35,7 @@ import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
 import { TrustStrip } from '@/components/marketing/TrustStrip';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { faqPage, product } from '@/lib/seo/jsonld';
+import { breadcrumb, faqPage, product } from '@/lib/seo/jsonld';
 import {
   PRICING,
   ADVANCED_PRICING,
@@ -136,6 +137,20 @@ const PRICING_FAQ_SCHEMA: { q: string; a: string }[] = [
  * Product + Offer JSON-LD cho /pricing. 4 bậc trả phí → 4 Offer, giá + URL khớp
  * đúng các thẻ giá + CTA đang hiển thị (chống cloaking). Gói miễn phí không phải
  * "mua" nên không liệt kê như một Offer. Giá lấy từ canonical `PRICING`.
+ */
+/**
+ * Product JSON-LD cho trang giá — nguồn DUY NHẤT.
+ *
+ * Trước 2026-07-25 có HAI khai báo Product cho cùng trang này: một bản gõ tay
+ * trong `layout.tsx` (giá hard-code) và bản này (giá lấy từ hằng số `PRICING`).
+ * Google thấy hai thực thể Product mâu thuẫn trên trang tiền → có thể bỏ qua cả
+ * hai, mất luôn phần hiện giá trong kết quả tìm kiếm. Bản gõ tay đã bị xoá; giá
+ * chỉ được lấy từ `PRICING` để không bao giờ lệch với giá thật.
+ *
+ * ⚠️ ĐỪNG thêm Offer khuyến mãi vào đây nếu luồng áp mã CHƯA chạy end-to-end.
+ * Tiền lệ (Wave 54 #282): Offer `LAUNCH30` vẫn nằm trong JSON-LD sau khi banner
+ * đã gỡ (commit e370aaf) vì worker không kiểm mã — Google vẫn hiện giảm giá mà
+ * khách không dùng được, tức quảng cáo sai trên SERP.
  */
 const PRICING_PRODUCT = {
   name: 'hieu.asia — Gói thành viên & Lá số AI',
@@ -376,6 +391,30 @@ export default function PricingPage() {
           </p>
         </div>
 
+        {/* Link tới trang sản phẩm /reading — trang giải thích bài đọc 5 lăng
+            kính (thứ khách đang mua ở các gói trên). Trước bản này, /reading có
+            0 link từ trang CÔNG KHAI nào: 9 link trỏ tới nó đều nằm trong khu
+            đã-đăng-nhập mà robots.txt đã chặn (/reading/, /account, /decisions/d_)
+            ⇒ với Google nó là trang MỒ CÔI dù là trang bán hàng chính. Trang giá
+            mà không trỏ tới thứ đang bán cũng là một lỗ hổng điều hướng. Đặt ở
+            đây (sau bảng giá, cùng kiểu với dòng 1:1) để không cạnh tranh với
+            CTA chính "Bắt đầu miễn phí". */}
+        <div className="mx-auto mt-3 max-w-marketing px-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            Chưa rõ gói trả phí đọc những gì?{' '}
+            {/* PHẢI dùng `<Link>`: eslint `@next/next/no-html-link-for-pages` chặn
+                `<a href>` trỏ tới route CÓ THẬT. Dòng 1:1 phía trên vẫn dùng `<a>`
+                được vì `/checkout/founder-1on1` là route động → rule không resolve
+                nên không chặn. Đừng "đồng bộ style" bằng cách đổi lại thành `<a>`. */}
+            <Link
+              href="/reading"
+              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+            >
+              Xem bài đọc 5 lăng kính gồm gì →
+            </Link>
+          </p>
+        </div>
+
         {/* Wave 60.79.T2 (vault 112 P1 #6): TrustStrip lifted FROM between
             hero and pricing tiers TO right after the tiers + before FAQ. The
             audit caught the strip sitting ~120px below the hero CTA in a dead
@@ -400,6 +439,12 @@ export default function PricingPage() {
       <SiteFooter />
       <StickyMobileCta label="Bắt đầu miễn phí" trackId="pricing" />
       <JsonLd data={product(PRICING_PRODUCT)} />
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Bảng giá', url: '/pricing' },
+        ])}
+      />
       <JsonLd data={faqPage(PRICING_FAQ_SCHEMA)} />
     </>
   );

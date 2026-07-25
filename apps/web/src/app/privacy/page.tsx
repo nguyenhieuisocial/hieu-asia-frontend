@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 import { ReopenCmpButton } from '@/components/cmp/ReopenCmpButton';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata = {
   title: 'Chính sách bảo mật',
@@ -329,6 +331,21 @@ export default function PrivacyPage() {
           <CardContent className="space-y-2 text-sm leading-relaxed text-foreground/85">
             <ul className="list-disc space-y-2 pl-5">
               <li>Tạo báo cáo phân tích cá nhân (Tử Vi + MBTI + tâm lý) dành riêng cho bạn.</li>
+              {/* Nghĩa vụ thông báo TRƯỚC KHI thu thập (Luật BVDLCN 91/2025). Cơ sở
+                  xử lý: Điều 19.1.4 — "thực hiện thoả thuận của chủ thể dữ liệu với
+                  tổ chức", tức cung cấp chính tính năng người dùng đã đăng ký; KHÔNG
+                  phải cookie personalization. Ai đổi hành vi đồng bộ phải sửa cả mục
+                  này + Hỏi–Đáp ở /tra-cuu-tuoi + lib/birth-profile.ts. */}
+              <li>
+                <strong className="text-foreground">Ghi nhớ ngày sinh giữa các công cụ.</strong>{' '}
+                Khi bạn <strong className="text-foreground">đã đăng nhập</strong>, ngày — giờ sinh
+                được lưu vào tài khoản để các công cụ tự điền sẵn và bạn dùng lại được trên thiết
+                bị khác, không phải nhập lại. Khi bạn{' '}
+                <strong className="text-foreground">chưa đăng nhập</strong>, thông tin này chỉ nằm
+                trong trình duyệt của bạn và không được gửi lên máy chủ. Bạn gỡ bất cứ lúc nào bằng
+                nút <em>Xoá</em> ngay cạnh dòng thông tin đã lưu ở mỗi công cụ — thao tác này xoá cả
+                bản trên máy lẫn bản trong tài khoản.
+              </li>
               <li>
                 <strong className="text-foreground">Không dùng dữ liệu cá nhân để huấn luyện mô hình.</strong>{' '}
                 Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có thể tắt
@@ -619,6 +636,13 @@ export default function PrivacyPage() {
         </div>
       </section>
       </main>
+      {/* SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Chính sách bảo mật', url: '/privacy' },
+        ])}
+      />
       <SiteFooter />
     </>
   );

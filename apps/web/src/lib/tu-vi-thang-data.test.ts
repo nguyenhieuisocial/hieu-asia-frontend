@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { ZODIAC } from './hop-tuoi-pairs';
 import { dayCanChi } from './gio-hoang-dao';
 import {
@@ -6,14 +8,22 @@ import {
   buildMonthOverview,
   buildMonthTable,
   buildThangConGiap,
+  DESCRIPTION_MAX,
+  HUB_DESCRIPTION,
+  HUB_TITLE,
   LAUNCH_MONTH,
+  TITLE_MAX,
   buildableMonths,
   daysInMonth,
   elementStance,
   liveMonths,
+  metaTitle,
+  monthPageDescription,
+  monthPageTitle,
   monthSlug,
   parseMonthSlug,
   pastMonths,
+  resolveServableMonth,
   spanNote,
 } from './tu-vi-thang-data';
 
@@ -74,7 +84,7 @@ describe('slug tháng', () => {
   });
 
   it('từ chối slug sai định dạng hoặc ngoài khoảng', () => {
-    for (const bad of ['', 'thang-8', '0-2026', '13-2026', '8-1999', '8-2099', '8/2026', 'ty']) {
+    for (const bad of ['', 'thang-8', '0-2026', '13-2026', '8-1999', '8-2101', '8/2026', 'ty']) {
       expect(parseMonthSlug(bad)).toBeNull();
     }
   });
@@ -195,6 +205,54 @@ describe('nội dung 72 trang thực sự khác nhau', () => {
     expect(new Set(faqs).size).toBe(pages.length);
     for (const p of pages) expect(p.faqs).toHaveLength(5);
   });
+
+});
+
+describe('ngưỡng SERP của cả 3 route', () => {
+  // Ngưỡng Google cắt: ~60 ký tự tiêu đề, ~160 ký tự mô tả. Mọi mẫu chuỗi ghép
+  // từ dữ liệu (tên trụ tháng, số ngày hợp/xung) nên độ dài đổi theo tháng.
+  //
+  // CỐ Ý KHÔNG dùng `NOW`/`liveMonths` ở đây. Cụm sinh trang cuốn chiếu vô hạn
+  // về phía trước, nên nếu chỉ kiểm cửa sổ đang mở thì một tháng chật hơn (chỉ
+  // vào cửa sổ sau này) sẽ lọt lưới — trang tháng 10/2027 là ví dụ thật: tiêu đề
+  // 59/60, chật hơn mọi tháng trong cửa sổ hiện tại.
+  //
+  // Trụ tháng lặp lại theo chu kỳ 5 năm (can tháng suy từ can năm theo Ngũ Hổ
+  // Độn), nên quét 10 năm là phủ HẾT mọi tổ hợp (tháng × trụ tháng) có thể có.
+  const YEARS = Array.from({ length: 10 }, (_, i) => 2026 + i);
+  const months = YEARS.flatMap((year) =>
+    Array.from({ length: 12 }, (_, i) => ({ year, month: i + 1 })),
+  );
+
+  const check = (label: string, title: string, description: string) => {
+    // Route ghép hậu tố thương hiệu vào tiêu đề trần — cái vượt ngưỡng là chuỗi
+    // SAU khi ghép, nên phải đo `metaTitle()` chứ không đo bản trần.
+    expect(metaTitle(title).length, `title: ${label}`).toBeLessThanOrEqual(TITLE_MAX);
+    expect(description.length, `desc: ${label}`).toBeLessThanOrEqual(DESCRIPTION_MAX);
+    // clampDescription là chốt chặn; nếu nó phải cắt thì mẫu chữ đã quá dài —
+    // sửa mẫu chứ đừng để người đọc thấy câu cụt.
+    expect(description, `desc bị cắt: ${label}`).not.toContain('…');
+  };
+
+  it('hub /tu-vi-thang', () => {
+    check('hub', HUB_TITLE, HUB_DESCRIPTION);
+  });
+
+  it(`trang tháng /tu-vi-thang/[ky] — ${months.length} tháng (2026–2035)`, () => {
+    for (const k of months) {
+      const m = buildMonthOverview(k);
+      check(monthSlug(k), monthPageTitle(m), monthPageDescription(m));
+    }
+  });
+
+  it(`trang con giáp /tu-vi-thang/[ky]/[congiap] — ${months.length * 12} trang`, () => {
+    for (const k of months) {
+      for (const z of ZODIAC) {
+        const d = buildThangConGiap(k, z.slug)!;
+        check(`${monthSlug(k)}/${z.slug}`, d.seoTitle, d.seoDescription);
+      }
+    }
+  });
 });
 
 describe('giọng thương hiệu', () => {
@@ -245,5 +303,131 @@ describe('bảng tổng quan tháng', () => {
 describe('slug con giáp lạ', () => {
   it('trả về null để route gọi notFound()', () => {
     expect(buildThangConGiap({ year: 2026, month: 8 }, 'khong-co')).toBeNull();
+  });
+});
+
+// Lỗi thật, suýt lộ ra ngày 01/08/2026 và không test nào bắt được:
+// `app/sitemap.ts` tính `liveMonths()` lúc CHẠY (ISR 1 giờ) nên nó cuốn theo
+// lịch, còn `generateStaticParams()` chốt tập slug tại lúc BUILD. Qua mốc đầu
+// tháng mà chưa deploy lại thì sitemap khai URL chưa dựng ⇒ 404.
+//
+// Ba bài dưới khoá cả hai vế: (1) nguy cơ có thật, đo được; (2) tập trang phục
+// vụ luôn phủ được sitemap khi cùng một mốc thời gian; (3) cấu hình route giữ
+// đúng thứ làm (2) thành sự thật lúc chạy.
+describe('sitemap và trang phải cuốn theo lịch CÙNG NHỊP', () => {
+  const ROUTE_FILES = [
+    'src/app/tu-vi-thang/[ky]/page.tsx',
+    'src/app/tu-vi-thang/[ky]/[congiap]/page.tsx',
+  ];
+  // Trang tổng không có `[param]` nên không cần `dynamicParams`, nhưng nó là chỗ
+  // duy nhất liên kết nội bộ tới trang tháng → đóng băng thì tháng mới thành
+  // trang mồ côi. Chỉ đòi `revalidate`.
+  const HUB_FILE = 'src/app/tu-vi-thang/page.tsx';
+
+  it('tập slug chốt tại BUILD KHÔNG phủ nổi sitemap của tháng sau — nguy cơ là thật', () => {
+    const buildDay = new Date('2026-07-25T00:00:00Z');
+    const built = new Set(buildableMonths(buildDay).map(monthSlug));
+    const missing = liveMonths(new Date('2026-08-01T00:00:00Z'))
+      .map(monthSlug)
+      .filter((s) => !built.has(s));
+    // Mỗi tháng thiếu = 1 trang tháng + 12 trang con giáp = 13 URL chết.
+    expect(missing.length, 'nếu bài này xanh nghĩa là nguy cơ đã biến mất — đọc lại ghi chú trước khi xoá cấu hình route').toBeGreaterThan(0);
+  });
+
+  it('cùng một mốc thời gian: MỌI URL sitemap của cụm đều phục vụ được', () => {
+    const dates = [
+      '2026-07-25', // hôm dựng cụm
+      '2026-08-01', // mốc vỡ đầu tiên
+      '2026-09-01',
+      '2026-12-31', // bắc cầu qua năm
+      '2027-01-01',
+      '2030-06-15',
+      // Vách đá cũ: bản trước chặn năm ở 2035, nên từ 7/2035 cửa sổ tháng sinh
+      // ra "1-2036" mà `parseMonthSlug` từ chối. Hai mốc này khoá lại chỗ đó.
+      '2035-07-01',
+      '2035-12-01',
+    ];
+    for (const d of dates) {
+      const now = new Date(`${d}T00:00:00Z`);
+      const months = liveMonths(now);
+      expect(months.length, `sitemap rỗng tại ${d} — phép đo hỏng chứ không phải site sạch`).toBeGreaterThan(0);
+      for (const k of months) {
+        expect(resolveServableMonth(monthSlug(k), now), `${monthSlug(k)} nằm trong sitemap tại ${d} nhưng route không phục vụ`).toEqual(k);
+      }
+    }
+  });
+
+  it('cấu hình 2 route giữ đúng thứ làm điều trên thành sự thật lúc chạy', () => {
+    for (const f of ROUTE_FILES) {
+      const src = readFileSync(join(process.cwd(), f), 'utf8');
+      expect(src, `${f}: đóng dynamicParams lại thì tháng mới trong sitemap sẽ 404`).toMatch(
+        /export const dynamicParams = true/,
+      );
+      expect(src, `${f}: thiếu revalidate thì lệnh 308 của tháng đã hết bị nướng cứng vào HTML lúc build`).toMatch(
+        /export const revalidate = \d+/,
+      );
+    }
+    const hub = readFileSync(join(process.cwd(), HUB_FILE), 'utf8');
+    expect(hub, `${HUB_FILE}: thiếu revalidate thì tháng mới không có link nội bộ nào trỏ tới`).toMatch(
+      /export const revalidate = \d+/,
+    );
+  });
+});
+
+// Ngưỡng thứ ba của PR #940 — `og:title` phải khớp `<title>` — là ngưỡng DUY
+// NHẤT chưa có chốt nào canh: `seo-guard` không có luật nào về `og:` (đo trên
+// HTML render thì 955 trang toàn site "lệch og:title", mà phần lớn KHÔNG phải
+// lỗi — xem §4 note 172 — nên một luật toàn site sẽ chỉ đẻ báo động giả).
+// Cách đúng là canh HẸP, ngay trong cụm: bắt cả 3 route dùng CÙNG một định
+// danh cho `<title>`, `og:title` và `twitter:title`.
+describe('og:title phải khớp <title> — canh trong phạm vi cụm', () => {
+  const ROUTES = [
+    'src/app/tu-vi-thang/page.tsx',
+    'src/app/tu-vi-thang/[ky]/page.tsx',
+    'src/app/tu-vi-thang/[ky]/[congiap]/page.tsx',
+  ];
+
+  it('cả 3 route dùng chung một định danh tiêu đề cho thẻ trang, og và twitter', () => {
+    for (const f of ROUTES) {
+      const src = readFileSync(join(process.cwd(), f), 'utf8');
+      const canonical = /\btitle:\s*\{\s*absolute:\s*([A-Za-z_$][\w$]*)\s*\}/.exec(src);
+      expect(canonical, `${f}: không thấy title: { absolute: … } — root layout sẽ cộng thêm hậu tố lần nữa`).not.toBeNull();
+
+      const id = canonical![1]!;
+      // Mọi chỗ khai tiêu đề KHÁC (og, twitter) phải trỏ về đúng định danh đó.
+      // Lưu ý: regex này KHÔNG khớp `title: { absolute: … }` (sau dấu hai chấm
+      // là `{`, không phải định danh) — nên `others` đúng là "những chỗ còn lại".
+      const others = [...src.matchAll(/\btitle:\s*([A-Za-z_$][\w$]*)/g)].map((m) => m[1]!);
+      const shorthand = id === 'title' ? (src.match(/\btitle,/g) ?? []).length : 0;
+
+      const wrong = others.filter((x) => x !== id);
+      expect(wrong, `${f}: og/twitter dùng tiêu đề KHÁC <title> (${wrong.join(', ')}) — đúng lỗi gốc của PR #940`).toEqual([]);
+      expect(others.length + shorthand, `${f}: phải khai đủ cả og:title lẫn twitter:title bằng cùng định danh "${id}"`).toBeGreaterThanOrEqual(2);
+    }
+  });
+});
+
+describe('resolveServableMonth — chốt phạm vi khi dynamicParams đã mở', () => {
+  const NOW_R = new Date('2026-07-25T00:00:00Z');
+
+  it('nhận tháng đang sống và tháng trong chặng 308', () => {
+    expect(resolveServableMonth('8-2026', NOW_R)).toEqual({ year: 2026, month: 8 });
+    expect(resolveServableMonth('6-2026', NOW_R)).toEqual({ year: 2026, month: 6 });
+  });
+
+  it('từ chối tháng ngoài cửa sổ, dù `parseMonthSlug` chấp nhận định dạng', () => {
+    expect(parseMonthSlug('1-2030')).not.toBeNull();
+    expect(resolveServableMonth('1-2030', NOW_R)).toBeNull();
+  });
+
+  it('chỉ phục vụ dạng slug CHUẨN — chặn hai URL cùng nội dung', () => {
+    expect(parseMonthSlug('08-2026')).toEqual({ year: 2026, month: 8 });
+    expect(resolveServableMonth('08-2026', NOW_R)).toBeNull();
+  });
+
+  it('từ chối rác', () => {
+    for (const s of ['', 'abc', '13-2026', '8-2019', '8-2036', '8/2026']) {
+      expect(resolveServableMonth(s, NOW_R), s).toBeNull();
+    }
   });
 });

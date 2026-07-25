@@ -4,6 +4,8 @@ import { ArrowRight, Plus, MessageCircle, LayoutDashboard } from 'lucide-react';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 import { Fab } from '@/components/product/Fab';
 import { LENSES } from '@/lib/catalog/lenses';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
@@ -138,6 +140,14 @@ export default function ReadingHubPage() {
           </div>
         </section>
       </main>
+
+      {/* SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Lá số của bạn', url: '/reading' },
+        ])}
+      />
 
       <SiteFooter />
 

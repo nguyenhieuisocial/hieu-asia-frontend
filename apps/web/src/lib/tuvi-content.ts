@@ -1,6 +1,28 @@
 /**
  * Static reference content for /tu-vi/cung-* and /tu-vi/sao/* SEO pages.
  *
+ * ⚠️⚠️ ĐỌC TRƯỚC KHI SỬA NỘI DUNG Ở ĐÂY (từ 2026-07-25, CMS Tử Vi bước 3) ⚠️⚠️
+ *
+ * File này KHÔNG còn là nguồn duy nhất. `/tu-vi/[palace]` và `/tu-vi/sao/[star]`
+ * nay đọc qua `lib/tuvi-content-source.ts` theo công thức:
+ *
+ *     hiển thị = { ...bản trong FILE NÀY, ...các trường DB CÓ GIÁ TRỊ }
+ *
+ * DB (`hieu_asia.tuvi_content`) hiện có **đủ mọi trường** ⇒ **DB THẮNG**.
+ * ⇒ Sửa chữ trong file này thì **WEB SẼ KHÔNG ĐỔI**. Đừng ngồi tìm lỗi — đó là
+ *   thiết kế: founder sửa nội dung qua admin `/tuvi-content`, không qua code.
+ *
+ * Muốn nội dung sửa ở đây LÊN ĐƯỢC web, chọn 1 trong 2:
+ *   (a) Bấm workflow **`seed-tuvi-content`** (bỏ tick dry_run) → đẩy file này sang DB.
+ *       ⚠️ Nó GHI ĐÈ trường tương ứng trong DB → **mất phần founder đã tự sửa** ở
+ *       những trường đó. Hỏi founder trước khi chạy nếu họ đã dùng admin.
+ *   (b) Hoặc sửa thẳng trong admin `/tuvi-content` (khuyến nghị cho việc đổi CHỮ).
+ *
+ * File này VẪN là nguồn cho: `generateStaticParams` (danh sách route), sitemap,
+ * test, và **bản dự phòng** khi API/DB lỗi — nên vẫn phải giữ đầy đủ, đừng xoá bớt.
+ * Thêm cung/sao MỚI thì bắt buộc sửa ở đây (cần route + trang web tương ứng), rồi
+ * chạy workflow seed.
+ *
  * Each entry is intentionally factual + non-superstitious. We describe
  * what the palace/star traditionally REPRESENTS in Tử Vi Đẩu Số without
  * making predictive claims. AI Mentor is the layer that personalizes
@@ -2245,4 +2267,32 @@ export const ALL_STARS_CONTENT: StarContent[] = [...MAJOR_STARS_CONTENT, ...AUX_
 
 export function findStarContent(slug: string): StarContent | undefined {
   return ALL_STARS_CONTENT.find((s) => s.slug === slug);
+}
+
+// ── Meta description cho /tu-vi/sao/* và /tu-vi/* ───────────────────
+// Ở đây chứ không inline trong route, để test canh được ngưỡng 160 ký tự.
+//
+// Lỗi cũ (cả 47 trang sao + 11/13 trang cung đều dính): mẫu đặt đoạn bách khoa
+// (`archetype` 197–285 ký tự, `overview` 157–377 ký tự) lên TRƯỚC phần từ khoá,
+// rồi clamp ở 160 → thứ bị cắt luôn là phần có giá trị SEO, và Google hiển thị
+// một câu cụt lửng. Sửa gốc: dồn từ khoá lên đầu, phần biến chọn trường NGẮN.
+
+/** Biệt danh ngắn của sao — đoạn trước " — " trong `archetype`, vd "Đế tinh". */
+function starEpithet(archetype: string): string {
+  const head = archetype.replace(/\s+/g, ' ').trim().split(' — ')[0] ?? '';
+  // Vài sao viết `archetype` theo cấu trúc khác nên đoạn đầu dài cả trăm ký tự
+  // (Liêm Trinh: 196). Chỉ nhận khi nó thật sự là biệt danh ngắn.
+  return head.length <= 40 ? head : '';
+}
+
+/** Mô tả trang một sao. Dài nhất 143 ký tự trên toàn bộ 47 sao hiện có. */
+export function starMetaDescription(s: StarContent): string {
+  const ep = starEpithet(s.archetype);
+  return `Sao ${s.name} trong Tử Vi Đẩu Số${ep ? ` — ${ep}` : ''}: ý nghĩa khi toạ cung Mệnh, Quan Lộc, Tài Bạch và cách luận trên lá số.`;
+}
+
+/** Mô tả trang một cung. Dùng `domain` (16–41 ký tự) chứ không phải `overview`. */
+export function palaceMetaDescription(p: PalaceContent): string {
+  const domain = p.domain.replace(/\s+/g, ' ').trim().replace(/[.\s]+$/, '');
+  return `Cung ${p.name} trong Tử Vi Đẩu Số: ${domain}. Ý nghĩa, sao thường gặp và cách luận trên lá số.`;
 }

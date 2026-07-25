@@ -1,0 +1,97 @@
+name: seed-tuvi-content
+
+# Đồng bộ nội dung Tử Vi từ CODE (`apps/web/src/lib/tuvi-content.ts`) sang DB
+# (`hieu_asia.tuvi_content`) — nguồn mà worker API `/content/public/tuvi/*` phục vụ.
+#
+# VÌ SAO CÓ WORKFLOW NÀY thay vì chạy tay:
+#   `SUPABASE_DB_URL` là chuỗi kết nối CÓ MẬT KHẨU. Đặt việc nạp ở CI để khoá
+#   nằm phía GitHub — không ai phải giữ/dán khoá ở máy cục bộ.
+#
+# AN TOÀN:
+#   • Mặc định `dry_run = true` → chỉ ĐẾM, không ghi một dòng nào.
+#   • SQL sinh ra bọc trong `begin; … commit;` → lỗi giữa đường là rollback sạch.
+#   • Upsert theo `slug`, KHÔNG xoá dòng nào → mục founder tự thêm qua trang quản
+#     trị sẽ không bị mất.
+#   • Idempotent: bấm chạy lại bao nhiêu lần cũng cho cùng kết quả.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Chỉ đếm, KHÔNG ghi vào DB (bỏ tick để ghi thật)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seed-tuvi-content
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    name: đồng bộ nội dung Tử Vi (code → DB)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        # Script chỉ cần `esbuild` (đã có trong lockfile) để nạp file .ts.
+        run: pnpm install --frozen-lockfile
+
+      - name: Đếm nội dung sẽ đồng bộ
+        run: node scripts/seed-tuvi-content.mjs --check
+
+      - name: Sinh SQL (kiểm hình dạng, không ghi DB)
+        run: |
+          node scripts/seed-tuvi-content.mjs > /tmp/seed-tuvi.sql
+          echo "SQL: $(wc -c < /tmp/seed-tuvi.sql) byte · $(grep -c 'on conflict' /tmp/seed-tuvi.sql) khối upsert"
+          # Chốt chặn: phải có bọc giao dịch, nếu không thì lỗi giữa đường sẽ ghi nửa vời.
+          grep -qx 'begin;' /tmp/seed-tuvi.sql && grep -qx 'commit;' /tmp/seed-tuvi.sql \
+            || { echo "::error::SQL thiếu begin/commit — dừng"; exit 1; }
+
+      - name: Cài psql nếu thiếu
+        if: ${{ inputs.dry_run == false }}
+        run: |
+          if ! command -v psql >/dev/null 2>&1; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+          fi
+          psql --version
+
+      - name: GHI vào DB
+        if: ${{ inputs.dry_run == false }}
+        env:
+          PGURL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$PGURL" ]; then
+            echo "::error::thiếu secret SUPABASE_DB_URL"; exit 1
+          fi
+          # ON_ERROR_STOP: bất kỳ lỗi nào → thoát khác 0 → transaction rollback.
+          psql "$PGURL" --set=ON_ERROR_STOP=1 -q -f /tmp/seed-tuvi.sql
+          echo "đã ghi xong"
+
+      - name: Verify sau khi ghi
+        if: ${{ inputs.dry_run == false }}
+        env:
+          PGURL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          psql "$PGURL" --set=ON_ERROR_STOP=1 -At -c "
+            select kind || ': ' || count(*) || ' mục, data trung bình ' ||
+                   round(avg(length(data::text)))::int || ' ký tự, mới nhất ' ||
+                   max(updated_at)::date
+            from hieu_asia.tuvi_content group by kind order by kind;"
+
+      - name: Ghi chú khi chạy thử
+        if: ${{ inputs.dry_run == true }}
+        run: echo "::notice::Đây là lần chạy THỬ — chưa ghi gì vào DB. Bỏ tick \"dry_run\" rồi chạy lại để ghi thật."

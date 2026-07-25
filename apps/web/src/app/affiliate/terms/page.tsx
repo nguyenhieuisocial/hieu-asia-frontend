@@ -8,6 +8,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
@@ -215,6 +217,14 @@ export default function AffiliateTermsPage() {
           </div>
         </section>
       </main>
+      {/* SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Cộng tác viên', url: '/affiliate' },
+          { name: 'Điều khoản chương trình', url: '/affiliate/terms' },
+        ])}
+      />
       <SiteFooter />
     </div>
   );

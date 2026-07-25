@@ -16,13 +16,18 @@ import {
   buildThangConGiap,
   buildableMonths,
   liveMonths,
+  metaTitle,
   monthSlug,
-  parseMonthSlug,
+  resolveServableMonth,
   spanNote,
   type DayNote,
 } from '@/lib/tu-vi-thang-data';
 
-export const dynamicParams = false;
+// Xem ghi chú dài ở `[ky]/page.tsx`: phải mở `dynamicParams` thì route mới cuốn
+// theo lịch giống `app/sitemap.ts`, nếu không qua mốc đầu tháng là sitemap khai
+// URL chưa dựng → 404. Phạm vi do `resolveServableMonth()` chốt.
+export const dynamicParams = true;
+export const revalidate = 86400;
 
 // PHẢI sinh CẢ HAI segment ở đây. `[ky]/page.tsx` là một route khác (không phải
 // layout) nên Next KHÔNG ghép generateStaticParams của nó xuống route con —
@@ -41,30 +46,38 @@ export async function generateMetadata({
   params: Promise<{ ky: string; congiap: string }>;
 }): Promise<Metadata> {
   const { ky, congiap } = await params;
-  const k = parseMonthSlug(ky);
+  const k = resolveServableMonth(ky);
   if (!k) notFound();
   const d = buildThangConGiap(k, congiap);
   if (!d) notFound();
   const url = `https://hieu.asia/tu-vi-thang/${ky}/${congiap}`;
+  // `d.seoTitle` là bản trần (JSON-LD headline + og:image alt dùng nó); hậu tố
+  // thương hiệu ghép ở đây rồi chốt bằng `absolute` — xem ghi chú ngưỡng SERP
+  // trong `tu-vi-thang-data.ts`.
+  const title = metaTitle(d.seoTitle);
   return {
-    title: d.seoTitle,
+    title: { absolute: title },
     description: d.seoDescription,
     alternates: { canonical: url },
-    // Route-level openGraph THAY THẾ openGraph của root layout — phải khai lại
-    // images, nếu không preview mạng xã hội sẽ trắng.
+    // CỐ Ý KHÔNG khai `images` ở đây. Route-level openGraph thay thế openGraph
+    // của root layout, nên trước đây route phải tự khai lại `/og-image.jpg` kẻo
+    // preview mạng xã hội trắng. Nhưng từ khi cụm có `opengraph-image.tsx`,
+    // khai `images` lại thành có hại: Next CHỈ áp file-convention khi segment
+    // KHÔNG có key `images` → khai vào là chặn mất ảnh generated của cụm, và
+    // 72 trang này chia sẻ ra ảnh chung chung của cả site trong khi hub + 6
+    // trang tháng ra ảnh có thương hiệu. Bỏ `images` để cả cụm dùng chung một
+    // ảnh. (Đã verify: og:image vẫn có, trỏ đúng ảnh generated của cụm.)
     openGraph: {
-      title: d.seoTitle,
+      title,
       description: d.seoDescription,
       url,
       type: 'article',
       locale: 'vi_VN',
-      images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: d.seoTitle }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: d.seoTitle,
+      title,
       description: d.seoDescription,
-      images: [{ url: '/og-image.jpg', alt: d.seoTitle }],
     },
   };
 }
@@ -98,7 +111,7 @@ export default async function TuViThangConGiapPage({
   params: Promise<{ ky: string; congiap: string }>;
 }) {
   const { ky, congiap } = await params;
-  const k = parseMonthSlug(ky);
+  const k = resolveServableMonth(ky);
   if (!k) notFound();
 
   // Mùa vụ: hết tháng → 308 về evergreen (file vẫn giữ, không mất backlink).
@@ -118,7 +131,16 @@ export default async function TuViThangConGiapPage({
       headline: d.seoTitle,
       description: d.seoDescription,
       url: `/tu-vi-thang/${ky}/${congiap}`,
-      image: '/og-image.jpg',
+      // Trỏ đúng tấm ảnh mà `og:image` đang dùng (ảnh generated của cụm,
+      // 1200×630) thay vì logo chung toàn site: hai nguồn nói khác nhau về cùng
+      // một trang thì Google chọn cái nào cũng dở. Đường dẫn KHÔNG kèm mã băm —
+      // đã kiểm trên production: bản không mã băm trả đúng ảnh đó (200,
+      // image/png, 95.854 byte).
+      image: `/tu-vi-thang/${ky}/${congiap}/opengraph-image`,
+      // CỐ Ý KHÔNG khai `datePublished`/`dateModified`. Trang sinh tất định từ
+      // can chi, không có ngày xuất bản thật; lấy ngày build làm ngày đăng là
+      // bịa, mà `revalidate` hằng ngày còn khiến nó nhảy liên tục — tín hiệu
+      // tươi mới giả. Thà thiếu trường còn hơn khai sai.
       type: 'Article',
     }),
     breadcrumb([

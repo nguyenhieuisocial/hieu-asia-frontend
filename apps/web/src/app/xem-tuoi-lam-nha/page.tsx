@@ -9,12 +9,16 @@ import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkBuildYear, BUILD_VERDICT_LABEL } from '@/lib/xem-tuoi-lam-nha';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
-const TITLE = `Xem tuổi làm nhà năm ${TARGET_YEAR} — tính Kim Lâu, Hoang Ốc, Tam Tai`;
-// SEO S7: rút gọn 246 → ~162 ký tự (Google cắt mô tả ~170).
-const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có được tuổi xây/sửa nhà theo năm sinh gia chủ: Kim Lâu, Hoang Ốc, Tam Tai — rõ từng bước tính, kèm các năm được tuổi gần nhất và tục mượn tuổi.`;
+const TITLE = `Xem tuổi làm nhà ${TARGET_YEAR} — Kim Lâu, Hoang Ốc, Tam Tai`;
+// Mốc thật là 160 ký tự, không phải ~170 — bản trước dừng ở 162 nên Google vẫn
+// cắt. Bỏ "rõ từng bước tính" (đã nói ở tiêu đề) → 143, giữ được "tục mượn tuổi".
+const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có được tuổi xây/sửa nhà theo năm sinh gia chủ: Kim Lâu, Hoang Ốc, Tam Tai — kèm các năm được tuổi gần nhất và tục mượn tuổi.`;
 
 export const metadata: Metadata = {
-  title: TITLE,
+  // #942 đã rút TITLE nhưng vẫn còn 62 ký tự sau khi root layout nối
+  // " · hieu.asia" (12) — vì mốc dùng khi đó là ~170 chứ không phải 60/160.
+  // `absolute` chặn hậu tố → 50 ký tự, không phải cắt thêm chữ nào nữa.
+  title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: 'https://hieu.asia/xem-tuoi-lam-nha' },
   openGraph: {

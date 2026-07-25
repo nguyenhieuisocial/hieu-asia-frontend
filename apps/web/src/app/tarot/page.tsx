@@ -4,7 +4,8 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { TarotTool } from '@/components/tools/TarotTool';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { faqPage } from '@/lib/seo/jsonld';
+import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
+import { BASE_URL, ORG_ID, SITE_LOCALE } from '@/lib/seo/constants';
 
 const FAQS = [
   {
@@ -32,6 +33,25 @@ const FAQS = [
     a: 'Không phán định mệnh, không hù dọa, không bán "giải hạn". Bạn rút lá, đọc gợi ý phản tư, và nếu muốn có thể đọc sâu cùng AI dựa trên chính bối cảnh bạn mô tả — AI đặt câu hỏi giúp bạn nghĩ, không phán thay bạn.',
   },
 ];
+
+// SEO-FIX: bộ schema riêng của trang /tarot — trước đây nằm ở layout.tsx nên
+// rớt xuống mọi route con. Không có builder SoftwareApplication trong
+// lib/seo/jsonld nên node này khai tại chỗ, nhưng trỏ `publisher` về @id
+// Organization (node phát site-wide qua siteGraph()) thay vì lặp lại Organization.
+const TOOL_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Rút bài Tarot online',
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  url: `${BASE_URL}/tarot`,
+  inLanguage: SITE_LOCALE,
+  description:
+    'Rút ngẫu nhiên 1 lá Tarot từ bộ 78 lá cho câu hỏi bạn đang phân vân — mỗi lá kèm lời gợi mở để tự suy ngẫm. Miễn phí, không bói toán.',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'VND' },
+  publisher: { '@id': ORG_ID },
+};
 
 export default function TarotPage() {
   return (
@@ -110,7 +130,22 @@ export default function TarotPage() {
         </RevealOnScroll>
       </div>
 
-      <JsonLd data={faqPage(FAQS)} />
+      <JsonLd
+        data={[
+          webPage({
+            url: '/tarot',
+            name: 'Rút bài Tarot — gợi ý phản tư',
+            description:
+              'Rút lá Tarot (78 lá) cho câu hỏi bạn đang phân vân — mỗi lá là một lăng kính để tự suy ngẫm. Miễn phí, không bói toán.',
+          }),
+          TOOL_JSONLD,
+          breadcrumb([
+            { name: 'Trang chủ', url: '/' },
+            { name: 'Tarot', url: '/tarot' },
+          ]),
+          faqPage(FAQS),
+        ]}
+      />
       <StickyMobileCta trackId="tarot" />
     </ToolPageShell>
   );

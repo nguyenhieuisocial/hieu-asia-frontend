@@ -64,10 +64,15 @@ jobs:
         run: pnpm --filter web test:a11y
         env:
           PLAYWRIGHT_BASE_URL: ${{ inputs.base_url || 'https://hieu.asia' }}
-          # Empty string = advisory (dark violations are logged, not fatal).
-          # Change the fallback to '1' to make the dark sweep blocking for
-          # every run once note 171's backlog is at 0.
-          A11Y_DARK_STRICT: ${{ inputs.dark_strict && '1' || '' }}
+          # ✅ 2026-07-25 — ĐÃ BẬT CHỐT CỨNG (làm đúng hướng dẫn ở dòng cũ:
+          # "đổi fallback thành '1' khi nợ note 171 về 0").
+          # Bằng chứng nợ đã cạn: run 30145381734 (quét production đêm 25/07) —
+          # 84 trang · 83 SẠCH · 1 trang còn lỗi là `/brand`, và trang đó đã được
+          # MIỄN có-lý-do-đo-được ngay trong a11y-dark.spec.ts (ô màu thương hiệu
+          # trung tính: không mực nào đạt 4,5:1 ở cỡ chữ nhỏ).
+          # ⇒ Từ nay MỌI hồi quy chế-độ-tối trên 83 trang kia sẽ làm ĐỎ lần chạy
+          # theo lịch, thay vì trôi vào báo cáo không ai đọc.
+          A11Y_DARK_STRICT: '1'
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

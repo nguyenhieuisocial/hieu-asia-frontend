@@ -21,6 +21,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { FloatingTOC } from '@/components/ui/FloatingTOC';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { article } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   // Wave 54 BUG-034: rename "Methodology" → "Phương pháp" for VN consistency
@@ -269,22 +270,21 @@ const STARS_114: StarRow[] = [
 
 const TODAY_ISO = '2026-05-21';
 
+// SEO-FIX: trước đây khai tay và thiếu `image` — trường Google dùng cho rich
+// result của Article/TechArticle. Chuyển sang builder chung article()
+// (lib/seo/jsonld) vốn tự điền image (ảnh OG) và trỏ author/publisher về @id
+// Organization phát site-wide. `mainEntity` giữ nguyên vì builder không có trường
+// này — spread lên trên kết quả builder.
 const ARTICLE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'TechArticle',
-  headline:
-    'Methodology Tử Vi — Trường phái, an sao, đại vận, lưu niên · hieu.asia',
-  description:
-    'Phương pháp Tử Vi Bắc phái dùng tại hieu.asia: cách an Mệnh-Thân-Cục, 14 chính tinh, 10 phụ tinh, đại vận, lưu niên, lằn ranh engine vs AI.',
-  inLanguage: 'vi-VN',
-  datePublished: '2026-05-22',
-  dateModified: TODAY_ISO,
-  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-  publisher: {
-    '@type': 'Organization',
-    name: 'hieu.asia',
-    url: 'https://hieu.asia',
-  },
+  ...article({
+    type: 'TechArticle',
+    headline: 'Methodology Tử Vi — Trường phái, an sao, đại vận, lưu niên · hieu.asia',
+    description:
+      'Phương pháp Tử Vi Bắc phái dùng tại hieu.asia: cách an Mệnh-Thân-Cục, 14 chính tinh, 10 phụ tinh, đại vận, lưu niên, lằn ranh engine vs AI.',
+    url: '/methodology/tu-vi',
+    datePublished: '2026-05-22',
+    dateModified: TODAY_ISO,
+  }),
   mainEntity: {
     '@type': 'Thing',
     name: 'Tử Vi Đẩu Số (Bắc phái)',

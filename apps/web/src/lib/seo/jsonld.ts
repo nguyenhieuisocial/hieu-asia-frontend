@@ -14,6 +14,8 @@ import {
   SITE_LOCALE,
   ORG_DESCRIPTION,
   LOGO_PATH,
+  ORG_LOGO,
+  ORG_LOGO_SIZE,
   SOCIAL_LINKS,
   CONTACT_EMAIL,
   ORG_ID,
@@ -32,7 +34,9 @@ export function organization(): JsonLdNode {
     url: BASE_URL,
     logo: {
       '@type': 'ImageObject',
-      url: abs(LOGO_PATH),
+      url: abs(ORG_LOGO),
+      width: ORG_LOGO_SIZE,
+      height: ORG_LOGO_SIZE,
     },
     description: ORG_DESCRIPTION,
     // Expertise domains — helps AI search engines disambiguate hieu.asia as a

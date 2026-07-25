@@ -14,15 +14,27 @@ import {
   buildMonthTable,
   buildableMonths,
   liveMonths,
+  metaTitle,
+  monthPageDescription,
+  monthPageTitle,
   monthSlug,
-  parseMonthSlug,
+  resolveServableMonth,
   spanNote,
 } from '@/lib/tu-vi-thang-data';
 
-// Tập slug cố định tại build. Gồm cả vài tháng ĐÃ QUA — không phải để hiển thị
-// (chúng 308 ngay ở dòng đầu component), mà để URL từng nằm trong sitemap không
-// rơi vào 404 sau khi hết tháng.
-export const dynamicParams = false;
+// Dựng sẵn tập slug tại build (gồm cả vài tháng ĐÃ QUA — chúng 308 ngay ở dòng
+// đầu component, giữ lại để URL từng nằm trong sitemap không rơi vào 404).
+//
+// `dynamicParams = true` là BẮT BUỘC, không phải tuỳ chọn: `app/sitemap.ts` tính
+// `liveMonths()` lúc CHẠY nên nó cuốn theo lịch, còn tập dựng sẵn thì đứng yên
+// từ lúc build — để `false` thì qua mốc đầu tháng sitemap sẽ khai URL chưa dựng
+// và trả 404. Phạm vi được `resolveServableMonth()` chốt lại (xem ghi chú của
+// hàm đó trong lib), nên mở ra KHÔNG làm nở không gian URL.
+export const dynamicParams = true;
+
+// Để lệnh 308 của tháng đã hết được tính lại thay vì nướng cứng vào HTML lúc
+// build. Cụm chia theo THÁNG nên trễ tối đa 1 ngày là thừa đủ.
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return buildableMonths().map((k) => ({ ky: monthSlug(k) }));
@@ -34,14 +46,17 @@ export async function generateMetadata({
   params: Promise<{ ky: string }>;
 }): Promise<Metadata> {
   const { ky } = await params;
-  const k = parseMonthSlug(ky);
+  const k = resolveServableMonth(ky);
   if (!k) notFound();
   const m = buildMonthOverview(k);
-  const title = `Tử vi tháng ${k.month}/${k.year} cho 12 con giáp (tháng ${m.main.label})`;
-  const description = `Tháng ${k.month}/${k.year} mang trụ tháng ${m.main.label} — can ${m.main.can} hành ${m.main.canElement}, chi ${m.main.chi} hành ${m.main.chiElement}. Bảng đối chiếu 12 con giáp với chi tháng và số ngày hợp/xung trong tháng.`;
+  // Mẫu chuỗi nằm trong lib để test khoá được ngưỡng SERP — xem ghi chú ở
+  // `tu-vi-thang-data.ts`. `absolute` để hậu tố thương hiệu không bị root layout
+  // cộng thêm lần nữa (và để og:title trùng khít <title>).
+  const title = metaTitle(monthPageTitle(m));
+  const description = monthPageDescription(m);
   const url = `https://hieu.asia/tu-vi-thang/${m.slug}`;
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url, type: 'article', locale: 'vi_VN' },
@@ -55,7 +70,7 @@ export default async function TuViThangMonthPage({
   params: Promise<{ ky: string }>;
 }) {
   const { ky } = await params;
-  const k = parseMonthSlug(ky);
+  const k = resolveServableMonth(ky);
   if (!k) notFound();
 
   // Mùa vụ: hết tháng → 308 về evergreen, file vẫn giữ để không mất backlink.

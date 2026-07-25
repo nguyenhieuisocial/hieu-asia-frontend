@@ -5,10 +5,24 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@hieu-asia/ui'
 import { ChevronRight, ArrowRight } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { PALACES_CONTENT, findPalaceContent, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
+import {
+  PALACES_CONTENT,
+  ALL_STARS_CONTENT,
+  palaceMetaDescription,
+} from '@/lib/tuvi-content';
+import { getPalace } from '@/lib/tuvi-content-source';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { clampDescription } from '@/lib/seo/description';
+
+/** CMS Tử Vi bước 3: nội dung đọc từ DB (dự phòng = bản trong code), làm mới sau
+ *  5 phút → founder sửa trong admin `/tuvi-content` là web đổi, không cần deploy.
+ *  Next đòi giá trị HẰNG nên không dùng được biến import; giữ khớp với
+ *  TUVI_REVALIDATE_SECONDS trong lib/tuvi-content-source.ts. */
+export const revalidate = 300;
 
 export function generateStaticParams() {
+  // CỐ Ý lấy từ CODE, không từ DB: danh sách route phải đầy đủ + ổn định lúc
+  // dựng, kể cả khi API sập.
   return PALACES_CONTENT.map((p) => ({ palace: p.slug }));
 }
 
@@ -16,15 +30,19 @@ export async function generateMetadata(
   { params }: { params: Promise<{ palace: string }> },
 ): Promise<Metadata> {
   const { palace } = await params;
-  const data = findPalaceContent(palace);
+  const data = await getPalace(palace);
   if (!data) return {};
   return {
     title: `Cung ${data.name} trong Tử Vi Đẩu Số`,
-    description: `${data.overview.slice(0, 155)}`,
+    // Mẫu nằm trong lib để test canh được ngưỡng — xem ghi chú ở tuvi-content.ts.
+    description: clampDescription(palaceMetaDescription(data), 160),
     alternates: { canonical: `https://hieu.asia/tu-vi/${data.slug}` },
     openGraph: {
       title: `Cung ${data.name}`,
-      description: data.overview.slice(0, 200),
+      // `.slice()` cắt cứng giữa chữ — đúng lỗi mà clampDescription sinh ra để
+      // dẹp (#936), còn sót ở đây. og:description không bị Google giới hạn 160
+      // nên vẫn giữ đoạn overview dài hơn, chỉ cắt cho gọn ở ranh giới từ.
+      description: clampDescription(data.overview, 200),
       url: `https://hieu.asia/tu-vi/${data.slug}`,
       type: 'article',
       images: OG_DEFAULT_IMAGES,
@@ -38,7 +56,7 @@ export default async function PalacePage({
   params: Promise<{ palace: string }>;
 }) {
   const { palace } = await params;
-  const data = findPalaceContent(palace);
+  const data = await getPalace(palace);
   if (!data) notFound();
 
   const breadcrumbJsonLd = {

@@ -12,12 +12,15 @@ import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkWeddingYear, VERDICT_LABEL } from '@/lib/xem-tuoi-cuoi';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
-const TITLE = `Xem tuổi cưới năm ${TARGET_YEAR} — tính Kim Lâu, Tam Tai theo năm sinh`;
+const TITLE = `Xem tuổi cưới ${TARGET_YEAR} — Kim Lâu, Tam Tai theo năm sinh`;
 // SEO S7: rút gọn 221 → ~154 ký tự (Google cắt mô tả ~170).
 const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có thuận để cưới theo năm sinh cô dâu, chú rể: Kim Lâu, Tam Tai, chi năm xung tuổi — rõ từng bước tính, kèm các năm không phạm gần nhất.`;
 
 export const metadata: Metadata = {
-  title: TITLE,
+  // #942 đã rút TITLE nhưng vẫn còn 63 ký tự sau khi root layout nối
+  // " · hieu.asia" (12) — vì mốc dùng khi đó là ~170 chứ không phải 60/160.
+  // `absolute` chặn hậu tố → 51 ký tự, không phải cắt thêm chữ nào nữa.
+  title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: 'https://hieu.asia/xem-tuoi-cuoi' },
   openGraph: {

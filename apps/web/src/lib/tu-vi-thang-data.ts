@@ -34,6 +34,7 @@ import {
   type NguHanh,
 } from './hop-tuoi-pairs';
 import { canChiOfYear, TAM_TAI_YEARS, ANIMAL_BY_CHI, type Chi } from './xem-tuoi-cuoi';
+import { clampDescription } from './seo/description';
 
 // ── Cửa sổ tháng được xuất bản ──────────────────────────────────────
 // Cụm này SINH DẦN THEO LỊCH. Hai quy tắc:
@@ -75,8 +76,13 @@ export function parseMonthSlug(slug: string): MonthKey | null {
   const month = Number(m[1]);
   const year = Number(m[2]);
   if (month < 1 || month > 12) return null;
-  // Chặn không gian URL vô hạn (dynamicParams tắt nhưng vẫn phòng khi mở lại).
-  if (year < 2020 || year > 2035) return null;
+  // Chặn vệ sinh cho không gian URL. Phạm vi PHỤC VỤ nay do
+  // `resolveServableMonth()` chốt (cửa sổ tháng đang chạy), nên khoảng này phải
+  // đặt RỘNG hơn cửa sổ đó rất nhiều để không bao giờ thành vách đá.
+  // Bản cũ chặn ở 2035: từ 7/2035 cửa sổ tháng sinh ra "1-2036" mà chính hàm
+  // này từ chối ⇒ sitemap lại khai URL không phục vụ được — đúng lỗi vừa sửa,
+  // chỉ là chậm 9 năm.
+  if (year < 2020 || year > 2100) return null;
   return { year, month };
 }
 
@@ -114,6 +120,31 @@ export function liveMonths(now: Date = new Date(), count = WINDOW_MONTHS): Month
 export function pastMonths(now: Date = new Date(), count = GRACE_MONTHS): MonthKey[] {
   const base = monthOf(now);
   return Array.from({ length: count }, (_, i) => shiftMonth(base, -(i + 1)));
+}
+
+/**
+ * Slug → tháng, CHỈ khi slug đó thật sự được phục vụ tại `now`.
+ *
+ * VÌ SAO PHẢI CÓ HÀM NÀY — lỗi thật, hạn lộ 01/08/2026
+ * `app/sitemap.ts` tính `liveMonths()` lúc CHẠY (nó là ISR 1 giờ) nên danh sách
+ * URL tự cuốn theo lịch; trong khi `generateStaticParams()` chốt tập slug tại
+ * lúc BUILD. Qua mốc đầu tháng mà chưa deploy lại thì sitemap khai URL chưa hề
+ * được dựng ⇒ **404**. Mô phỏng: 01/08 thừa 13 URL, 01/09 thừa 26, 01/10 thừa
+ * 39. Chiều ngược lại cũng hỏng: tháng đã hết vẫn trả 200 vì lệnh 308 bị nướng
+ * vào HTML từ lúc build.
+ *
+ * Cách chữa: cho route bám lịch giống sitemap (`dynamicParams = true` +
+ * `revalidate`). Nhưng mở ra thì PHẢI có đúng hàm này chốt lại phạm vi — không
+ * thì mọi tháng 2020–2035 đều render được (~2.500 URL). Đây chính là cái mà
+ * ghi chú trong `parseMonthSlug` đã lường trước ("phòng khi mở lại").
+ *
+ * Chốt luôn URL trùng nội dung: `parseMonthSlug` nhận cả "08-2026", nhưng chỉ
+ * dạng chuẩn "8-2026" mới được phục vụ.
+ */
+export function resolveServableMonth(slug: string, now: Date = new Date()): MonthKey | null {
+  const k = parseMonthSlug(slug);
+  if (!k || monthSlug(k) !== slug) return null;
+  return buildableMonths(now).some((x) => monthSlug(x) === slug) ? k : null;
 }
 
 /** Tất cả tháng cần dựng route (đang sống + chặng 308 đã hết). */
@@ -174,6 +205,8 @@ interface RelationCopy {
   label: string;
   /** Cụm ngắn để ghép vào câu chốt, vd "Tam Hợp". */
   short: string;
+  /** Cụm ghép sau "chi tuổi …" trong meta description — phải đọc trôi và ngắn. */
+  metaRel: string;
   line: (tuoi: string, chiThang: string, thangLabel: string) => string;
 }
 
@@ -181,36 +214,42 @@ const MONTH_RELATION: Record<RelationKind, RelationCopy> = {
   'tam-hop': {
     label: 'Tam Hợp với tháng',
     short: 'Tam Hợp',
+    metaRel: 'Tam Hợp với chi tháng',
     line: (t, c, m) =>
       `Chi tháng ${c} cùng nhóm Tam Hợp với chi tuổi ${t}. Theo Can Chi, đây là tín hiệu tham khảo thuận cho ${m}: nhịp của tháng dễ ăn khớp với bạn, hợp để chốt những việc đã chuẩn bị sẵn và rủ người cùng làm, hơn là khởi sự một thứ hoàn toàn mới.`,
   },
   'luc-hop': {
     label: 'Lục Hợp với tháng',
     short: 'Lục Hợp',
+    metaRel: 'Lục Hợp với chi tháng',
     line: (t, c, m) =>
       `Chi tháng ${c} và chi tuổi ${t} tạo thành một cặp Lục Hợp. Gợi ý cho ${m}: những việc cần người khác gật đầu — xin ý kiến, thương lượng, nối lại một liên lạc đang dở — thường trôi hơn bình thường, miễn là bạn chịu mở lời trước.`,
   },
   'luc-xung': {
     label: 'Lục Xung với tháng',
     short: 'Lục Xung',
+    metaRel: 'Lục Xung với chi tháng',
     line: (t, c, m) =>
       `Chi tháng ${c} lục xung với chi tuổi ${t}. Nói cho đúng: đây không phải "tháng xấu". Nó là lời nhắc rằng trong ${m} bạn dễ gặp việc đổi hướng gấp và va chạm quan điểm hơn thường lệ. Cách xử lý thực tế là để dư thời gian cho mỗi việc và tránh chốt chuyện lớn lúc đang mệt.`,
   },
   'luc-hai': {
     label: 'Lục Hại với tháng',
     short: 'Lục Hại',
+    metaRel: 'Lục Hại với chi tháng',
     line: (t, c, m) =>
       `Chi tháng ${c} và chi tuổi ${t} ở thế Lục Hại. Kiểu vướng của thế này thường là chuyện vặt: hiểu nhầm, sai hẹn, giấy tờ thiếu một mục. Trong ${m}, viết rõ ra thay vì nói miệng và xác nhận lại trước khi làm sẽ tiết kiệm cho bạn khá nhiều thời gian.`,
   },
   'dong-tuoi': {
     label: 'Tháng trùng chi tuổi',
     short: 'trùng chi tuổi',
+    metaRel: 'trùng chi tháng',
     line: (t, c, m) =>
       `${m.charAt(0).toUpperCase()}${m.slice(1)} mang đúng địa chi ${c} của tuổi ${t} — dân gian gọi là tháng trùng chi bản mệnh. Đây không phải hạn. Nó chỉ gợi ý rằng việc của bạn trong tháng dễ nổi lên và dễ được để ý hơn, nên làm gì cũng nên chắc tay và nói trước cho rõ.`,
   },
   'binh-hoa': {
     label: 'Bình hoà với tháng',
     short: 'bình hoà',
+    metaRel: 'bình hoà với chi tháng',
     line: (t, c, m) =>
       `Chi tháng ${c} không hợp cũng không xung với chi tuổi ${t}. Theo Can Chi, ${m} là một tháng "bình" với bạn: không có lực đẩy cũng không có lực cản rõ rệt đến từ tuổi. Nói cách khác, tháng này ra sao gần như hoàn toàn nằm ở việc bạn chọn làm gì.`,
   },
@@ -319,6 +358,60 @@ export function spanNote(o: MonthOverview): string {
       `${fmtDate(o.key.year, o.key.month, s.fromDay)}–${fmtDate(o.key.year, o.key.month, s.toDay)} thuộc tiết tháng ${s.pillar.label}`,
   );
   return `Trụ tháng theo Bát Tự đổi tại tiết khí chứ không đổi vào ngày 1 dương lịch, nên ${o.label} bị cắt làm hai đoạn: ${parts.join('; ')}. Trang này lấy ${o.main.label} làm trụ đại diện vì nó chiếm ${o.mainDays}/${o.daysCount} ngày.`;
+}
+
+// ── Chuỗi SEO của cụm ───────────────────────────────────────────────
+// Cả 3 route (hub, tháng, tháng×con giáp) lấy tiêu đề/mô tả từ đây, KHÔNG tự
+// ghép chuỗi trong `generateMetadata`. Lý do: hai ngưỡng SERP (tiêu đề ≤60, mô
+// tả ≤160) chỉ khoá được bằng test khi mọi mẫu nằm chung một chỗ test với tới.
+// Trang tháng từng là mẫu chật nhất cụm (dư đúng 1 ký tự ở tháng 10/2027) mà
+// không test nào chạm tới vì nó nằm inline trong route.
+//
+// Quy ước: mọi hàm ở đây trả về tiêu đề **trần** (không hậu tố thương hiệu);
+// route ghép hậu tố bằng `metaTitle()` rồi đặt vào `title: { absolute }`. Bản
+// trần dành cho JSON-LD `headline`/`name` — chỗ không nên mang tên thương hiệu.
+//
+// ⚠️ Ghi chú cũ ở đây còn nói bản trần dùng cho `og:image` alt — SAI, đã sửa.
+// Cả cụm dùng CHUNG một ảnh chia sẻ (2 route con `re-export` ảnh của hub), nên
+// alt là chuỗi cố định của hub và có kèm tên thương hiệu — đúng, vì nó mô tả
+// đúng tấm ảnh đó. Ảnh riêng cho từng trang đã bị loại có chủ đích: 1.440 ảnh
+// sinh lúc build, trong khi CPU build là phần đắt nhất hoá đơn Vercel.
+
+/**
+ * Hậu tố thương hiệu cho `<title>`.
+ *
+ * Root layout đặt `title.template = '%s · hieu.asia'`, nhưng Next KHÔNG áp
+ * template đó lên `openGraph.title` → dùng template thì `<title>` dài thêm 12
+ * ký tự còn `og:title` thì không, hai thẻ lệch nhau. Nên cụm này tự ghép hậu tố
+ * rồi chốt bằng `absolute`, và dùng đúng một chuỗi cho cả `og:`/`twitter:`.
+ */
+const BRAND_SUFFIX = ' | hieu.asia';
+
+/** Ghép hậu tố thương hiệu vào tiêu đề trần. */
+export function metaTitle(bare: string): string {
+  return `${bare}${BRAND_SUFFIX}`;
+}
+
+/** Ngưỡng Google cắt ở SERP — test dùng đúng hai số này. */
+export const TITLE_MAX = 60;
+export const DESCRIPTION_MAX = 160;
+
+export const HUB_TITLE = 'Tử vi tháng theo con giáp — tra can chi';
+
+export const HUB_DESCRIPTION =
+  'Tử vi tháng cho 12 con giáp: trụ tháng theo tiết khí, quan hệ hợp xung với chi tuổi, ngày hợp và ngày xung trong tháng. Tính từ can chi để tham khảo.';
+
+/** Tiêu đề trần của trang một tháng. */
+export function monthPageTitle(o: MonthOverview): string {
+  return `Tử vi tháng ${o.key.month}/${o.key.year} cho 12 con giáp (${o.main.label})`;
+}
+
+/** Mô tả trang một tháng — clamp là chốt chặn, độ dài phụ thuộc tên trụ tháng. */
+export function monthPageDescription(o: MonthOverview): string {
+  return clampDescription(
+    `Tháng ${o.key.month}/${o.key.year} mang trụ tháng ${o.main.label} — can ${o.main.can} hành ${o.main.canElement}, chi ${o.main.chi} hành ${o.main.chiElement}. Bảng đối chiếu 12 con giáp với chi tháng và số ngày hợp/xung trong tháng.`,
+    DESCRIPTION_MAX,
+  );
 }
 
 // ── Bảng ngày trong tháng theo chi tuổi ─────────────────────────────
@@ -432,8 +525,17 @@ export function buildThangConGiap(k: MonthKey, slug: string): ThangConGiap | nul
 
   const verdictShort = `${month.label.charAt(0).toUpperCase()}${month.label.slice(1)} mang trụ tháng ${month.main.label} (nạp âm ${month.main.napAm.name}). Với tuổi ${z.ten}, chi tháng ${month.main.chi} ở thế ${relCopy.short}; trong tháng có ${thuanCount} ngày hợp chi tuổi và ${days.lucXung.length} ngày xung chi tuổi. Đây là tra cứu theo phong tục Can Chi để tham khảo, không phải lời phán.`;
 
-  const seoTitle = `Tử vi tháng ${k.month}/${k.year} tuổi ${z.ten}: hợp xung, ngày đáng chú ý`;
-  const seoDescription = `Tử vi ${month.label} cho tuổi ${z.ten} (con ${ANIMAL_BY_CHI[z.ten as Chi]}): trụ tháng ${month.main.label}, ${relCopy.label.toLowerCase()}, kèm danh sách ${thuanCount} ngày hợp và ${days.lucXung.length} ngày xung chi tuổi. Tính từ can chi, tham khảo chứ không phán số mệnh.`;
+  // Tiêu đề "trần" (không hậu tố thương hiệu) — route ghép ` | hieu.asia` khi
+  // dựng metadata, còn JSON-LD headline dùng đúng bản trần này.
+  const seoTitle = `Tử vi tháng ${k.month}/${k.year} tuổi ${z.ten}: ngày hợp xung`;
+  // Mô tả: từ khoá ("tử vi tháng M/YYYY tuổi X") dồn lên đầu, phần dữ kiện theo
+  // sau. `clampDescription` chỉ là chốt chặn — độ dài phụ thuộc tên trụ tháng và
+  // số ngày hợp/xung, mà cụm sinh trang cuốn chiếu nên tổ hợp tương lai chưa đo
+  // hết được. (Sweep 2026–2035: dài nhất 152, clamp chưa phải cắt lần nào.)
+  const seoDescription = clampDescription(
+    `Tử vi ${month.label} tuổi ${z.ten} (con ${ANIMAL_BY_CHI[z.ten as Chi]}): trụ tháng ${month.main.label}, chi tuổi ${relCopy.metaRel}, ${thuanCount} ngày hợp và ${days.lucXung.length} ngày xung. Tính từ can chi để tham khảo.`,
+    DESCRIPTION_MAX,
+  );
 
   const faqs: { q: string; a: string }[] = [
     {

@@ -15,9 +15,11 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
+import { Button, Card, CardContent, Input, Label } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 import { getSupabaseAuth } from '@/lib/auth-client';
 
 type PayoutMethod = 'bank' | 'momo' | 'zalo';
@@ -37,6 +39,15 @@ interface SignupError {
   ok: false;
   error: string;
 }
+
+// SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. Trang có
+// 2 nhánh render (chưa đăng nhập / đã đăng nhập) nên khai một lần ở đây và dùng
+// cho cả hai — crawler thấy nhánh chưa đăng nhập.
+const BREADCRUMB_JSONLD = breadcrumb([
+  { name: 'Trang chủ', url: '/' },
+  { name: 'Cộng tác viên', url: '/affiliate' },
+  { name: 'Đăng ký', url: '/affiliate/signup' },
+]);
 
 export default function AffiliateSignupPage() {
   const [authState, setAuthState] = React.useState<AuthState>('loading');
@@ -167,12 +178,12 @@ export default function AffiliateSignupPage() {
             className="pointer-events-none absolute -top-20 right-[-10%] h-[360px] w-[360px] rounded-full bg-gold/15 blur-3xl"
           />
           <div className="relative mx-auto max-w-xl px-4">
-          <Card className="border-gold/30">
-            <CardHeader>
-              <div className="mb-2 text-3xl">🎉</div>
-              <CardTitle className="text-2xl">Bạn đã là affiliate hieu.asia!</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
+          <div className="mb-2 text-3xl">🎉</div>
+          <h1 className="font-heading text-2xl font-semibold leading-none tracking-tight">
+            Bạn đã là affiliate hieu.asia!
+          </h1>
+          <Card className="mt-4 border-gold/30">
+            <CardContent className="space-y-6 pt-6">
               <div>
                 <Label className="text-xs uppercase text-muted-foreground">Mã affiliate của bạn</Label>
                 <div className="mt-1 rounded border border-gold/30 bg-gold/10 p-3 text-center font-mono text-2xl font-bold text-gold-700">
@@ -219,6 +230,7 @@ export default function AffiliateSignupPage() {
           </Card>
           </div>
         </main>
+        <JsonLd data={BREADCRUMB_JSONLD} />
         <SiteFooter />
       </div>
     );
@@ -240,14 +252,14 @@ export default function AffiliateSignupPage() {
           <span className="mx-1.5">/</span>
           <span className="text-muted-foreground">Đăng ký</span>
         </nav>
+        <h1 className="mt-4 font-heading text-2xl font-semibold leading-none tracking-tight">
+          Đăng ký affiliate
+        </h1>
+        <p className="mt-1.5 text-sm text-muted-foreground">
+          Hoa hồng 30% đơn đầu / 10% mỗi lần gia hạn · Cookie 30 ngày
+        </p>
         <Card className="mt-4 border-border">
-          <CardHeader>
-            <CardTitle className="text-2xl">Đăng ký affiliate</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Hoa hồng 30% đơn đầu / 10% mỗi lần gia hạn · Cookie 30 ngày
-            </p>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             {authState === 'loading' && (
               <p className="py-8 text-center text-sm text-muted-foreground">Đang kiểm tra đăng nhập…</p>
             )}
@@ -381,6 +393,7 @@ export default function AffiliateSignupPage() {
         </Card>
         </div>
       </main>
+      <JsonLd data={BREADCRUMB_JSONLD} />
       <SiteFooter />
     </div>
   );

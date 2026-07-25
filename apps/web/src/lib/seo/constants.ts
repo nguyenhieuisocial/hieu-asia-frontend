@@ -34,11 +34,18 @@ export const OG_DEFAULT_IMAGES = [
 ];
 
 /**
- * Logo for Organization.logo (ImageObject). TODO(product): replace with a
- * dedicated square logo asset (>=112x112) once available; using the existing
- * OG image keeps the schema valid in the meantime.
+ * Image fallback for Article/Product schema `image` — the 1200×630 OG banner
+ * (correct aspect for article/product rich results, NOT for a logo).
  */
 export const LOGO_PATH = OG_DEFAULT;
+
+/**
+ * Square brand logo for Organization.logo (ImageObject). schema.org expects a
+ * square/near-square logo, not the 1200×630 OG banner — use the 512×512 PWA icon
+ * (already shipped in /public, referenced by the manifest).
+ */
+export const ORG_LOGO = '/icon-512.png';
+export const ORG_LOGO_SIZE = 512;
 
 /**
  * Official profiles for Organization.sameAs (Knowledge Panel / entity signal).

@@ -5,6 +5,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { FaqSection } from '@/components/seo/FaqSection';
 import { breadcrumb, webPage, faqPage, type FaqItem } from '@/lib/seo/jsonld';
+import { clampDescription } from '@/lib/seo/description';
 import { QUE_PAGES, TRIGRAMS, getQue } from '@/lib/que-kinh-dich';
 import { getThoanTu, THOAN_TU_SOURCE } from '@/lib/que-thoan-tu';
 import { HAO_TU, HAO_TU_SOURCE } from '@/lib/que-hao-tu';
@@ -28,8 +29,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Short format fits ~45 chars for all 64 quẻ names.
   const shortTitle = `Quẻ ${q.nameVi} (số ${q.id}) — Kinh Dịch | hieu.asia`;
   const ogTitle = `Quẻ ${q.nameVi} (quẻ số ${q.id}) — ý nghĩa & lời khuyên`;
-  // SEO-FIX: limit keyTags to 3 to keep description ≤ 155 chars.
-  const description = `Quẻ ${q.nameVi} (${q.id}/64 Kinh Dịch) — ${q.keyTags.slice(0, 3).join(', ')}. Gợi ý ứng xử, tình cảm – công việc và câu hỏi tự soi.`;
+  // SEO-FIX: giới hạn 3 keyTags giữ description trong ~157 ký tự — sát mức Google
+  // cắt (160), nên clamp luôn ở biên từ để dữ liệu quẻ đổi sau này không sinh
+  // snippet đứt giữa chữ. Với 64 quẻ hiện tại, clamp không cắt gì.
+  const description = clampDescription(
+    `Quẻ ${q.nameVi} (${q.id}/64 Kinh Dịch) — ${q.keyTags.slice(0, 3).join(', ')}. Gợi ý ứng xử, tình cảm – công việc và câu hỏi tự soi.`,
+  );
   const url = `https://hieu.asia/gieo-que/y-nghia/${q.slug}`;
   return {
     title: { absolute: shortTitle },

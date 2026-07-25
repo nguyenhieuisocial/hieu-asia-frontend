@@ -12,6 +12,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { article } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Algorithm changelog',
@@ -154,22 +155,18 @@ const BREADCRUMB_JSONLD = {
   ],
 };
 
-const ARTICLE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'TechArticle',
+// SEO-FIX: trước đây khai tay và thiếu `image` — trường Google dùng cho rich
+// result của Article/TechArticle. Chuyển sang builder chung article()
+// (lib/seo/jsonld) vốn tự điền image (ảnh OG) và trỏ author/publisher về @id
+// Organization phát site-wide, thay vì lặp lại node Organization hai lần.
+const ARTICLE_JSONLD = article({
+  type: 'TechArticle',
   headline: 'Algorithm changelog · hieu.asia',
-  description:
-    'Lịch sử các thay đổi tới engine an sao, lịch âm và luận giải tại hieu.asia.',
-  inLanguage: 'vi-VN',
+  description: 'Lịch sử các thay đổi tới engine an sao, lịch âm và luận giải tại hieu.asia.',
+  url: '/methodology/algorithm-changelog',
   datePublished: '2026-01-15',
   dateModified: TODAY_ISO,
-  author: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-  publisher: {
-    '@type': 'Organization',
-    name: 'hieu.asia',
-    url: 'https://hieu.asia',
-  },
-};
+});
 
 const TYPE_STYLE: Record<
   'fix' | 'feat' | 'note',

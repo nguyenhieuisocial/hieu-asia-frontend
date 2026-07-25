@@ -7,9 +7,12 @@ import { breadcrumb, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { yearProfile } from '@/lib/sinh-con';
 import { ELEMENTS } from '@/lib/dat-ten-ngu-hanh';
 
-const TITLE = 'Lục Thập Hoa Giáp: bảng 60 Can Chi, nạp âm, ngũ hành';
+// SEO-FIX: 52 ký tự + hậu tố ' · hieu.asia' = 64 → bị Google cắt. Bỏ chữ "bảng"
+// (giữ đủ 3 từ khoá Can Chi / nạp âm / ngũ hành) → 59.
+const TITLE = 'Lục Thập Hoa Giáp: 60 Can Chi, nạp âm, ngũ hành';
+// SEO-FIX: DESCRIPTION 176 → 160 ký tự (bỏ "Tra cứu minh bạch").
 const DESCRIPTION =
-  'Bảng tra Lục Thập Hoa Giáp đầy đủ: 60 năm Can Chi (Giáp Tý → Quý Hợi), tên nạp âm và ngũ hành bản mệnh của từng năm. Tra cứu minh bạch, tính theo lịch can chi — không bói toán.';
+  'Bảng tra Lục Thập Hoa Giáp đầy đủ: 60 năm Can Chi (Giáp Tý → Quý Hợi), tên nạp âm và ngũ hành bản mệnh từng năm — tính theo lịch can chi, không bói toán.';
 const URL = 'https://hieu.asia/luc-thap-hoa-giap';
 
 export const metadata: Metadata = {

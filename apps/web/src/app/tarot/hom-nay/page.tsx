@@ -4,7 +4,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { faqPage } from '@/lib/seo/jsonld';
+import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { cardOfTheDay, cardDetailSlug } from '@/lib/tools/tarot';
 
@@ -143,7 +143,22 @@ export default function TarotTodayPage() {
         </section>
         </RevealOnScroll>
       </div>
-      <JsonLd data={faqPage(FAQS)} />
+      <JsonLd
+        data={[
+          webPage({
+            url: '/tarot/hom-nay',
+            name: 'Lá Tarot hôm nay — gợi ý phản tư mỗi ngày',
+            description:
+              'Mỗi ngày một lá Tarot, chung cho mọi người — một lá để dừng lại và ngẫm, không phải lời tiên đoán. Miễn phí, không bói toán.',
+          }),
+          breadcrumb([
+            { name: 'Trang chủ', url: '/' },
+            { name: 'Tarot', url: '/tarot' },
+            { name: 'Hôm nay', url: '/tarot/hom-nay' },
+          ]),
+          faqPage(FAQS),
+        ]}
+      />
       <StickyMobileCta trackId="tarot-hom-nay" />
     </ToolPageShell>
   );
