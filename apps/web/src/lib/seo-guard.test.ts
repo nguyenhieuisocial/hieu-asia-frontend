@@ -6,9 +6,12 @@
 // kiểm "chỉ đo độ dài" báo xanh trong khi 133 trang đang cụt trên SERP.
 //
 // Test khoá cả hai chiều: BẮT đúng cái xấu, và KHÔNG bắt nhầm cái tốt.
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 import {
   checkPage,
+  checkJsonLd,
+  parseJsonLd,
   applyAllowlist,
   matchesPattern,
   extractMeta,
@@ -140,5 +143,89 @@ describe('ALLOWLIST', () => {
       expect(entry.owner, `${url} thiếu owner`).toBeTruthy();
       expect(entry.note, `${url} thiếu note`).toBeTruthy();
     }
+  });
+
+  it('không có key trùng — JS lặng lẽ đè, mất luật mà không báo gì', () => {
+    // Đã suýt dính đúng lỗi này khi viết ALLOWLIST: khai '/dashboard' hai lần
+    // thì khai sau đè khai trước, một nửa số luật biến mất mà không có cảnh báo.
+    // Object đã parse thì không phát hiện được nữa → phải soi mã nguồn.
+    const src = readFileSync(
+      new URL('../../scripts/seo-guard.mjs', import.meta.url),
+      'utf8',
+    );
+    const body = src.slice(src.indexOf('export const ALLOWLIST'));
+    const keys = [...body.matchAll(/^\s{2}'([^']+)':/gm)].map((m) => m[1]);
+    const dupes = keys.filter((k, i) => keys.indexOf(k) !== i);
+    expect(dupes, `key khai trùng: ${dupes.join(', ')}`).toEqual([]);
+    expect(keys.length).toBeGreaterThan(5); // chốt: regex phải thật sự bắt được key
+  });
+});
+
+describe('JSON-LD — dữ liệu có cấu trúc', () => {
+  const ld = (obj: unknown) =>
+    `<script type="application/ld+json">${JSON.stringify(obj)}</script>`;
+  const crumb = {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'A', item: 'https://x/a' },
+      { '@type': 'ListItem', position: 2, name: 'B', item: 'https://x/b' },
+    ],
+  };
+  const faq = {
+    '@type': 'FAQPage',
+    mainEntity: [{ '@type': 'Question', name: 'Q?', acceptedAnswer: { text: 'A' } }],
+  };
+
+  it('trang lành lặn thì im lặng', () => {
+    expect(checkJsonLd(parseJsonLd(ld(crumb) + ld(faq)))).toEqual([]);
+  });
+
+  it('bắt khối JSON hỏng cú pháp', () => {
+    const html = '<script type="application/ld+json">{ hỏng }</script>';
+    expect(checkJsonLd(parseJsonLd(html)).map((v: { rule: string }) => v.rule)).toContain(
+      'jsonld-invalid',
+    );
+  });
+
+  it('bắt khai TRÙNG loại — đúng lỗi #936 phải sửa ở trang chủ', () => {
+    const v = checkJsonLd(parseJsonLd(ld(crumb) + ld(crumb)));
+    expect(v.map((x: { rule: string }) => x.rule)).toContain('jsonld-duplicate-type');
+  });
+
+  it('bắt FAQ rỗng và FAQ thiếu câu trả lời', () => {
+    expect(
+      checkJsonLd(parseJsonLd(ld({ '@type': 'FAQPage', mainEntity: [] }))).map(
+        (x: { rule: string }) => x.rule,
+      ),
+    ).toContain('jsonld-faq-broken');
+    expect(
+      checkJsonLd(
+        parseJsonLd(ld({ '@type': 'FAQPage', mainEntity: [{ name: 'Q?' }] })),
+      ).map((x: { rule: string }) => x.rule),
+    ).toContain('jsonld-faq-broken');
+  });
+
+  it('bắt breadcrumb sai thứ tự position', () => {
+    const broken = {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { position: 1, name: 'A', item: 'x' },
+        { position: 3, name: 'B', item: 'y' },
+      ],
+    };
+    expect(checkJsonLd(parseJsonLd(ld(broken))).map((x: { rule: string }) => x.rule)).toContain(
+      'jsonld-breadcrumb-broken',
+    );
+  });
+
+  it('bắt trang không có khối JSON-LD nào', () => {
+    expect(checkJsonLd(parseJsonLd('<html></html>')).map((x: { rule: string }) => x.rule)).toEqual([
+      'jsonld-missing',
+    ]);
+  });
+
+  it('đọc được cả dạng @graph và mảng', () => {
+    expect(parseJsonLd(ld({ '@graph': [crumb, faq] })).nodes).toHaveLength(2);
+    expect(parseJsonLd(ld([crumb, faq])).nodes).toHaveLength(2);
   });
 });

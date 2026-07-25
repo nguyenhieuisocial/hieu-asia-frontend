@@ -131,6 +131,112 @@ export function applyAllowlist(violations, allowlist) {
   return { blocking, allowed, stale };
 }
 
+// ── Dữ liệu có cấu trúc (JSON-LD) ───────────────────────────────────
+// Đây là thứ quyết định Google có hiện FAQ / đường dẫn phân cấp ngay trong kết
+// quả tìm kiếm hay không — tức chiếm chỗ trên SERP, ảnh hưởng thẳng tới tỉ lệ
+// bấm vào. Sai một chỗ là mất sạch mà KHÔNG có cảnh báo nào.
+//
+// Lỗi loại này đã từng xảy ra ở repo: #936 phải gộp Organization + WebSite bị
+// khai trùng ở trang chủ (Google thấy hai Organization mâu thuẫn nhau).
+//
+// Thêm luật vào ĐÚNG LÚC số vi phạm đang bằng 0 (đo 2026-07-25: 1.113 trang,
+// 0 lỗi cú pháp, 0 khối trùng, 0 FAQ hỏng, 0 breadcrumb hỏng) — nên nó không
+// chặn việc của ai, chỉ giữ nguyên trạng thái tốt sẵn có.
+
+/** Các @type chỉ được xuất hiện MỘT lần trên một trang. */
+const SINGLETON_TYPES = ['WebPage', 'BreadcrumbList', 'Organization', 'WebSite', 'FAQPage', 'Article'];
+
+/** Gom mọi node JSON-LD trong HTML. Trả về {nodes, invalid}. */
+export function parseJsonLd(html) {
+  const dec = (s) =>
+    s
+      .replace(/&quot;/g, '"')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&#x27;|&#39;/g, "'");
+  const blocks = [...html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(
+    (m) => m[1],
+  );
+  const nodes = [];
+  let invalid = 0;
+  for (const b of blocks) {
+    let parsed = null;
+    for (const candidate of [dec(b), b]) {
+      try {
+        parsed = JSON.parse(candidate);
+        break;
+      } catch {
+        /* thử cách còn lại */
+      }
+    }
+    if (parsed === null) {
+      invalid++;
+      continue;
+    }
+    const arr = Array.isArray(parsed) ? parsed : (parsed['@graph'] ?? [parsed]);
+    for (const n of arr) if (n && n['@type']) nodes.push(n);
+  }
+  return { nodes, invalid, blockCount: blocks.length };
+}
+
+/**
+ * Kiểm dữ liệu có cấu trúc của một trang.
+ * @param {{nodes: any[], invalid: number, blockCount: number}} ld
+ */
+export function checkJsonLd(ld) {
+  const out = [];
+  if (ld.invalid > 0) {
+    out.push({ rule: 'jsonld-invalid', detail: `${ld.invalid} khối JSON-LD không parse được` });
+  }
+  if (ld.blockCount === 0) {
+    out.push({ rule: 'jsonld-missing', detail: 'trang không có khối JSON-LD nào' });
+    return out;
+  }
+
+  const typeOf = (n) => (Array.isArray(n['@type']) ? n['@type'].join('+') : n['@type']);
+  const counts = new Map();
+  for (const n of ld.nodes) counts.set(typeOf(n), (counts.get(typeOf(n)) || 0) + 1);
+  for (const t of SINGLETON_TYPES) {
+    const c = counts.get(t) ?? 0;
+    if (c > 1) {
+      out.push({
+        rule: 'jsonld-duplicate-type',
+        detail: `${c} khối "${t}" trên cùng một trang — Google thấy hai thực thể mâu thuẫn`,
+      });
+    }
+  }
+
+  for (const n of ld.nodes) {
+    const t = typeOf(n);
+    if (t === 'FAQPage') {
+      const me = n.mainEntity;
+      if (!Array.isArray(me) || me.length === 0) {
+        out.push({ rule: 'jsonld-faq-broken', detail: 'FAQPage có mainEntity rỗng' });
+      } else if (me.some((q) => !q?.name || !q?.acceptedAnswer?.text)) {
+        out.push({
+          rule: 'jsonld-faq-broken',
+          detail: 'FAQPage có câu hỏi thiếu name hoặc acceptedAnswer.text',
+        });
+      }
+    }
+    if (t === 'BreadcrumbList') {
+      const items = n.itemListElement;
+      if (!Array.isArray(items) || items.length === 0) {
+        out.push({ rule: 'jsonld-breadcrumb-broken', detail: 'BreadcrumbList rỗng' });
+      } else if (!items.every((it, i) => it?.position === i + 1)) {
+        out.push({
+          rule: 'jsonld-breadcrumb-broken',
+          detail: `position phải chạy 1..n, đang là ${items.map((i) => i?.position).join(',')}`,
+        });
+      } else if (items.some((it) => !it?.name || !it?.item)) {
+        out.push({ rule: 'jsonld-breadcrumb-broken', detail: 'mục breadcrumb thiếu name hoặc item' });
+      }
+    }
+  }
+  return out;
+}
+
 /** Rút <title> / meta description từ HTML. */
 export function extractMeta(html) {
   const dec = (s) =>
@@ -206,16 +312,26 @@ export const ALLOWLIST = {
     owner: 'agent SEO sweep (app/layout.tsx)',
     note: 'dùng tiêu đề mặc định; nên cân nhắc noindex thay vì rút tiêu đề',
   },
-  '/dashboard': {
-    rules: ['title-too-long'],
-    owner: 'agent SEO sweep (app/layout.tsx)',
-    note: 'dùng tiêu đề mặc định; đã chặn ở robots.txt nhưng vẫn render tiêu đề đó',
-  },
   '/onboarding-wizard': {
-    rules: ['title-too-long'],
+    rules: ['title-too-long', 'jsonld-missing'],
     owner: 'agent SEO sweep (app/layout.tsx)',
-    note: 'dùng tiêu đề mặc định của site',
+    note: 'dùng tiêu đề mặc định của site; luồng riêng tư nên không cần JSON-LD',
   },
+
+  // ── Không có JSON-LD, và ĐÚNG là không cần ────────────────────────
+  // Đo 2026-07-25: 85 trang không có JSON-LD, và 0 trong số đó là trang công
+  // khai có trong sitemap. Toàn bộ là hai nhóm dưới đây.
+  '/tu-vi-thang/*': {
+    rules: ['jsonld-missing'],
+    owner: 'Agent-1 (đúng thiết kế, không phải lỗi)',
+    note: 'Các tháng ĐÃ HẾT chỉ được dựng để 308 về evergreen, không render nội dung nên không có JSON-LD. Danh sách này đổi theo từng tháng nên dùng tiền tố thay vì liệt kê tay. Tháng đang mở VẪN có đủ JSON-LD nên luật vẫn canh được chúng.',
+  },
+  '/affiliate/leaderboard': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư, không nằm trong sitemap' },
+  '/affiliate/network': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư, không nằm trong sitemap' },
+  '/checkout/premium': { rules: ['jsonld-missing'], owner: 'n/a', note: 'luồng thanh toán, không index' },
+  '/dashboard': { rules: ['title-too-long', 'jsonld-missing'], owner: 'agent SEO sweep (app/layout.tsx)', note: 'dùng tiêu đề mặc định; đã chặn ở robots.txt' },
+  '/reading/new': { rules: ['jsonld-missing'], owner: 'n/a', note: 'luồng nhập liệu riêng tư' },
+  '/settings': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư' },
 };
 
 // ── CLI ─────────────────────────────────────────────────────────────
@@ -265,14 +381,18 @@ function main() {
   for (const f of files) {
     const rel = relative(appDir, f).split(sep).join('/').replace(/\.html$/, '');
     const url = rel === 'index' ? '/' : `/${rel}`;
-    const { title, description } = extractMeta(readFileSync(f, 'utf8'));
+    const html = readFileSync(f, 'utf8');
+    const { title, description } = extractMeta(html);
     for (const v of checkPage({ url, title, description })) violations.push({ url, ...v });
+    for (const v of checkJsonLd(parseJsonLd(html))) violations.push({ url, ...v });
   }
 
   const { blocking, allowed, stale } = applyAllowlist(violations, ALLOWLIST);
 
   console.log(`seo-guard: đã kiểm ${files.length} trang tĩnh.`);
-  console.log(`  ngưỡng: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt`);
+  console.log(
+    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · JSON-LD hợp lệ, không trùng loại, FAQ/breadcrumb đủ trường`,
+  );
   console.log(`  vi phạm mới: ${blocking.length} · miễn trừ (có chủ): ${allowed.length}`);
 
   if (stale.length) {
