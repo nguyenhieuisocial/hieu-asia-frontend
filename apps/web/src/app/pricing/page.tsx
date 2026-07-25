@@ -25,6 +25,7 @@
  * template. Survey + comparison table removed (PricingTierV2 has hybrid built-in).
  */
 
+import Link from 'next/link';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
@@ -387,12 +388,16 @@ export default function PricingPage() {
         <div className="mx-auto mt-3 max-w-marketing px-6 text-center">
           <p className="text-sm text-muted-foreground">
             Chưa rõ gói trả phí đọc những gì?{' '}
-            <a
+            {/* PHẢI dùng `<Link>`: eslint `@next/next/no-html-link-for-pages` chặn
+                `<a href>` trỏ tới route CÓ THẬT. Dòng 1:1 phía trên vẫn dùng `<a>`
+                được vì `/checkout/founder-1on1` là route động → rule không resolve
+                nên không chặn. Đừng "đồng bộ style" bằng cách đổi lại thành `<a>`. */}
+            <Link
               href="/reading"
               className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
             >
               Xem bài đọc 5 lăng kính gồm gì →
-            </a>
+            </Link>
           </p>
         </div>
 
