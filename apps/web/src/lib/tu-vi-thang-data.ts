@@ -76,8 +76,13 @@ export function parseMonthSlug(slug: string): MonthKey | null {
   const month = Number(m[1]);
   const year = Number(m[2]);
   if (month < 1 || month > 12) return null;
-  // Chặn không gian URL vô hạn (dynamicParams tắt nhưng vẫn phòng khi mở lại).
-  if (year < 2020 || year > 2035) return null;
+  // Chặn vệ sinh cho không gian URL. Phạm vi PHỤC VỤ nay do
+  // `resolveServableMonth()` chốt (cửa sổ tháng đang chạy), nên khoảng này phải
+  // đặt RỘNG hơn cửa sổ đó rất nhiều để không bao giờ thành vách đá.
+  // Bản cũ chặn ở 2035: từ 7/2035 cửa sổ tháng sinh ra "1-2036" mà chính hàm
+  // này từ chối ⇒ sitemap lại khai URL không phục vụ được — đúng lỗi vừa sửa,
+  // chỉ là chậm 9 năm.
+  if (year < 2020 || year > 2100) return null;
   return { year, month };
 }
 
@@ -115,6 +120,31 @@ export function liveMonths(now: Date = new Date(), count = WINDOW_MONTHS): Month
 export function pastMonths(now: Date = new Date(), count = GRACE_MONTHS): MonthKey[] {
   const base = monthOf(now);
   return Array.from({ length: count }, (_, i) => shiftMonth(base, -(i + 1)));
+}
+
+/**
+ * Slug → tháng, CHỈ khi slug đó thật sự được phục vụ tại `now`.
+ *
+ * VÌ SAO PHẢI CÓ HÀM NÀY — lỗi thật, hạn lộ 01/08/2026
+ * `app/sitemap.ts` tính `liveMonths()` lúc CHẠY (nó là ISR 1 giờ) nên danh sách
+ * URL tự cuốn theo lịch; trong khi `generateStaticParams()` chốt tập slug tại
+ * lúc BUILD. Qua mốc đầu tháng mà chưa deploy lại thì sitemap khai URL chưa hề
+ * được dựng ⇒ **404**. Mô phỏng: 01/08 thừa 13 URL, 01/09 thừa 26, 01/10 thừa
+ * 39. Chiều ngược lại cũng hỏng: tháng đã hết vẫn trả 200 vì lệnh 308 bị nướng
+ * vào HTML từ lúc build.
+ *
+ * Cách chữa: cho route bám lịch giống sitemap (`dynamicParams = true` +
+ * `revalidate`). Nhưng mở ra thì PHẢI có đúng hàm này chốt lại phạm vi — không
+ * thì mọi tháng 2020–2035 đều render được (~2.500 URL). Đây chính là cái mà
+ * ghi chú trong `parseMonthSlug` đã lường trước ("phòng khi mở lại").
+ *
+ * Chốt luôn URL trùng nội dung: `parseMonthSlug` nhận cả "08-2026", nhưng chỉ
+ * dạng chuẩn "8-2026" mới được phục vụ.
+ */
+export function resolveServableMonth(slug: string, now: Date = new Date()): MonthKey | null {
+  const k = parseMonthSlug(slug);
+  if (!k || monthSlug(k) !== slug) return null;
+  return buildableMonths(now).some((x) => monthSlug(x) === slug) ? k : null;
 }
 
 /** Tất cả tháng cần dựng route (đang sống + chặng 308 đã hết). */
