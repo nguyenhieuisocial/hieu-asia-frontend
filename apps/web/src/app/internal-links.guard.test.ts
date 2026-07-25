@@ -149,9 +149,15 @@ describe('link nội bộ không được trỏ tới route không tồn tại',
         // mùa. Chốt này quét chữ nên không thấy điều kiện lúc chạy; thứ kiểm
         // được (và đúng thứ cần kiểm) là: file có gọi `expiredSeasonalTarget`
         // cho ĐÚNG đường dẫn đó không.
-        const daBocDieuKien = new RegExp(
-          `expiredSeasonalTarget\\(\\s*['"\`]${href.replace(/[/-]/g, '\\$&')}['"\`]`,
-        ).test(src);
+        // KHÔNG dựng RegExp từ biến. Đây là lần thứ BA trong cùng đợt CodeQL
+        // bắt tôi tự viết escape thiếu (`js/incomplete-sanitization`) — hai lần
+        // trước ở `seo-guard.mjs` và ở chính file này. Escape đúng khó hơn vẻ
+        // ngoài, mà ở đây không cần regex chút nào: bỏ hết khoảng trắng rồi so
+        // chuỗi là đủ, và không có gì để escape sai.
+        const gonGang = src.replace(/\s+/g, '');
+        const daBocDieuKien = ["'", '"', '`'].some((nhay) =>
+          gonGang.includes(`expiredSeasonalTarget(${nhay}${href}${nhay}`),
+        );
         if (!daBocDieuKien) {
           bad.push(
             `${rel(f)} (route ${tuMinh}) link tới ${href} — trang đó hết mùa ${mua.redirectFrom} sẽ 308 về ${mua.evergreen}, tức quay lại chính nó`,
