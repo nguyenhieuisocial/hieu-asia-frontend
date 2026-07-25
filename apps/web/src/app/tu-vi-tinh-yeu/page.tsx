@@ -337,6 +337,18 @@ export default function TuViTinhYeuPage() {
               >
                 Xem hợp tuổi cưới hỏi <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>
+              <Link
+                href="/that-tich-2026"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
+              >
+                Tình duyên ngày Thất Tịch 2026 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
+              </Link>
+              <Link
+                href="/valentine-2027"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-gold"
+              >
+                Xem tình duyên Valentine 2027 <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
+              </Link>
             </div>
           </div>
         </section>
