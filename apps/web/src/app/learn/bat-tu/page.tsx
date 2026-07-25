@@ -21,8 +21,9 @@ import {
 
 export const metadata: Metadata = {
   title: 'Bát Tự Tứ Trụ: Học huyền học',
+  // ≤160 ký tự (seo-guard vault 172) — dài hơn thì Google cắt mất câu chốt.
   description:
-    'Bát Tự (Tứ Trụ) từ nền tảng tới chuyên sâu: 10 Thiên Can, 12 Địa Chi, tàng can, Thập Thần, Dụng Thần, Vòng Trường Sinh, Thần Sát, Đại Vận – Lưu Niên. Góc nhìn để hiểu mình, không phán số mệnh.',
+    'Bát Tự (Tứ Trụ) từ nền tảng tới chuyên sâu: Thiên Can, Địa Chi, tàng can, Thập Thần, Dụng Thần, Thần Sát, Đại Vận – Lưu Niên. Góc nhìn để hiểu mình.',
   alternates: { canonical: 'https://hieu.asia/learn/bat-tu' },
 };
 

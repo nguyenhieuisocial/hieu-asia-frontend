@@ -20,8 +20,9 @@ import {
 
 export const metadata: Metadata = {
   title: 'Phong Thủy — hướng nhà, ngũ hành & chọn ngày',
+  // ≤160 ký tự (seo-guard vault 172) — dài hơn thì Google cắt mất câu chốt.
   description:
-    'Phong Thủy ứng dụng: hai nhánh Loan Đầu và Lý Khí; Bát Trạch (hướng nhà hợp tuổi, tính Cung Phi), Huyền Không Phi Tinh, bổ khuyết ngũ hành, chọn ngày–giờ, xem tuổi và thước Lỗ Ban. Quy tắc minh bạch để tham khảo, không phán số mệnh.',
+    'Phong Thủy ứng dụng: Loan Đầu và Lý Khí, Bát Trạch (hướng nhà hợp tuổi, Cung Phi), Huyền Không Phi Tinh, chọn ngày giờ và thước Lỗ Ban. Không phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/learn/phong-thuy' },
 };
 

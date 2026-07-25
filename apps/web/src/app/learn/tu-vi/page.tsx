@@ -17,8 +17,9 @@ import {
 
 export const metadata: Metadata = {
   title: 'Tử Vi 12 cung, Học huyền học',
+  // ≤160 ký tự (seo-guard vault 172) — dài hơn thì Google cắt mất câu chốt.
   description:
-    'Bách khoa Tử Vi Đẩu Số: 12 cung, 14 chính tinh, độ sáng miếu hãm, Tứ Hóa, Cục, Tuần Triệt, cách cục, đại vận lưu niên, kèm quy trình luận 6 bước và sổ tay thuật ngữ.',
+    'Bách khoa Tử Vi Đẩu Số: 12 cung, 14 chính tinh, miếu hãm, Tứ Hóa, Cục, Tuần Triệt, cách cục, đại vận lưu niên, kèm quy trình luận 6 bước.',
   alternates: { canonical: 'https://hieu.asia/learn/tu-vi' },
 };
 

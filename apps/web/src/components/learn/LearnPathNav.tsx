@@ -9,9 +9,10 @@
  * 2. HIỆN strip "bài tiếp theo trong lộ trình" ở cuối TRANG CHỦ ĐỀ (chỉ trang
  *    chủ đề chính, không hiện ở trang con để khỏi nhiễu khi đang tra cứu).
  *
- * Mount qua layout nên KHÔNG phải sửa 18 trang bài. Strip render sau hydration
- * và nằm dưới nội dung bài (ngoài viewport lúc tải) → không gây CLS. Trang vẫn
- * static: usePathname + localStorage đều chạy phía client.
+ * Mount qua layout nên KHÔNG phải sửa 18 trang bài. Strip nằm NGAY TRONG HTML
+ * tĩnh — `usePathname` đã có giá trị lúc prerender, nên chữ "Bài tiếp theo…"
+ * xuất hiện trong file .html (đã kiểm trên bản build) → không CLS và Google đọc
+ * được liên kết nội bộ này. Trang vẫn static: chỉ localStorage mới cần client.
  */
 
 import * as React from 'react';
