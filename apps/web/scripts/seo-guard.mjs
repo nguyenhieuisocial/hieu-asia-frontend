@@ -39,8 +39,33 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 export const TITLE_MAX = 60;
 export const DESCRIPTION_MAX = 160;
 
-/** Số trang tối thiểu phải đọc được. Dưới mức này = build lỗi/bị xoá, KHÔNG phải "site sạch". */
-const MIN_PAGES = 200;
+/**
+ * Số trang tối thiểu phải đọc được. Dưới mức này = build lỗi/bị xoá, KHÔNG phải
+ * "site sạch".
+ *
+ * Đặt sát thực tế (1.113 trang tại 2026-07-25) chứ không đặt thấp cho "an toàn":
+ * ngưỡng 200 nghe thì rộng rãi nhưng có nghĩa là **913 trang có thể biến mất mà
+ * guard vẫn in "✅ không có vi phạm"**. Một thay đổi routing khiến cụm
+ * `/hop-tuoi` (132 trang) hay `/tu-vi-thang` (157 trang) chuyển sang render động
+ * sẽ rút chúng khỏi phạm vi kiểm mà không có tín hiệu nào.
+ */
+const MIN_PAGES = 1000;
+
+/**
+ * Giải mã thực thể HTML.
+ *
+ * THỨ TỰ QUAN TRỌNG: `&amp;` phải giải CUỐI CÙNG. Giải nó trước thì `&amp;lt;`
+ * → `&lt;` → `<`, tức giải hai lần và làm sai nội dung (CodeQL js/double-escaping
+ * bắt đúng lỗi này trong bản đầu của file). Đừng sắp xếp lại cho "gọn".
+ */
+function decodeEntities(s) {
+  return s
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&amp;/g, '&');
+}
 
 // ── Luật ────────────────────────────────────────────────────────────
 
@@ -101,8 +126,8 @@ export function matchesPattern(pattern, url) {
 export function applyAllowlist(violations, allowlist) {
   const blocking = [];
   const allowed = [];
-  /** pattern::rule đã thực sự dùng tới — để phát hiện mục thừa. */
-  const used = new Set();
+  /** pattern::rule → số trang đã miễn trừ. Dùng cho cả `stale` lẫn `max`. */
+  const count = new Map();
 
   for (const v of violations) {
     let hit = null;
@@ -114,9 +139,32 @@ export function applyAllowlist(violations, allowlist) {
     }
     if (hit) {
       allowed.push(v);
-      used.add(`${hit}::${v.rule}`);
+      const k = `${hit}::${v.rule}`;
+      count.set(k, (count.get(k) ?? 0) + 1);
     } else {
       blocking.push(v);
+    }
+  }
+
+  // ── Chặn mẫu `/*` che quá rộng ──────────────────────────────────
+  // Một mẫu tiền tố miễn trừ theo CỤM, nên nó cũng che luôn những trang trong
+  // cụm mà lẽ ra phải bị canh. Ví dụ thật: `/tu-vi-thang/*` miễn `jsonld-missing`
+  // cho 78 trang tháng ĐÃ HẾT — nhưng nó che luôn 79 trang tháng ĐANG SỐNG, nên
+  // nếu cụm đó mất sạch JSON-LD thì guard vẫn im. Và `stale` cũng không cứu
+  // được: mẫu vẫn "đang được dùng" bởi 78 trang kia.
+  //
+  // `max` là số trang mẫu này ĐƯỢC PHÉP miễn. Vượt lên = có trang mới hỏng.
+  for (const [pattern, entry] of Object.entries(allowlist)) {
+    if (typeof entry.max !== 'number') continue;
+    for (const rule of entry.rules) {
+      const n = count.get(`${pattern}::${rule}`) ?? 0;
+      if (n > entry.max) {
+        blocking.push({
+          url: pattern,
+          rule: 'allowlist-overflow',
+          detail: `mẫu này chỉ được miễn ${entry.max} trang cho luật "${rule}", đang miễn ${n} — có ${n - entry.max} trang MỚI hỏng đang bị mẫu che mất`,
+        });
+      }
     }
   }
 
@@ -125,7 +173,7 @@ export function applyAllowlist(violations, allowlist) {
   const stale = [];
   for (const [pattern, entry] of Object.entries(allowlist)) {
     for (const rule of entry.rules) {
-      if (!used.has(`${pattern}::${rule}`)) stale.push({ url: pattern, rule });
+      if (!count.has(`${pattern}::${rule}`)) stale.push({ url: pattern, rule });
     }
   }
   return { blocking, allowed, stale };
@@ -148,13 +196,6 @@ const SINGLETON_TYPES = ['WebPage', 'BreadcrumbList', 'Organization', 'WebSite',
 
 /** Gom mọi node JSON-LD trong HTML. Trả về {nodes, invalid}. */
 export function parseJsonLd(html) {
-  const dec = (s) =>
-    s
-      .replace(/&quot;/g, '"')
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&#x27;|&#39;/g, "'");
   const blocks = [...html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(
     (m) => m[1],
   );
@@ -162,7 +203,11 @@ export function parseJsonLd(html) {
   let invalid = 0;
   for (const b of blocks) {
     let parsed = null;
-    for (const candidate of [dec(b), b]) {
+    // Nội dung trong <script type="application/ld+json"> là JSON THÔ, không phải
+    // HTML đã escape → thử parse nguyên bản TRƯỚC, chỉ giải mã thực thể khi thất
+    // bại (phòng framework có escape). Làm ngược lại thì một chuỗi chứa đúng chữ
+    // "&amp;" trong nội dung sẽ bị đổi thành "&".
+    for (const candidate of [b, decodeEntities(b)]) {
       try {
         parsed = JSON.parse(candidate);
         break;
@@ -239,18 +284,11 @@ export function checkJsonLd(ld) {
 
 /** Rút <title> / meta description từ HTML. */
 export function extractMeta(html) {
-  const dec = (s) =>
-    s
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#x27;|&#39;/g, "'");
   const t = /<title>([^<]*)<\/title>/.exec(html);
   const d = /<meta name="description" content="([^"]*)"/.exec(html);
   return {
-    title: t ? dec(t[1]) : null,
-    description: d ? dec(d[1]) : null,
+    title: t ? decodeEntities(t[1]) : null,
+    description: d ? decodeEntities(d[1]) : null,
   };
 }
 
@@ -270,11 +308,13 @@ export const ALLOWLIST = {
   },
   '/learn/*': {
     rules: ['description-too-long'],
+    max: 4,
     owner: 'agent /learn (PR #937)',
     note: 'bat-tu 192 · palm 218 · phong-thuy 232 · tu-vi 165. Cùng chủ với trên.',
   },
   '/tarot/y-nghia/*': {
     rules: ['description-clamped'],
+    max: 11,
     owner: 'Agent-2 (cụm tarot + gieo-que)',
     note: 'Ví dụ sống của cái bẫy ở đầu file: bản build trước 11 trang này mô tả 161–171 ký tự (quá dài); nay đã bọc clampDescription nên độ dài "đạt" — nhưng chữ vẫn nguyên độ dài cũ nên clamp phải cắt, và người dùng thấy câu cụt trên SERP. Bọc clamp KHÔNG phải là sửa; phải rút chữ.',
   },
@@ -323,6 +363,7 @@ export const ALLOWLIST = {
   // khai có trong sitemap. Toàn bộ là hai nhóm dưới đây.
   '/tu-vi-thang/*': {
     rules: ['jsonld-missing'],
+    max: 78,
     owner: 'Agent-1 (đúng thiết kế, không phải lỗi)',
     note: 'Các tháng ĐÃ HẾT chỉ được dựng để 308 về evergreen, không render nội dung nên không có JSON-LD. Danh sách này đổi theo từng tháng nên dùng tiền tố thay vì liệt kê tay. Tháng đang mở VẪN có đủ JSON-LD nên luật vẫn canh được chúng.',
   },

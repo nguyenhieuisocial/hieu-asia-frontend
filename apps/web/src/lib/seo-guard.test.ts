@@ -123,6 +123,40 @@ describe('applyAllowlist', () => {
     const { stale } = applyAllowlist([], list);
     expect(stale).toHaveLength(2);
   });
+
+  // Mẫu `/*` miễn trừ theo CỤM nên nó che luôn những trang trong cụm lẽ ra phải
+  // bị canh. Thật ở repo này: `/tu-vi-thang/*` miễn `jsonld-missing` cho 78
+  // trang tháng đã hết, nhưng che luôn 79 trang tháng đang sống — cụm đó mất
+  // sạch JSON-LD thì guard vẫn im, và `stale` không cứu được vì mẫu vẫn "đang
+  // được dùng" bởi 78 trang kia. `max` là chốt chặn cho đúng lỗ hổng này.
+  describe('max — chặn mẫu /* che quá rộng', () => {
+    const capped = {
+      '/cum/*': { rules: ['jsonld-missing'], owner: 'ai đó', note: 'x', max: 2 },
+    };
+    const v = (n: number) =>
+      Array.from({ length: n }, (_, i) => ({ url: `/cum/${i}`, rule: 'jsonld-missing', detail: '' }));
+
+    it('đúng bằng giới hạn thì im lặng', () => {
+      const { blocking } = applyAllowlist(v(2), capped);
+      expect(blocking).toHaveLength(0);
+    });
+
+    it('vượt giới hạn thì BÁO ĐỎ, kèm số trang mới hỏng', () => {
+      const { blocking } = applyAllowlist(v(5), capped);
+      expect(blocking).toHaveLength(1);
+      expect(blocking[0]?.rule).toBe('allowlist-overflow');
+      expect(blocking[0]?.detail).toContain('3 trang MỚI hỏng');
+    });
+
+    it('mọi mẫu /* trong ALLOWLIST thật đều phải có max', () => {
+      // Không có max thì mẫu tiền tố = một lỗ hổng im lặng chờ ngày dùng.
+      const entries = Object.entries(ALLOWLIST) as [string, { max?: number }][];
+      const prefixNoMax = entries
+        .filter(([p, e]) => p.endsWith('/*') && typeof e.max !== 'number')
+        .map(([p]) => p);
+      expect(prefixNoMax).toEqual([]);
+    });
+  });
 });
 
 describe('extractMeta', () => {
