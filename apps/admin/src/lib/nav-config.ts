@@ -125,6 +125,9 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/content', label: 'Nội dung', Icon: FileText },
       { href: '/content-calendar', label: 'Lịch nội dung', Icon: CalendarDays },
+      // CMS Tử Vi (bước 2/3): sửa diễn giải 12 cung + 47 sao trong
+      // `hieu_asia.tuvi_content` — cùng bảng worker API phục vụ ra web.
+      { href: '/tuvi-content', label: 'Nội dung Tử Vi', Icon: BookOpen },
     ],
   },
   {
