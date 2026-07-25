@@ -461,11 +461,6 @@ export const ALLOWLIST = {
     owner: 'agent SEO sweep (cụm Bản mệnh + Phong thuỷ)',
     note: 'tiêu đề 63 · mô tả bị clamp cắt',
   },
-  '/': {
-    rules: ['description-too-long'],
-    owner: 'founder / agent SEO sweep',
-    note: 'trang chủ, mô tả 188 ký tự — không agent nào được tự sửa app/page.tsx',
-  },
   // 5 trang dưới đây KHÔNG tự khai tiêu đề nên thừa hưởng tiêu đề MẶC ĐỊNH của
   // site trong `app/layout.tsx` — mà chuỗi đó dài 61 ký tự, TỰ NÓ đã vượt.
   // Sửa 1 dòng ở root là hết cả 5. Nhưng câu hỏi thật là: /auth/callback,
