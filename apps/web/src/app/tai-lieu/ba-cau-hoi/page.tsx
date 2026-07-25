@@ -25,11 +25,15 @@ import {
  * cho trang đọc và bản PDF.
  */
 
+// SEO-FIX: DESC 184 → 160 ký tự (rút "kèm cách trả lời từng bước, ví dụ đã điền
+// sẵn và cạm bẫy hay gặp" → "cách trả lời từng bước, ví dụ sẵn").
 const DESC =
-  'Tài liệu miễn phí: ba câu hỏi tự soi trước một quyết định lớn (cưới, sinh con, đổi việc, bán nhà) — kèm cách trả lời từng bước, ví dụ đã điền sẵn và cạm bẫy hay gặp. Làm trong 20 phút.';
+  'Tài liệu miễn phí: ba câu hỏi tự soi trước một quyết định lớn (cưới, sinh con, đổi việc, bán nhà) — cách trả lời từng bước, ví dụ sẵn. Làm trong 20 phút.';
 
 export const metadata: Metadata = {
-  title: `${BA_CAU_HOI_TITLE} — tài liệu miễn phí`,
+  // SEO-FIX: BA_CAU_HOI_TITLE (33) + ' — tài liệu miễn phí' (20) + hậu tố
+  // ' · hieu.asia' (12) = 65 → bị Google cắt. Rút hậu tố còn ' — miễn phí' → 56.
+  title: `${BA_CAU_HOI_TITLE} — miễn phí`,
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/tai-lieu/ba-cau-hoi' },
   openGraph: {

@@ -15,7 +15,9 @@ import { expiredSeasonalTarget } from '@/lib/seasonal';
 // (`solarToLunar` trong lib/ngay-kieng-ky.ts): 7/7 âm lịch 2026 = 19/8/2026.
 
 export const metadata: Metadata = {
-  title: 'Thất Tịch 2026 — ngày nào, nên hiểu thế nào về duyên',
+  // SEO-FIX: 52 ký tự + hậu tố ' · hieu.asia' = 64 → bị Google cắt. Bản mới 45
+  // ký tự, đổi sang dạng câu hỏi khớp cách người ta thật sự tìm.
+  title: 'Thất Tịch 2026 là ngày nào? Hiểu sao về duyên',
   description:
     'Thất Tịch 2026 rơi vào thứ Tư 19/8 dương lịch (7/7 âm lịch). Nguồn gốc Ngưu Lang – Chức Nữ, chuyện ăn chè đậu đỏ, và cách xem duyên theo lá số thay vì cầu may.',
   alternates: { canonical: 'https://hieu.asia/that-tich-2026' },
