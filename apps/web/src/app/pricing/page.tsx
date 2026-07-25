@@ -35,7 +35,7 @@ import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { OrnamentDivider } from '@/components/marketing/OrnamentDivider';
 import { TrustStrip } from '@/components/marketing/TrustStrip';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { faqPage, product } from '@/lib/seo/jsonld';
+import { breadcrumb, faqPage, product } from '@/lib/seo/jsonld';
 import {
   PRICING,
   ADVANCED_PRICING,
@@ -137,6 +137,20 @@ const PRICING_FAQ_SCHEMA: { q: string; a: string }[] = [
  * Product + Offer JSON-LD cho /pricing. 4 bậc trả phí → 4 Offer, giá + URL khớp
  * đúng các thẻ giá + CTA đang hiển thị (chống cloaking). Gói miễn phí không phải
  * "mua" nên không liệt kê như một Offer. Giá lấy từ canonical `PRICING`.
+ */
+/**
+ * Product JSON-LD cho trang giá — nguồn DUY NHẤT.
+ *
+ * Trước 2026-07-25 có HAI khai báo Product cho cùng trang này: một bản gõ tay
+ * trong `layout.tsx` (giá hard-code) và bản này (giá lấy từ hằng số `PRICING`).
+ * Google thấy hai thực thể Product mâu thuẫn trên trang tiền → có thể bỏ qua cả
+ * hai, mất luôn phần hiện giá trong kết quả tìm kiếm. Bản gõ tay đã bị xoá; giá
+ * chỉ được lấy từ `PRICING` để không bao giờ lệch với giá thật.
+ *
+ * ⚠️ ĐỪNG thêm Offer khuyến mãi vào đây nếu luồng áp mã CHƯA chạy end-to-end.
+ * Tiền lệ (Wave 54 #282): Offer `LAUNCH30` vẫn nằm trong JSON-LD sau khi banner
+ * đã gỡ (commit e370aaf) vì worker không kiểm mã — Google vẫn hiện giảm giá mà
+ * khách không dùng được, tức quảng cáo sai trên SERP.
  */
 const PRICING_PRODUCT = {
   name: 'hieu.asia — Gói thành viên & Lá số AI',
@@ -425,6 +439,12 @@ export default function PricingPage() {
       <SiteFooter />
       <StickyMobileCta label="Bắt đầu miễn phí" trackId="pricing" />
       <JsonLd data={product(PRICING_PRODUCT)} />
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Bảng giá', url: '/pricing' },
+        ])}
+      />
       <JsonLd data={faqPage(PRICING_FAQ_SCHEMA)} />
     </>
   );
