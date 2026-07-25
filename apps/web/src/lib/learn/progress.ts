@@ -43,7 +43,11 @@ export function parseSummary(raw: string | null): TopicSummary | null {
     if (typeof done !== 'number' || !Number.isFinite(done) || done < 0) return null;
     if (typeof total !== 'number' || !Number.isFinite(total) || total < 0) return null;
     const time = typeof ts === 'number' && Number.isFinite(ts) ? ts : 0;
-    return { done: Math.floor(done), total: Math.floor(total), ts: time };
+    const d = Math.floor(done);
+    const t = Math.floor(total);
+    // Kẹp done ≤ total: writer hiện tại không bao giờ ghi vượt, nhưng dữ liệu bị
+    // sửa tay trong localStorage sẽ khiến hub hiện "8/6" và thanh tiến độ tràn.
+    return { done: t > 0 ? Math.min(d, t) : d, total: t, ts: time };
   } catch {
     return null;
   }

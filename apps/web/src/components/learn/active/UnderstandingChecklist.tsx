@@ -21,7 +21,7 @@
 import * as React from 'react';
 import { Checkbox } from '@hieu-asia/ui';
 import { track } from '@/lib/analytics';
-import { writeTopicSummary } from '@/lib/learn/progress';
+import { understandingKey, writeTopicSummary } from '@/lib/learn/progress';
 
 export interface UnderstandingFacet {
   /** id ổn định, duy nhất trong chủ đề. */
@@ -38,22 +38,33 @@ export interface UnderstandingChecklistProps {
   facets: UnderstandingFacet[];
 }
 
-const keyFor = (topicId: string) => `learn:understanding:${topicId}`;
-
 export function UnderstandingChecklist({ topicId, facets }: UnderstandingChecklistProps) {
   const [checked, setChecked] = React.useState<Record<string, boolean>>({});
   const [hydrated, setHydrated] = React.useState(false);
   const syncTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Bản MỚI NHẤT của map tick, cập nhật ngay lúc set state. Cần nó vì lời gọi
+  // GET dưới đây là async: nếu union với biến chụp lúc mount thì cú tick người
+  // học bấm TRONG lúc chờ mạng bị xoá ngược — checkbox tự bỏ tick, localStorage
+  // và summary bị ghi đè bằng số cũ.
+  const liveRef = React.useRef<Record<string, boolean>>({});
+
+  // Đặt state + ref cùng lúc. Side-effect vẫn để NGOÀI updater để không chạy
+  // hai lần trong StrictMode dev.
+  const apply = React.useCallback((next: Record<string, boolean>) => {
+    liveRef.current = next;
+    setChecked(next);
+  }, []);
 
   // Đọc localStorage SAU mount để không lệch hydrate (SSR = tất cả chưa tick).
   // Rồi GET server để union (best-effort, chưa đăng nhập → 401 → bỏ qua im lặng).
   React.useEffect(() => {
     let local: Record<string, boolean> = {};
     try {
-      const raw = window.localStorage.getItem(keyFor(topicId));
+      const raw = window.localStorage.getItem(understandingKey(topicId));
       if (raw) {
         local = JSON.parse(raw) as Record<string, boolean>;
-        setChecked(local);
+        apply(local);
       }
     } catch {
       /* ignore */
@@ -69,13 +80,14 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
         const res = await fetch('/api/user/preferences', { credentials: 'same-origin' });
         if (!res.ok) return;
         const data = (await res.json()) as { ok?: boolean; preferences?: Record<string, unknown> };
-        const remote = data?.preferences?.[keyFor(topicId)];
+        const remote = data?.preferences?.[understandingKey(topicId)];
         if (!data?.ok || cancelled || typeof remote !== 'object' || remote === null) return;
-        // Union: server ∪ localStorage. Ghi lại localStorage để hai bên đồng bộ.
-        const merged = { ...(remote as Record<string, boolean>), ...local };
-        setChecked(merged);
+        // Union: server ∪ trạng thái ĐANG hiện trên máy (liveRef, không phải
+        // `local` chụp lúc mount) → tick vừa bấm trong lúc chờ mạng vẫn thắng.
+        const merged = { ...(remote as Record<string, boolean>), ...liveRef.current };
+        apply(merged);
         try {
-          window.localStorage.setItem(keyFor(topicId), JSON.stringify(merged));
+          window.localStorage.setItem(understandingKey(topicId), JSON.stringify(merged));
         } catch {
           /* ignore */
         }
@@ -88,7 +100,7 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
       cancelled = true;
     };
     // facets là mảng module-const ở mọi trang → identity ổn định, không re-run thừa.
-  }, [topicId, facets]);
+  }, [topicId, facets, apply]);
 
   // Dọn timer debounce khi unmount.
   React.useEffect(
@@ -107,7 +119,7 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ user_id: 'self', prefs: { [keyFor(topicId)]: nextChecked } }),
+        body: JSON.stringify({ user_id: 'self', prefs: { [understandingKey(topicId)]: nextChecked } }),
       }).catch(() => {
         /* best-effort */
       });
@@ -115,13 +127,13 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
   };
 
   const toggle = (id: string) => {
-    const checkedNext = !checked[id];
+    const checkedNext = !liveRef.current[id];
     // Tính `next` NGOÀI updater để mọi side-effect (localStorage, sync, summary,
     // analytics) chạy đúng 1 lần kể cả StrictMode dev.
-    const next = { ...checked, [id]: checkedNext };
-    setChecked(next);
+    const next = { ...liveRef.current, [id]: checkedNext };
+    apply(next);
     try {
-      window.localStorage.setItem(keyFor(topicId), JSON.stringify(next));
+      window.localStorage.setItem(understandingKey(topicId), JSON.stringify(next));
     } catch {
       /* ignore */
     }
