@@ -153,8 +153,13 @@ function SwatchTile({ name, hex, fg = 'light', note }: Swatch) {
         {name}
       </span>
       <span className="flex items-center justify-between">
+        {/* A11Y: bỏ giảm-độ-đục cho nhãn trên ô màu. Chữ mờ trên nền màu thương
+            hiệu là đúng nguyên nhân 12 vi phạm color-contrast của /brand trong
+            đợt quét đêm 25/07 — vd ink/60 trên gold #B8923D ra #594824 = 3,04:1
+            (cần 4,5). Dùng full-opacity: ink trên #B8923D = 6,14:1 ✅, ink trên
+            #F2EDE3 = 15,31:1 ✅. Ô màu KHÔNG đổi — chỉ đổi mực chữ. */}
         <span
-          className={`font-mono text-[11px] ${fg === 'dark' ? 'text-ink/80' : 'text-cream/80'}`}
+          className={`font-mono text-[11px] ${fg === 'dark' ? 'text-ink' : 'text-cream'}`}
         >
           {hex.toUpperCase()}
         </span>
@@ -168,7 +173,7 @@ function SwatchTile({ name, hex, fg = 'light', note }: Swatch) {
       </span>
       {note ? (
         <span
-          className={`absolute bottom-1 left-3 right-3 text-[10px] ${fg === 'dark' ? 'text-ink/60' : 'text-cream/60'}`}
+          className={`absolute bottom-1 left-3 right-3 text-[10px] ${fg === 'dark' ? 'text-ink' : 'text-cream'}`}
         >
           {note}
         </span>
