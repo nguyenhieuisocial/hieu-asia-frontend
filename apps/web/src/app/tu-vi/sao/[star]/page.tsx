@@ -5,11 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@hieu-asia/ui'
 import { ChevronRight, ArrowRight, Sparkles, ShieldAlert } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
-import { ALL_STARS_CONTENT, findStarContent, starMetaDescription } from '@/lib/tuvi-content';
+import { ALL_STARS_CONTENT, starMetaDescription } from '@/lib/tuvi-content';
+import { getStar } from '@/lib/tuvi-content-source';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { clampDescription } from '@/lib/seo/description';
 
+/** CMS Tử Vi bước 3: nội dung đọc từ DB (dự phòng = bản trong code), làm mới sau
+ *  5 phút → founder sửa trong admin `/tuvi-content` là web đổi, không cần deploy. */
+// Next đòi giá trị HẰNG (statically analyzable) — không dùng được biến import.
+// Giữ khớp với TUVI_REVALIDATE_SECONDS trong lib/tuvi-content-source.ts.
+export const revalidate = 300;
+
 export function generateStaticParams() {
+  // CỐ Ý lấy từ CODE, không từ DB: danh sách route phải đầy đủ + ổn định lúc
+  // dựng, kể cả khi API sập.
   return ALL_STARS_CONTENT.map((s) => ({ star: s.slug }));
 }
 
@@ -17,7 +26,7 @@ export async function generateMetadata(
   { params }: { params: Promise<{ star: string }> },
 ): Promise<Metadata> {
   const { star } = await params;
-  const data = findStarContent(star);
+  const data = await getStar(star);
   if (!data) return {};
   return {
     title: `Sao ${data.name} trong Tử Vi Đẩu Số`,
@@ -40,7 +49,7 @@ export default async function StarPage({
   params: Promise<{ star: string }>;
 }) {
   const { star } = await params;
-  const data = findStarContent(star);
+  const data = await getStar(star);
   if (!data) notFound();
 
   const breadcrumbJsonLd = {
