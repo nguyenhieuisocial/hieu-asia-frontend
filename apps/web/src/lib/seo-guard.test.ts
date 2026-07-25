@@ -64,6 +64,48 @@ describe('checkPage — bắt đúng cái xấu', () => {
   });
 });
 
+describe('checkPage — luật <h1>', () => {
+  // Lỗi thật đã sửa ở #953: `/affiliate/signup` là trang DUY NHẤT trong 978 trang
+  // cho-index không có `<h1>` nào — tiêu đề nằm trong `CardTitle` nên render ra
+  // `h3`. Không lỗi build, không test đỏ, không ai biết. Thêm luật lúc số vi phạm
+  // đang bằng 0 nên nó không chặn việc của ai, chỉ giữ nguyên trạng thái tốt.
+  it('bắt trang cho-index không có h1', () => {
+    expect(checkPage({ ...ok, h1Count: 0 }).map((x: { rule: string }) => x.rule)).toContain('h1-missing');
+  });
+
+  it('bắt trang có nhiều hơn 1 h1', () => {
+    expect(checkPage({ ...ok, h1Count: 2 }).map((x: { rule: string }) => x.rule)).toContain('h1-multiple');
+  });
+
+  it('đúng 1 h1 thì im lặng', () => {
+    expect(checkPage({ ...ok, h1Count: 1 })).toEqual([]);
+  });
+
+  // Trang noindex KHÔNG bị soi: h1 thuần là tín hiệu tìm kiếm nên trang không cho
+  // index chẳng có gì để mất. 25 trang riêng tư của site render nội dung phía
+  // client trong <Suspense> ⇒ HTML tĩnh chỉ có khung, h1 xuất hiện sau khi tải
+  // xong. Soi cả chúng thì luật sinh 25 báo động sai và sẽ bị tắt đi.
+  it('KHÔNG soi h1 trên trang noindex', () => {
+    expect(checkPage({ ...ok, h1Count: 0, noindex: true })).toEqual([]);
+    expect(checkPage({ ...ok, h1Count: 3, noindex: true })).toEqual([]);
+  });
+
+  // Chống hỏng-im-lặng: nếu extractMeta thôi trả h1Count thì luật tự tắt mà CI
+  // vẫn xanh. Test này khoá việc extractMeta LUÔN đo được.
+  it('extractMeta luôn trả h1Count là số + đọc đúng cờ noindex', () => {
+    const a = extractMeta('<title>t</title><h1>x</h1>');
+    expect(a.h1Count).toBe(1);
+    expect(a.noindex).toBe(false);
+    const b = extractMeta('<meta name="robots" content="noindex, nofollow"/><h1>a</h1><h1 class="y">b</h1>');
+    expect(b.h1Count).toBe(2);
+    expect(b.noindex).toBe(true);
+  });
+
+  it('không khớp thẻ giả như <h1abc>', () => {
+    expect(extractMeta('<h1abc>x</h1abc>').h1Count).toBe(0);
+  });
+});
+
 describe('checkPage — không bắt nhầm cái tốt', () => {
   it('trang đạt chuẩn thì im lặng', () => {
     expect(checkPage(ok)).toEqual([]);
@@ -162,11 +204,11 @@ describe('applyAllowlist', () => {
 describe('extractMeta', () => {
   it('rút được title + description và giải mã thực thể HTML', () => {
     const html = `<html><head><title>A &amp; B</title><meta name="description" content="C &quot;D&quot;"/></head></html>`;
-    expect(extractMeta(html)).toEqual({ title: 'A & B', description: 'C "D"' });
+    expect(extractMeta(html)).toEqual({ title: 'A & B', description: 'C "D"', h1Count: 0, noindex: false });
   });
 
   it('trả null khi thiếu, không ném lỗi', () => {
-    expect(extractMeta('<html></html>')).toEqual({ title: null, description: null });
+    expect(extractMeta('<html></html>')).toEqual({ title: null, description: null, h1Count: 0, noindex: false });
   });
 });
 
