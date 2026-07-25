@@ -5,6 +5,12 @@ import { XuatHanhChecker } from '@/components/xuat-hanh/XuatHanhChecker';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { webPage, breadcrumb, faqPage } from '@/lib/seo/jsonld';
+import { expiredSeasonalTarget } from '@/lib/seasonal';
+
+// Trang có một quyết định phụ thuộc NGÀY (ẩn link mùa Tết khi hết mùa). Không
+// khai `revalidate` thì quyết định đó bị nướng vào HTML từ lúc build và link
+// vòng-lại-chính-nó sẽ nằm đó tới lần deploy sau.
+export const revalidate = 86400;
 
 const DESC =
   'Tra hướng xuất hành (Hỷ Thần, Tài Thần) và giờ hoàng đạo cho bất kỳ ngày nào, tính theo Can-Chi. Minh bạch — phong tục tham khảo, không phán số mệnh.';
@@ -81,7 +87,11 @@ export default function XuatHanhPage() {
         <section className="space-y-8">
           <XuatHanhChecker />
 
-          {/* Dẫn về trang mùa Tết */}
+          {/* Dẫn về trang mùa Tết — CHỈ khi mùa còn hiệu lực.
+              Hết mùa, `/xuat-hanh-2027` sẽ 308 về đúng trang này ⇒ để nguyên
+              link thì người bấm quay lại chỗ cũ (vòng lại chính nó), và Google
+              phí lượt quét vào một chặng chuyển hướng vô nghĩa. */}
+          {!expiredSeasonalTarget('/xuat-hanh-2027') && (
           <div className="mx-auto max-w-3xl">
             <Link
               href="/xuat-hanh-2027"
@@ -93,6 +103,7 @@ export default function XuatHanhPage() {
               <span className="shrink-0 text-gold">Mở →</span>
             </Link>
           </div>
+          )}
 
           {/* Giải thích */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
