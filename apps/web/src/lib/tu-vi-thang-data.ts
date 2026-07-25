@@ -330,6 +330,55 @@ export function spanNote(o: MonthOverview): string {
   return `Trụ tháng theo Bát Tự đổi tại tiết khí chứ không đổi vào ngày 1 dương lịch, nên ${o.label} bị cắt làm hai đoạn: ${parts.join('; ')}. Trang này lấy ${o.main.label} làm trụ đại diện vì nó chiếm ${o.mainDays}/${o.daysCount} ngày.`;
 }
 
+// ── Chuỗi SEO của cụm ───────────────────────────────────────────────
+// Cả 3 route (hub, tháng, tháng×con giáp) lấy tiêu đề/mô tả từ đây, KHÔNG tự
+// ghép chuỗi trong `generateMetadata`. Lý do: hai ngưỡng SERP (tiêu đề ≤60, mô
+// tả ≤160) chỉ khoá được bằng test khi mọi mẫu nằm chung một chỗ test với tới.
+// Trang tháng từng là mẫu chật nhất cụm (dư đúng 1 ký tự ở tháng 10/2027) mà
+// không test nào chạm tới vì nó nằm inline trong route.
+//
+// Quy ước: mọi hàm ở đây trả về tiêu đề **trần** (không hậu tố thương hiệu);
+// route ghép hậu tố bằng `metaTitle()` rồi đặt vào `title: { absolute }`. Bản
+// trần dành cho JSON-LD `headline`/`name` và `og:image` alt — những chỗ không
+// nên mang tên thương hiệu.
+
+/**
+ * Hậu tố thương hiệu cho `<title>`.
+ *
+ * Root layout đặt `title.template = '%s · hieu.asia'`, nhưng Next KHÔNG áp
+ * template đó lên `openGraph.title` → dùng template thì `<title>` dài thêm 12
+ * ký tự còn `og:title` thì không, hai thẻ lệch nhau. Nên cụm này tự ghép hậu tố
+ * rồi chốt bằng `absolute`, và dùng đúng một chuỗi cho cả `og:`/`twitter:`.
+ */
+const BRAND_SUFFIX = ' | hieu.asia';
+
+/** Ghép hậu tố thương hiệu vào tiêu đề trần. */
+export function metaTitle(bare: string): string {
+  return `${bare}${BRAND_SUFFIX}`;
+}
+
+/** Ngưỡng Google cắt ở SERP — test dùng đúng hai số này. */
+export const TITLE_MAX = 60;
+export const DESCRIPTION_MAX = 160;
+
+export const HUB_TITLE = 'Tử vi tháng theo con giáp — tra can chi';
+
+export const HUB_DESCRIPTION =
+  'Tử vi tháng cho 12 con giáp: trụ tháng theo tiết khí, quan hệ hợp xung với chi tuổi, ngày hợp và ngày xung trong tháng. Tính từ can chi để tham khảo.';
+
+/** Tiêu đề trần của trang một tháng. */
+export function monthPageTitle(o: MonthOverview): string {
+  return `Tử vi tháng ${o.key.month}/${o.key.year} cho 12 con giáp (${o.main.label})`;
+}
+
+/** Mô tả trang một tháng — clamp là chốt chặn, độ dài phụ thuộc tên trụ tháng. */
+export function monthPageDescription(o: MonthOverview): string {
+  return clampDescription(
+    `Tháng ${o.key.month}/${o.key.year} mang trụ tháng ${o.main.label} — can ${o.main.can} hành ${o.main.canElement}, chi ${o.main.chi} hành ${o.main.chiElement}. Bảng đối chiếu 12 con giáp với chi tháng và số ngày hợp/xung trong tháng.`,
+    DESCRIPTION_MAX,
+  );
+}
+
 // ── Bảng ngày trong tháng theo chi tuổi ─────────────────────────────
 
 export interface DayNote {
@@ -444,12 +493,13 @@ export function buildThangConGiap(k: MonthKey, slug: string): ThangConGiap | nul
   // Tiêu đề "trần" (không hậu tố thương hiệu) — route ghép ` | hieu.asia` khi
   // dựng metadata, còn JSON-LD headline dùng đúng bản trần này.
   const seoTitle = `Tử vi tháng ${k.month}/${k.year} tuổi ${z.ten}: ngày hợp xung`;
-  // Mô tả ≤160 ký tự: từ khoá ("tử vi tháng M/YYYY tuổi X") dồn lên đầu, phần
-  // dữ kiện theo sau. `clampDescription` chỉ là chốt chặn — mẫu này dài nhất 151
-  // ký tự với dữ liệu hiện có, nhưng độ dài phụ thuộc trụ tháng nên vẫn cần chặn.
+  // Mô tả: từ khoá ("tử vi tháng M/YYYY tuổi X") dồn lên đầu, phần dữ kiện theo
+  // sau. `clampDescription` chỉ là chốt chặn — độ dài phụ thuộc tên trụ tháng và
+  // số ngày hợp/xung, mà cụm sinh trang cuốn chiếu nên tổ hợp tương lai chưa đo
+  // hết được. (Sweep 2026–2035: dài nhất 152, clamp chưa phải cắt lần nào.)
   const seoDescription = clampDescription(
     `Tử vi ${month.label} tuổi ${z.ten} (con ${ANIMAL_BY_CHI[z.ten as Chi]}): trụ tháng ${month.main.label}, chi tuổi ${relCopy.metaRel}, ${thuanCount} ngày hợp và ${days.lucXung.length} ngày xung. Tính từ can chi để tham khảo.`,
-    160,
+    DESCRIPTION_MAX,
   );
 
   const faqs: { q: string; a: string }[] = [

@@ -16,6 +16,7 @@ import {
   buildThangConGiap,
   buildableMonths,
   liveMonths,
+  metaTitle,
   monthSlug,
   parseMonthSlug,
   spanNote,
@@ -46,18 +47,18 @@ export async function generateMetadata({
   const d = buildThangConGiap(k, congiap);
   if (!d) notFound();
   const url = `https://hieu.asia/tu-vi-thang/${ky}/${congiap}`;
-  // Template `%s · hieu.asia` của root layout đẩy <title> vượt ngưỡng Google cắt
-  // (~60 ký tự) và làm og:title lệch <title>. Chốt bằng `absolute` rồi dùng đúng
-  // chuỗi đó cho og/twitter — cùng cách các trang khác trong repo đang làm.
-  const metaTitle = `${d.seoTitle} | hieu.asia`;
+  // `d.seoTitle` là bản trần (JSON-LD headline + og:image alt dùng nó); hậu tố
+  // thương hiệu ghép ở đây rồi chốt bằng `absolute` — xem ghi chú ngưỡng SERP
+  // trong `tu-vi-thang-data.ts`.
+  const title = metaTitle(d.seoTitle);
   return {
-    title: { absolute: metaTitle },
+    title: { absolute: title },
     description: d.seoDescription,
     alternates: { canonical: url },
     // Route-level openGraph THAY THẾ openGraph của root layout — phải khai lại
     // images, nếu không preview mạng xã hội sẽ trắng.
     openGraph: {
-      title: metaTitle,
+      title,
       description: d.seoDescription,
       url,
       type: 'article',
@@ -66,7 +67,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: metaTitle,
+      title,
       description: d.seoDescription,
       images: [{ url: '/og-image.jpg', alt: d.seoTitle }],
     },

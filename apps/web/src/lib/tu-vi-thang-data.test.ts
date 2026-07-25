@@ -6,11 +6,18 @@ import {
   buildMonthOverview,
   buildMonthTable,
   buildThangConGiap,
+  DESCRIPTION_MAX,
+  HUB_DESCRIPTION,
+  HUB_TITLE,
   LAUNCH_MONTH,
+  TITLE_MAX,
   buildableMonths,
   daysInMonth,
   elementStance,
   liveMonths,
+  metaTitle,
+  monthPageDescription,
+  monthPageTitle,
   monthSlug,
   parseMonthSlug,
   pastMonths,
@@ -196,18 +203,51 @@ describe('nội dung 72 trang thực sự khác nhau', () => {
     for (const p of pages) expect(p.faqs).toHaveLength(5);
   });
 
-  // Ngưỡng Google cắt ở SERP: ~60 ký tự tiêu đề, ~160 ký tự mô tả. Mẫu chuỗi ở
-  // đây ghép từ dữ liệu (tên trụ tháng, số ngày) nên độ dài đổi theo tháng —
-  // khoá lại bằng test để một lần sửa chữ sau này không âm thầm vượt ngưỡng.
-  it('tiêu đề ≤60 và mô tả ≤160 ký tự, không gãy giữa chữ', () => {
-    // Route ghép ` | hieu.asia` vào seoTitle khi dựng <title>, nên bản trần phải
-    // chừa đủ chỗ cho hậu tố — nếu không, tiêu đề render ra mới là cái vượt ngưỡng.
-    const brandSuffix = ' | hieu.asia';
-    for (const p of pages) {
-      expect(p.seoTitle.length + brandSuffix.length).toBeLessThanOrEqual(60);
-      expect(p.seoDescription.length).toBeLessThanOrEqual(160);
-      // Mẫu hiện tại vừa khít trong ngưỡng nên clampDescription không phải cắt.
-      expect(p.seoDescription).not.toContain('…');
+});
+
+describe('ngưỡng SERP của cả 3 route', () => {
+  // Ngưỡng Google cắt: ~60 ký tự tiêu đề, ~160 ký tự mô tả. Mọi mẫu chuỗi ghép
+  // từ dữ liệu (tên trụ tháng, số ngày hợp/xung) nên độ dài đổi theo tháng.
+  //
+  // CỐ Ý KHÔNG dùng `NOW`/`liveMonths` ở đây. Cụm sinh trang cuốn chiếu vô hạn
+  // về phía trước, nên nếu chỉ kiểm cửa sổ đang mở thì một tháng chật hơn (chỉ
+  // vào cửa sổ sau này) sẽ lọt lưới — trang tháng 10/2027 là ví dụ thật: tiêu đề
+  // 59/60, chật hơn mọi tháng trong cửa sổ hiện tại.
+  //
+  // Trụ tháng lặp lại theo chu kỳ 5 năm (can tháng suy từ can năm theo Ngũ Hổ
+  // Độn), nên quét 10 năm là phủ HẾT mọi tổ hợp (tháng × trụ tháng) có thể có.
+  const YEARS = Array.from({ length: 10 }, (_, i) => 2026 + i);
+  const months = YEARS.flatMap((year) =>
+    Array.from({ length: 12 }, (_, i) => ({ year, month: i + 1 })),
+  );
+
+  const check = (label: string, title: string, description: string) => {
+    // Route ghép hậu tố thương hiệu vào tiêu đề trần — cái vượt ngưỡng là chuỗi
+    // SAU khi ghép, nên phải đo `metaTitle()` chứ không đo bản trần.
+    expect(metaTitle(title).length, `title: ${label}`).toBeLessThanOrEqual(TITLE_MAX);
+    expect(description.length, `desc: ${label}`).toBeLessThanOrEqual(DESCRIPTION_MAX);
+    // clampDescription là chốt chặn; nếu nó phải cắt thì mẫu chữ đã quá dài —
+    // sửa mẫu chứ đừng để người đọc thấy câu cụt.
+    expect(description, `desc bị cắt: ${label}`).not.toContain('…');
+  };
+
+  it('hub /tu-vi-thang', () => {
+    check('hub', HUB_TITLE, HUB_DESCRIPTION);
+  });
+
+  it(`trang tháng /tu-vi-thang/[ky] — ${months.length} tháng (2026–2035)`, () => {
+    for (const k of months) {
+      const m = buildMonthOverview(k);
+      check(monthSlug(k), monthPageTitle(m), monthPageDescription(m));
+    }
+  });
+
+  it(`trang con giáp /tu-vi-thang/[ky]/[congiap] — ${months.length * 12} trang`, () => {
+    for (const k of months) {
+      for (const z of ZODIAC) {
+        const d = buildThangConGiap(k, z.slug)!;
+        check(`${monthSlug(k)}/${z.slug}`, d.seoTitle, d.seoDescription);
+      }
     }
   });
 });

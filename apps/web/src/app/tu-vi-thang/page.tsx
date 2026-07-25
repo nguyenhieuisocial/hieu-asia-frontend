@@ -9,16 +9,21 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
-import { buildMonthOverview, liveMonths, WINDOW_MONTHS } from '@/lib/tu-vi-thang-data';
+import {
+  buildMonthOverview,
+  HUB_DESCRIPTION,
+  HUB_TITLE,
+  liveMonths,
+  metaTitle,
+  WINDOW_MONTHS,
+} from '@/lib/tu-vi-thang-data';
 
-const TITLE = 'Tử vi tháng theo con giáp — tra can chi';
-// Template `%s · hieu.asia` của root layout đẩy <title> vượt ngưỡng Google cắt
-// (~60 ký tự) và làm og:title lệch <title>. Chốt bằng `absolute` rồi dùng đúng
-// chuỗi đó cho og/twitter — cùng cách các trang khác trong repo đang làm.
-const META_TITLE = `${TITLE} | hieu.asia`;
-// ≤160 ký tự để Google không cắt cụt ở SERP.
-const DESC =
-  'Tử vi tháng cho 12 con giáp: trụ tháng theo tiết khí, quan hệ hợp xung với chi tuổi, ngày hợp và ngày xung trong tháng. Tính từ can chi để tham khảo.';
+// Mẫu chuỗi nằm trong lib để test khoá được ngưỡng SERP — xem ghi chú ở
+// `tu-vi-thang-data.ts`. TITLE là bản trần (JSON-LD dùng), META_TITLE có hậu tố
+// thương hiệu và đi vào `absolute` + og/twitter để ba thẻ trùng khít nhau.
+const TITLE = HUB_TITLE;
+const META_TITLE = metaTitle(HUB_TITLE);
+const DESC = HUB_DESCRIPTION;
 const URL = 'https://hieu.asia/tu-vi-thang';
 
 export const metadata: Metadata = {
