@@ -84,6 +84,12 @@ jobs:
                 # thư mục 261 file là đốt quota vô ích. Grep toàn repo chỉ có 3
                 # file này phát JSON-LD — nếu thêm file mới thì thêm vào đây.
                 apps/web/src/components/seo/* | apps/web/src/components/learn/LearnArticleView.tsx) RELEVANT=true ;;
+                # `sitemap.ts` / `robots.ts` KHÔNG khớp 2 mẫu `*page.tsx` / `*layout.tsx`
+                # ở trên, nên sửa sitemap là guard BỎ QUA im lặng — đúng lúc luật
+                # `canonical-ceded-in-sitemap` cần chính file đó. `robots.ts` vào cùng
+                # vì nó quyết định trang nào cho-index, mà nhóm luật `h1-*` và canonical
+                # đều chỉ soi trang cho-index.
+                apps/web/src/app/sitemap.ts | apps/web/src/app/robots.ts) RELEVANT=true ;;
                 # Chính guard và workflow của nó.
                 apps/web/scripts/seo-guard.mjs | .github/workflows/seo-guard.yml) RELEVANT=true ;;
                 # Nâng Next có thể đổi hình dạng HTML → chết regex đọc thẻ.
