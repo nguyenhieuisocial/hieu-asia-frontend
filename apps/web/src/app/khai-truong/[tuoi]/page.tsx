@@ -7,7 +7,11 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { KhaiTruongChecker } from '@/components/khai-truong/KhaiTruongChecker';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { OPENING_VERDICT_LABEL } from '@/lib/khai-truong';
-import { BIRTH_YEARS, TARGET_YEAR, buildYearPage, slugOf, yearFromSlug } from '../years';
+import { BIRTH_YEARS, targetYear, buildYearPage, slugOf, yearFromSlug } from '../years';
+
+// Năm mục tiêu lật vào mùng 1 Tết ⇒ phải tính lúc render, và route phải khai
+// `revalidate` nếu không kết quả vẫn bị nướng vào HTML từ lúc build.
+export const revalidate = 86400;
 
 // Fixed set of SEO landing slugs — unknown slugs 404 instead of rendering.
 export const dynamicParams = false;
@@ -55,6 +59,8 @@ export default async function KhaiTruongYearPage({
   const { tuoi } = await params;
   const year = yearFromSlug(tuoi);
   if (!year) notFound();
+  // Đọc một lần đầu hàm render — không gán ra cấp module (xem `lib/nam-muc-tieu.ts`).
+  const TARGET_YEAR = targetYear();
   const d = buildYearPage(year);
 
   return (

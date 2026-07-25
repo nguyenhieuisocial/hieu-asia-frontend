@@ -1096,7 +1096,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "cat": "xem-tuoi",
       "emoji": "🧧",
       "name": "Tuổi Xông Đất",
-      "desc": "Gợi ý tuổi xông đất Tết Đinh Mùi 2027 theo tam hợp, lục hợp & ngũ hành — minh bạch, tham khảo."
+      "desc": "Gợi ý tuổi xông đất Tết theo tam hợp, lục hợp & ngũ hành — minh bạch, tham khảo."
     },
     "surfaces": [
       "catalog"

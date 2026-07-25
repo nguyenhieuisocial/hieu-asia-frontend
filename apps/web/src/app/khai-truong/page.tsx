@@ -7,30 +7,42 @@ import { KhaiTruongChecker } from '@/components/khai-truong/KhaiTruongChecker';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkOpeningYear, OPENING_VERDICT_LABEL } from '@/lib/khai-truong';
 import { clampDescription } from '@/lib/seo/description';
-import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
+import { BIRTH_YEARS, targetYear, slugOf } from './years';
 
+// Năm mục tiêu lật vào mùng 1 Tết nên MỌI chỗ dùng nó phải tính lúc render —
+// hằng số cấp module chỉ được tính một lần cho mỗi tiến trình máy chủ. Vì vậy
+// tiêu đề/mô tả đều là HÀM nhận năm, và metadata dùng `generateMetadata()`.
+//
 // Title kept ≤~63 rendered (incl. " · hieu.asia" suffix) so it doesn't truncate in
 // SERPs; the old "Xem tuổi khai trương / mở hàng năm 2027 — tính Tam Tai, xung Thái
 // Tuế" rendered ~89 chars. Keywords (khai trương / mở hàng / year / Tam Tai / Thái
 // Tuế) preserved.
-const TITLE = `Tuổi khai trương / mở hàng ${TARGET_YEAR} — Tam Tai, Thái Tuế`;
+const TITLE = (y: number) => `Tuổi khai trương / mở hàng ${y} — Tam Tai, Thái Tuế`;
 // Full paragraph kept but clamped to ≤160 for the SERP snippet (was ~430 chars).
-const DESCRIPTION = clampDescription(
-  `Kiểm tra năm ${TARGET_YEAR} có hợp tuổi khai trương / mở hàng theo năm sinh chủ kinh doanh: Tam Tai (3 năm kiêng khởi sự) và xung Thái Tuế — hiển thị rõ từng bước tính, kèm các năm hợp tuổi gần nhất. Không xét Kim Lâu / Hoang Ốc (dành cho làm nhà, cưới hỏi). Tham khảo minh bạch, không phán số mệnh.`,
-  160,
-);
+const DESCRIPTION = (y: number) =>
+  clampDescription(
+    `Kiểm tra năm ${y} có hợp tuổi khai trương / mở hàng theo năm sinh chủ kinh doanh: Tam Tai (3 năm kiêng khởi sự) và xung Thái Tuế — hiển thị rõ từng bước tính, kèm các năm hợp tuổi gần nhất. Không xét Kim Lâu / Hoang Ốc (dành cho làm nhà, cưới hỏi). Tham khảo minh bạch, không phán số mệnh.`,
+    160,
+  );
 
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: 'https://hieu.asia/khai-truong' },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: 'https://hieu.asia/khai-truong',
-    type: 'website' as const,
-  },
-};
+// Không có dòng này thì năm vẫn bị nướng vào HTML từ lúc build và Tết qua rồi
+// trang vẫn ghi năm cũ — đúng lỗi đang sửa.
+export const revalidate = 86400;
+
+export function generateMetadata(): Metadata {
+  const y = targetYear();
+  return {
+    title: TITLE(y),
+    description: DESCRIPTION(y),
+    alternates: { canonical: 'https://hieu.asia/khai-truong' },
+    openGraph: {
+      title: TITLE(y),
+      description: DESCRIPTION(y),
+      url: 'https://hieu.asia/khai-truong',
+      type: 'website' as const,
+    },
+  };
+}
 
 const FAQS = [
   {
@@ -63,13 +75,15 @@ const FAQS = [
 const TABLE_YEARS: number[] = Array.from({ length: 36 }, (_, i) => 1965 + i); // 1965–2000
 
 export default function KhaiTruongPage() {
+  // Đọc một lần đầu hàm render rồi dùng lại — không gán ra cấp module.
+  const TARGET_YEAR = targetYear();
   const rows = TABLE_YEARS.map((y) => ({ year: y, r: checkOpeningYear(y, TARGET_YEAR) }));
 
   return (
     <>
       <JsonLd
         data={[
-          webPage({ name: TITLE, description: DESCRIPTION, url: '/khai-truong' }),
+          webPage({ name: TITLE(TARGET_YEAR), description: DESCRIPTION(TARGET_YEAR), url: '/khai-truong' }),
           breadcrumb([
             { name: 'Trang chủ', url: '/' },
             { name: 'Xem tuổi khai trương', url: '/khai-truong' },

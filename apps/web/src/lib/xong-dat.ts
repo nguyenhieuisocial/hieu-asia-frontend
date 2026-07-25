@@ -26,14 +26,80 @@
  */
 
 import { ELEMENTS } from './dat-ten-ngu-hanh';
-import { relationOf, ZODIAC, type RelationKind, type Zodiac } from './hop-tuoi-pairs';
+import { relationOf, sortPair, ZODIAC, type RelationKind, type Zodiac } from './hop-tuoi-pairs';
+import { namMucTieu } from './nam-muc-tieu';
+import { solarToLunar } from './ngay-kieng-ky';
 import { yearProfile, type RelationTone, type YearProfile } from './sinh-con';
 
-/** Tết gần nhất kế tiếp: Đinh Mùi — mùng 1 = 06/02/2027 (verify-xong-dat.ts). */
-export const DEFAULT_TARGET_YEAR = 2027;
+/**
+ * Năm Tết mà cụm /xong-dat đang nói tới — KỲ TẾT KẾ TIẾP, lật vào mùng 1 Tết.
+ *
+ * Vì sao là `namMucTieu() + 1` chứ không phải `namMucTieu()` như các cụm cưới /
+ * làm nhà / khai trương: xông đất là tục của ĐÚNG mùng 1 Tết, tức là hành vi MỞ
+ * một năm âm mới. Trong suốt năm âm 2026 (Bính Ngọ), năm sắp được mở là 2027
+ * (Đinh Mùi) — đúng bằng con số 2027 gõ cứng trước đây. Các cụm kia hỏi "năm
+ * đang sống có cưới/làm nhà được không" nên dùng thẳng năm âm hiện hành; cụm
+ * này hỏi "Tết sắp tới mời ai bước vào nhà", nên lệch đúng 1 năm.
+ *
+ * VÌ SAO LÙI 3 NGÀY — sửa một lỗi tinh vi
+ * `namMucTieu() + 1` trần sẽ lật ngay lúc giao thừa: sáng mùng 1 Tết Đinh Mùi
+ * trang đã nói về **Tết 2028**, trong khi người đang đọc chính là người đi xông
+ * đất cho 2027 sáng hôm đó. Sai đúng vào ngày cao điểm nhất của cả cụm.
+ * Xông đất là tục của **ba ngày Tết**, nên năm đang mở phải được giữ hết mùng 3
+ * rồi mới chuyển sang kỳ sau. Lùi đồng hồ 3 ngày là cách diễn đạt gọn nhất:
+ *   05/02/2027 (29 Chạp) → 2027 · 06/02 (mùng 1) → 2027 · 08/02 (mùng 3) → 2027
+ *   09/02/2027 (mùng 4)  → 2028 · và giữ 2028 suốt tới Tết sau.
+ *
+ * ⚠️ Gọi LÚC RENDER, đừng gán vào hằng số cấp module — xem ghi chú dài trong
+ * `nam-muc-tieu.ts`. Route dùng nó cũng phải khai `revalidate`.
+ */
+const BA_NGAY_TET_MS = 3 * 24 * 60 * 60 * 1000;
 
-/** Các năm có thể chọn trong checker (đều tính từ engine, không viết tay). */
-export const TARGET_YEARS = [2027, 2028] as const;
+export function defaultTargetYear(now: Date = new Date()): number {
+  return namMucTieu(new Date(now.getTime() - BA_NGAY_TET_MS)) + 1;
+}
+
+/** Các năm chọn được trong checker: Tết tới và Tết kế đó. */
+export function targetYears(now?: Date): number[] {
+  const y = defaultTargetYear(now);
+  return [y, y + 1];
+}
+
+export interface TetMoc {
+  /** Ngày dương của mùng 1, dạng dd/mm/yyyy — vd "06/02/2027". */
+  ngay: string;
+  /** Thứ trong tuần của mùng 1 — vd "thứ Bảy". */
+  thu: string;
+  /** Ngày dương liền trước mùng 1 — vd "05/02/2027". */
+  ngayTruoc: string;
+}
+
+const THU_VN = ['Chủ Nhật', 'thứ Hai', 'thứ Ba', 'thứ Tư', 'thứ Năm', 'thứ Sáu', 'thứ Bảy'];
+
+const ngayDuong = (d: Date) =>
+  `${String(d.getUTCDate()).padStart(2, '0')}/${String(d.getUTCMonth() + 1).padStart(2, '0')}/${d.getUTCFullYear()}`;
+
+/**
+ * Mốc mùng 1 Tết của một năm âm — DÒ bằng chính bộ lịch âm trong repo.
+ *
+ * Không gõ bảng ngày Tết: bảng gõ tay sẽ hết dữ liệu vào một năm nào đó rồi im
+ * lặng sai, đúng loại lỗi `nam-muc-tieu.ts` sinh ra để dẹp. Mùng 1 luôn rơi
+ * trong 21/01–21/02 dương lịch của chính năm âm đó nên chỉ cần quét dải này.
+ */
+export function tetMoc(lunarYear: number): TetMoc {
+  for (let i = 0; i < 40; i++) {
+    const d = new Date(Date.UTC(lunarYear, 0, 21 + i));
+    const l = solarToLunar(d.getUTCDate(), d.getUTCMonth() + 1, d.getUTCFullYear());
+    if (l.day === 1 && l.month === 1 && !l.leap && l.year === lunarYear) {
+      return {
+        ngay: ngayDuong(d),
+        thu: THU_VN[d.getUTCDay()]!,
+        ngayTruoc: ngayDuong(new Date(d.getTime() - 86400000)),
+      };
+    }
+  }
+  throw new Error(`Không tìm được mùng 1 Tết cho năm âm ${lunarYear}`);
+}
 
 export type XongDatTier = 'rat-hop' | 'hop' | 'binh' | 'nen-can-nhac';
 
@@ -188,7 +254,7 @@ function tierOf(total: number, hardFlag: boolean): XongDatTier {
 export function checkXongDat(
   guestYear: number,
   hostYear: number,
-  targetYear: number = DEFAULT_TARGET_YEAR,
+  targetYear: number = defaultTargetYear(),
 ): XongDatResult | null {
   const guest = yearProfile(guestYear);
   const host = yearProfile(hostYear);
@@ -203,7 +269,7 @@ export function checkXongDat(
 }
 
 /** Dải năm sinh ứng viên mặc định: 18–65 tuổi (dương) tại năm xông đất. */
-export function candidateYears(targetYear: number = DEFAULT_TARGET_YEAR): number[] {
+export function candidateYears(targetYear: number = defaultTargetYear()): number[] {
   const out: number[] = [];
   for (let y = targetYear - 65; y <= targetYear - 18; y++) out.push(y);
   return out;
@@ -215,7 +281,7 @@ export function candidateYears(targetYear: number = DEFAULT_TARGET_YEAR): number
  */
 export function rankCandidates(
   hostYear: number,
-  targetYear: number = DEFAULT_TARGET_YEAR,
+  targetYear: number = defaultTargetYear(),
 ): XongDatResult[] {
   return candidateYears(targetYear)
     .map((y) => checkXongDat(y, hostYear, targetYear))
@@ -229,7 +295,7 @@ export function rankCandidates(
  */
 export function topCandidates(
   hostYear: number,
-  targetYear: number = DEFAULT_TARGET_YEAR,
+  targetYear: number = defaultTargetYear(),
   count = 6,
 ): XongDatResult[] {
   const perChi = new Map<string, number>();
@@ -248,7 +314,7 @@ export function topCandidates(
 /** Các nhóm con giáp "nên cân nhắc" cho 1 gia chủ (mức chi, kèm lý do). */
 export function cautionChis(
   hostYear: number,
-  targetYear: number = DEFAULT_TARGET_YEAR,
+  targetYear: number = defaultTargetYear(),
 ): Array<{ zodiac: Zodiac; reasons: string[] }> {
   const host = yearProfile(hostYear);
   const target = yearProfile(targetYear);
@@ -266,25 +332,44 @@ export function cautionChis(
   }).filter((e) => e.reasons.length > 0);
 }
 
+/**
+ * Bộ tam hợp đầy đủ (gồm cả chi năm) theo THỨ TỰ QUEN GỌI — vd chi Mùi ra
+ * "Hợi – Mão – Mùi". Quy luật: bộ bắt đầu từ chi trường sinh (Dần, Tỵ, Thân,
+ * Hợi — đúng các chi có chỉ số ≡ 2 mod 3), rồi cách 4 cung một.
+ */
+function tamHopTrio(target: Zodiac): Zodiac[] {
+  const i = ZODIAC.findIndex((z) => z.slug === target.slug);
+  const start = [i, (i + 4) % 12, (i + 8) % 12].find((j) => j % 3 === 2)!;
+  return [0, 4, 8].map((k) => ZODIAC[(start + k) % 12]!);
+}
+
 /** Nhóm con giáp theo quan hệ với chi NĂM — cho nội dung trang năm. */
-export function yearChiGroups(targetYear: number = DEFAULT_TARGET_YEAR): {
+export function yearChiGroups(targetYear: number = defaultTargetYear()): {
   target: YearProfile;
   tamHop: Zodiac[];
   lucHop: Zodiac[];
   xung: Zodiac[];
   hai: Zodiac[];
   trung: Zodiac[];
+  /** Cả bộ tam hợp theo thứ tự quen gọi (gồm chi năm). */
+  boTamHop: Zodiac[];
+  /** Cặp lục hợp theo thứ tự địa chi (gồm chi năm). */
+  capLucHop: Zodiac[];
 } | null {
   const target = yearProfile(targetYear);
   if (!target) return null;
   const by = (kind: RelationKind) =>
     ZODIAC.filter((z) => relationOf(z.slug, target.zodiac.slug) === kind);
+  const lucHop = by('luc-hop');
+  const capSlugs = lucHop[0] ? sortPair(lucHop[0].slug, target.zodiac.slug) : [];
   return {
     target,
     tamHop: by('tam-hop'),
-    lucHop: by('luc-hop'),
+    lucHop,
     xung: by('luc-xung'),
     hai: by('luc-hai'),
     trung: by('dong-tuoi'),
+    boTamHop: tamHopTrio(target.zodiac),
+    capLucHop: capSlugs.map((s) => ZODIAC.find((z) => z.slug === s)!),
   };
 }

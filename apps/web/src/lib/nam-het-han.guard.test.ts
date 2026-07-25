@@ -45,6 +45,19 @@ describe('năm gõ cứng không được tụt lại phía sau ngày thật', (
     it(`${ten} trong ${file}`, () => {
       const src = doc(file);
       const m = new RegExp(`\\b${ten}\\s*(?::\\s*number)?\\s*=\\s*(\\d{4})\\b`).exec(src);
+      // Cụm đã chuyển sang tự lật vào mùng 1 Tết thì không còn gì để mục.
+      const tuLatTheoTet = /namMucTieu\s*[({]|from '@\/lib\/nam-muc-tieu'/.test(src);
+
+      if (tuLatTheoTet) {
+        // Nhưng phải sửa TRỌN: vừa gọi hàm vừa để sót hằng số cũ là sửa nửa vời
+        // — chỗ nào còn đọc hằng số sẽ vẫn kẹt ở năm cũ mà không ai thấy.
+        expect(
+          m,
+          `${file}: đã dùng namMucTieu() nhưng vẫn còn hằng số ${ten} = ${m?.[1]} — sửa nửa vời, chỗ nào còn đọc hằng số sẽ kẹt ở năm cũ.`,
+        ).toBeNull();
+        return;
+      }
+
       // Đọc không ra thì PHẢI đỏ. Một chốt im lặng bỏ qua trông y hệt như chốt
       // xanh — đúng cái bẫy đã dính một lần trong đợt này.
       expect(m, `${file}: không đọc được ${ten} — hằng số bị đổi tên hay đổi cách khai? Chốt này đang không bảo vệ gì.`).not.toBeNull();
@@ -55,7 +68,8 @@ describe('năm gõ cứng không được tụt lại phía sau ngày thật', (
         `${cum}: ${ten} = ${nam} trong khi đang là năm ${NAM_NAY}. ` +
           `Các trang này in năm ${nam} vào <title>/<h1>/JSON-LD, vẫn cho index và vẫn nằm trong sitemap — ` +
           `người tìm cho năm ${NAM_NAY} bấm vào sẽ thấy toàn bộ tính toán của năm cũ. ` +
-          `Dựng lại KHÔNG chữa được vì đây là hằng số trong mã. Sửa: bump hằng số + rà lại phần chữ quanh nó.`,
+          `Dựng lại KHÔNG chữa được vì đây là hằng số trong mã. ` +
+          `Cách sửa dứt điểm: chuyển sang \`namMucTieu()\` (lật vào mùng 1 Tết) như cụm /xem-tuoi-cuoi đã làm.`,
       ).toBeGreaterThanOrEqual(NAM_NAY);
     });
   }

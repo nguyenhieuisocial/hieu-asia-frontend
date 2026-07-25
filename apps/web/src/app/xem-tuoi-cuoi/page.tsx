@@ -10,29 +10,41 @@ import { XemTuoiCuoiChecker } from '@/components/xem-tuoi-cuoi/XemTuoiCuoiChecke
 import { HopTuoiClient } from '@/app/hop-tuoi/[type]/HopTuoiClient';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkWeddingYear, VERDICT_LABEL } from '@/lib/xem-tuoi-cuoi';
-import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
+import { BIRTH_YEARS, targetYear, slugOf } from './years';
 
-const TITLE = `Xem tuổi cưới ${TARGET_YEAR} — Kim Lâu, Tam Tai theo năm sinh`;
+// Năm mục tiêu lật vào mùng 1 Tết nên MỌI chỗ dùng nó phải tính lúc render —
+// hằng số cấp module chỉ được tính một lần cho mỗi tiến trình máy chủ. Vì vậy
+// tiêu đề/mô tả/FAQ đều là HÀM nhận năm, và metadata dùng `generateMetadata()`.
+const TITLE = (y: number) => `Xem tuổi cưới ${y} — Kim Lâu, Tam Tai theo năm sinh`;
 // SEO S7: rút gọn 221 → ~154 ký tự (Google cắt mô tả ~170).
-const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có thuận để cưới theo năm sinh cô dâu, chú rể: Kim Lâu, Tam Tai, chi năm xung tuổi — rõ từng bước tính, kèm các năm không phạm gần nhất.`;
+const DESCRIPTION = (y: number) =>
+  `Kiểm tra năm ${y} có thuận để cưới theo năm sinh cô dâu, chú rể: Kim Lâu, Tam Tai, chi năm xung tuổi — rõ từng bước tính, kèm các năm không phạm gần nhất.`;
 
-export const metadata: Metadata = {
+// Không có dòng này thì năm vẫn bị nướng vào HTML từ lúc build và Tết qua rồi
+// trang vẫn ghi năm cũ — đúng lỗi đang sửa.
+export const revalidate = 86400;
+
+export function generateMetadata(): Metadata {
+  const y = targetYear();
   // #942 đã rút TITLE nhưng vẫn còn 63 ký tự sau khi root layout nối
   // " · hieu.asia" (12) — vì mốc dùng khi đó là ~170 chứ không phải 60/160.
   // `absolute` chặn hậu tố → 51 ký tự, không phải cắt thêm chữ nào nữa.
-  title: { absolute: TITLE },
-  description: DESCRIPTION,
-  alternates: { canonical: 'https://hieu.asia/xem-tuoi-cuoi' },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: 'https://hieu.asia/xem-tuoi-cuoi',
-    type: 'website' as const,
-    images: OG_DEFAULT_IMAGES,
-  },
-};
+  return {
+    title: { absolute: TITLE(y) },
+    description: DESCRIPTION(y),
+    alternates: { canonical: 'https://hieu.asia/xem-tuoi-cuoi' },
+    openGraph: {
+      title: TITLE(y),
+      description: DESCRIPTION(y),
+      url: 'https://hieu.asia/xem-tuoi-cuoi',
+      type: 'website' as const,
+      images: OG_DEFAULT_IMAGES,
+    },
+  };
+}
 
-const FAQS = [
+// Nhận năm mục tiêu làm tham số vì nó lật vào Tết — xem ghi chú ở đầu file.
+const FAQS = (TARGET_YEAR: number) => [
   {
     q: 'Xem tuổi cưới dựa trên những yếu tố nào?',
     a: 'Trang này tính 3 yếu tố dân gian hay được xét nhất khi chọn NĂM cưới: Kim Lâu (tuổi mụ chia 9, dư 1/3/6/8 là phạm), Tam Tai (mỗi nhóm tuổi tam hợp có 3 năm liền nhau cần kiêng) và chi năm xung với chi tuổi (lục xung). Mỗi kết luận đều kèm phép tính cụ thể để bạn kiểm chứng.',
@@ -59,18 +71,21 @@ const FAQS = [
 const TABLE_YEARS: number[] = Array.from({ length: 24 }, (_, i) => 1985 + i); // 1985–2008
 
 export default function XemTuoiCuoiPage() {
+  // Đọc một lần đầu hàm render rồi dùng lại — không gán ra cấp module.
+  const TARGET_YEAR = targetYear();
+  const faqs = FAQS(TARGET_YEAR);
   const rows = TABLE_YEARS.map((y) => ({ year: y, r: checkWeddingYear(y, TARGET_YEAR) }));
 
   return (
     <>
       <JsonLd
         data={[
-          webPage({ name: TITLE, description: DESCRIPTION, url: '/xem-tuoi-cuoi' }),
+          webPage({ name: TITLE(TARGET_YEAR), description: DESCRIPTION(TARGET_YEAR), url: '/xem-tuoi-cuoi' }),
           breadcrumb([
             { name: 'Trang chủ', url: '/' },
             { name: 'Xem tuổi cưới', url: '/xem-tuoi-cuoi' },
           ]),
-          faqPage(FAQS),
+          faqPage(faqs),
         ]}
       />
       <ToolPageShell
@@ -207,7 +222,7 @@ export default function XemTuoiCuoiPage() {
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
-              {FAQS.map((f, i) => (
+              {faqs.map((f, i) => (
                 <div key={i}>
                   <dt className="font-medium text-foreground">{f.q}</dt>
                   <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>

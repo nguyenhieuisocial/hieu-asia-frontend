@@ -7,30 +7,42 @@ import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { XemTuoiLamNhaChecker } from '@/components/xem-tuoi-lam-nha/XemTuoiLamNhaChecker';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkBuildYear, BUILD_VERDICT_LABEL } from '@/lib/xem-tuoi-lam-nha';
-import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
+import { BIRTH_YEARS, targetYear, slugOf } from './years';
 
-const TITLE = `Xem tuổi làm nhà ${TARGET_YEAR} — Kim Lâu, Hoang Ốc, Tam Tai`;
+// Năm mục tiêu lật vào mùng 1 Tết nên MỌI chỗ dùng nó phải tính lúc render —
+// hằng số cấp module chỉ được tính một lần cho mỗi tiến trình máy chủ. Vì vậy
+// tiêu đề/mô tả/FAQ đều là HÀM nhận năm, và metadata dùng `generateMetadata()`.
+const TITLE = (y: number) => `Xem tuổi làm nhà ${y} — Kim Lâu, Hoang Ốc, Tam Tai`;
 // Mốc thật là 160 ký tự, không phải ~170 — bản trước dừng ở 162 nên Google vẫn
 // cắt. Bỏ "rõ từng bước tính" (đã nói ở tiêu đề) → 143, giữ được "tục mượn tuổi".
-const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có được tuổi xây/sửa nhà theo năm sinh gia chủ: Kim Lâu, Hoang Ốc, Tam Tai — kèm các năm được tuổi gần nhất và tục mượn tuổi.`;
+const DESCRIPTION = (y: number) =>
+  `Kiểm tra năm ${y} có được tuổi xây/sửa nhà theo năm sinh gia chủ: Kim Lâu, Hoang Ốc, Tam Tai — kèm các năm được tuổi gần nhất và tục mượn tuổi.`;
 
-export const metadata: Metadata = {
+// Không có dòng này thì năm vẫn bị nướng vào HTML từ lúc build và Tết qua rồi
+// trang vẫn ghi năm cũ — đúng lỗi đang sửa.
+export const revalidate = 86400;
+
+export function generateMetadata(): Metadata {
+  const y = targetYear();
   // #942 đã rút TITLE nhưng vẫn còn 62 ký tự sau khi root layout nối
   // " · hieu.asia" (12) — vì mốc dùng khi đó là ~170 chứ không phải 60/160.
   // `absolute` chặn hậu tố → 50 ký tự, không phải cắt thêm chữ nào nữa.
-  title: { absolute: TITLE },
-  description: DESCRIPTION,
-  alternates: { canonical: 'https://hieu.asia/xem-tuoi-lam-nha' },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: 'https://hieu.asia/xem-tuoi-lam-nha',
-    type: 'website' as const,
-    images: OG_DEFAULT_IMAGES,
-  },
-};
+  return {
+    title: { absolute: TITLE(y) },
+    description: DESCRIPTION(y),
+    alternates: { canonical: 'https://hieu.asia/xem-tuoi-lam-nha' },
+    openGraph: {
+      title: TITLE(y),
+      description: DESCRIPTION(y),
+      url: 'https://hieu.asia/xem-tuoi-lam-nha',
+      type: 'website' as const,
+      images: OG_DEFAULT_IMAGES,
+    },
+  };
+}
 
-const FAQS = [
+// Nhận năm mục tiêu làm tham số vì nó lật vào Tết — xem ghi chú ở đầu file.
+const FAQS = (TARGET_YEAR: number) => [
   {
     q: 'Xem tuổi làm nhà dựa trên những yếu tố nào?',
     a: 'Trang này tính 3 hạn dân gian hay được xét nhất khi chọn NĂM khởi công: Kim Lâu (tuổi mụ chia 9, dư 1/3/6/8 là phạm), Hoang Ốc (tuổi mụ đếm vòng 6 cung, rơi Tam Địa Sát / Ngũ Thọ Tử / Lục Hoang Ốc là phạm) và Tam Tai (mỗi nhóm tuổi tam hợp có 3 năm liền nhau cần kiêng). Không phạm cả ba thì dân gian gọi là "được tuổi". Mỗi kết luận đều kèm phép tính cụ thể để bạn kiểm chứng.',
@@ -61,18 +73,21 @@ const FAQS = [
 const TABLE_YEARS: number[] = Array.from({ length: 36 }, (_, i) => 1965 + i); // 1965–2000
 
 export default function XemTuoiLamNhaPage() {
+  // Đọc một lần đầu hàm render rồi dùng lại — không gán ra cấp module.
+  const TARGET_YEAR = targetYear();
+  const faqs = FAQS(TARGET_YEAR);
   const rows = TABLE_YEARS.map((y) => ({ year: y, r: checkBuildYear(y, TARGET_YEAR) }));
 
   return (
     <>
       <JsonLd
         data={[
-          webPage({ name: TITLE, description: DESCRIPTION, url: '/xem-tuoi-lam-nha' }),
+          webPage({ name: TITLE(TARGET_YEAR), description: DESCRIPTION(TARGET_YEAR), url: '/xem-tuoi-lam-nha' }),
           breadcrumb([
             { name: 'Trang chủ', url: '/' },
             { name: 'Xem tuổi làm nhà', url: '/xem-tuoi-lam-nha' },
           ]),
-          faqPage(FAQS),
+          faqPage(faqs),
         ]}
       />
       <ToolPageShell
@@ -208,7 +223,7 @@ export default function XemTuoiLamNhaPage() {
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">
-              {FAQS.map((f, i) => (
+              {faqs.map((f, i) => (
                 <div key={i}>
                   <dt className="font-medium text-foreground">{f.q}</dt>
                   <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>

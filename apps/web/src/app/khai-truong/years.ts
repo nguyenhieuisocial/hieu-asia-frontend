@@ -17,8 +17,20 @@ import {
   type OpeningYearResult,
 } from '@/lib/khai-truong';
 
-/** Năm khai trương chính của cụm trang (mùa đầu năm). */
-export const TARGET_YEAR = 2026;
+/**
+ * Năm khai trương chính của cụm trang.
+ *
+ * Trước đây là hằng số gõ tay kèm ghi chú "mùa đầu năm" — nhưng không ai nhắc
+ * thì không ai cập nhật, và dựng lại web KHÔNG chữa được vì đó là literal trong
+ * mã. Nay lật tự động vào **mùng 1 Tết** (lựa chọn của founder: cụm này xem
+ * theo tuổi âm và can chi năm, mà tuổi âm chỉ tăng khi sang năm âm mới).
+ *
+ * ⚠️ Phải gọi LÚC RENDER, đừng gán vào hằng số cấp module — xem ghi chú dài
+ * trong `lib/nam-muc-tieu.ts`. Route dùng nó cũng phải khai `revalidate`.
+ */
+import { namMucTieu } from '@/lib/nam-muc-tieu';
+
+export { namMucTieu as targetYear };
 
 /** Các năm sinh có trang riêng — nhóm tuổi chủ kinh doanh phổ biến (1970–1999). */
 export const BIRTH_YEARS: number[] = Array.from({ length: 30 }, (_, i) => 1970 + i);
@@ -67,6 +79,9 @@ function verdictShortOf(r: OpeningYearResult): string {
 }
 
 export function buildYearPage(birthYear: number): YearPageData {
+  // Đọc năm mục tiêu MỘT LẦN ngay đầu hàm rồi dùng biến cục bộ: hàm này được
+  // gọi lúc render nên giá trị luôn đúng, mà phần chữ bên dưới không phải sửa.
+  const TARGET_YEAR = namMucTieu();
   const main = checkOpeningYear(birthYear, TARGET_YEAR);
   const next = checkOpeningYear(birthYear, TARGET_YEAR + 1);
   const scan = scanOpeningYears(birthYear, TARGET_YEAR, 6);
