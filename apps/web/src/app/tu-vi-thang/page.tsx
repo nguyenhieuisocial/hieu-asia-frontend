@@ -9,12 +9,7 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
-import {
-  buildMonthOverview,
-  liveMonths,
-  monthSlug,
-  WINDOW_MONTHS,
-} from '@/lib/tu-vi-thang-data';
+import { buildMonthOverview, liveMonths, WINDOW_MONTHS } from '@/lib/tu-vi-thang-data';
 
 const TITLE = 'Tử vi tháng theo con giáp — tra can chi';
 // Template `%s · hieu.asia` của root layout đẩy <title> vượt ngưỡng Google cắt
