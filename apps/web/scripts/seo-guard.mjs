@@ -130,6 +130,71 @@ export function checkPage(page) {
   return out;
 }
 
+/** Đưa URL về dạng so sánh được: bỏ tên miền, bỏ dấu `/` cuối. */
+export function normalizeUrl(u, base = 'https://hieu.asia') {
+  if (!u) return null;
+  return u.replace(base, '').split(/[?#]/)[0].replace(/\/+$/, '') || '/';
+}
+
+/**
+ * Kiểm canonical ở mức TOÀN SITE (không kiểm được từng trang riêng lẻ vì cần
+ * biết cả tập trang).
+ *
+ * VÌ SAO CẦN: canonical đang được gõ TAY ở 185 file, không có helper dùng chung
+ * — đúng môi trường sinh lỗi copy-paste. Và mọi cách hỏng ở đây đều IM LẶNG mà
+ * hậu quả nặng: trang vẫn hiện, vẫn có nội dung, chỉ là không bao giờ lên hạng.
+ *
+ * Đo 2026-07-25 (1.113 trang tĩnh): 0 vi phạm cả 3 luật. 66 trang `/hop-tuoi/
+ * tuoi/X-Y` cố ý trỏ canonical sang `Y-X` là ĐÚNG — cặp tuổi đối xứng nên gom
+ * hai thứ tự về một trang để khỏi trùng nội dung; cả 66 đều đã được loại khỏi
+ * sitemap. Thêm luật lúc vi phạm bằng 0 nên không chặn việc của ai.
+ *
+ * @param {{url: string, canonical: string|null, noindex: boolean}[]} pages
+ * @param {Set<string>|null} sitemapUrls URL trong sitemap (đã chuẩn hoá), null = không đọc được
+ */
+export function checkCanonicalGraph(pages, sitemapUrls) {
+  const out = [];
+  const exists = new Set(pages.map((p) => p.url));
+  /** Trang cho-index có canonical trỏ sang trang KHÁC → url đích. */
+  const ceded = new Map();
+  for (const p of pages) {
+    if (p.noindex || !p.canonical) continue;
+    const target = normalizeUrl(p.canonical);
+    if (target !== p.url) ceded.set(p.url, target);
+  }
+
+  for (const [url, target] of ceded) {
+    // Trỏ vào trang không tồn tại: Google dồn xếp hạng vào hư không ⇒ trang này
+    // mất sạch, và không có lỗi nào hiện ra ở đâu.
+    if (!exists.has(target)) {
+      out.push({
+        url,
+        rule: 'canonical-ghost',
+        detail: `canonical trỏ tới "${target}" — trang đó KHÔNG có trong build; Google dồn xếp hạng vào hư không`,
+      });
+      continue;
+    }
+    // A→B và B→A: Google không chọn được bản chuẩn nên thường bỏ CẢ HAI.
+    if (ceded.get(target) === url) {
+      out.push({
+        url,
+        rule: 'canonical-loop',
+        detail: `canonical vòng tròn với "${target}" — hai trang trỏ vào nhau, Google dễ bỏ cả hai`,
+      });
+    }
+    // Đã nhường canonical thì đừng nộp cho Google: Search Console sẽ báo
+    // "Duplicate, submitted URL not selected as canonical".
+    if (sitemapUrls && sitemapUrls.has(url)) {
+      out.push({
+        url,
+        rule: 'canonical-ceded-in-sitemap',
+        detail: `đã nhường canonical cho "${target}" mà vẫn nằm trong sitemap — bỏ khỏi app/sitemap.ts`,
+      });
+    }
+  }
+  return out;
+}
+
 /**
  * Khoá miễn trừ khớp URL không? Hỗ trợ 2 dạng:
  *   "/khai-truong"        → khớp đúng URL đó
@@ -309,6 +374,7 @@ export function extractMeta(html) {
   const t = /<title>([^<]*)<\/title>/.exec(html);
   const d = /<meta name="description" content="([^"]*)"/.exec(html);
   const robots = /<meta name="robots" content="([^"]*)"/.exec(html);
+  const canon = /<link rel="canonical" href="([^"]*)"/.exec(html);
   const h1Count = (html.match(/<h1[\s>]/g) || []).length;
   const noindex = robots !== null && robots[1].includes('noindex');
   return {
@@ -316,6 +382,7 @@ export function extractMeta(html) {
     description: d ? decodeEntities(d[1]) : null,
     h1Count,
     noindex,
+    canonical: canon ? canon[1] : null,
   };
 }
 
@@ -440,22 +507,47 @@ function main() {
   }
 
   const violations = [];
+  const canonPages = [];
+  // Sitemap: `next build` render nội dung ra `sitemap.xml.body` — còn
+  // `sitemap.xml` là THƯ MỤC (chứa route.js). Đọc đúng cái tên `.xml` sẽ luôn
+  // ném lỗi và luật cần sitemap bị tắt ÂM THẦM. Thử `.body` trước.
+  let sitemapUrls = null;
+  for (const name of ['sitemap.xml.body', 'sitemap.xml']) {
+    try {
+      const sm = readFileSync(join(appDir, name), 'utf8');
+      sitemapUrls = new Set([...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => normalizeUrl(m[1])));
+      break;
+    } catch {
+      // thử tên tiếp theo
+    }
+  }
+  // Bỏ luật thì phải NÓI RA. Guard im lặng tự vô hiệu là cách hỏng tệ nhất
+  // (vault 172 §6): vẫn in "không có vi phạm" trong khi đã thôi kiểm.
+  if (sitemapUrls === null) {
+    console.warn(
+      'seo-guard: canh bao — khong doc duoc sitemap trong build, BO luat "canonical-ceded-in-sitemap". Cac luat khac van chay.',
+    );
+  }
+
   for (const f of files) {
     const rel = relative(appDir, f).split(sep).join('/').replace(/\.html$/, '');
     const url = rel === 'index' ? '/' : `/${rel}`;
     const html = readFileSync(f, 'utf8');
-    const { title, description, h1Count, noindex } = extractMeta(html);
+    const { title, description, h1Count, noindex, canonical } = extractMeta(html);
     for (const v of checkPage({ url, title, description, h1Count, noindex })) {
       violations.push({ url, ...v });
     }
     for (const v of checkJsonLd(parseJsonLd(html))) violations.push({ url, ...v });
+    canonPages.push({ url, canonical, noindex });
   }
+
+  for (const v of checkCanonicalGraph(canonPages, sitemapUrls)) violations.push(v);
 
   const { blocking, allowed, stale } = applyAllowlist(violations, ALLOWLIST);
 
   console.log(`seo-guard: đã kiểm ${files.length} trang tĩnh.`);
   console.log(
-    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · đúng 1 <h1> (trang cho-index) · JSON-LD hợp lệ, không trùng loại, FAQ/breadcrumb đủ trường`,
+    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · đúng 1 <h1> (trang cho-index) · canonical không trỏ vào hư không/vòng tròn/sitemap · JSON-LD hợp lệ, không trùng loại, FAQ/breadcrumb đủ trường`,
   );
   console.log(`  vi phạm mới: ${blocking.length} · miễn trừ (có chủ): ${allowed.length}`);
 
