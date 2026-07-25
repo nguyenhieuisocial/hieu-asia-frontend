@@ -12,6 +12,9 @@ import {
   Skeleton,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb, faqPage, webPage } from '@/lib/seo/jsonld';
+import { BASE_URL, ORG_ID, SITE_LOCALE } from '@/lib/seo/constants';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { ReferralCard } from '@/components/account/ReferralCard';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
@@ -68,15 +71,39 @@ const FAQ: { q: string; a: string }[] = [
   },
 ];
 
-const FAQ_JSONLD = {
+// SEO-FIX: bộ schema riêng của trang /gieo-que — trước đây nằm ở layout.tsx nên
+// rớt xuống mọi route con. Không có builder SoftwareApplication trong
+// lib/seo/jsonld nên node này khai tại chỗ, nhưng trỏ `publisher` về @id
+// Organization (node phát site-wide qua siteGraph()) thay vì lặp lại Organization.
+const TOOL_JSONLD = {
   '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQ.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
+  '@type': 'SoftwareApplication',
+  name: 'Gieo Quẻ Kinh Dịch online',
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  url: `${BASE_URL}/gieo-que`,
+  inLanguage: SITE_LOCALE,
+  description:
+    'Bốc quẻ hỏi việc theo Kinh Dịch với phép 3 đồng xu — lập quẻ chính, quẻ biến, hào động trong 64 quẻ Dịch, kèm lời gợi mở. Miễn phí.',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'VND' },
+  publisher: { '@id': ORG_ID },
 };
+
+const PAGE_JSONLD = [
+  webPage({
+    url: '/gieo-que',
+    name: 'Gieo Quẻ Kinh Dịch online — bốc quẻ hỏi việc miễn phí',
+    description:
+      'Gieo quẻ Kinh Dịch online theo phép 3 đồng xu: lập quẻ chính, quẻ biến và hào động trong 64 quẻ Dịch.',
+  }),
+  TOOL_JSONLD,
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Gieo Quẻ', url: '/gieo-que' },
+  ]),
+  faqPage(FAQ),
+];
 
 export default function GieoQuePage() {
   const [question, setQuestion] = React.useState('');
@@ -116,10 +143,7 @@ export default function GieoQuePage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-      />
+      <JsonLd data={PAGE_JSONLD} />
       <ToolPageShell
         eyebrow="Kinh Dịch cổ truyền"
         relatedSlug="/gieo-que"
