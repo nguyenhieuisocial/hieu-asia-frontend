@@ -39,49 +39,19 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-// Wave 60.95.k P1-SEO — JSON-LD parity with /pricing /sample-report
-// /methodology. /account is `noindex` so crawlers won't surface it in
-// SERP, but BreadcrumbList still helps when /account is linked from
-// indexed pages (footer, in-app email). WebPage does not expose user
-// data — only static page metadata.
-const BREADCRUMB_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Tài khoản', item: 'https://hieu.asia/account' },
-  ],
-};
-
-const WEBPAGE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'WebPage',
-  name: 'Tài khoản',
-  description:
-    'Trung tâm quản lý tài khoản hieu.asia: lá số, quyết định, mentor, thanh toán, affiliate, quyền riêng tư.',
-  url: 'https://hieu.asia/account',
-  inLanguage: 'vi-VN',
-  isPartOf: {
-    '@type': 'WebSite',
-    name: 'hieu.asia',
-    url: 'https://hieu.asia',
-  },
-};
-
+// SEO-FIX: WebPage + BreadcrumbList của TRANG /account đã chuyển sang page.tsx.
+// Đặt ở layout khiến CẢ 11 route con (/account/chart, /account/mentor, …) cũng
+// phát bộ schema của trang cha → mỗi trang con có 2 WebPage (một trỏ sai url về
+// /account) và 2 BreadcrumbList. Cùng lỗi đã sửa cho tarot / gieo-que /
+// than-so-hoc (#939, #941). Ở đây cả nhánh là noindex nên Google không thấy —
+// nhưng sửa để LUẬT không cần ngoại lệ, và guard test bên dưới khoá được nó:
+// src/app/layout-schema.guard.test.ts
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
   // Client-side auth gate lives in apps/web/src/app/account/page.tsx via
   // useAuth() — we cannot read Supabase session from cookies() reliably
   // because the SDK uses a single storage key in localStorage, not cookies.
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
-      />
       <ReferralClaimOnce />
       {children}
     </>

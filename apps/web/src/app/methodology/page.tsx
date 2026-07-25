@@ -31,6 +31,7 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { article } from '@/lib/seo/jsonld';
 import { Scrollyteller } from '@/components/marketing/Scrollyteller';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
@@ -542,20 +543,17 @@ const BREADCRUMB_JSONLD = {
   ],
 };
 
-const ARTICLE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'TechArticle',
+// SEO-FIX: trước đây khai tay và thiếu `image` + `author` — hai trường Google
+// dùng cho rich result của Article/TechArticle. Chuyển sang builder chung
+// article() (lib/seo/jsonld) vốn đã tự điền image (ảnh OG) + author và publisher
+// trỏ @id về Organization phát site-wide, thay vì lặp lại node Organization.
+const ARTICLE_JSONLD = article({
+  type: 'TechArticle',
   headline: 'Phương pháp luận hieu.asia — Engine tính gì, AI luận gì',
-  description:
-    'Engine deterministic lập lá số, AI diễn giải, người dùng quyết định.',
-  inLanguage: 'vi-VN',
+  description: 'Engine deterministic lập lá số, AI diễn giải, người dùng quyết định.',
+  url: '/methodology',
   dateModified: '2026-05-21',
-  publisher: {
-    '@type': 'Organization',
-    name: 'hieu.asia',
-    url: 'https://hieu.asia',
-  },
-};
+});
 
 const FAQ_JSONLD = {
   '@context': 'https://schema.org',
