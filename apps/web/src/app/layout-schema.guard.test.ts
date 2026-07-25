@@ -51,7 +51,6 @@ const KNOWN_LEAF_DEBT = new Set<string>([
   '/can-xuong',
   '/disc',
   '/enneagram',
-  '/pricing',
   '/thuoc-lo-ban',
   '/tinh-menh-cuc',
   '/tu-kiem',
