@@ -19,6 +19,7 @@ import { AhrefsAnalytics } from '@/components/analytics/AhrefsAnalytics';
 import { GoogleTags } from '@/components/analytics/GoogleTags';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
+import { BirthProfileSync } from '@/components/account/BirthProfileSync';
 import { FloatingMentor } from '@/components/marketing/FloatingMentor';
 import { BackToTop } from '@/components/BackToTop';
 import { WebMcpTools } from '@/components/marketing/WebMcpTools';
@@ -303,6 +304,10 @@ export default async function RootLayout({
                     on first visit (geo-aware: VN + EU always; auto-accept
                     legitimate-interest defaults elsewhere). */}
                 <ConsentBanner />
+                {/* Hồ sơ ngày sinh: đồng bộ với tài khoản khi ĐÃ đăng nhập.
+                    Khách vãng lai → component này no-op hoàn toàn (không fetch),
+                    giữ đúng cam kết "tính ngay trong trình duyệt" ở trang tra cứu. */}
+                <BirthProfileSync />
                 {/* Wave 60.68 — PWA bottom-nav. Renders ONLY in standalone
                     display-mode AND on in-app routes (/account, /reading,
                     /dashboard, /journal, /decisions). No-op otherwise. */}
