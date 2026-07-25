@@ -369,8 +369,13 @@ export function spanNote(o: MonthOverview): string {
 //
 // Quy ước: mọi hàm ở đây trả về tiêu đề **trần** (không hậu tố thương hiệu);
 // route ghép hậu tố bằng `metaTitle()` rồi đặt vào `title: { absolute }`. Bản
-// trần dành cho JSON-LD `headline`/`name` và `og:image` alt — những chỗ không
-// nên mang tên thương hiệu.
+// trần dành cho JSON-LD `headline`/`name` — chỗ không nên mang tên thương hiệu.
+//
+// ⚠️ Ghi chú cũ ở đây còn nói bản trần dùng cho `og:image` alt — SAI, đã sửa.
+// Cả cụm dùng CHUNG một ảnh chia sẻ (2 route con `re-export` ảnh của hub), nên
+// alt là chuỗi cố định của hub và có kèm tên thương hiệu — đúng, vì nó mô tả
+// đúng tấm ảnh đó. Ảnh riêng cho từng trang đã bị loại có chủ đích: 1.440 ảnh
+// sinh lúc build, trong khi CPU build là phần đắt nhất hoá đơn Vercel.
 
 /**
  * Hậu tố thương hiệu cho `<title>`.

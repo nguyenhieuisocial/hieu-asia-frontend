@@ -15,6 +15,8 @@ import {
   applyAllowlist,
   matchesPattern,
   extractMeta,
+  normalizeUrl,
+  checkCanonicalGraph,
   TITLE_MAX,
   DESCRIPTION_MAX,
   ALLOWLIST,
@@ -61,6 +63,60 @@ describe('checkPage — bắt đúng cái xấu', () => {
     expect(checkPage({ ...ok, description: null }).map((x: { rule: string }) => x.rule)).toContain(
       'description-missing',
     );
+  });
+});
+
+describe('canonical — luật mức toàn site', () => {
+  // Canonical đang được gõ TAY ở 185 file, không helper dùng chung → dễ sai
+  // copy-paste. Mọi cách hỏng ở đây đều IM LẶNG mà hậu quả nặng: trang vẫn hiện,
+  // vẫn có nội dung, chỉ là không bao giờ lên hạng. Đo 2026-07-25: 0 vi phạm.
+  const P = (url: string, canonical: string | null, noindex = false) => ({ url, canonical, noindex });
+
+  it('chuẩn hoá URL: bỏ tên miền, bỏ dấu / cuối, bỏ query/hash', () => {
+    expect(normalizeUrl('https://hieu.asia/tarot/')).toBe('/tarot');
+    expect(normalizeUrl('/tarot?utm=x#y')).toBe('/tarot');
+    expect(normalizeUrl('https://hieu.asia')).toBe('/');
+    expect(normalizeUrl(null)).toBeNull();
+  });
+
+  it('tự trỏ về chính mình thì im lặng', () => {
+    const out = checkCanonicalGraph([P('/a', 'https://hieu.asia/a'), P('/b', null)], new Set(['/a', '/b']));
+    expect(out).toEqual([]);
+  });
+
+  it('gom nhóm CỐ Ý là hợp lệ — 66 trang /hop-tuoi/tuoi/X-Y trỏ sang Y-X', () => {
+    const out = checkCanonicalGraph([P('/x-y', 'https://hieu.asia/y-x'), P('/y-x', 'https://hieu.asia/y-x')], new Set(['/y-x']));
+    expect(out).toEqual([]);
+  });
+
+  it('bắt canonical trỏ vào trang KHÔNG tồn tại', () => {
+    const out = checkCanonicalGraph([P('/a', 'https://hieu.asia/khong-co')], new Set());
+    expect(out.map((v: { rule: string }) => v.rule)).toEqual(['canonical-ghost']);
+  });
+
+  it('bắt canonical vòng tròn A↔B', () => {
+    const out = checkCanonicalGraph([P('/a', 'https://hieu.asia/b'), P('/b', 'https://hieu.asia/a')], new Set());
+    expect(out.filter((v: { rule: string }) => v.rule === 'canonical-loop')).toHaveLength(2);
+  });
+
+  it('bắt trang đã nhường canonical mà vẫn nằm trong sitemap', () => {
+    const out = checkCanonicalGraph([P('/a', 'https://hieu.asia/b'), P('/b', 'https://hieu.asia/b')], new Set(['/a', '/b']));
+    expect(out.map((v: { rule: string }) => v.rule)).toEqual(['canonical-ceded-in-sitemap']);
+  });
+
+  // Không đọc được sitemap thì CHỈ bỏ luật cần nó, 2 luật kia vẫn phải chạy.
+  it('sitemap = null thì vẫn bắt ghost/loop, chỉ bỏ luật sitemap', () => {
+    const out = checkCanonicalGraph([P('/a', 'https://hieu.asia/khong-co')], null);
+    expect(out.map((v: { rule: string }) => v.rule)).toEqual(['canonical-ghost']);
+  });
+
+  it('KHÔNG soi trang noindex', () => {
+    expect(checkCanonicalGraph([P('/a', 'https://hieu.asia/khong-co', true)], new Set())).toEqual([]);
+  });
+
+  it('extractMeta đọc được canonical', () => {
+    expect(extractMeta('<link rel="canonical" href="https://hieu.asia/x"/>').canonical).toBe('https://hieu.asia/x');
+    expect(extractMeta('<html></html>').canonical).toBeNull();
   });
 });
 
@@ -204,11 +260,11 @@ describe('applyAllowlist', () => {
 describe('extractMeta', () => {
   it('rút được title + description và giải mã thực thể HTML', () => {
     const html = `<html><head><title>A &amp; B</title><meta name="description" content="C &quot;D&quot;"/></head></html>`;
-    expect(extractMeta(html)).toEqual({ title: 'A & B', description: 'C "D"', h1Count: 0, noindex: false });
+    expect(extractMeta(html)).toEqual({ title: 'A & B', description: 'C "D"', h1Count: 0, noindex: false, canonical: null });
   });
 
   it('trả null khi thiếu, không ném lỗi', () => {
-    expect(extractMeta('<html></html>')).toEqual({ title: null, description: null, h1Count: 0, noindex: false });
+    expect(extractMeta('<html></html>')).toEqual({ title: null, description: null, h1Count: 0, noindex: false, canonical: null });
   });
 });
 
