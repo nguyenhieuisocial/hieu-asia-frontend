@@ -11,28 +11,33 @@ import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 import {
   buildMonthOverview,
+  HUB_DESCRIPTION,
+  HUB_TITLE,
   liveMonths,
-  monthSlug,
+  metaTitle,
   WINDOW_MONTHS,
 } from '@/lib/tu-vi-thang-data';
 
-const TITLE = 'Tử vi tháng theo con giáp — tra can chi từng tháng';
-const DESC =
-  'Tử vi từng tháng cho 12 con giáp: trụ tháng theo tiết khí, quan hệ hợp xung với chi tuổi, và danh sách ngày trong tháng hợp hoặc xung chi tuổi. Tính từ can chi, tham khảo chứ không phán số mệnh.';
+// Mẫu chuỗi nằm trong lib để test khoá được ngưỡng SERP — xem ghi chú ở
+// `tu-vi-thang-data.ts`. TITLE là bản trần (JSON-LD dùng), META_TITLE có hậu tố
+// thương hiệu và đi vào `absolute` + og/twitter để ba thẻ trùng khít nhau.
+const TITLE = HUB_TITLE;
+const META_TITLE = metaTitle(HUB_TITLE);
+const DESC = HUB_DESCRIPTION;
 const URL = 'https://hieu.asia/tu-vi-thang';
 
 export const metadata: Metadata = {
-  title: TITLE,
+  title: { absolute: META_TITLE },
   description: DESC,
   alternates: { canonical: URL },
   openGraph: {
-    title: TITLE,
+    title: META_TITLE,
     description: DESC,
     url: URL,
     type: 'website',
     locale: 'vi_VN',
   },
-  twitter: { card: 'summary_large_image', title: TITLE, description: DESC },
+  twitter: { card: 'summary_large_image', title: META_TITLE, description: DESC },
 };
 
 const HUB_FAQS = [
