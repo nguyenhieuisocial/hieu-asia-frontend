@@ -40,6 +40,8 @@ import {
 } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 import { useAuth } from '@/hooks/use-auth';
 import { FeedHero } from '@/components/account/FeedHero';
 import { StreakCard } from '@/components/account/StreakCard';
@@ -60,11 +62,33 @@ import { SubscribePush } from '@/components/daily/SubscribePush';
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
+// SEO-FIX: bộ schema riêng của trang /account — trước đây nằm ở layout.tsx nên
+// rớt xuống cả 11 route con (/account/chart, /account/mentor, …), khiến mỗi trang
+// con có 2 WebPage + 2 BreadcrumbList. Đặt NGOÀI <Suspense>: AccountPageInner là
+// client component chờ auth nên HTML máy chủ chỉ chứa fallback — schema nằm bên
+// trong sẽ không bao giờ tới được crawler. Dùng builder chung nên isPartOf trỏ
+// @id về node WebSite phát site-wide, bỏ node WebSite ẩn danh trùng lặp.
+const PAGE_JSONLD = [
+  webPage({
+    url: '/account',
+    name: 'Tài khoản',
+    description:
+      'Trung tâm quản lý tài khoản hieu.asia: lá số, quyết định, mentor, thanh toán, affiliate, quyền riêng tư.',
+  }),
+  breadcrumb([
+    { name: 'Trang chủ', url: '/' },
+    { name: 'Tài khoản', url: '/account' },
+  ]),
+];
+
 export default function AccountPage() {
   return (
-    <Suspense fallback={<AccountLoader />}>
-      <AccountPageInner />
-    </Suspense>
+    <>
+      <JsonLd data={PAGE_JSONLD} />
+      <Suspense fallback={<AccountLoader />}>
+        <AccountPageInner />
+      </Suspense>
+    </>
   );
 }
 
