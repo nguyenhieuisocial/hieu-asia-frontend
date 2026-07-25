@@ -1,0 +1,60 @@
+# SEO metadata guard (vault 172) — đo <title> + meta description trên HTML mà
+# `next build` sinh ra, tức đúng thứ Google thấy, KHÔNG đọc chuỗi trong source.
+#
+# Vì sao phải build mới đo được: đợt SEO 2026-07-25 có PR rút chữ theo chuỗi
+# trong source, quên mất 12 ký tự hậu tố " · hieu.asia" mà root layout tự nối
+# vào <title> — nên "sửa xong" mà trang vẫn vượt ngưỡng, và không ai biết.
+#
+# CHỈ CHẠY khi PR đụng tới thứ có thể làm hỏng meta (xem `paths` bên dưới), nên
+# phần lớn PR không phải trả giá build lần hai.
+#
+# Advisory: đây là check RIÊNG, không nằm trong job bắt buộc
+# "turbo lint + test + build", nên một lần báo nhầm không bao giờ chặn merge —
+# cho tới khi founder tự bật.
+# Để BẬT thành bắt buộc (không cần sửa file):
+#   GitHub → Settings → Branches → main → Require status checks to pass →
+#   thêm "seo-guard (vault 172)".
+name: seo-guard
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/web/src/app/**/page.tsx'
+      - 'apps/web/src/app/**/layout.tsx'
+      - 'apps/web/src/lib/seo/**'
+      - 'apps/web/src/lib/*-data.ts'
+      - 'apps/web/src/lib/tuvi-content.ts'
+      - 'apps/web/src/lib/hop-tuoi-pairs.ts'
+      - 'apps/web/scripts/seo-guard.mjs'
+      - '.github/workflows/seo-guard.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seo-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  seo-guard:
+    name: seo-guard (vault 172)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+        # pnpm version pinned via `packageManager` in package.json.
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build web
+        run: pnpm --filter web build
+      - name: Guard SEO metadata
+        run: node apps/web/scripts/seo-guard.mjs
