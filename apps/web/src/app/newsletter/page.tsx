@@ -3,6 +3,8 @@ import { Mail, Sparkles, ShieldCheck } from 'lucide-react';
 import { Card, CardContent } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 
@@ -82,6 +84,13 @@ export default function NewsletterHubPage() {
           />
         </div>
       </main>
+      {/* SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Bản tin', url: '/newsletter' },
+        ])}
+      />
       <SiteFooter />
     </div>
   );

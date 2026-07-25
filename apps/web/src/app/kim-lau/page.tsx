@@ -8,9 +8,12 @@ import { webPage, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { KIM_LAU_TYPES, KIM_LAU_FAQS, phamAges } from '@/lib/kim-lau-data';
 
 const url = 'https://hieu.asia/kim-lau';
-const title = 'Kim Lâu là gì? Tra tuổi Kim Lâu cô dâu theo năm sinh';
+// SEO-FIX: title 52 ký tự + hậu tố ' · hieu.asia' của template gốc = 64 → Google
+// cắt mất phần cuối. Bỏ chữ "Kim Lâu" lặp lần hai, giữ đủ từ khoá. description
+// 184 → 160 (bỏ "minh bạch" trùng ý với "không hù dọa").
+const title = 'Kim Lâu là gì? Tra tuổi cô dâu theo năm sinh';
 const description =
-  'Kim Lâu là gì, tuổi nào phạm Kim Lâu khi cưới? Nhập năm sinh cô dâu để tra các năm tới năm nào phạm — tính theo phong tục (tuổi mụ chia 9), minh bạch, không hù dọa, không bán giải hạn.';
+  'Kim Lâu là gì, tuổi nào phạm Kim Lâu khi cưới? Nhập năm sinh cô dâu để tra năm nào phạm — theo phong tục (tuổi mụ chia 9), không hù dọa, không bán giải hạn.';
 
 export const metadata: Metadata = {
   title,

@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata = {
   title: 'Điều khoản dịch vụ',
@@ -229,6 +231,13 @@ export default function TermsPage() {
         </div>
       </section>
       </main>
+      {/* SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Điều khoản dịch vụ', url: '/terms' },
+        ])}
+      />
       <SiteFooter />
     </>
   );
