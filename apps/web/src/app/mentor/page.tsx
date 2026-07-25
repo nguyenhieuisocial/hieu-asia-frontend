@@ -31,10 +31,8 @@ const PAGE_DESCRIPTION =
   `Mentor AI trả lời từ chính lá số Tử Vi / Bát Tự bạn đã lập, nhớ mục tiêu và quyết định của bạn, hỏi không giới hạn — ${MENTOR_PRICE}. Lập lá số miễn phí trước.`;
 
 export const metadata: Metadata = {
-  // Trang đã dùng `absolute` nhưng tự nhét " · hieu.asia" vào trong chuỗi → 63
-  // ký tự, vẫn vượt ngưỡng Google cắt ~60. Bỏ hậu tố → 51, giữ nguyên chữ.
   title: {
-    absolute: 'Mentor AI — hỏi đáp không giới hạn từ lá số của bạn',
+    absolute: 'Mentor AI — hỏi đáp không giới hạn từ lá số của bạn · hieu.asia',
   },
   description: PAGE_DESCRIPTION,
   alternates: { canonical: '/mentor' },
