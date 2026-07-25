@@ -11,6 +11,8 @@ import Link from 'next/link';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { listCaseStudies, ILLUSTRATIVE_LABEL } from '@/lib/case-studies';
@@ -157,6 +159,14 @@ export default function CaseStudiesIndexPage() {
         </section>
         </RevealOnScroll>
       </main>
+      {/* SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Cộng đồng', url: '/community' },
+          { name: 'Case studies', url: '/community/cases' },
+        ])}
+      />
       <SiteFooter />
     </>
   );

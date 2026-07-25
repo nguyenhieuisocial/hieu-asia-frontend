@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 import { ReopenCmpButton } from '@/components/cmp/ReopenCmpButton';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 
 export const metadata = {
   title: 'Chính sách bảo mật',
@@ -619,6 +621,13 @@ export default function PrivacyPage() {
         </div>
       </section>
       </main>
+      {/* SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Chính sách bảo mật', url: '/privacy' },
+        ])}
+      />
       <SiteFooter />
     </>
   );

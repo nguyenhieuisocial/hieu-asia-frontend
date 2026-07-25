@@ -22,6 +22,8 @@ import {
 } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import {
@@ -189,6 +191,14 @@ export default function WeeklyReviewPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      {/* SEO-FIX: có breadcrumb HIỂN THỊ bên dưới nhưng không phát
+          BreadcrumbList → Google không hiện đường dẫn phân cấp. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Weekly Review', url: '/weekly-review' },
+        ])}
+      />
       <SiteNav />
 
       <section className="mx-auto max-w-3xl px-6 pt-16 pb-20">

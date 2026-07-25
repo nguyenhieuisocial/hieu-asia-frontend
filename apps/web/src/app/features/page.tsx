@@ -63,7 +63,7 @@ import { TrustStrip, FEATURES_PILLARS } from '@/components/marketing/TrustStrip'
 import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { faqPage } from '@/lib/seo/jsonld';
+import { breadcrumb, faqPage } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   title: 'Tính năng',
@@ -627,7 +627,18 @@ const FEATURES_FAQ_SCHEMA = [
 export default function FeaturesPage() {
   return (
     <>
-      <JsonLd data={[FEATURES_JSON_LD, faqPage(FEATURES_FAQ_SCHEMA)]} />
+      {/* SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp
+          cho trang này trong kết quả tìm kiếm. */}
+      <JsonLd
+        data={[
+          FEATURES_JSON_LD,
+          breadcrumb([
+            { name: 'Trang chủ', url: '/' },
+            { name: 'Tính năng', url: '/features' },
+          ]),
+          faqPage(FEATURES_FAQ_SCHEMA),
+        ]}
+      />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground">
         {/* Hero — Wave 60.56 P3.3: consolidated MarketingHero (R1 finding:

@@ -7,6 +7,8 @@ import { ExpertContent, ExpertTerm } from '@/components/reading/ModeContent';
 import { getZodiacDailyOpener } from '@/lib/daily-opener';
 import { isGenericSummary } from '@/lib/zodiac-blurb';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb, webPage } from '@/lib/seo/jsonld';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 600;
@@ -289,6 +291,24 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
         </>
       )}
       </main>
+      {/* SEO-FIX: 12 trang con /tu-vi-hom-nay/[zodiac] có breadcrumb HIỂN THỊ
+          (nav ở trên) nhưng không phát BreadcrumbList nào → Google không hiện
+          được đường dẫn phân cấp trong kết quả tìm kiếm. Nhãn khớp đúng nav để
+          không lệch giữa schema và nội dung thấy được. */}
+      <JsonLd
+        data={[
+          webPage({
+            url: `/tu-vi-hom-nay/${zodiac}`,
+            name: `Tử Vi tuổi ${label} hôm nay`,
+            description: `Tử Vi hôm nay cho tuổi ${label}: tổng quan, sự nghiệp, tình duyên, tài lộc, sức khỏe, giờ tốt, hướng tốt.`,
+          }),
+          breadcrumb([
+            { name: 'Trang chủ', url: '/' },
+            { name: 'Tử Vi hôm nay', url: '/tu-vi-hom-nay' },
+            { name: `Tuổi ${label}`, url: `/tu-vi-hom-nay/${zodiac}` },
+          ]),
+        ]}
+      />
       <SiteFooter />
     </div>
   );

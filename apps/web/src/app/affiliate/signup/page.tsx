@@ -18,6 +18,8 @@ import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 import { getSupabaseAuth } from '@/lib/auth-client';
 
 type PayoutMethod = 'bank' | 'momo' | 'zalo';
@@ -37,6 +39,15 @@ interface SignupError {
   ok: false;
   error: string;
 }
+
+// SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. Trang có
+// 2 nhánh render (chưa đăng nhập / đã đăng nhập) nên khai một lần ở đây và dùng
+// cho cả hai — crawler thấy nhánh chưa đăng nhập.
+const BREADCRUMB_JSONLD = breadcrumb([
+  { name: 'Trang chủ', url: '/' },
+  { name: 'Cộng tác viên', url: '/affiliate' },
+  { name: 'Đăng ký', url: '/affiliate/signup' },
+]);
 
 export default function AffiliateSignupPage() {
   const [authState, setAuthState] = React.useState<AuthState>('loading');
@@ -219,6 +230,7 @@ export default function AffiliateSignupPage() {
           </Card>
           </div>
         </main>
+        <JsonLd data={BREADCRUMB_JSONLD} />
         <SiteFooter />
       </div>
     );
@@ -381,6 +393,7 @@ export default function AffiliateSignupPage() {
         </Card>
         </div>
       </main>
+      <JsonLd data={BREADCRUMB_JSONLD} />
       <SiteFooter />
     </div>
   );

@@ -13,6 +13,8 @@ import {
   RadioGroupItem,
 } from '@hieu-asia/ui';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import {
   DownloadToolPdfButton,
@@ -251,6 +253,15 @@ export default function XemHopNhomPage() {
 
   return (
     <>
+      {/* SEO-FIX: có breadcrumb HIỂN THỊ (prop breadcrumb bên dưới) nhưng không
+          phát BreadcrumbList → Google không hiện đường dẫn phân cấp. Nhãn khớp
+          đúng breadcrumb đang hiện. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Xem hợp nhóm', url: '/xem-hop-nhom' },
+        ])}
+      />
       <ToolPageShell
         eyebrow="So hợp nhóm · gia đình"
         relatedSlug="/xem-hop-nhom"
