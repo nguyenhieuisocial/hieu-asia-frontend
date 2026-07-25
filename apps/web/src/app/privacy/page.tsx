@@ -6,6 +6,12 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb } from '@/lib/seo/jsonld';
 
+// Trang có in năm © lấy từ `new Date()`. Server component tĩnh thì năm đó bị
+// nướng vào HTML lúc build và đứng yên tới lần deploy sau — sang 01/01 là thân
+// trang ghi năm cũ trong khi chân trang (client component) đã nhảy năm mới, tức
+// hai dòng © trên CÙNG một trang nói khác nhau. Web không có lịch dựng lại định
+// kỳ nên khoảng lệch là thật.
+export const revalidate = 86400;
 export const metadata = {
   title: 'Chính sách bảo mật',
   description:

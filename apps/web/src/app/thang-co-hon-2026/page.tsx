@@ -11,6 +11,15 @@ import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { permanentRedirect } from 'next/navigation';
 import { expiredSeasonalTarget } from '@/lib/seasonal';
 
+// Mùa vụ tính LÚC CHẠY, không phải lúc build.
+// `app/sitemap.ts` là ISR 1 giờ nên nó gọi `expiredSeasonalTarget()` với ngày
+// hiện tại và tự loại URL này ra khi hết mùa. Nhưng trang thì tĩnh: không có
+// `revalidate`, lệnh 308 dưới kia bị nướng vào HTML từ lúc build ⇒ hết mùa mà
+// chưa deploy lại thì sitemap đã bỏ URL trong khi trang vẫn trả 200 nội dung
+// mùa cũ. Đúng nửa còn lại của lỗi đã sửa cho cụm /tu-vi-thang ở PR #965.
+// Web này KHÔNG có lịch dựng lại định kỳ (deploy chỉ chạy khi push vào main),
+// nên khoảng lệch là thật chứ không phải lý thuyết.
+export const revalidate = 86400;
 export const metadata: Metadata = {
   title: 'Tháng cô hồn 2026 — lịch âm & cách nhìn',
   description:
