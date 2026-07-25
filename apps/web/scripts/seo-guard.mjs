@@ -71,11 +71,33 @@ function decodeEntities(s) {
 
 /**
  * Kiểm một trang. Trả về mảng vi phạm (rỗng = đạt).
- * @param {{url: string, title: string|null, description: string|null}} page
+ * @param {{url: string, title: string|null, description: string|null, h1Count?: number, noindex?: boolean}} page
  */
 export function checkPage(page) {
   const out = [];
-  const { title, description } = page;
+  const { title, description, h1Count, noindex } = page;
+
+  // Chỉ soi trang CHO-INDEX: h1 thuần là tín hiệu tìm kiếm nên trang noindex
+  // không có gì để mất — và 25 trang riêng tư của site render nội dung phía
+  // client trong <Suspense>, HTML tĩnh chỉ có khung nên h1 xuất hiện sau khi tải
+  // xong (đúng thiết kế). Soi cả chúng thì luật sinh 25 báo động sai rồi bị tắt.
+  //
+  // `typeof` chứ không phải truthy: h1Count === 0 LÀ ca cần bắt.
+  if (typeof h1Count === 'number' && !noindex) {
+    if (h1Count === 0) {
+      out.push({
+        rule: 'h1-missing',
+        detail:
+          'không có <h1> — Google mất tín hiệu chủ đề mạnh nhất của trang, và ' +
+          'heading bắt đầu từ h2/h3 là lỗi heading-order (WCAG 1.3.1)',
+      });
+    } else if (h1Count > 1) {
+      out.push({
+        rule: 'h1-multiple',
+        detail: `${h1Count} thẻ <h1> trên một trang — chỉ được đúng 1; các h1 sau nên hạ xuống h2`,
+      });
+    }
+  }
 
   if (!title) {
     out.push({ rule: 'title-missing', detail: 'không có <title>' });
@@ -286,9 +308,14 @@ export function checkJsonLd(ld) {
 export function extractMeta(html) {
   const t = /<title>([^<]*)<\/title>/.exec(html);
   const d = /<meta name="description" content="([^"]*)"/.exec(html);
+  const robots = /<meta name="robots" content="([^"]*)"/.exec(html);
+  const h1Count = (html.match(/<h1[\s>]/g) || []).length;
+  const noindex = robots !== null && robots[1].includes('noindex');
   return {
     title: t ? decodeEntities(t[1]) : null,
     description: d ? decodeEntities(d[1]) : null,
+    h1Count,
+    noindex,
   };
 }
 
@@ -356,7 +383,7 @@ export const ALLOWLIST = {
   // Đo 2026-07-25: 85 trang không có JSON-LD, và 0 trong số đó là trang công
   // khai có trong sitemap. Toàn bộ là hai nhóm dưới đây.
   '/tu-vi-thang/*': {
-    rules: ['jsonld-missing'],
+    rules: ['jsonld-missing', 'h1-missing'],
     max: 78,
     owner: 'Agent-1 (đúng thiết kế, không phải lỗi)',
     note: 'Các tháng ĐÃ HẾT chỉ được dựng để 308 về evergreen, không render nội dung nên không có JSON-LD. Danh sách này đổi theo từng tháng nên dùng tiền tố thay vì liệt kê tay. Tháng đang mở VẪN có đủ JSON-LD nên luật vẫn canh được chúng.',
@@ -364,7 +391,7 @@ export const ALLOWLIST = {
   '/affiliate/leaderboard': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư, không nằm trong sitemap' },
   '/affiliate/network': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư, không nằm trong sitemap' },
   '/checkout/premium': { rules: ['jsonld-missing'], owner: 'n/a', note: 'luồng thanh toán, không index' },
-  '/dashboard': { rules: ['title-too-long', 'jsonld-missing'], owner: 'agent SEO sweep (app/layout.tsx)', note: 'dùng tiêu đề mặc định; đã chặn ở robots.txt' },
+  '/dashboard': { rules: ['title-too-long', 'jsonld-missing', 'h1-missing'], owner: 'agent SEO sweep (app/layout.tsx)', note: 'dùng tiêu đề mặc định; đã chặn ở robots.txt' },
   '/reading/new': { rules: ['jsonld-missing'], owner: 'n/a', note: 'luồng nhập liệu riêng tư' },
   '/settings': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư' },
 };
@@ -417,8 +444,10 @@ function main() {
     const rel = relative(appDir, f).split(sep).join('/').replace(/\.html$/, '');
     const url = rel === 'index' ? '/' : `/${rel}`;
     const html = readFileSync(f, 'utf8');
-    const { title, description } = extractMeta(html);
-    for (const v of checkPage({ url, title, description })) violations.push({ url, ...v });
+    const { title, description, h1Count, noindex } = extractMeta(html);
+    for (const v of checkPage({ url, title, description, h1Count, noindex })) {
+      violations.push({ url, ...v });
+    }
     for (const v of checkJsonLd(parseJsonLd(html))) violations.push({ url, ...v });
   }
 
@@ -426,7 +455,7 @@ function main() {
 
   console.log(`seo-guard: đã kiểm ${files.length} trang tĩnh.`);
   console.log(
-    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · JSON-LD hợp lệ, không trùng loại, FAQ/breadcrumb đủ trường`,
+    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · đúng 1 <h1> (trang cho-index) · JSON-LD hợp lệ, không trùng loại, FAQ/breadcrumb đủ trường`,
   );
   console.log(`  vi phạm mới: ${blocking.length} · miễn trừ (có chủ): ${allowed.length}`);
 
