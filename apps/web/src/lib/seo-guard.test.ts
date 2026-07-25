@@ -17,6 +17,7 @@ import {
   extractMeta,
   normalizeUrl,
   checkCanonicalGraph,
+  checkNodeUrls,
   TITLE_MAX,
   DESCRIPTION_MAX,
   ALLOWLIST,
@@ -63,6 +64,61 @@ describe('checkPage — bắt đúng cái xấu', () => {
     expect(checkPage({ ...ok, description: null }).map((x: { rule: string }) => x.rule)).toContain(
       'description-missing',
     );
+  });
+});
+
+describe('jsonld-url-mismatch — node khai url đúng trang', () => {
+  // Đây là HẬU QUẢ THẬT của lỗi lớn nhất đợt 25/07: schema trang cha đặt trong
+  // `layout.tsx` rớt xuống ~174 route con → mỗi trang con có node WebPage khai
+  // `url` là URL trang CHA. `layout-schema.guard.test.ts` bắt nguyên nhân; luật
+  // này bắt hậu quả, kể cả khi ai gõ tay sai url ngay trong page.tsx.
+  const wp = (u: string) => ({ '@type': 'WebPage', url: u });
+  const bc = (last: string) => ({
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, item: 'https://hieu.asia/' },
+      { '@type': 'ListItem', position: 2, item: last },
+    ],
+  });
+
+  it('url khớp trang thì im lặng', () => {
+    expect(checkNodeUrls('/tarot', [wp('https://hieu.asia/tarot')], false)).toEqual([]);
+  });
+
+  it('bắt WebPage khai url của trang khác', () => {
+    const out = checkNodeUrls('/tarot/y-nghia/the-fool', [wp('https://hieu.asia/tarot')], false);
+    expect(out.map((v: { rule: string }) => v.rule)).toEqual(['jsonld-url-mismatch']);
+  });
+
+  it('bắt cả Article/TechArticle', () => {
+    const out = checkNodeUrls('/methodology', [{ '@type': 'TechArticle', url: 'https://hieu.asia/x' }], false);
+    expect(out).toHaveLength(1);
+  });
+
+  it('dùng @id khi không có url', () => {
+    const out = checkNodeUrls('/a', [{ '@type': 'WebPage', '@id': 'https://hieu.asia/b' }], false);
+    expect(out).toHaveLength(1);
+  });
+
+  it('bắt breadcrumb kết ở trang khác', () => {
+    const out = checkNodeUrls('/tarot/y-nghia/the-fool', [bc('https://hieu.asia/tarot')], false);
+    expect(out.map((v: { rule: string }) => v.rule)).toEqual(['jsonld-url-mismatch']);
+  });
+
+  it('breadcrumb kết đúng trang thì im lặng', () => {
+    expect(checkNodeUrls('/tarot', [bc('https://hieu.asia/tarot')], false)).toEqual([]);
+  });
+
+  it('dấu / cuối không tính là lệch', () => {
+    expect(checkNodeUrls('/tarot', [wp('https://hieu.asia/tarot/')], false)).toEqual([]);
+  });
+
+  it('node không khai url thì bỏ qua, không đoán bừa', () => {
+    expect(checkNodeUrls('/a', [{ '@type': 'WebPage', name: 'x' }], false)).toEqual([]);
+  });
+
+  it('KHÔNG soi trang noindex', () => {
+    expect(checkNodeUrls('/a', [wp('https://hieu.asia/b')], true)).toEqual([]);
   });
 });
 

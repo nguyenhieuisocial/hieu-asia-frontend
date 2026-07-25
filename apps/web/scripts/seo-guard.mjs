@@ -196,6 +196,58 @@ export function checkCanonicalGraph(pages, sitemapUrls) {
 }
 
 /**
+ * Node JSON-LD có khai `url`/`@id` trỏ ĐÚNG trang đang đứng không?
+ *
+ * VÌ SAO CẦN — đây là HẬU QUẢ THẬT của lỗi lớn nhất đợt SEO 25/07: schema của
+ * trang cha đặt trong `layout.tsx` rớt xuống ~174 route con, nên mỗi trang con
+ * có một node `WebPage` khai `url` là URL của trang CHA. Google đọc "trang này
+ * chính là trang kia" trên 174 URL khác nhau.
+ *
+ * `layout-schema.guard.test.ts` bắt NGUYÊN NHÂN (schema nằm trong layout có
+ * route con). Luật này bắt HẬU QUẢ — kể cả khi ai đó gõ tay sai `url` ngay
+ * trong `page.tsx`, nơi guard kia không soi tới.
+ *
+ * Breadcrumb: mục CUỐI phải là chính trang đang đứng. Breadcrumb rò từ layout
+ * xuống con luôn kết thúc ở trang cha — đo 1.113 trang thì 100% breadcrumb đều
+ * kết ở chính trang đó, nên quy ước này chắc chắn, không sinh báo động sai.
+ *
+ * Đo 2026-07-25: 0 vi phạm. Thêm luật lúc bằng 0 nên không chặn việc của ai.
+ *
+ * @param {string} url URL của chính trang (đã chuẩn hoá)
+ * @param {any[]} nodes các node JSON-LD đã phẳng hoá
+ * @param {boolean} noindex trang noindex thì bỏ qua — không có tín hiệu nào để mất
+ */
+export function checkNodeUrls(url, nodes, noindex) {
+  const out = [];
+  if (noindex) return out;
+  for (const n of nodes) {
+    const t = Array.isArray(n['@type']) ? n['@type'][0] : n['@type'];
+    if (t === 'WebPage' || t === 'Article' || t === 'TechArticle' || t === 'BlogPosting') {
+      const claimed = normalizeUrl(n.url) ?? normalizeUrl(n['@id']);
+      if (claimed && claimed !== url) {
+        out.push({
+          rule: 'jsonld-url-mismatch',
+          detail: `node ${t} khai url "${claimed}" trong khi trang là "${url}" — Google đọc thành "trang này chính là trang kia"`,
+        });
+      }
+    } else if (t === 'BreadcrumbList') {
+      const items = n.itemListElement;
+      if (Array.isArray(items) && items.length > 0) {
+        const it = items[items.length - 1]?.item;
+        const claimed = normalizeUrl(typeof it === 'string' ? it : it?.['@id']);
+        if (claimed && claimed !== url) {
+          out.push({
+            rule: 'jsonld-url-mismatch',
+            detail: `breadcrumb kết ở "${claimed}" chứ không phải trang hiện tại "${url}" — dấu hiệu schema của trang khác rớt vào đây`,
+          });
+        }
+      }
+    }
+  }
+  return out;
+}
+
+/**
  * Khoá miễn trừ khớp URL không? Hỗ trợ 2 dạng:
  *   "/khai-truong"        → khớp đúng URL đó
  *   "/tarot/y-nghia/*"    → khớp mọi URL trong cụm (dùng cho route template)
@@ -537,7 +589,9 @@ function main() {
     for (const v of checkPage({ url, title, description, h1Count, noindex })) {
       violations.push({ url, ...v });
     }
-    for (const v of checkJsonLd(parseJsonLd(html))) violations.push({ url, ...v });
+    const jsonld = parseJsonLd(html);
+    for (const v of checkJsonLd(jsonld)) violations.push({ url, ...v });
+    for (const v of checkNodeUrls(url, jsonld.nodes, noindex)) violations.push({ url, ...v });
     canonPages.push({ url, canonical, noindex });
   }
 
@@ -547,7 +601,7 @@ function main() {
 
   console.log(`seo-guard: đã kiểm ${files.length} trang tĩnh.`);
   console.log(
-    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · đúng 1 <h1> (trang cho-index) · canonical không trỏ vào hư không/vòng tròn/sitemap · JSON-LD hợp lệ, không trùng loại, FAQ/breadcrumb đủ trường`,
+    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · đúng 1 <h1> (trang cho-index) · canonical không trỏ vào hư không/vòng tròn/sitemap · JSON-LD hợp lệ, url khai đúng trang, không trùng loại, FAQ/breadcrumb đủ trường`,
   );
   console.log(`  vi phạm mới: ${blocking.length} · miễn trừ (có chủ): ${allowed.length}`);
 
