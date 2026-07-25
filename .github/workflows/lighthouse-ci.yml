@@ -6,6 +6,18 @@
 #
 # Founder note: a11y is the only ERROR-level budget (fails CI on regression).
 # Performance + best-practices + SEO are WARN-level for now.
+#
+# ⚠️ ĐỌC TRƯỚC KHI TIN KẾT QUẢ JOB NÀY (ghi 2026-07-26 sau một lần đỏ oan):
+# Job chạy trên `pull_request` NHƯNG `.lighthouserc.json` cắm cứng 5 URL
+# PRODUCTION (https://hieu.asia/...) — nó KHÔNG đo bản preview của PR. Nghĩa là:
+#   • nó đỏ/xanh theo tình trạng SITE THẬT tại thời điểm chạy, không theo diff;
+#   • một PR không đụng gì tới 5 trang đó vẫn có thể bị nó báo đỏ;
+#   • và ngược lại, hồi quy hiệu năng DO PR gây ra sẽ KHÔNG bị bắt ở đây.
+# Ca thật: PR #937 đỏ ở `cls-culprits-insight`; chạy lại ĐÚNG commit đó → xanh.
+# CLS đo được thật sự là 0.001. ⇒ Gặp job này đỏ: RERUN trước, đừng đi tìm lỗi
+# trong diff. Đã hạ `numberOfRuns` 1 → 3 (LHCI lấy trung vị) để bớt nhiễu.
+# Giữ nguyên cách đo production là CÓ CHỦ Ý: nó là màn theo dõi site thật rẻ
+# tiền. Nếu sau này muốn nó gác PR thật thì phải trỏ vào preview URL của Vercel.
 
 name: Lighthouse CI
 
@@ -26,7 +38,8 @@ jobs:
   lighthouse:
     name: Lighthouse audit
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 15 → 25: numberOfRuns 1 → 3 nhân ba thời gian thu thập (5 URL × 3 lượt).
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
