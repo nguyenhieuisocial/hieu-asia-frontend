@@ -14,6 +14,15 @@ import { expiredSeasonalTarget } from '@/lib/seasonal';
 // Ngày âm–dương trên trang này lấy từ chính engine lịch của repo
 // (`solarToLunar` trong lib/ngay-kieng-ky.ts): 7/7 âm lịch 2026 = 19/8/2026.
 
+// Mùa vụ tính LÚC CHẠY, không phải lúc build.
+// `app/sitemap.ts` là ISR 1 giờ nên nó gọi `expiredSeasonalTarget()` với ngày
+// hiện tại và tự loại URL này ra khi hết mùa. Nhưng trang thì tĩnh: không có
+// `revalidate`, lệnh 308 dưới kia bị nướng vào HTML từ lúc build ⇒ hết mùa mà
+// chưa deploy lại thì sitemap đã bỏ URL trong khi trang vẫn trả 200 nội dung
+// mùa cũ. Đúng nửa còn lại của lỗi đã sửa cho cụm /tu-vi-thang ở PR #965.
+// Web này KHÔNG có lịch dựng lại định kỳ (deploy chỉ chạy khi push vào main),
+// nên khoảng lệch là thật chứ không phải lý thuyết.
+export const revalidate = 86400;
 export const metadata: Metadata = {
   // SEO-FIX: 52 ký tự + hậu tố ' · hieu.asia' = 64 → bị Google cắt. Bản mới 45
   // ký tự, đổi sang dạng câu hỏi khớp cách người ta thật sự tìm.

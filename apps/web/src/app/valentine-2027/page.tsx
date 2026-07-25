@@ -15,6 +15,15 @@ import { expiredSeasonalTarget } from '@/lib/seasonal';
 // lib/ngay-kieng-ky.ts): 14/2/2027 = mùng 9 tháng Giêng âm lịch Đinh Mùi,
 // tức Valentine 2027 rơi đúng vào tuần Tết.
 
+// Mùa vụ tính LÚC CHẠY, không phải lúc build.
+// `app/sitemap.ts` là ISR 1 giờ nên nó gọi `expiredSeasonalTarget()` với ngày
+// hiện tại và tự loại URL này ra khi hết mùa. Nhưng trang thì tĩnh: không có
+// `revalidate`, lệnh 308 dưới kia bị nướng vào HTML từ lúc build ⇒ hết mùa mà
+// chưa deploy lại thì sitemap đã bỏ URL trong khi trang vẫn trả 200 nội dung
+// mùa cũ. Đúng nửa còn lại của lỗi đã sửa cho cụm /tu-vi-thang ở PR #965.
+// Web này KHÔNG có lịch dựng lại định kỳ (deploy chỉ chạy khi push vào main),
+// nên khoảng lệch là thật chứ không phải lý thuyết.
+export const revalidate = 86400;
 export const metadata: Metadata = {
   // SEO-FIX: 54 ký tự + hậu tố ' · hieu.asia' = 66 → bị Google cắt. Bỏ "không
   // đoán mò" (giọng thương hiệu, đã có trong description).

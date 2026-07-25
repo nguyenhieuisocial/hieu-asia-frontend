@@ -22,6 +22,15 @@ const TET_DAYS = [
 const DAYS = TET_DAYS.map((d) => ({ ...d, r: computeXuatHanh(d.dd, d.mm, d.yy) }));
 const mung1 = DAYS[0]!.r;
 
+// Mùa vụ tính LÚC CHẠY, không phải lúc build.
+// `app/sitemap.ts` là ISR 1 giờ nên nó gọi `expiredSeasonalTarget()` với ngày
+// hiện tại và tự loại URL này ra khi hết mùa. Nhưng trang thì tĩnh: không có
+// `revalidate`, lệnh 308 dưới kia bị nướng vào HTML từ lúc build ⇒ hết mùa mà
+// chưa deploy lại thì sitemap đã bỏ URL trong khi trang vẫn trả 200 nội dung
+// mùa cũ. Đúng nửa còn lại của lỗi đã sửa cho cụm /tu-vi-thang ở PR #965.
+// Web này KHÔNG có lịch dựng lại định kỳ (deploy chỉ chạy khi push vào main),
+// nên khoảng lệch là thật chứ không phải lý thuyết.
+export const revalidate = 86400;
 export const metadata: Metadata = {
   title: 'Xuất hành Tết 2027 — hướng & giờ tốt 3 ngày',
   description:
