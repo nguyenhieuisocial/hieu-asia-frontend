@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { ZODIAC } from './hop-tuoi-pairs';
 import { dayCanChi } from './gio-hoang-dao';
 import {
@@ -21,6 +23,7 @@ import {
   monthSlug,
   parseMonthSlug,
   pastMonths,
+  resolveServableMonth,
   spanNote,
 } from './tu-vi-thang-data';
 
@@ -81,7 +84,7 @@ describe('slug tháng', () => {
   });
 
   it('từ chối slug sai định dạng hoặc ngoài khoảng', () => {
-    for (const bad of ['', 'thang-8', '0-2026', '13-2026', '8-1999', '8-2099', '8/2026', 'ty']) {
+    for (const bad of ['', 'thang-8', '0-2026', '13-2026', '8-1999', '8-2101', '8/2026', 'ty']) {
       expect(parseMonthSlug(bad)).toBeNull();
     }
   });
@@ -300,5 +303,98 @@ describe('bảng tổng quan tháng', () => {
 describe('slug con giáp lạ', () => {
   it('trả về null để route gọi notFound()', () => {
     expect(buildThangConGiap({ year: 2026, month: 8 }, 'khong-co')).toBeNull();
+  });
+});
+
+// Lỗi thật, suýt lộ ra ngày 01/08/2026 và không test nào bắt được:
+// `app/sitemap.ts` tính `liveMonths()` lúc CHẠY (ISR 1 giờ) nên nó cuốn theo
+// lịch, còn `generateStaticParams()` chốt tập slug tại lúc BUILD. Qua mốc đầu
+// tháng mà chưa deploy lại thì sitemap khai URL chưa dựng ⇒ 404.
+//
+// Ba bài dưới khoá cả hai vế: (1) nguy cơ có thật, đo được; (2) tập trang phục
+// vụ luôn phủ được sitemap khi cùng một mốc thời gian; (3) cấu hình route giữ
+// đúng thứ làm (2) thành sự thật lúc chạy.
+describe('sitemap và trang phải cuốn theo lịch CÙNG NHỊP', () => {
+  const ROUTE_FILES = [
+    'src/app/tu-vi-thang/[ky]/page.tsx',
+    'src/app/tu-vi-thang/[ky]/[congiap]/page.tsx',
+  ];
+  // Trang tổng không có `[param]` nên không cần `dynamicParams`, nhưng nó là chỗ
+  // duy nhất liên kết nội bộ tới trang tháng → đóng băng thì tháng mới thành
+  // trang mồ côi. Chỉ đòi `revalidate`.
+  const HUB_FILE = 'src/app/tu-vi-thang/page.tsx';
+
+  it('tập slug chốt tại BUILD KHÔNG phủ nổi sitemap của tháng sau — nguy cơ là thật', () => {
+    const buildDay = new Date('2026-07-25T00:00:00Z');
+    const built = new Set(buildableMonths(buildDay).map(monthSlug));
+    const missing = liveMonths(new Date('2026-08-01T00:00:00Z'))
+      .map(monthSlug)
+      .filter((s) => !built.has(s));
+    // Mỗi tháng thiếu = 1 trang tháng + 12 trang con giáp = 13 URL chết.
+    expect(missing.length, 'nếu bài này xanh nghĩa là nguy cơ đã biến mất — đọc lại ghi chú trước khi xoá cấu hình route').toBeGreaterThan(0);
+  });
+
+  it('cùng một mốc thời gian: MỌI URL sitemap của cụm đều phục vụ được', () => {
+    const dates = [
+      '2026-07-25', // hôm dựng cụm
+      '2026-08-01', // mốc vỡ đầu tiên
+      '2026-09-01',
+      '2026-12-31', // bắc cầu qua năm
+      '2027-01-01',
+      '2030-06-15',
+      // Vách đá cũ: bản trước chặn năm ở 2035, nên từ 7/2035 cửa sổ tháng sinh
+      // ra "1-2036" mà `parseMonthSlug` từ chối. Hai mốc này khoá lại chỗ đó.
+      '2035-07-01',
+      '2035-12-01',
+    ];
+    for (const d of dates) {
+      const now = new Date(`${d}T00:00:00Z`);
+      const months = liveMonths(now);
+      expect(months.length, `sitemap rỗng tại ${d} — phép đo hỏng chứ không phải site sạch`).toBeGreaterThan(0);
+      for (const k of months) {
+        expect(resolveServableMonth(monthSlug(k), now), `${monthSlug(k)} nằm trong sitemap tại ${d} nhưng route không phục vụ`).toEqual(k);
+      }
+    }
+  });
+
+  it('cấu hình 2 route giữ đúng thứ làm điều trên thành sự thật lúc chạy', () => {
+    for (const f of ROUTE_FILES) {
+      const src = readFileSync(join(process.cwd(), f), 'utf8');
+      expect(src, `${f}: đóng dynamicParams lại thì tháng mới trong sitemap sẽ 404`).toMatch(
+        /export const dynamicParams = true/,
+      );
+      expect(src, `${f}: thiếu revalidate thì lệnh 308 của tháng đã hết bị nướng cứng vào HTML lúc build`).toMatch(
+        /export const revalidate = \d+/,
+      );
+    }
+    const hub = readFileSync(join(process.cwd(), HUB_FILE), 'utf8');
+    expect(hub, `${HUB_FILE}: thiếu revalidate thì tháng mới không có link nội bộ nào trỏ tới`).toMatch(
+      /export const revalidate = \d+/,
+    );
+  });
+});
+
+describe('resolveServableMonth — chốt phạm vi khi dynamicParams đã mở', () => {
+  const NOW_R = new Date('2026-07-25T00:00:00Z');
+
+  it('nhận tháng đang sống và tháng trong chặng 308', () => {
+    expect(resolveServableMonth('8-2026', NOW_R)).toEqual({ year: 2026, month: 8 });
+    expect(resolveServableMonth('6-2026', NOW_R)).toEqual({ year: 2026, month: 6 });
+  });
+
+  it('từ chối tháng ngoài cửa sổ, dù `parseMonthSlug` chấp nhận định dạng', () => {
+    expect(parseMonthSlug('1-2030')).not.toBeNull();
+    expect(resolveServableMonth('1-2030', NOW_R)).toBeNull();
+  });
+
+  it('chỉ phục vụ dạng slug CHUẨN — chặn hai URL cùng nội dung', () => {
+    expect(parseMonthSlug('08-2026')).toEqual({ year: 2026, month: 8 });
+    expect(resolveServableMonth('08-2026', NOW_R)).toBeNull();
+  });
+
+  it('từ chối rác', () => {
+    for (const s of ['', 'abc', '13-2026', '8-2019', '8-2036', '8/2026']) {
+      expect(resolveServableMonth(s, NOW_R), s).toBeNull();
+    }
   });
 });
