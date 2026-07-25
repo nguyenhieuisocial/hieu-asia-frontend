@@ -9,7 +9,7 @@ import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkBuildYear, BUILD_VERDICT_LABEL } from '@/lib/xem-tuoi-lam-nha';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
-const TITLE = `Xem tuổi làm nhà năm ${TARGET_YEAR} — tính Kim Lâu, Hoang Ốc, Tam Tai`;
+const TITLE = `Xem tuổi làm nhà ${TARGET_YEAR} — Kim Lâu, Hoang Ốc, Tam Tai`;
 // SEO S7: rút gọn 246 → ~162 ký tự (Google cắt mô tả ~170).
 const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có được tuổi xây/sửa nhà theo năm sinh gia chủ: Kim Lâu, Hoang Ốc, Tam Tai — rõ từng bước tính, kèm các năm được tuổi gần nhất và tục mượn tuổi.`;
 
