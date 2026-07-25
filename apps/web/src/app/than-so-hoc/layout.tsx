@@ -41,39 +41,12 @@ export const metadata: Metadata = {
   },
 };
 
-const BREADCRUMB_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Thần Số Học', item: 'https://hieu.asia/than-so-hoc' },
-  ],
-};
-
-const WEBPAGE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'WebPage',
-  '@id': 'https://hieu.asia/than-so-hoc',
-  url: 'https://hieu.asia/than-so-hoc',
-  name: 'Thần Số Học — Số chủ đạo theo Pythagoras',
-  description:
-    'Phân tích số chủ đạo, số vận mệnh, số linh hồn, năm cá nhân 2026 theo phương pháp Pythagoras — miễn phí, AI cá nhân hoá theo ngày sinh + họ tên.',
-  inLanguage: 'vi-VN',
-  isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
-};
-
+// SEO-FIX: WebPage + BreadcrumbList của TRANG /than-so-hoc đã được chuyển sang
+// page.tsx. Đặt ở layout khiến mọi route con (/cac-loai-so, /cac-loai-so/[slug],
+// /y-nghia, /y-nghia/[slug], /result) cũng phát bộ schema của trang cha → trang
+// con có 2 WebPage (một trỏ sai url /than-so-hoc) và 2 BreadcrumbList (một bị cắt
+// còn 2 cấp). Cùng lỗi đã sửa cho app/tarot + app/gieo-que (PR #939). Layout chỉ
+// giữ metadata.
 export default function ThanSoHocLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
-      />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
