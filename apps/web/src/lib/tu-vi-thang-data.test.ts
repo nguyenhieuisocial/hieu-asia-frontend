@@ -374,6 +374,39 @@ describe('sitemap và trang phải cuốn theo lịch CÙNG NHỊP', () => {
   });
 });
 
+// Ngưỡng thứ ba của PR #940 — `og:title` phải khớp `<title>` — là ngưỡng DUY
+// NHẤT chưa có chốt nào canh: `seo-guard` không có luật nào về `og:` (đo trên
+// HTML render thì 955 trang toàn site "lệch og:title", mà phần lớn KHÔNG phải
+// lỗi — xem §4 note 172 — nên một luật toàn site sẽ chỉ đẻ báo động giả).
+// Cách đúng là canh HẸP, ngay trong cụm: bắt cả 3 route dùng CÙNG một định
+// danh cho `<title>`, `og:title` và `twitter:title`.
+describe('og:title phải khớp <title> — canh trong phạm vi cụm', () => {
+  const ROUTES = [
+    'src/app/tu-vi-thang/page.tsx',
+    'src/app/tu-vi-thang/[ky]/page.tsx',
+    'src/app/tu-vi-thang/[ky]/[congiap]/page.tsx',
+  ];
+
+  it('cả 3 route dùng chung một định danh tiêu đề cho thẻ trang, og và twitter', () => {
+    for (const f of ROUTES) {
+      const src = readFileSync(join(process.cwd(), f), 'utf8');
+      const canonical = /\btitle:\s*\{\s*absolute:\s*([A-Za-z_$][\w$]*)\s*\}/.exec(src);
+      expect(canonical, `${f}: không thấy title: { absolute: … } — root layout sẽ cộng thêm hậu tố lần nữa`).not.toBeNull();
+
+      const id = canonical![1]!;
+      // Mọi chỗ khai tiêu đề KHÁC (og, twitter) phải trỏ về đúng định danh đó.
+      // Lưu ý: regex này KHÔNG khớp `title: { absolute: … }` (sau dấu hai chấm
+      // là `{`, không phải định danh) — nên `others` đúng là "những chỗ còn lại".
+      const others = [...src.matchAll(/\btitle:\s*([A-Za-z_$][\w$]*)/g)].map((m) => m[1]!);
+      const shorthand = id === 'title' ? (src.match(/\btitle,/g) ?? []).length : 0;
+
+      const wrong = others.filter((x) => x !== id);
+      expect(wrong, `${f}: og/twitter dùng tiêu đề KHÁC <title> (${wrong.join(', ')}) — đúng lỗi gốc của PR #940`).toEqual([]);
+      expect(others.length + shorthand, `${f}: phải khai đủ cả og:title lẫn twitter:title bằng cùng định danh "${id}"`).toBeGreaterThanOrEqual(2);
+    }
+  });
+});
+
 describe('resolveServableMonth — chốt phạm vi khi dynamicParams đã mở', () => {
   const NOW_R = new Date('2026-07-25T00:00:00Z');
 

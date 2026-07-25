@@ -131,7 +131,16 @@ export default async function TuViThangConGiapPage({
       headline: d.seoTitle,
       description: d.seoDescription,
       url: `/tu-vi-thang/${ky}/${congiap}`,
-      image: '/og-image.jpg',
+      // Trỏ đúng tấm ảnh mà `og:image` đang dùng (ảnh generated của cụm,
+      // 1200×630) thay vì logo chung toàn site: hai nguồn nói khác nhau về cùng
+      // một trang thì Google chọn cái nào cũng dở. Đường dẫn KHÔNG kèm mã băm —
+      // đã kiểm trên production: bản không mã băm trả đúng ảnh đó (200,
+      // image/png, 95.854 byte).
+      image: `/tu-vi-thang/${ky}/${congiap}/opengraph-image`,
+      // CỐ Ý KHÔNG khai `datePublished`/`dateModified`. Trang sinh tất định từ
+      // can chi, không có ngày xuất bản thật; lấy ngày build làm ngày đăng là
+      // bịa, mà `revalidate` hằng ngày còn khiến nó nhảy liên tục — tín hiệu
+      // tươi mới giả. Thà thiếu trường còn hơn khai sai.
       type: 'Article',
     }),
     breadcrumb([
