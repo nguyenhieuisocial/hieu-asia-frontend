@@ -6,7 +6,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { faqPage } from '@/lib/seo/jsonld';
+import { breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
@@ -134,7 +134,18 @@ export default function HopTuoiLandingPage() {
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(HOP_TUOI_JSONLD) }}
     />
-    <JsonLd data={faqPage(FAQS)} />
+    {/* SEO-FIX: trang có breadcrumb HIỂN THỊ (prop breadcrumb bên dưới) nhưng
+        không phát BreadcrumbList → Google không hiện đường dẫn phân cấp trong
+        kết quả tìm kiếm. Nhãn khớp đúng breadcrumb đang hiện. */}
+    <JsonLd
+      data={[
+        breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Hợp tuổi', url: '/hop-tuoi' },
+        ]),
+        faqPage(FAQS),
+      ]}
+    />
     <ToolPageShell
       eyebrow="Hợp tuổi · Tương hợp Can Chi"
         relatedSlug="/hop-tuoi"

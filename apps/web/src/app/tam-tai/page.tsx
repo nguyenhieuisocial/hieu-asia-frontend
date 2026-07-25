@@ -8,7 +8,9 @@ import { webPage, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { listTamHopGroups, listTamTai, CALENDAR_FROM, CALENDAR_TO } from '@/lib/tam-tai-data';
 
 const url = 'https://hieu.asia/tam-tai';
-const title = 'Tam Tai là gì? Tra tuổi phạm Tam Tai theo năm sinh';
+// SEO-FIX: title 50 ký tự + hậu tố ' · hieu.asia' = 62 → bị Google cắt. Bỏ
+// "theo năm sinh" (từ khoá yếu nhất, đã có trong description).
+const title = 'Tam Tai là gì? Tra tuổi phạm Tam Tai';
 const description =
   'Tam Tai là gì, tuổi nào phạm Tam Tai và vào những năm nào? Nhập năm sinh để tra theo phong tục Can Chi — minh bạch cách tính, không hù dọa, không bán giải hạn.';
 

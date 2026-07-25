@@ -327,6 +327,78 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     ]
   },
   {
+    "href": "/that-tich-2026",
+    "quick": {
+      "label": "Thất Tịch 2026",
+      "tier": "free",
+      "group": "theo-mua"
+    },
+    "catalog": {
+      "cat": "van-trinh",
+      "emoji": "🪷",
+      "name": "Thất Tịch 2026",
+      "desc": "Ngày Thất Tịch 19/8/2026 (Ngưu Lang – Chức Nữ): ý nghĩa tình duyên, việc nên làm và gợi ý xem hợp tuổi trong ngày."
+    },
+    "surfaces": [
+      "drawer",
+      "catalog"
+    ],
+    "relatedLabel": "Thất Tịch 2026 (tình duyên)",
+    "related": [
+      "/tu-vi-tinh-yeu",
+      "/hop-tuoi",
+      "/cung-hoang-dao"
+    ]
+  },
+  {
+    "href": "/valentine-2027",
+    "quick": {
+      "label": "Valentine 2027",
+      "tier": "free",
+      "group": "theo-mua"
+    },
+    "catalog": {
+      "cat": "van-trinh",
+      "emoji": "💝",
+      "name": "Valentine 2027",
+      "desc": "Lễ Tình nhân 14/2/2027: xem tình duyên, hợp tuổi đôi lứa và gợi ý cho ngày Valentine theo lá số."
+    },
+    "surfaces": [
+      "drawer",
+      "catalog"
+    ],
+    "relatedLabel": "Valentine 2027 (tình duyên)",
+    "related": [
+      "/tu-vi-tinh-yeu",
+      "/hop-tuoi",
+      "/cung-hoang-dao"
+    ]
+  },
+  {
+    "href": "/ban-do",
+    "quick": {
+      "label": "Bản đồ cá nhân",
+      "tier": "free",
+      "group": "theo-mua"
+    },
+    "catalog": {
+      "cat": "van-trinh",
+      "emoji": "🗺️",
+      "name": "Bản đồ cá nhân",
+      "desc": "Bản đồ gợi ý theo tuần, tháng, năm dựa trên lá số của bạn — điểm nhấn thời điểm nên tập trung."
+    },
+    "surfaces": [
+      "drawer",
+      "catalog"
+    ],
+    "relatedLabel": "Bản đồ cá nhân (theo thời điểm)",
+    "related": [
+      "/lich-van-nien",
+      "/dai-van-hien-tai",
+      "/tu-vi-hom-nay"
+    ]
+  },
+  {
     "href": "/tu-vi-2026",
     "quick": {
       "label": "Tử Vi 2026",

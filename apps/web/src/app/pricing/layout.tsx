@@ -4,8 +4,10 @@ export const metadata: Metadata = {
   title: 'Bảng giá',
   // vault 147 §a — nỗi đau VOC lớn nhất ở màn giá là "bẫy thanh toán" và
   // "giá mờ ám". Nói thẳng giá + không tự động gia hạn ngay trong description.
+  // SEO-FIX: 181 → 160 ký tự. Giữ nguyên cả 3 mức giá (phần quan trọng nhất);
+  // rút câu cuối còn "Bắt đầu miễn phí." vì phần sau vốn đã bị Google cắt.
   description:
-    'Giá rõ ràng, không bẫy thuê bao: Premium 99.000đ một lần · Mentor 199.000đ/tháng, huỷ bất cứ lúc nào · Lifetime 4.990.000đ trọn đời. Bắt đầu miễn phí, xem lá số trước rồi mới quyết.',
+    'Giá rõ ràng, không bẫy thuê bao: Premium 99.000đ một lần · Mentor 199.000đ/tháng, huỷ bất cứ lúc nào · Lifetime 4.990.000đ trọn đời. Bắt đầu miễn phí.',
   alternates: { canonical: 'https://hieu.asia/pricing' },
   // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
   // openGraph (Next.js merge semantics), so we must re-declare `images` here

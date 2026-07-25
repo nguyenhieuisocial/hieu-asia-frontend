@@ -12,7 +12,7 @@ import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkWeddingYear, VERDICT_LABEL } from '@/lib/xem-tuoi-cuoi';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
-const TITLE = `Xem tuổi cưới năm ${TARGET_YEAR} — tính Kim Lâu, Tam Tai theo năm sinh`;
+const TITLE = `Xem tuổi cưới ${TARGET_YEAR} — Kim Lâu, Tam Tai theo năm sinh`;
 // SEO S7: rút gọn 221 → ~154 ký tự (Google cắt mô tả ~170).
 const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có thuận để cưới theo năm sinh cô dâu, chú rể: Kim Lâu, Tam Tai, chi năm xung tuổi — rõ từng bước tính, kèm các năm không phạm gần nhất.`;
 

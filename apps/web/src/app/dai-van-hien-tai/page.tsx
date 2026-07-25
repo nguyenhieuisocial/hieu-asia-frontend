@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { breadcrumb } from '@/lib/seo/jsonld';
 import { DaiVanHienTaiForm } from './form';
 
 export const metadata: Metadata = {
@@ -17,5 +19,16 @@ export const metadata: Metadata = {
 };
 
 export default function DaiVanHienTaiPage() {
-  return <DaiVanHienTaiForm />;
+  return (
+    <>
+      {/* SEO-FIX: thiếu BreadcrumbList → Google không hiện đường dẫn phân cấp. */}
+      <JsonLd
+        data={breadcrumb([
+          { name: 'Trang chủ', url: '/' },
+          { name: 'Đại vận hiện tại', url: '/dai-van-hien-tai' },
+        ])}
+      />
+      <DaiVanHienTaiForm />
+    </>
+  );
 }

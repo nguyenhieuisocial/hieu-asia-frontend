@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage } from '@/lib/seo/jsonld';
+import { clampDescription } from '@/lib/seo/description';
 import { ALL_PAGES, MAJOR_PAGES, getCardPage } from '@/lib/tarot-card-pages';
 import { MINOR_PAGES } from '@/lib/tarot-card-pages-minor';
 
@@ -28,11 +29,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const shortTitle = `Lá ${c.name_vi} (${c.name}) · Tarot | hieu.asia`;
   // og:title can be longer — social cards allow more space.
   const ogTitle = `Ý nghĩa lá ${c.name} (${c.name_vi}) — xuôi & ngược`;
-  // SEO-FIX: description truncated to stay under 160 chars.
-  // Old template with 3 upright + 2 reversed keywords often exceeded 160 chars.
-  const description = `Ý nghĩa lá ${c.name_vi} (${c.name}): xuôi — ${c.keyUp
-    .slice(0, 2)
-    .join(', ')}; ngược — ${c.keyRev[0]}. Biểu tượng, tình cảm – công việc và câu hỏi tự soi.`;
+  // SEO-FIX: cắt bớt xuống 2 từ khoá xuôi + 1 ngược vẫn chưa đủ — tên lá và từ
+  // khoá dài khiến 11/78 lá vượt 160 ký tự (dài nhất 171: page-of-pentacles), bị
+  // Google cắt ngang giữa từ. clampDescription cắt ở biên từ + thêm dấu "…".
+  const description = clampDescription(
+    `Ý nghĩa lá ${c.name_vi} (${c.name}): xuôi — ${c.keyUp
+      .slice(0, 2)
+      .join(', ')}; ngược — ${c.keyRev[0]}. Biểu tượng, tình cảm – công việc và câu hỏi tự soi.`,
+  );
   const url = `https://hieu.asia/tarot/y-nghia/${c.slug}`;
   return {
     title: { absolute: shortTitle },

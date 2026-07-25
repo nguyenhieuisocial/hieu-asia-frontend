@@ -19,33 +19,10 @@ export const metadata: Metadata = {
   },
 };
 
-const WEBPAGE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'WebPage',
-  name: 'Lá Tarot hôm nay — gợi ý phản tư mỗi ngày',
-  description:
-    'Mỗi ngày một lá Tarot, chung cho mọi người — một lá để dừng lại và ngẫm, không phải lời tiên đoán. Miễn phí, không bói toán.',
-  url: 'https://hieu.asia/tarot/hom-nay',
-  inLanguage: 'vi-VN',
-  isPartOf: { '@type': 'WebSite', name: 'hieu.asia', url: 'https://hieu.asia' },
-};
-
-const BREADCRUMB_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Tarot', item: 'https://hieu.asia/tarot' },
-    { '@type': 'ListItem', position: 3, name: 'Hôm nay', item: 'https://hieu.asia/tarot/hom-nay' },
-  ],
-};
-
+// SEO-FIX: WebPage + BreadcrumbList của trang này đã chuyển sang page.tsx —
+// schema thuộc một route cụ thể không nên đặt ở layout, vì layout bọc cả các
+// route con thêm sau này (đúng lỗi đã xảy ra ở app/tarot/layout.tsx). Layout chỉ
+// giữ metadata.
 export default function TarotTodayLayout({ children }: { children: ReactNode }) {
-  return (
-    <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }} />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }

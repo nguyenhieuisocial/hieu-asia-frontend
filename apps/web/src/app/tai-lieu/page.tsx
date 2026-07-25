@@ -18,8 +18,10 @@ import { TAI_LIEU } from '@/lib/tai-lieu/registry';
  * mới quyết để lại email cho bản mang về — đúng thứ tự "cho trước, mời sau".
  */
 
+// SEO-FIX: DESC 177 → 160 ký tự (bỏ "trước quyết định lớn" ở cuối — vốn bị
+// Google cắt mất, và đã nói rõ ở trang con /tai-lieu/ba-cau-hoi).
 const DESC =
-  'Bốn tài liệu miễn phí của hieu.asia: sách điện tử đọc lá số không mê tín, tuổi xông đất Tết Đinh Mùi 2027, lịch ngày tốt trong tháng và bộ 3 câu hỏi tự soi trước quyết định lớn.';
+  'Bốn tài liệu miễn phí của hieu.asia: sách điện tử đọc lá số không mê tín, tuổi xông đất Tết Đinh Mùi 2027, lịch ngày tốt trong tháng và bộ 3 câu hỏi tự soi.';
 
 export const metadata: Metadata = {
   title: 'Tài liệu tặng miễn phí',

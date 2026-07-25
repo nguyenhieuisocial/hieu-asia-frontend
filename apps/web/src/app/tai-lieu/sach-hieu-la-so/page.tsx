@@ -25,11 +25,15 @@ import {
  * lẫn payload PDF, nên hai bản không bao giờ lệch nhau.
  */
 
+// SEO-FIX: DESC 195 → 160 ký tự (bỏ "đối chiếu với quá khứ thật của bạn" và
+// rút "Đọc khoảng 15–20 phút" → "Đọc 15–20 phút").
 const DESC =
-  'Sách điện tử miễn phí: cách đọc lá số của mình một cách tỉnh táo — phân biệt phần tính được với phần diễn giải, nhận ra lời chung chung, đối chiếu với quá khứ thật của bạn. Đọc khoảng 15–20 phút.';
+  'Sách điện tử miễn phí: cách đọc lá số của mình một cách tỉnh táo — phân biệt phần tính được với phần diễn giải, nhận ra lời chung chung. Đọc 15–20 phút.';
 
 export const metadata: Metadata = {
-  title: `${EBOOK_TITLE} — sách điện tử miễn phí`,
+  // SEO-FIX: EBOOK_TITLE (35) + ' — sách điện tử miễn phí' (24) + hậu tố
+  // ' · hieu.asia' (12) = 71 → bị Google cắt. Rút hậu tố còn ' — miễn phí' → 58.
+  title: `${EBOOK_TITLE} — miễn phí`,
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/tai-lieu/sach-hieu-la-so' },
   openGraph: {
