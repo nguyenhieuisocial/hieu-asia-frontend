@@ -195,6 +195,21 @@ describe('nội dung 72 trang thực sự khác nhau', () => {
     expect(new Set(faqs).size).toBe(pages.length);
     for (const p of pages) expect(p.faqs).toHaveLength(5);
   });
+
+  // Ngưỡng Google cắt ở SERP: ~60 ký tự tiêu đề, ~160 ký tự mô tả. Mẫu chuỗi ở
+  // đây ghép từ dữ liệu (tên trụ tháng, số ngày) nên độ dài đổi theo tháng —
+  // khoá lại bằng test để một lần sửa chữ sau này không âm thầm vượt ngưỡng.
+  it('tiêu đề ≤60 và mô tả ≤160 ký tự, không gãy giữa chữ', () => {
+    // Route ghép ` | hieu.asia` vào seoTitle khi dựng <title>, nên bản trần phải
+    // chừa đủ chỗ cho hậu tố — nếu không, tiêu đề render ra mới là cái vượt ngưỡng.
+    const brandSuffix = ' | hieu.asia';
+    for (const p of pages) {
+      expect(p.seoTitle.length + brandSuffix.length).toBeLessThanOrEqual(60);
+      expect(p.seoDescription.length).toBeLessThanOrEqual(160);
+      // Mẫu hiện tại vừa khít trong ngưỡng nên clampDescription không phải cắt.
+      expect(p.seoDescription).not.toContain('…');
+    }
+  });
 });
 
 describe('giọng thương hiệu', () => {

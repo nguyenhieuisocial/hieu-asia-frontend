@@ -16,23 +16,28 @@ import {
   WINDOW_MONTHS,
 } from '@/lib/tu-vi-thang-data';
 
-const TITLE = 'Tử vi tháng theo con giáp — tra can chi từng tháng';
+const TITLE = 'Tử vi tháng theo con giáp — tra can chi';
+// Template `%s · hieu.asia` của root layout đẩy <title> vượt ngưỡng Google cắt
+// (~60 ký tự) và làm og:title lệch <title>. Chốt bằng `absolute` rồi dùng đúng
+// chuỗi đó cho og/twitter — cùng cách các trang khác trong repo đang làm.
+const META_TITLE = `${TITLE} | hieu.asia`;
+// ≤160 ký tự để Google không cắt cụt ở SERP.
 const DESC =
-  'Tử vi từng tháng cho 12 con giáp: trụ tháng theo tiết khí, quan hệ hợp xung với chi tuổi, và danh sách ngày trong tháng hợp hoặc xung chi tuổi. Tính từ can chi, tham khảo chứ không phán số mệnh.';
+  'Tử vi tháng cho 12 con giáp: trụ tháng theo tiết khí, quan hệ hợp xung với chi tuổi, ngày hợp và ngày xung trong tháng. Tính từ can chi để tham khảo.';
 const URL = 'https://hieu.asia/tu-vi-thang';
 
 export const metadata: Metadata = {
-  title: TITLE,
+  title: { absolute: META_TITLE },
   description: DESC,
   alternates: { canonical: URL },
   openGraph: {
-    title: TITLE,
+    title: META_TITLE,
     description: DESC,
     url: URL,
     type: 'website',
     locale: 'vi_VN',
   },
-  twitter: { card: 'summary_large_image', title: TITLE, description: DESC },
+  twitter: { card: 'summary_large_image', title: META_TITLE, description: DESC },
 };
 
 const HUB_FAQS = [

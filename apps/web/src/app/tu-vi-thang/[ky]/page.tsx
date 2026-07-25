@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { clampDescription } from '@/lib/seo/description';
 import { breadcrumb, faqPage, itemList, webPage } from '@/lib/seo/jsonld';
 import { expiredMonthTarget } from '@/lib/seasonal';
 import {
@@ -37,11 +38,19 @@ export async function generateMetadata({
   const k = parseMonthSlug(ky);
   if (!k) notFound();
   const m = buildMonthOverview(k);
-  const title = `Tử vi tháng ${k.month}/${k.year} cho 12 con giáp (tháng ${m.main.label})`;
-  const description = `Tháng ${k.month}/${k.year} mang trụ tháng ${m.main.label} — can ${m.main.can} hành ${m.main.canElement}, chi ${m.main.chi} hành ${m.main.chiElement}. Bảng đối chiếu 12 con giáp với chi tháng và số ngày hợp/xung trong tháng.`;
+  // Template `%s · hieu.asia` của root layout đẩy <title> vượt ngưỡng Google cắt
+  // (~60 ký tự) và làm og:title lệch <title>. Chốt bằng `absolute` rồi dùng đúng
+  // chuỗi đó cho og/twitter — cùng cách các trang khác trong repo đang làm.
+  const title = `Tử vi tháng ${k.month}/${k.year} cho 12 con giáp (${m.main.label}) | hieu.asia`;
+  // Mẫu này dài nhất 151 ký tự với dữ liệu hiện có; clamp là chốt chặn vì độ dài
+  // phụ thuộc tên trụ tháng — cắt ở ranh giới từ thay vì gãy giữa chữ.
+  const description = clampDescription(
+    `Tháng ${k.month}/${k.year} mang trụ tháng ${m.main.label} — can ${m.main.can} hành ${m.main.canElement}, chi ${m.main.chi} hành ${m.main.chiElement}. Bảng đối chiếu 12 con giáp với chi tháng và số ngày hợp/xung trong tháng.`,
+    160,
+  );
   const url = `https://hieu.asia/tu-vi-thang/${m.slug}`;
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url, type: 'article', locale: 'vi_VN' },
