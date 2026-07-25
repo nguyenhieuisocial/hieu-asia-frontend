@@ -6,6 +6,7 @@ import { PALACE_READINGS, findPalaceReading } from '@/lib/palace-readings';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { clampDescription } from '@/lib/seo/description';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 
 // Closed whitelist of the 12 palace slugs. Defence-in-depth alongside
@@ -25,11 +26,16 @@ export async function generateMetadata(
   if (!data) return { title: 'Không tìm thấy cung Tử Vi' };
   return {
     title: `Cung ${data.name}: đọc lá số Tử Vi`,
-    description: data.governs.slice(0, 158),
+    // `governs` là đoạn văn ~600 ký tự nên cắt cứng nó (cách cũ: slice(0,158))
+    // vừa đứt giữa chữ vừa ra 12 mô tả mở đầu giống nhau. Dùng `coreQuestion` —
+    // câu hỏi riêng của từng cung: mỗi trang một mô tả khác nhau, dài nhất 146
+    // ký tự nên luôn dưới ngưỡng 160 của seo-guard, không cần clamp.
+    description: `Cung ${data.name} trong lá số Tử Vi: ${data.coreQuestion}`,
     alternates: { canonical: `https://hieu.asia/learn/tu-vi/${data.slug}` },
     openGraph: {
       title: `Cung ${data.name}`,
-      description: data.governs.slice(0, 200),
+      // OG cho phép dài hơn; cắt theo biên từ thay vì giữa chữ.
+      description: clampDescription(data.governs, 200),
       url: `https://hieu.asia/learn/tu-vi/${data.slug}`,
       type: 'article',
       images: OG_DEFAULT_IMAGES,

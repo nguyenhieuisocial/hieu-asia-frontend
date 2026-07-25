@@ -20,8 +20,9 @@ import {
 
 export const metadata: Metadata = {
   title: 'Xem chỉ tay — Học huyền học',
+  // ≤160 ký tự (seo-guard vault 172) — dài hơn thì Google cắt mất câu chốt.
   description:
-    'Xem chỉ tay (chiromancy): bảy đường — tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, thuỷ tinh, hôn nhân — cùng các gò (Kim Tinh, Mặt Trăng…), hai hệ hình bàn tay và quy ước tay thuận. Đọc xu hướng, không phán số mệnh.',
+    'Xem chỉ tay: bảy đường tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, thuỷ tinh, hôn nhân cùng các gò và quy ước tay thuận. Đọc xu hướng, không phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/learn/palm' },
 };
 

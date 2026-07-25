@@ -447,17 +447,10 @@ export function extractMeta(html) {
 // vào main trước ba PR đó thì nó sẽ báo đỏ đúng những trang ba PR kia đang sửa
 // — đó là hành vi đúng, không phải lỗi guard. Guard nên gộp SAU CÙNG.
 export const ALLOWLIST = {
-  '/learn': {
-    rules: ['description-too-long'],
-    owner: 'agent /learn (PR #937)',
-    note: 'mô tả 199 ký tự — cụm /learn đang có PR mở, để agent đó xử cùng đợt',
-  },
-  '/learn/*': {
-    rules: ['description-too-long'],
-    max: 4,
-    owner: 'agent /learn (PR #937)',
-    note: 'bat-tu 192 · palm 218 · phong-thuy 232 · tu-vi 165. Cùng chủ với trên.',
-  },
+  // Cụm /learn ĐÃ XOÁ khỏi đây (không phải bỏ quên): 5 mô tả vượt ngưỡng đã rút
+  // xuống ≤160 và 12 trang /learn/tu-vi/[cung] đã thay cắt-cứng bằng câu hỏi
+  // riêng của từng cung. Từ giờ guard canh cụm /learn như mọi cụm khác — thêm
+  // trang mới mà mô tả quá dài là CI đỏ ngay, đúng ý đồ.
   '/huong-ban-lam-viec': {
     rules: ['title-too-long', 'description-too-long'],
     owner: 'agent SEO sweep (cụm Bản mệnh + Phong thuỷ)',
