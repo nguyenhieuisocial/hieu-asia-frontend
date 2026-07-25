@@ -6,10 +6,19 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { KhaiTruongChecker } from '@/components/khai-truong/KhaiTruongChecker';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkOpeningYear, OPENING_VERDICT_LABEL } from '@/lib/khai-truong';
+import { clampDescription } from '@/lib/seo/description';
 import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
-const TITLE = `Xem tuổi khai trương / mở hàng năm ${TARGET_YEAR} — tính Tam Tai, xung Thái Tuế`;
-const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có hợp tuổi khai trương / mở hàng theo năm sinh chủ kinh doanh: Tam Tai (3 năm kiêng khởi sự) và xung Thái Tuế — hiển thị rõ từng bước tính, kèm các năm hợp tuổi gần nhất. Không xét Kim Lâu / Hoang Ốc (dành cho làm nhà, cưới hỏi). Tham khảo minh bạch, không phán số mệnh.`;
+// Title kept ≤~63 rendered (incl. " · hieu.asia" suffix) so it doesn't truncate in
+// SERPs; the old "Xem tuổi khai trương / mở hàng năm 2027 — tính Tam Tai, xung Thái
+// Tuế" rendered ~89 chars. Keywords (khai trương / mở hàng / year / Tam Tai / Thái
+// Tuế) preserved.
+const TITLE = `Tuổi khai trương / mở hàng ${TARGET_YEAR} — Tam Tai, Thái Tuế`;
+// Full paragraph kept but clamped to ≤160 for the SERP snippet (was ~430 chars).
+const DESCRIPTION = clampDescription(
+  `Kiểm tra năm ${TARGET_YEAR} có hợp tuổi khai trương / mở hàng theo năm sinh chủ kinh doanh: Tam Tai (3 năm kiêng khởi sự) và xung Thái Tuế — hiển thị rõ từng bước tính, kèm các năm hợp tuổi gần nhất. Không xét Kim Lâu / Hoang Ốc (dành cho làm nhà, cưới hỏi). Tham khảo minh bạch, không phán số mệnh.`,
+  160,
+);
 
 export const metadata: Metadata = {
   title: TITLE,
