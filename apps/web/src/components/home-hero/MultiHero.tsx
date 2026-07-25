@@ -46,12 +46,23 @@ export function MultiHero(): React.JSX.Element {
   const hoverRef = React.useRef<number | null>(null);
   React.useEffect(() => { hoverRef.current = hover; }, [hover]);
 
+  // Ba bộ đếm giờ này mỗi nhịp bắt React vẽ lại cây con ~287 thẻ. Trước đây
+  // chúng chạy NGAY lúc mount, tức rơi đúng vào cửa sổ hydrate — cộng thêm 2-3
+  // lần render dài vào lúc luồng chính đang bận nhất (trang chủ đo được TBT
+  // 650ms so với 50ms của /pricing). Hoãn 3 giây: người xem vẫn thấy chữ xoay
+  // gần như ngay lập tức, nhưng nó không còn tranh luồng lúc tải.
   React.useEffect(() => {
     if (reduceMotion()) return;
-    const a = window.setInterval(() => { if (hoverRef.current == null) setAutoActive((x) => (x + 1) % (LENS_N + 1)); }, 2400);
-    const w = window.setInterval(() => setWordIdx((x) => (x + 1) % WORDS.length), 3400);
-    const s = window.setInterval(() => setSample((x) => (x + 1) % SAMPLES.length), 3600);
-    return () => { window.clearInterval(a); window.clearInterval(w); window.clearInterval(s); };
+    let a = 0, w = 0, s = 0;
+    const start = window.setTimeout(() => {
+      a = window.setInterval(() => { if (hoverRef.current == null) setAutoActive((x) => (x + 1) % (LENS_N + 1)); }, 2400);
+      w = window.setInterval(() => setWordIdx((x) => (x + 1) % WORDS.length), 3400);
+      s = window.setInterval(() => setSample((x) => (x + 1) % SAMPLES.length), 3600);
+    }, 3000);
+    return () => {
+      window.clearTimeout(start);
+      window.clearInterval(a); window.clearInterval(w); window.clearInterval(s);
+    };
   }, []);
 
   const active = hover != null ? hover : autoActive;

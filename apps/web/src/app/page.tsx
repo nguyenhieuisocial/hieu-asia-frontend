@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Calendar, User, Briefcase, HelpCircle, Heart } from 'lucide-react';
 import { PRICING, formatVND } from '@/lib/pricing';
 import { SiteNav } from '@/components/home/SiteNav';
@@ -431,12 +432,34 @@ export default function LandingPage() {
             Đặt trên MultiHero để là thứ đầu tiên người lạ chạm vào. */}
         <InstantChartHero />
 
+        {/* ── VÌ SAO CÓ <Suspense fallback={null}> QUANH CÁC KHỐI DƯỚI ĐÂY ──
+            KHÔNG phải để hoãn tải, cũng không đổi HTML một chữ nào (trang vẫn
+            prerender tĩnh; không khối nào suspend nên fallback không bao giờ
+            hiện). Nó chia HYDRATION thành nhiều tác vụ ngắn: React hydrate theo
+            từng ranh giới Suspense và nhường luồng chính giữa các ranh giới.
+
+            Số đo 2026-07-25 (Lighthouse desktop, production): trang chủ có 1445
+            thẻ DOM và TBT 650ms, trong khi /pricing 420 thẻ và TBT 50ms — dù hai
+            trang tải gần như CÙNG một lượng JS (1317KB chung + 113KB riêng).
+            Tức nút thắt là hydrate một cây lớn trong MỘT tác vụ dài, không phải
+            số byte. TBT = tổng phần vượt 50ms của mỗi tác vụ, nên cùng một khối
+            lượng việc chia nhỏ ra sẽ hạ TBT mạnh.
+
+            ⚠️ ĐỪNG thay bằng next/dynamic: gọi từ Server Component thì import
+            được giải quyết phía máy chủ, KHÔNG tạo ranh giới hydration ⇒ không
+            hạ TBT. Còn `ssr:false` thì xoá nội dung khỏi HTML ⇒ mất nội dung
+            cho Google và sinh nhảy layout (CLS đang 0.001, đừng phá).
+            Chi tiết + số đo: vault 172. */}
         {/* Câu chuyện thương hiệu "năm lăng kính → AI" — giữ bản sắc editorial */}
-        <MultiHero />
+        <Suspense fallback={null}>
+          <MultiHero />
+        </Suspense>
 
         {/* Bộ não Oracle — khu nền tối: đồ thị TOÀN BỘ công cụ hội tụ về "Bạn".
             Mảng signature immersive; tương phản nền tối để chòm sao sáng rực. */}
-        <OracleBrain />
+        <Suspense fallback={null}>
+          <OracleBrain />
+        </Suspense>
 
         {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
         <RevealOnScroll><NotOraclesStrip /></RevealOnScroll>
@@ -541,9 +564,13 @@ export default function LandingPage() {
         />
 
         {/* Methodology — show-your-work: cơ chế 4 lăng kính → AI, đặt trước trust (review #23). */}
-        <RevealOnScroll><Methodology /></RevealOnScroll>
+        <Suspense fallback={null}>
+          <RevealOnScroll><Methodology /></RevealOnScroll>
+        </Suspense>
         {/* Breadth — chống undersell (founder feedback): KHÔNG chỉ 4 lăng kính, có cả bộ 12 công cụ. */}
-        <RevealOnScroll><ToolkitSection /></RevealOnScroll>
+        <Suspense fallback={null}>
+          <RevealOnScroll><ToolkitSection /></RevealOnScroll>
+        </Suspense>
 
         {/* Wave 64 (declutter) — 3 khối bỏ ở đây:
             • WhyTrust + HowToStart: niềm tin đã do TrustBand phủ SỚM (gồm Bằng
@@ -583,7 +610,9 @@ export default function LandingPage() {
             tĩnh, có nhãn demo) ngay trước báo cáo mẫu — cho thấy "lá số được
             TÍNH RA" trước khi đọc kết quả. Phá đơn điệu text + chứng minh
             "tính thật, không tra bảng". */}
-        <RevealOnScroll><EngineProofShowcase /></RevealOnScroll>
+        <Suspense fallback={null}>
+          <RevealOnScroll><EngineProofShowcase /></RevealOnScroll>
+        </Suspense>
 
         {/* Wave 60.95.c P1-6 — SampleOutputShowcase (vault 130 §III P1-6, biggest
             conversion lever per ChatGPT R6 §3.2). Surfaces 4 illustrative report
@@ -591,7 +620,9 @@ export default function LandingPage() {
             so user sees what they get before seeing the price. Server component,
             no client state — keeps initial bundle flat. Primary CTA →/onboarding,
             secondary →/sample-report (full demo). */}
-        <SampleOutputShowcase />
+        <Suspense fallback={null}>
+          <SampleOutputShowcase />
+        </Suspense>
 
         {/* Wave 60.95.i P2 — MentorSampleInteractive (vault 130 §interaction
             designer). Companion to the static SampleOutputShowcase above:
@@ -601,12 +632,16 @@ export default function LandingPage() {
             with a touch interaction before price friction. Client component
             (useState for active question), no Motion runtime — pure CSS
             grid-row trick for reveal. */}
-        <MentorSampleLazy />
+        <Suspense fallback={null}>
+          <MentorSampleLazy />
+        </Suspense>
 
         {/* Lộ trình khởi đầu — band kích-hoạt có khung phần-thưởng THẬT (mẫu
             task-center/rewards của Bitget; mời bạn → voucher giảm giá có thật).
             Đặt trước Giá: làm xong các bước free rồi mới tới gói trả phí. */}
-        <RevealOnScroll><StartupPath /></RevealOnScroll>
+        <Suspense fallback={null}>
+          <RevealOnScroll><StartupPath /></RevealOnScroll>
+        </Suspense>
 
         {/* Lời mời "lập lá số thật" giờ là HERO (InstantChartHero, trên cùng) —
             teaser GIẢ cũ ở đây đã bỏ. Để khách lướt thẳng xuống giá sau khi
@@ -615,6 +650,7 @@ export default function LandingPage() {
         {/* 6. PricingTierV2 — 3 tiers replace 4 (Notion-style toggle + KHUYÊN DÙNG + refund) */}
         {/* Wave 64 — anchor cho "Xem các gói →" (gieo giá sớm); scroll-mt chừa nav dính. */}
         <div id="pricing" aria-hidden="true" className="scroll-mt-24" />
+        <Suspense fallback={null}>
         <PricingTierV2
           eyebrow="GÓI THÀNH VIÊN"
           page="/"
@@ -691,6 +727,7 @@ export default function LandingPage() {
             },
           ]}
         />
+        </Suspense>
 
         {/* Wave 63.4 — pricing reconciliation + single refund guarantee.
             Founder review #2: (a) the 3-tier table omitted Mentor-Yearly +

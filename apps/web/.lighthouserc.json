@@ -12,7 +12,7 @@
         "preset": "desktop",
         "throttlingMethod": "simulate"
       },
-      "numberOfRuns": 1
+      "numberOfRuns": 3
     },
     "assert": {
       "preset": "lighthouse:no-pwa",
@@ -25,6 +25,8 @@
         "uses-long-cache-ttl": "off",
         "robots-txt": "off",
         "tap-targets": "off",
+        "cls-culprits-insight": "warn",
+        "dom-size-insight": "warn",
         "bf-cache": "warn",
         "errors-in-console": "warn",
         "legacy-javascript-insight": "warn",

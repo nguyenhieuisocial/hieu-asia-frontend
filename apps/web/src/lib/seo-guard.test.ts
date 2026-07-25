@@ -18,6 +18,7 @@ import {
   normalizeUrl,
   checkCanonicalGraph,
   checkNodeUrls,
+  checkDuplicateMeta,
   TITLE_MAX,
   DESCRIPTION_MAX,
   ALLOWLIST,
@@ -64,6 +65,51 @@ describe('checkPage — bắt đúng cái xấu', () => {
     expect(checkPage({ ...ok, description: null }).map((x: { rule: string }) => x.rule)).toContain(
       'description-missing',
     );
+  });
+});
+
+describe('duplicate-title / duplicate-description', () => {
+  // `checkPage` canh ĐỘ DÀI title/description nhưng chưa ai canh tính DUY NHẤT.
+  // Với site sinh trang từ khuôn mẫu, chỉ cần sửa mẫu mà bỏ sót phần biến là CẢ
+  // CỤM dùng chung một tiêu đề — Google không phân biệt được, các trang tự cạnh
+  // tranh, GSC báo "Duplicate title tags". Đo 2026-07-26: 0 trùng.
+  const P = (url: string, title: string, description = `mo ta ${url}`, noindex = false) => ({
+    url,
+    title,
+    description,
+    noindex,
+  });
+
+  it('mỗi trang một tiêu đề riêng thì im lặng', () => {
+    expect(checkDuplicateMeta([P('/a', 'A'), P('/b', 'B')])).toEqual([]);
+  });
+
+  it('bắt 2 trang dùng chung tiêu đề', () => {
+    const out = checkDuplicateMeta([P('/a', 'X'), P('/b', 'X')]);
+    expect(out.map((v: { rule: string }) => v.rule)).toEqual(['duplicate-title']);
+  });
+
+  it('báo theo NHÓM, không phải mỗi trang một dòng', () => {
+    const out = checkDuplicateMeta([P('/a', 'X'), P('/b', 'X'), P('/c', 'X')]);
+    expect(out).toHaveLength(1);
+    expect(out[0]?.detail).toContain('3 trang');
+  });
+
+  it('bắt mô tả trùng', () => {
+    const out = checkDuplicateMeta([P('/a', 'A', 'chung'), P('/b', 'B', 'chung')]);
+    expect(out.map((v: { rule: string }) => v.rule)).toEqual(['duplicate-description']);
+  });
+
+  it('KHÔNG soi trang noindex', () => {
+    expect(checkDuplicateMeta([P('/a', 'X', 'm', true), P('/b', 'X', 'm', true)])).toEqual([]);
+  });
+
+  it('thiếu title/description thì bỏ qua, không gom thành một nhóm "null"', () => {
+    const pages = [
+      { url: '/a', title: null, description: null, noindex: false },
+      { url: '/b', title: null, description: null, noindex: false },
+    ];
+    expect(checkDuplicateMeta(pages)).toEqual([]);
   });
 });
 

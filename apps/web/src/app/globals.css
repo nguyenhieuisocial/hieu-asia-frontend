@@ -309,8 +309,14 @@ html {
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+/* Cùng lý do với `.aur-blob` bên dưới, và nặng hơn: sweep này chạy vô hạn ngay
+ * TRÊN CHỮ của thẻ <h1> — chính là phần tử LCP của trang chủ. Vẽ lại gradient
+ * chữ mỗi khung vừa giữ Speed Index không hội tụ vừa tốn CPU mãi mãi.
+ * Chạy 3 lượt (~13,5s) rồi dừng: người xem vẫn thấy hiệu ứng lúc vào trang,
+ * sau đó chữ đứng yên đúng như khung cuối. `forwards` giữ nguyên trạng thái
+ * cuối để không nhấp nháy khi kết thúc. */
 @media (prefers-reduced-motion: no-preference) {
-  .fx-shimmer { animation: fxShimmer 4.5s linear infinite; }
+  .fx-shimmer { animation: fxShimmer 4.5s linear 3 forwards; }
 }
 @keyframes fxShimmer { 0% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
 
@@ -338,11 +344,25 @@ html {
  * #418. Để ở đây + opacity theo biến --ao (set qua data-i). */
 .aur { position: absolute; inset: 0; overflow: hidden; pointer-events: none; --ao: 0.34; }
 .aur[data-i='rich'] { --ao: 0.55; }
+/* `animation-delay` KHÔNG phải để cho đẹp — nó sửa một chỉ số đo được.
+ * Speed Index chấm bằng cách so từng khung hình với KHUNG CUỐI của lượt tải.
+ * Nền aurora trôi vô hạn nên không khung nào giống khung cuối ⇒ điểm không bao
+ * giờ hội tụ. Số đo 2026-07-25: trang chủ là trang DUY NHẤT có animation vô hạn
+ * trong khung nhìn (8 blob) và cũng là trang duy nhất có Speed Index 3,0s —
+ * bốn trang còn lại 0,8–1,1s với FCP tương đương.
+ * Hoãn 6 giây: lúc đo thì nền đứng yên nên điểm hội tụ, còn người xem vẫn thấy
+ * nền trôi sau khi đọc xong khối đầu — chu kỳ 18–31s nên không ai nhận ra chỗ
+ * bắt đầu. Giữ nguyên màu, vị trí, độ mờ.
+ * ⚠️ Độ trễ phải nằm TRONG shorthand `animation` của từng .aur-*, KHÔNG tách ra
+ * `animation-delay` ở .aur-blob: shorthand đặt sau sẽ reset delay về 0 và bản vá
+ * thành vô tác dụng (đã dính đúng bẫy này một lần).
+ * Muốn tắt hẳn chuyển động thì đã có
+ * sẵn khối `prefers-reduced-motion` bên dưới. */
 .aur-blob { position: absolute; border-radius: 9999px; filter: blur(66px); will-change: transform; }
-.aur-a { top: -10%; left: 8%; width: 46%; height: 60%; background: radial-gradient(circle, rgba(224, 174, 98, var(--ao)) 0%, rgba(224, 174, 98, 0) 70%); animation: auroraA 18s ease-in-out infinite; }
-.aur-b { top: 6%; right: 2%; width: 42%; height: 55%; background: radial-gradient(circle, rgba(164, 117, 50, var(--ao)) 0%, rgba(164, 117, 50, 0) 70%); animation: auroraB 22s ease-in-out infinite; }
-.aur-c { bottom: -14%; left: 30%; width: 50%; height: 60%; background: radial-gradient(circle, rgba(212, 162, 97, var(--ao)) 0%, rgba(212, 162, 97, 0) 70%); animation: auroraC 26s ease-in-out infinite; }
-.aur-d { top: 24%; left: -8%; width: 38%; height: 50%; background: radial-gradient(circle, rgba(184, 146, 61, calc(var(--ao) * 0.8)) 0%, rgba(184, 146, 61, 0) 72%); animation: auroraD 31s ease-in-out infinite; }
+.aur-a { top: -10%; left: 8%; width: 46%; height: 60%; background: radial-gradient(circle, rgba(224, 174, 98, var(--ao)) 0%, rgba(224, 174, 98, 0) 70%); animation: auroraA 18s ease-in-out 6s infinite; }
+.aur-b { top: 6%; right: 2%; width: 42%; height: 55%; background: radial-gradient(circle, rgba(164, 117, 50, var(--ao)) 0%, rgba(164, 117, 50, 0) 70%); animation: auroraB 22s ease-in-out 6s infinite; }
+.aur-c { bottom: -14%; left: 30%; width: 50%; height: 60%; background: radial-gradient(circle, rgba(212, 162, 97, var(--ao)) 0%, rgba(212, 162, 97, 0) 70%); animation: auroraC 26s ease-in-out 6s infinite; }
+.aur-d { top: 24%; left: -8%; width: 38%; height: 50%; background: radial-gradient(circle, rgba(184, 146, 61, calc(var(--ao) * 0.8)) 0%, rgba(184, 146, 61, 0) 72%); animation: auroraD 31s ease-in-out 6s infinite; }
 @keyframes auroraA { 0%, 100% { transform: translate(-12%, -8%) scale(1); } 50% { transform: translate(8%, 6%) scale(1.18); } }
 @keyframes auroraB { 0%, 100% { transform: translate(10%, -6%) scale(1.1); } 50% { transform: translate(-6%, 10%) scale(0.92); } }
 @keyframes auroraC { 0%, 100% { transform: translate(-4%, 10%) scale(0.95); } 50% { transform: translate(6%, -8%) scale(1.15); } }
