@@ -23,11 +23,14 @@ import {
  * Mốc mùa vụ: Tết 2026 (Bính Ngọ) đã qua — tài liệu này nhắm Tết 2027.
  */
 
+// SEO-FIX: DESC 208 → 160 ký tự — dài nhất toàn site, Google cắt mất gần 50 ký
+// tự. Gộp "nhóm tuổi nên cân nhắc kèm lý do" vào "kèm lý do" và rút câu cuối.
 const DESC =
-  'Tài liệu miễn phí về tuổi xông đất Tết Đinh Mùi 2027: 5 bước chọn người xông đất, danh sách tuổi hợp tính riêng theo tuổi gia chủ, nhóm tuổi nên cân nhắc kèm lý do. Tham khảo theo tập tục, không phán số mệnh.';
+  'Tài liệu miễn phí về tuổi xông đất Tết Đinh Mùi 2027: 5 bước chọn người xông đất, danh sách tuổi hợp theo tuổi gia chủ, kèm lý do. Tham khảo theo tập tục.';
 
 export const metadata: Metadata = {
-  title: 'Tuổi xông đất Tết Đinh Mùi 2027 — tài liệu miễn phí',
+  // SEO-FIX: 51 ký tự + hậu tố ' · hieu.asia' = 63 → bị Google cắt.
+  title: 'Tuổi xông đất Tết Đinh Mùi 2027 — miễn phí',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/tai-lieu/tuoi-xong-dat' },
   openGraph: {
