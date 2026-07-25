@@ -2246,3 +2246,31 @@ export const ALL_STARS_CONTENT: StarContent[] = [...MAJOR_STARS_CONTENT, ...AUX_
 export function findStarContent(slug: string): StarContent | undefined {
   return ALL_STARS_CONTENT.find((s) => s.slug === slug);
 }
+
+// ── Meta description cho /tu-vi/sao/* và /tu-vi/* ───────────────────
+// Ở đây chứ không inline trong route, để test canh được ngưỡng 160 ký tự.
+//
+// Lỗi cũ (cả 47 trang sao + 11/13 trang cung đều dính): mẫu đặt đoạn bách khoa
+// (`archetype` 197–285 ký tự, `overview` 157–377 ký tự) lên TRƯỚC phần từ khoá,
+// rồi clamp ở 160 → thứ bị cắt luôn là phần có giá trị SEO, và Google hiển thị
+// một câu cụt lửng. Sửa gốc: dồn từ khoá lên đầu, phần biến chọn trường NGẮN.
+
+/** Biệt danh ngắn của sao — đoạn trước " — " trong `archetype`, vd "Đế tinh". */
+function starEpithet(archetype: string): string {
+  const head = archetype.replace(/\s+/g, ' ').trim().split(' — ')[0] ?? '';
+  // Vài sao viết `archetype` theo cấu trúc khác nên đoạn đầu dài cả trăm ký tự
+  // (Liêm Trinh: 196). Chỉ nhận khi nó thật sự là biệt danh ngắn.
+  return head.length <= 40 ? head : '';
+}
+
+/** Mô tả trang một sao. Dài nhất 143 ký tự trên toàn bộ 47 sao hiện có. */
+export function starMetaDescription(s: StarContent): string {
+  const ep = starEpithet(s.archetype);
+  return `Sao ${s.name} trong Tử Vi Đẩu Số${ep ? ` — ${ep}` : ''}: ý nghĩa khi toạ cung Mệnh, Quan Lộc, Tài Bạch và cách luận trên lá số.`;
+}
+
+/** Mô tả trang một cung. Dùng `domain` (16–41 ký tự) chứ không phải `overview`. */
+export function palaceMetaDescription(p: PalaceContent): string {
+  const domain = p.domain.replace(/\s+/g, ' ').trim().replace(/[.\s]+$/, '');
+  return `Cung ${p.name} trong Tử Vi Đẩu Số: ${domain}. Ý nghĩa, sao thường gặp và cách luận trên lá số.`;
+}

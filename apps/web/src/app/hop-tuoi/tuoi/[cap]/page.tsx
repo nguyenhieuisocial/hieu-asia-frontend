@@ -14,6 +14,7 @@ import {
   relationOf,
   canonicalPairSlug,
   nguHanhInteraction,
+  pairMetaDescription,
   RELATION_COPY,
   type RelationKind,
   type Zodiac,
@@ -34,15 +35,9 @@ export async function generateMetadata({
   const parsed = parsePairSlug(cap);
   if (!parsed) return {};
   const { a, b } = parsed;
-  const copy = RELATION_COPY[relationOf(a.slug, b.slug)];
   const title = `Tuổi ${a.ten} hợp tuổi ${b.ten} không?`;
-  const summary = copy.summary(a.ten, b.ten);
-  const description = clampDescription(
-    summary.length < 110
-      ? `${summary} Xem luận giải Can Chi: mức độ hợp, điểm cần dung hoà và gợi ý cho tuổi ${a.ten} – ${b.ten}.`
-      : summary,
-    160,
-  );
+  // Mẫu nằm trong lib để test canh được ngưỡng — xem ghi chú ở hop-tuoi-pairs.ts.
+  const description = clampDescription(pairMetaDescription(a, b), 160);
   const canonical = `${BASE}/hop-tuoi/tuoi/${canonicalPairSlug(a.slug, b.slug)}`;
   return {
     title,

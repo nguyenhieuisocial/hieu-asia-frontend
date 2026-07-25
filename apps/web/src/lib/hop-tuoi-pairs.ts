@@ -397,3 +397,19 @@ export function nguHanhInteraction(a: Zodiac, b: Zodiac): NguHanhInteraction {
     text: `Về Ngũ Hành, hành ${ha} (tuổi ${a.ten}) và hành ${hb} (tuổi ${b.ten}) ở thế trung tính — không sinh không khắc rõ rệt, nên sự hoà hợp phụ thuộc nhiều vào cách hai người phối hợp.`,
   };
 }
+
+// --- Meta description trang cặp tuổi ---------------------------------------
+// Ở đây chứ không inline trong route, để test canh được ngưỡng 160 ký tự.
+//
+// Lỗi cũ (74/144 trang dính): route nối thêm một câu từ khoá dài ~78 ký tự vào
+// `summary` (81–113 ký tự) rồi clamp ở 160 → tổng vượt, và phần bị cắt luôn là
+// câu từ khoá vừa nối. Sửa: câu nối ngắn lại, và CHỈ nối khi còn đủ chỗ.
+
+/** Câu từ khoá nối thêm khi mô tả còn ngắn. */
+const PAIR_META_TAIL = ' Mức độ hợp và điểm cần dung hoà theo Can Chi.';
+
+/** Mô tả trang một cặp tuổi. Dài nhất 159 ký tự trên toàn bộ 144 cặp. */
+export function pairMetaDescription(a: Zodiac, b: Zodiac): string {
+  const summary = RELATION_COPY[relationOf(a.slug, b.slug)].summary(a.ten, b.ten);
+  return summary.length + PAIR_META_TAIL.length <= 160 ? summary + PAIR_META_TAIL : summary;
+}
