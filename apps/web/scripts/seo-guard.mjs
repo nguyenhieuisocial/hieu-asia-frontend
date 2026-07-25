@@ -312,12 +312,6 @@ export const ALLOWLIST = {
     owner: 'agent /learn (PR #937)',
     note: 'bat-tu 192 · palm 218 · phong-thuy 232 · tu-vi 165. Cùng chủ với trên.',
   },
-  '/tarot/y-nghia/*': {
-    rules: ['description-clamped'],
-    max: 11,
-    owner: 'Agent-2 (cụm tarot + gieo-que)',
-    note: 'Ví dụ sống của cái bẫy ở đầu file: bản build trước 11 trang này mô tả 161–171 ký tự (quá dài); nay đã bọc clampDescription nên độ dài "đạt" — nhưng chữ vẫn nguyên độ dài cũ nên clamp phải cắt, và người dùng thấy câu cụt trên SERP. Bọc clamp KHÔNG phải là sửa; phải rút chữ.',
-  },
   '/huong-ban-lam-viec': {
     rules: ['title-too-long', 'description-too-long'],
     owner: 'agent SEO sweep (cụm Bản mệnh + Phong thuỷ)',
