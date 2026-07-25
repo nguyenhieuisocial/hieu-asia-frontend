@@ -70,6 +70,19 @@ export const QUICK_GROUPS: { key: NonNullable<QuickTool['group']>; label: string
 
 export const TOOL_REGISTRY: ToolEntry[] = [
   {
+    // Trang GIỚI THIỆU SẢN PHẨM TRẢ PHÍ (bài đọc 5 lăng kính). `surfaces: []` là
+    // CỐ Ý: KHÔNG đưa vào drawer / marquee / catalog để không tạo thêm một cửa
+    // vào cạnh tranh với phễu chính (`/onboarding` + form hero). Entry này chỉ tồn
+    // tại để /reading CÓ `relatedLabel` → được phép xuất hiện trong "Công cụ liên
+    // quan" của các trang lá số. Trước đó /reading có 0 link từ trang CÔNG KHAI
+    // nào (9 link trỏ tới nó đều nằm trong khu đã-đăng-nhập mà robots.txt chặn:
+    // /reading/, /account, /decisions/d_) ⇒ với Google là trang MỒ CÔI dù là
+    // trang bán hàng chính.
+    "href": "/reading",
+    "surfaces": [],
+    "relatedLabel": "Bài đọc 5 lăng kính (trả phí)"
+  },
+  {
     "href": "/la-so-tu-vi",
     "catalog": {
       "cat": "la-so",
@@ -85,7 +98,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/la-so-bat-tu",
       "/tu-vi",
       "/tinh-menh-cuc",
-      "/bang-chung"
+      "/bang-chung",
+      "/reading"
     ]
   },
   {
@@ -1538,7 +1552,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/than-so-hoc",
       "/tinh-menh-cuc",
       "/lich-van-nien",
-      "/bang-chung"
+      "/bang-chung",
+      "/reading"
     ]
   },
   {
