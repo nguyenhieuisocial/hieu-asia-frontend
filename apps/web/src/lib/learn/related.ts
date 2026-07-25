@@ -8,11 +8,11 @@
 
 import type { LearnRelatedLens } from '@/components/learn/LearnArticle';
 
-interface LearnTopic extends LearnRelatedLens {
+export interface LearnTopic extends LearnRelatedLens {
   slug: string;
 }
 
-const LEARN_TOPICS: readonly LearnTopic[] = [
+export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'tu-vi', eyebrow: 'ĐÔNG PHƯƠNG', name: 'Tử Vi', href: '/learn/tu-vi' },
   { slug: 'bat-tu', eyebrow: 'NGŨ HÀNH', name: 'Bát Tự', href: '/learn/bat-tu' },
   { slug: 'mbti', eyebrow: 'TÂM LÝ HỌC', name: 'MBTI', href: '/learn/mbti' },
@@ -36,6 +36,11 @@ const LEARN_TOPICS: readonly LearnTopic[] = [
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
   LEARN_TOPICS.map((t) => [t.slug, t]),
 );
+
+/** Tra một chủ đề /learn theo slug (dùng cho lộ trình học + chip "Học tiếp"). */
+export function learnTopicBySlug(slug: string): LearnTopic | undefined {
+  return BY_SLUG.get(slug);
+}
 
 // Chủ đề lân cận chọn tay theo slug — thay cho "lấy 4 mục đầu" (vốn hiển thị
 // cùng một tập gợi ý ở mọi trang). Mỗi chủ đề trỏ tới 4 chủ đề gần nghĩa để

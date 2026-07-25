@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
+import { LearnPathNav } from '@/components/learn/LearnPathNav';
 
 /**
  * Layout for /learn — wraps subpages in SiteNav + SiteFooter and applies
@@ -24,6 +25,8 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
           className="pointer-events-none absolute -top-10 left-[-12%] h-[300px] w-[300px] rounded-full bg-purple/15 blur-3xl"
         />
         <div className="relative">{children}</div>
+        {/* Strip "bài tiếp theo trong lộ trình" — client, chỉ hiện ở trang chủ đề. */}
+        <LearnPathNav />
       </div>
       <SiteFooter />
     </div>

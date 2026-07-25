@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { EOSIDIN } from '@/components/learn/EOSIDIN';
+import { ContinueLearning } from '@/components/learn/hub/ContinueLearning';
+import { LearnPathsSection } from '@/components/learn/hub/LearnPathsSection';
+import { TopicProgressBadge } from '@/components/learn/hub/TopicProgressBadge';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { itemList, breadcrumb } from '@/lib/seo/jsonld';
 
@@ -216,7 +219,12 @@ export default function LearnLandingPage() {
           Cách dùng khu Học: đọc bài, chỉnh độ sâu theo ba tầng (dễ hiểu đến chuyên sâu),
           rồi tự kiểm tra lại bằng phần hỏi đáp và câu hỏi ôn ở cuối mỗi bài.
         </p>
+        {/* Chip "Học tiếp" — khung cao cố định render sẵn (không CLS), nội dung
+            client điền sau hydration từ localStorage. */}
+        <ContinueLearning />
       </section>
+
+      <LearnPathsSection />
 
       <section className="mt-12 space-y-12">
         {CLUSTERS.map((cluster) => (
@@ -243,6 +251,8 @@ export default function LearnLandingPage() {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm leading-relaxed text-muted-foreground">{t.blurb}</p>
+                      {/* Tiến độ checklist của chủ đề — khung h-4 đặt sẵn (không CLS). */}
+                      <TopicProgressBadge slug={t.href.split('/').pop() ?? ''} />
                       <span className="mt-4 inline-block whitespace-nowrap text-xs font-semibold text-gold-700 group-hover:text-gold group-focus-within:text-gold">
                         Đọc giải thích →
                       </span>
