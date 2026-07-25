@@ -26,7 +26,9 @@ export async function generateMetadata({
   const description = c.intro.slice(0, 200);
   const url = `${BASE}/so-sanh/${c.slug}`;
   return {
-    title,
+    // `absolute` để root layout không nối thêm " · hieu.asia" (12 ký tự) đẩy
+    // <title> vượt ngưỡng Google cắt ~60 — cả 6 trang so sánh đều đang vượt.
+    title: { absolute: title },
     description,
     alternates: { canonical: url },
     openGraph: { title: c.title, description, url, type: 'article' },

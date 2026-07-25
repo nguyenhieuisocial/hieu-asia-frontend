@@ -10,7 +10,7 @@ import { listElementCarGuide } from '@/lib/mau-xe-data';
 const url = 'https://hieu.asia/mau-xe-hop-menh';
 const title = 'Màu xe hợp mệnh, hợp tuổi: tra theo năm sinh';
 const description =
-  'Sinh năm bao nhiêu hợp màu xe gì? Nhập năm sinh để biết màu xe hợp mệnh và màu nên cân nhắc — suy theo ngũ hành nạp âm, minh bạch cách tính, để tham khảo, không phán số mệnh.';
+  'Sinh năm bao nhiêu hợp màu xe gì? Nhập năm sinh để biết màu xe hợp mệnh và màu nên cân nhắc — suy theo ngũ hành nạp âm, tham khảo chứ không phán số mệnh.';
 
 export const metadata: Metadata = {
   title,

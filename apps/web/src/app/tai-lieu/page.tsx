@@ -19,7 +19,7 @@ import { TAI_LIEU } from '@/lib/tai-lieu/registry';
  */
 
 const DESC =
-  'Bốn tài liệu miễn phí của hieu.asia: sách điện tử đọc lá số không mê tín, tuổi xông đất Tết Đinh Mùi 2027, lịch ngày tốt trong tháng và bộ 3 câu hỏi tự soi trước quyết định lớn.';
+  'Bốn tài liệu miễn phí: sách điện tử đọc lá số không mê tín, tuổi xông đất Tết Đinh Mùi 2027, lịch ngày tốt trong tháng và bộ 3 câu hỏi tự soi.';
 
 export const metadata: Metadata = {
   title: 'Tài liệu tặng miễn phí',

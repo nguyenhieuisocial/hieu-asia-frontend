@@ -26,10 +26,12 @@ import {
  */
 
 const DESC =
-  'Tài liệu miễn phí: ba câu hỏi tự soi trước một quyết định lớn (cưới, sinh con, đổi việc, bán nhà) — kèm cách trả lời từng bước, ví dụ đã điền sẵn và cạm bẫy hay gặp. Làm trong 20 phút.';
+  'Tài liệu miễn phí: ba câu hỏi tự soi trước quyết định lớn (cưới, sinh con, đổi việc, bán nhà) — kèm cách trả lời từng bước và ví dụ. Làm trong 20 phút.';
 
 export const metadata: Metadata = {
-  title: `${BA_CAU_HOI_TITLE} — tài liệu miễn phí`,
+  // `absolute` để root layout không nối thêm " · hieu.asia" (12 ký tự) đẩy
+  // <title> vượt ngưỡng Google cắt ~60. Chữ tiêu đề giữ nguyên.
+  title: { absolute: `${BA_CAU_HOI_TITLE} — tài liệu miễn phí` },
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/tai-lieu/ba-cau-hoi' },
   openGraph: {

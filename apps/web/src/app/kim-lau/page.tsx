@@ -10,10 +10,12 @@ import { KIM_LAU_TYPES, KIM_LAU_FAQS, phamAges } from '@/lib/kim-lau-data';
 const url = 'https://hieu.asia/kim-lau';
 const title = 'Kim Lâu là gì? Tra tuổi Kim Lâu cô dâu theo năm sinh';
 const description =
-  'Kim Lâu là gì, tuổi nào phạm Kim Lâu khi cưới? Nhập năm sinh cô dâu để tra các năm tới năm nào phạm — tính theo phong tục (tuổi mụ chia 9), minh bạch, không hù dọa, không bán giải hạn.';
+  'Kim Lâu là gì, tuổi nào phạm Kim Lâu khi cưới? Nhập năm sinh cô dâu để tra các năm tới năm nào phạm — tính theo phong tục (tuổi mụ chia 9), không hù dọa.';
 
 export const metadata: Metadata = {
-  title,
+  // `absolute` để root layout không nối thêm " · hieu.asia" (12 ký tự) đẩy
+  // <title> vượt ngưỡng Google cắt ~60. Chữ tiêu đề giữ nguyên.
+  title: { absolute: title },
   description,
   alternates: { canonical: url },
   openGraph: {

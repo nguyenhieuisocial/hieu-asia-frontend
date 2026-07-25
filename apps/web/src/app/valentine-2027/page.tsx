@@ -16,7 +16,9 @@ import { expiredSeasonalTarget } from '@/lib/seasonal';
 // tức Valentine 2027 rơi đúng vào tuần Tết.
 
 export const metadata: Metadata = {
-  title: 'Valentine 2027 — xem hợp đôi theo lá số, không đoán mò',
+  // `absolute` để root layout không nối thêm " · hieu.asia" (12 ký tự) đẩy
+  // <title> vượt ngưỡng Google cắt ~60. Chữ tiêu đề giữ nguyên.
+  title: { absolute: 'Valentine 2027 — xem hợp đôi theo lá số, không đoán mò' },
   description:
     'Valentine 2027 rơi vào Chủ Nhật 14/2, mùng 9 tháng Giêng Đinh Mùi — ngay tuần Tết. Xem hợp tuổi theo can-chi và cung Phu Thê trên lá số, có giải thích vì sao.',
   alternates: { canonical: 'https://hieu.asia/valentine-2027' },

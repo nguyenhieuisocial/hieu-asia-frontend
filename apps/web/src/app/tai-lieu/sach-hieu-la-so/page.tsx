@@ -26,10 +26,12 @@ import {
  */
 
 const DESC =
-  'Sách điện tử miễn phí: cách đọc lá số của mình một cách tỉnh táo — phân biệt phần tính được với phần diễn giải, nhận ra lời chung chung, đối chiếu với quá khứ thật của bạn. Đọc khoảng 15–20 phút.';
+  'Sách điện tử miễn phí: đọc lá số của mình một cách tỉnh táo — phân biệt phần tính được với phần diễn giải, nhận ra lời chung chung. Đọc khoảng 15–20 phút.';
 
 export const metadata: Metadata = {
-  title: `${EBOOK_TITLE} — sách điện tử miễn phí`,
+  // `absolute` để root layout không nối thêm " · hieu.asia" (12 ký tự) đẩy
+  // <title> vượt ngưỡng Google cắt ~60. Chữ tiêu đề giữ nguyên.
+  title: { absolute: `${EBOOK_TITLE} — sách điện tử miễn phí` },
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/tai-lieu/sach-hieu-la-so' },
   openGraph: {

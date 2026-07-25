@@ -11,10 +11,12 @@ import { BIRTH_YEARS, TARGET_YEAR, slugOf } from './years';
 
 const TITLE = `Xem tuổi làm nhà ${TARGET_YEAR} — Kim Lâu, Hoang Ốc, Tam Tai`;
 // SEO S7: rút gọn 246 → ~162 ký tự (Google cắt mô tả ~170).
-const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có được tuổi xây/sửa nhà theo năm sinh gia chủ: Kim Lâu, Hoang Ốc, Tam Tai — rõ từng bước tính, kèm các năm được tuổi gần nhất và tục mượn tuổi.`;
+const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có được tuổi xây/sửa nhà theo năm sinh gia chủ: Kim Lâu, Hoang Ốc, Tam Tai — kèm các năm được tuổi gần nhất và tục mượn tuổi.`;
 
 export const metadata: Metadata = {
-  title: TITLE,
+  // `absolute` để root layout không nối thêm " · hieu.asia" (12 ký tự) đẩy
+  // <title> vượt ngưỡng Google cắt ~60. Chữ tiêu đề giữ nguyên.
+  title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: 'https://hieu.asia/xem-tuoi-lam-nha' },
   openGraph: {

@@ -17,7 +17,9 @@ const TITLE = `Xem tuổi cưới ${TARGET_YEAR} — Kim Lâu, Tam Tai theo năm
 const DESCRIPTION = `Kiểm tra năm ${TARGET_YEAR} có thuận để cưới theo năm sinh cô dâu, chú rể: Kim Lâu, Tam Tai, chi năm xung tuổi — rõ từng bước tính, kèm các năm không phạm gần nhất.`;
 
 export const metadata: Metadata = {
-  title: TITLE,
+  // `absolute` để root layout không nối thêm " · hieu.asia" (12 ký tự) đẩy
+  // <title> vượt ngưỡng Google cắt ~60. Chữ tiêu đề giữ nguyên.
+  title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: 'https://hieu.asia/xem-tuoi-cuoi' },
   openGraph: {

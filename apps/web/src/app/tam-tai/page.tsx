@@ -13,7 +13,9 @@ const description =
   'Tam Tai là gì, tuổi nào phạm Tam Tai và vào những năm nào? Nhập năm sinh để tra theo phong tục Can Chi — minh bạch cách tính, không hù dọa, không bán giải hạn.';
 
 export const metadata: Metadata = {
-  title,
+  // `absolute` để root layout không nối thêm " · hieu.asia" (12 ký tự) đẩy
+  // <title> vượt ngưỡng Google cắt ~60. Chữ tiêu đề giữ nguyên.
+  title: { absolute: title },
   description,
   alternates: { canonical: url },
   openGraph: {

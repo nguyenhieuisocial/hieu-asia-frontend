@@ -24,10 +24,12 @@ import {
  */
 
 const DESC =
-  'Tài liệu miễn phí về tuổi xông đất Tết Đinh Mùi 2027: 5 bước chọn người xông đất, danh sách tuổi hợp tính riêng theo tuổi gia chủ, nhóm tuổi nên cân nhắc kèm lý do. Tham khảo theo tập tục, không phán số mệnh.';
+  'Tài liệu miễn phí về tuổi xông đất Tết Đinh Mùi 2027: 5 bước chọn người xông đất, danh sách tuổi hợp tính riêng theo tuổi gia chủ. Tham khảo theo tập tục.';
 
 export const metadata: Metadata = {
-  title: 'Tuổi xông đất Tết Đinh Mùi 2027 — tài liệu miễn phí',
+  // `absolute` để root layout không nối thêm " · hieu.asia" (12 ký tự) đẩy
+  // <title> vượt ngưỡng Google cắt ~60. Chữ tiêu đề giữ nguyên.
+  title: { absolute: 'Tuổi xông đất Tết Đinh Mùi 2027 — tài liệu miễn phí' },
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/tai-lieu/tuoi-xong-dat' },
   openGraph: {
