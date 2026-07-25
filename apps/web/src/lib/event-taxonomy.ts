@@ -139,6 +139,12 @@ export interface EventPropertyMap {
   };
   /** Người học tick / bỏ tick một khía cạnh trong bảng "Bạn đã thật sự hiểu chưa?". */
   learn_checklist_ticked: { topic: string; facet_id: string; checked: boolean };
+  /** Người học bấm chip "Học tiếp" trên hub /learn. */
+  learn_continue_clicked: { topic: string };
+  /** Người học bấm một bài trong khối "Lộ trình gợi ý" trên hub /learn. */
+  learn_path_step_clicked: { path: string; topic: string };
+  /** Người học bấm nút lộ trình cuối bài /learn (to_topic = 'learn-hub' khi là nút "xem lộ trình khác" ở bài cuối). */
+  learn_path_next_clicked: { path: string; from_topic: string; to_topic: string };
 
   // ── Auth ────────────────────────────────────────────────────────
   signup_started: { method: AuthMethod };
