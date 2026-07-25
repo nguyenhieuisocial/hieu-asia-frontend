@@ -21,6 +21,7 @@
 import * as React from 'react';
 import { Checkbox } from '@hieu-asia/ui';
 import { track } from '@/lib/analytics';
+import { writeTopicSummary } from '@/lib/learn/progress';
 
 export interface UnderstandingFacet {
   /** id ổn định, duy nhất trong chủ đề. */
@@ -58,6 +59,9 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
       /* ignore */
     }
     setHydrated(true);
+    // Ghi tóm tắt {done,total} cho hub /learn (learn:summary:<slug>) — cả khi
+    // done=0, để hub biết tổng số dòng của bài (trang là nơi duy nhất biết).
+    writeTopicSummary(topicId, facets.filter((f) => local[f.id]).length, facets.length);
 
     let cancelled = false;
     (async () => {
@@ -75,6 +79,7 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
         } catch {
           /* ignore */
         }
+        writeTopicSummary(topicId, facets.filter((f) => merged[f.id]).length, facets.length);
       } catch {
         /* ignore: 401/network — localStorage vẫn là nguồn chính */
       }
@@ -82,7 +87,8 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
     return () => {
       cancelled = true;
     };
-  }, [topicId]);
+    // facets là mảng module-const ở mọi trang → identity ổn định, không re-run thừa.
+  }, [topicId, facets]);
 
   // Dọn timer debounce khi unmount.
   React.useEffect(
@@ -110,17 +116,17 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
 
   const toggle = (id: string) => {
     const checkedNext = !checked[id];
-    setChecked((prev) => {
-      const next = { ...prev, [id]: checkedNext };
-      try {
-        window.localStorage.setItem(keyFor(topicId), JSON.stringify(next));
-      } catch {
-        /* ignore */
-      }
-      scheduleSync(next);
-      return next;
-    });
-    // Đo lường ngoài updater (tránh fire 2 lần ở StrictMode dev).
+    // Tính `next` NGOÀI updater để mọi side-effect (localStorage, sync, summary,
+    // analytics) chạy đúng 1 lần kể cả StrictMode dev.
+    const next = { ...checked, [id]: checkedNext };
+    setChecked(next);
+    try {
+      window.localStorage.setItem(keyFor(topicId), JSON.stringify(next));
+    } catch {
+      /* ignore */
+    }
+    scheduleSync(next);
+    writeTopicSummary(topicId, facets.filter((f) => next[f.id]).length, facets.length);
     track('learn_checklist_ticked', { topic: topicId, facet_id: id, checked: checkedNext });
   };
 
