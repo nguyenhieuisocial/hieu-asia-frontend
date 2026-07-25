@@ -28,6 +28,15 @@ const nextConfig: NextConfig = {
     // render-blocking stylesheet that is legitimately sized, not trimmable).
     // Verified via prod build + Chromatic visual regression + Lighthouse;
     // single reversible flag.
+    // 2026-07-26 — ĐÃ THỬ ĐẢO CỜ NÀY, ĐỪNG THỬ LẠI. Giả thuyết: `inlineCss`
+    // làm Next không phát `<link rel="preload" as="font">` nữa, gây khoảng cách
+    // LCP − FCP ≈ 0,9s đồng đều cả 5 trang. Dựng thử với `false` rồi đo
+    // (Lighthouse 3 lượt, CPU 4×, cùng máy): số preload font vẫn = 0, và chỉ số
+    // KHÔNG tốt hơn — điểm 0.81 vs 0.82, LCP 1848 vs 1882ms, FCP 832 vs 783ms.
+    // ⇒ inlineCss KHÔNG phải nguyên nhân mất preload font. Nguyên nhân thật vẫn
+    // chưa rõ (102 @font-face, 30 woff2, next/font/google mặc định preload:true
+    // mà HTML build ra chỉ có 1 preload và không phải font). Ai điều tra tiếp
+    // thì bắt đầu từ đó, đừng bắt đầu lại từ cờ này.
     inlineCss: true,
   },
   // Wave 55 + V4-FIX BUG-044. Force blocking <head> metadata for:
