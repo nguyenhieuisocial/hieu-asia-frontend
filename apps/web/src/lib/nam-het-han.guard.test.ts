@@ -64,24 +64,30 @@ describe('năm gõ cứng không được tụt lại phía sau ngày thật', (
     // Trang này có HAI đồng hồ: thẻ ngày lấy từ API (tự nhảy năm) còn tiêu
     // đề/H1 gõ cứng năm → sang 01/01 là tự mâu thuẫn ngay trong một khung hình.
     const src = doc('src/app/lich-van-nien/page.tsx');
-    const tuDate = /new Date\(\)[\s\S]{0,40}getFullYear\(\)/.test(src);
-    const nams = [...src.matchAll(/\bLịch Vạn Niên (\d{4})\b/g)].map((m) => Number(m[1]));
+
+    // Bản đầu của chốt này BẮT HỤT: nó dò chuỗi "Lịch Vạn Niên 2026" liền mạch,
+    // nên không thấy được dạng nằm trong JSX (`Lịch <GoldAccent>Vạn
+    // Niên</GoldAccent> 2026` có thẻ xen giữa). Kiểm đột biến mới lộ ra. Nay dò
+    // MỌI token năm sau khi bỏ chú thích — không phụ thuộc cách viết câu chữ.
+    const thanFile = src
+      .replace(/\/\*[\s\S]*?\*\//g, ' ')
+      .replace(/(^|[^:])\/\/[^\n]*/g, '$1'); // giữ nguyên `https://…`
 
     expect(
-      tuDate || nams.length > 0,
-      'không đọc được năm trong /lich-van-nien — chữ đã đổi? Chốt này đang không bảo vệ gì.',
+      /new Date\(\)[\s\S]{0,40}getFullYear\(\)/.test(src),
+      '/lich-van-nien không còn chỗ nào tính năm theo ngày hiện tại — quay lại gõ chết năm thì sang 01/01 ' +
+        'tiêu đề sẽ mâu thuẫn với thẻ ngày ngay bên cạnh (thẻ ngày lấy từ API, tự làm mới mỗi giờ).',
     ).toBe(true);
 
-    if (!tuDate) {
-      for (const n of nams) {
-        expect(
-          n,
-          `/lich-van-nien vẫn ghi "Lịch Vạn Niên ${n}" trong tiêu đề/H1 giữa năm ${NAM_NAY}, ` +
-            `trong khi thẻ ngày ngay bên cạnh đã hiện ngày của năm ${NAM_NAY} (nó lấy từ API, tự làm mới mỗi giờ). ` +
-            `Google lấy <title> làm nhãn kết quả tìm kiếm, đúng vào mùa truy vấn mạnh nhất là đầu năm.`,
-        ).toBeGreaterThanOrEqual(NAM_NAY);
-      }
-    }
+    const namCu = [...thanFile.matchAll(/\b(20\d{2})\b/g)]
+      .map((m) => Number(m[1]))
+      .filter((n) => n < NAM_NAY);
+    expect(
+      namCu,
+      `/lich-van-nien còn năm gõ chết đã cũ (${namCu.join(', ')}) giữa năm ${NAM_NAY}. ` +
+        `Google lấy <title> làm nhãn kết quả tìm kiếm, đúng vào mùa tra cứu lịch mạnh nhất là đầu năm. ` +
+        `Cho nó đi qua hàm tính năm như các chỗ còn lại.`,
+    ).toEqual([]);
   });
 });
 

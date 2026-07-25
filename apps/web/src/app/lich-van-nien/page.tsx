@@ -7,20 +7,40 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
-export const metadata: Metadata = {
-  title: 'Lịch Vạn Niên 2026 — Tra cứu ngày giờ tốt xấu',
-  description:
-    'Lịch vạn niên Việt Nam: ngày dương âm, Can Chi, Hoàng đạo / Hắc đạo, sao tốt sao xấu, giờ hoàng đạo, ngày tốt cho cưới hỏi, khai trương, động thổ.',
-  alternates: { canonical: 'https://hieu.asia/lich-van-nien' },
-  openGraph: {
-    title: 'Lịch Vạn Niên 2026 — Tra cứu ngày giờ tốt xấu',
+// Trang này có HAI đồng hồ và trước đây chúng chạy lệch nhau: thẻ ngày lấy từ
+// API (`revalidate` 1 giờ) nên tự nhảy năm, còn tiêu đề/H1 gõ chết "2026" nên
+// đứng yên ⇒ từ 01/01/2027 trang tự mâu thuẫn ngay trong một khung hình, và
+// Google lấy <title> làm nhãn kết quả đúng vào mùa tra cứu lịch mạnh nhất.
+//
+// Năm phải tính LÚC RENDER, không phải lúc nạp module: hằng số cấp module chỉ
+// được tính một lần cho mỗi tiến trình máy chủ, nên quanh mốc giao thừa các
+// tiến trình cũ/mới sẽ trả về năm khác nhau — sai không đều còn khó lần hơn sai
+// đều. Vì vậy dùng `generateMetadata()` (gọi mỗi lần dựng lại) thay cho object
+// tĩnh, và đọc `namHienTai()` trong thân component.
+const namHienTai = () => new Date().getFullYear();
+
+// Trang vốn đã là ISR 1 giờ nhờ `fetch` bên dưới; khai tường minh để chỗ tính
+// năm ở trên chắc chắn được chạy lại, và để ý định không phụ thuộc chi tiết cài
+// đặt của lời gọi fetch.
+export const revalidate = 3600;
+
+export function generateMetadata(): Metadata {
+  const title = `Lịch Vạn Niên ${namHienTai()} — Tra cứu ngày giờ tốt xấu`;
+  return {
+    title,
     description:
-      'Ngày dương âm, Can Chi, Hoàng đạo / Hắc đạo, giờ hoàng đạo, ngày tốt cho cưới hỏi, khai trương, động thổ.',
-    url: 'https://hieu.asia/lich-van-nien',
-    type: 'website',
-    images: OG_DEFAULT_IMAGES,
-  },
-};
+      'Lịch vạn niên Việt Nam: ngày dương âm, Can Chi, Hoàng đạo / Hắc đạo, sao tốt sao xấu, giờ hoàng đạo, ngày tốt cho cưới hỏi, khai trương, động thổ.',
+    alternates: { canonical: 'https://hieu.asia/lich-van-nien' },
+    openGraph: {
+      title,
+      description:
+        'Ngày dương âm, Can Chi, Hoàng đạo / Hắc đạo, giờ hoàng đạo, ngày tốt cho cưới hỏi, khai trương, động thổ.',
+      url: 'https://hieu.asia/lich-van-nien',
+      type: 'website',
+      images: OG_DEFAULT_IMAGES,
+    },
+  };
+}
 
 const FAQS = [
   {
@@ -112,12 +132,12 @@ export default async function LichVanNienPage() {
   return (
     <>
     <ToolPageShell
-      eyebrow="Lịch Vạn Niên · 2026"
+      eyebrow={`Lịch Vạn Niên · ${namHienTai()}`}
         relatedSlug="/lich-van-nien"
       icon={<span aria-hidden="true">📅</span>}
       title={
         <>
-          Lịch <GoldAccent>Vạn Niên</GoldAccent> 2026
+          Lịch <GoldAccent>Vạn Niên</GoldAccent> {namHienTai()}
         </>
       }
       description="Tra cứu ngày giờ tốt xấu chính xác theo lịch âm dương Việt Nam. Hoàng đạo / Hắc đạo · Can Chi · Sao tốt sao xấu · Giờ hoàng đạo."
