@@ -88,25 +88,11 @@ export const metadata: Metadata = {
   },
 };
 
-const ORGANIZATION_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'hieu.asia',
-  url: 'https://hieu.asia',
-  logo: 'https://hieu.asia/icon-512.png',
-  sameAs: ['https://t.me/hieuasiabot'],
-  description:
-    'Hiểu mình. Quyết định mình. AI giải mã Tử Vi, Bát Tự, MBTI và tướng tay theo tri thức cổ học Á Đông, trình bày bằng tiếng Việt cho người Việt.',
-};
-
-const WEBSITE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'hieu.asia',
-  url: 'https://hieu.asia',
-  inLanguage: 'vi-VN',
-};
-
+// Site-wide Organization + WebSite JSON-LD is emitted ONCE at the layout level
+// via siteGraph() (lib/seo) — the older standalone copies that used to live here
+// duplicated the entity with drifted data (short sameAs, off-brand description),
+// so Google saw two conflicting Organizations. Removed; the homepage-specific
+// nodes below (HowTo / Services / FAQ / SoftwareApplication) stay.
 const HOWTO_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
@@ -384,14 +370,6 @@ export default function LandingPage() {
   return (
     <>
       <ScrollProgress />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(HOWTO_JSONLD) }}

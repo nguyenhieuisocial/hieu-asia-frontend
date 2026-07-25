@@ -20,6 +20,7 @@ const DISALLOW = [
   '/reading/',
   '/unlock/',
   '/dashboard/',
+  '/dashboard', // exact path — the trailing-slash entry above does not match bare /dashboard
   '/account',
   '/settings',
   '/signin',
@@ -32,6 +33,8 @@ const DISALLOW = [
   // Wave 6 — private detail URLs (localStorage-only, would soft-404 for crawlers)
   '/decisions/d_',
   '/journal/jr_',
+  // Logged-in affiliate poster generator — not a public/indexable page.
+  '/affiliate/poster',
 ];
 
 // AI search & answer engines (GEO) — explicit allow so they can index public
