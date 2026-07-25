@@ -59,6 +59,11 @@ const HUB_FAQS = [
   },
 ];
 
+// Trang tổng là chỗ DUY NHẤT liên kết nội bộ tới các trang tháng. Đóng băng từ
+// lúc build thì tháng mới sinh ra sẽ không có link nào trỏ tới — trang mồ côi,
+// Google khó tìm. Cùng nhịp với 2 route con và với `app/sitemap.ts`.
+export const revalidate = 86400;
+
 export default function TuViThangHubPage() {
   const months = liveMonths().map((k) => buildMonthOverview(k));
   const listItems = months.map((m) => ({

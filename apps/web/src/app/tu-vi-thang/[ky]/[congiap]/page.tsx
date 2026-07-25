@@ -18,12 +18,16 @@ import {
   liveMonths,
   metaTitle,
   monthSlug,
-  parseMonthSlug,
+  resolveServableMonth,
   spanNote,
   type DayNote,
 } from '@/lib/tu-vi-thang-data';
 
-export const dynamicParams = false;
+// Xem ghi chú dài ở `[ky]/page.tsx`: phải mở `dynamicParams` thì route mới cuốn
+// theo lịch giống `app/sitemap.ts`, nếu không qua mốc đầu tháng là sitemap khai
+// URL chưa dựng → 404. Phạm vi do `resolveServableMonth()` chốt.
+export const dynamicParams = true;
+export const revalidate = 86400;
 
 // PHẢI sinh CẢ HAI segment ở đây. `[ky]/page.tsx` là một route khác (không phải
 // layout) nên Next KHÔNG ghép generateStaticParams của nó xuống route con —
@@ -42,7 +46,7 @@ export async function generateMetadata({
   params: Promise<{ ky: string; congiap: string }>;
 }): Promise<Metadata> {
   const { ky, congiap } = await params;
-  const k = parseMonthSlug(ky);
+  const k = resolveServableMonth(ky);
   if (!k) notFound();
   const d = buildThangConGiap(k, congiap);
   if (!d) notFound();
@@ -107,7 +111,7 @@ export default async function TuViThangConGiapPage({
   params: Promise<{ ky: string; congiap: string }>;
 }) {
   const { ky, congiap } = await params;
-  const k = parseMonthSlug(ky);
+  const k = resolveServableMonth(ky);
   if (!k) notFound();
 
   // Mùa vụ: hết tháng → 308 về evergreen (file vẫn giữ, không mất backlink).
