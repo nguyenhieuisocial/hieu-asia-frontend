@@ -55,21 +55,25 @@ export async function generateMetadata({
     title: { absolute: title },
     description: d.seoDescription,
     alternates: { canonical: url },
-    // Route-level openGraph THAY THẾ openGraph của root layout — phải khai lại
-    // images, nếu không preview mạng xã hội sẽ trắng.
+    // CỐ Ý KHÔNG khai `images` ở đây. Route-level openGraph thay thế openGraph
+    // của root layout, nên trước đây route phải tự khai lại `/og-image.jpg` kẻo
+    // preview mạng xã hội trắng. Nhưng từ khi cụm có `opengraph-image.tsx`,
+    // khai `images` lại thành có hại: Next CHỈ áp file-convention khi segment
+    // KHÔNG có key `images` → khai vào là chặn mất ảnh generated của cụm, và
+    // 72 trang này chia sẻ ra ảnh chung chung của cả site trong khi hub + 6
+    // trang tháng ra ảnh có thương hiệu. Bỏ `images` để cả cụm dùng chung một
+    // ảnh. (Đã verify: og:image vẫn có, trỏ đúng ảnh generated của cụm.)
     openGraph: {
       title,
       description: d.seoDescription,
       url,
       type: 'article',
       locale: 'vi_VN',
-      images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: d.seoTitle }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description: d.seoDescription,
-      images: [{ url: '/og-image.jpg', alt: d.seoTitle }],
     },
   };
 }
