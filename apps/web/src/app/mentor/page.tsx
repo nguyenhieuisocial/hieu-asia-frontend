@@ -31,8 +31,11 @@ const PAGE_DESCRIPTION =
   `Mentor AI trả lời từ chính lá số Tử Vi / Bát Tự bạn đã lập, nhớ mục tiêu và quyết định của bạn, hỏi không giới hạn — ${MENTOR_PRICE}. Lập lá số miễn phí trước.`;
 
 export const metadata: Metadata = {
+  // SEO-FIX: 63 ký tự → bị Google cắt. Bỏ "của bạn" (đã có trong og:title bên
+  // dưới, nơi được phép dài hơn) → 54. Sửa cùng lúc với việc đưa /mentor vào
+  // sitemap: không có lý gì đẩy trang cho Google tìm mà tiêu đề vẫn bị cắt.
   title: {
-    absolute: 'Mentor AI — hỏi đáp không giới hạn từ lá số của bạn · hieu.asia',
+    absolute: 'Mentor AI — hỏi đáp không giới hạn từ lá số · hieu.asia',
   },
   description: PAGE_DESCRIPTION,
   alternates: { canonical: '/mentor' },
