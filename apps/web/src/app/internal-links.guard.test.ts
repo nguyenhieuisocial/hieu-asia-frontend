@@ -24,6 +24,7 @@
 import { describe, it, expect } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
+import { SEASONAL_PAGES } from '@/lib/seasonal';
 
 const SRC = join(process.cwd(), 'src');
 const APP = join(SRC, 'app');
@@ -86,6 +87,18 @@ function sourceFiles(): string[] {
 
 const rel = (f: string) => relative(SRC, f).split(sep).join('/');
 
+/** File `src/app/<x>/page.tsx` → route `/<x>` (bỏ route group). null nếu không phải trang. */
+function routeCuaFile(f: string): string | null {
+  const r = relative(APP, f).split(sep).join('/');
+  if (r.startsWith('..') || !/\/?page\.tsx?$/.test(r)) return null;
+  const segs = r
+    .replace(/\/?page\.tsx?$/, '')
+    .split('/')
+    .filter((s) => s && !/^\(.*\)$/.test(s));
+  if (segs.some((s) => s.includes('['))) return null; // route động: không có một đường dẫn cố định
+  return `/${segs.join('/')}`;
+}
+
 const ROUTES = routePaths();
 const MATCHERS = routeMatchers(ROUTES);
 const FILES = sourceFiles();
@@ -113,6 +126,44 @@ describe('link nội bộ không được trỏ tới route không tồn tại',
     }
     expect(count, 'không rút được href nào — regex hỏng, test đang không bảo vệ gì').toBeGreaterThan(50);
     expect(bad, `link trỏ tới route không tồn tại:\n  ${bad.join('\n  ')}`).toEqual([]);
+  });
+
+  it('không trang nào link tới trang mùa vụ mà khi hết mùa lại quay về chính nó', () => {
+    // Trang mùa vụ hết hạn thì 308 về một trang evergreen. Nếu chính trang
+    // evergreen ấy lại đang link tới nó, thì sau ngày hết mùa người bấm sẽ quay
+    // lại đúng chỗ vừa đứng — cú bấm chết — và Google phí lượt quét vào một
+    // chặng chuyển hướng vô nghĩa. Ca thật đã bắt được: `/xuat-hanh` link tới
+    // `/xuat-hanh-2027`, mà trang đó hết mùa (01/01/2028) thì 308 về
+    // `/xuat-hanh`. Lỗi chỉ hiện ra sau một MỐC NGÀY nên không phép đo nào chụp
+    // tại một thời điểm nhìn thấy được — phải suy từ bảng mùa vụ.
+    const bad: string[] = [];
+    for (const f of FILES) {
+      const tuMinh = routeCuaFile(f);
+      if (!tuMinh) continue;
+      const src = readFileSync(f, 'utf8');
+      for (const m of src.matchAll(/href=(?:"|'|\{")(\/[a-z0-9\-/]*)(?:[#?][^"'`]*)?(?:"|'|"\})/gi)) {
+        const href = (m[1] ?? '').replace(/\/$/, '');
+        const mua = SEASONAL_PAGES[href];
+        if (!mua || mua.evergreen !== tuMinh) continue;
+        // Link vẫn được phép TỒN TẠI trong mã — miễn là có chốt ẩn nó khi hết
+        // mùa. Chốt này quét chữ nên không thấy điều kiện lúc chạy; thứ kiểm
+        // được (và đúng thứ cần kiểm) là: file có gọi `expiredSeasonalTarget`
+        // cho ĐÚNG đường dẫn đó không.
+        const daBocDieuKien = new RegExp(
+          `expiredSeasonalTarget\\(\\s*['"\`]${href.replace(/[/-]/g, '\\$&')}['"\`]`,
+        ).test(src);
+        if (!daBocDieuKien) {
+          bad.push(
+            `${rel(f)} (route ${tuMinh}) link tới ${href} — trang đó hết mùa ${mua.redirectFrom} sẽ 308 về ${mua.evergreen}, tức quay lại chính nó`,
+          );
+        }
+      }
+    }
+    expect(
+      bad,
+      `link vòng lại chính nó sau khi hết mùa:\n  ${bad.join('\n  ')}\n` +
+        `Cách sửa: bọc link trong \`{!expiredSeasonalTarget('<đường dẫn>') && …}\` và khai \`revalidate\` cho route đó.`,
+    ).toEqual([]);
   });
 
   it('phần tĩnh của href ghép động đều thuộc một cụm route có thật', () => {
