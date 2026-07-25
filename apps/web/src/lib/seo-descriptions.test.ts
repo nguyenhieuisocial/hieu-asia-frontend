@@ -43,6 +43,20 @@ describe('meta description /tu-vi/sao/[star]', () => {
       expect(starMetaDescription(s)).toContain('Mệnh, Quan Lộc, Tài Bạch');
     }
   });
+
+  // `starEpithet` trả '' khi đoạn đầu của `archetype` quá dài — một cơ chế IM
+  // LẶNG, đúng bằng cách `clampDescription` đã im lặng và làm hỏng 133 trang.
+  // Nếu ai biên tập lại `archetype` khiến cả 47 sao rơi vào fallback, mọi
+  // assertion độ dài ở trên VẪN xanh (mô tả ngắn đi thì luôn đạt) dù 47/47
+  // trang mất phần phân biệt. Khoá đúng danh sách để việc đó thành báo động.
+  it('chỉ đúng 3 sao được phép rơi vào mẫu rút gọn (không có biệt danh)', () => {
+    const noEpithet = ALL_STARS_CONTENT.filter((s) => !starMetaDescription(s).includes(' — '));
+    expect(noEpithet.map((s) => s.name)).toEqual([
+      'Liêm Trinh',
+      'Tham Lang',
+      'Địa Không - Địa Kiếp',
+    ]);
+  });
 });
 
 describe('meta description /tu-vi/[palace]', () => {
@@ -68,5 +82,21 @@ describe('meta description /hop-tuoi/tuoi/[cap]', () => {
   it('mỗi cặp một mô tả riêng', () => {
     const all = pairs.map(({ a, b }) => pairMetaDescription(a, b));
     expect(new Set(all).size).toBe(all.length);
+  });
+
+  // Truy vấn mục tiêu của cụm này là "tuổi X hợp tuổi Y không". Nhưng 132/144
+  // câu `summary` viết "Tý và Sửu" chứ không phải "tuổi Tý" — nên nếu câu nối
+  // thêm mất đi thì mô tả mất luôn từ khoá, dù độ dài vẫn "đạt".
+  it('luôn giữ đúng cụm từ khoá "tuổi X hợp tuổi Y"', () => {
+    for (const { a, b } of pairs) {
+      expect(pairMetaDescription(a, b)).toContain(`tuổi ${a.ten} hợp tuổi ${b.ten}`);
+    }
+  });
+
+  it('không lặp lại cụm "Can Chi" hai lần trong một mô tả', () => {
+    for (const { a, b } of pairs) {
+      const d = pairMetaDescription(a, b);
+      expect((d.match(/Can Chi/g) ?? []).length, `${a.ten}–${b.ten}: ${d}`).toBeLessThanOrEqual(1);
+    }
   });
 });

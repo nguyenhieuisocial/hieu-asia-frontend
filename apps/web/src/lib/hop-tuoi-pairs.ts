@@ -405,11 +405,21 @@ export function nguHanhInteraction(a: Zodiac, b: Zodiac): NguHanhInteraction {
 // `summary` (81–113 ký tự) rồi clamp ở 160 → tổng vượt, và phần bị cắt luôn là
 // câu từ khoá vừa nối. Sửa: câu nối ngắn lại, và CHỈ nối khi còn đủ chỗ.
 
-/** Câu từ khoá nối thêm khi mô tả còn ngắn. */
-const PAIR_META_TAIL = ' Mức độ hợp và điểm cần dung hoà theo Can Chi.';
+/**
+ * Câu từ khoá nối thêm khi mô tả còn chỗ.
+ *
+ * Phải nhắc lại "tuổi X hợp tuổi Y" vì đó ĐÚNG là cách người ta gõ vào Google,
+ * mà 132/144 câu `summary` lại viết "Tý và Sửu" chứ không phải "tuổi Tý" — nên
+ * nếu không có câu này thì mô tả mất hẳn từ khoá. Cũng cố ý KHÔNG lặp lại cụm
+ * "Can Chi" (đa số summary đã mở đầu bằng "Theo Can Chi,").
+ */
+const pairMetaTail = (a: Zodiac, b: Zodiac) => ` Xem tuổi ${a.ten} hợp tuổi ${b.ten} đến đâu.`;
 
-/** Mô tả trang một cặp tuổi. Dài nhất 159 ký tự trên toàn bộ 144 cặp. */
+/** Mô tả trang một cặp tuổi. Không cặp nào vượt 160 ký tự. */
 export function pairMetaDescription(a: Zodiac, b: Zodiac): string {
   const summary = RELATION_COPY[relationOf(a.slug, b.slug)].summary(a.ten, b.ten);
-  return summary.length + PAIR_META_TAIL.length <= 160 ? summary + PAIR_META_TAIL : summary;
+  const tail = pairMetaTail(a, b);
+  // Nhánh "không đủ chỗ thì bỏ tail" là phòng thủ cho trường hợp ai đó nới
+  // `RELATION_COPY.summary` sau này; với dữ liệu hiện tại mọi cặp đều đủ chỗ.
+  return summary.length + tail.length <= 160 ? summary + tail : summary;
 }
