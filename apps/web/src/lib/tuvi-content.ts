@@ -1,6 +1,28 @@
 /**
  * Static reference content for /tu-vi/cung-* and /tu-vi/sao/* SEO pages.
  *
+ * ⚠️⚠️ ĐỌC TRƯỚC KHI SỬA NỘI DUNG Ở ĐÂY (từ 2026-07-25, CMS Tử Vi bước 3) ⚠️⚠️
+ *
+ * File này KHÔNG còn là nguồn duy nhất. `/tu-vi/[palace]` và `/tu-vi/sao/[star]`
+ * nay đọc qua `lib/tuvi-content-source.ts` theo công thức:
+ *
+ *     hiển thị = { ...bản trong FILE NÀY, ...các trường DB CÓ GIÁ TRỊ }
+ *
+ * DB (`hieu_asia.tuvi_content`) hiện có **đủ mọi trường** ⇒ **DB THẮNG**.
+ * ⇒ Sửa chữ trong file này thì **WEB SẼ KHÔNG ĐỔI**. Đừng ngồi tìm lỗi — đó là
+ *   thiết kế: founder sửa nội dung qua admin `/tuvi-content`, không qua code.
+ *
+ * Muốn nội dung sửa ở đây LÊN ĐƯỢC web, chọn 1 trong 2:
+ *   (a) Bấm workflow **`seed-tuvi-content`** (bỏ tick dry_run) → đẩy file này sang DB.
+ *       ⚠️ Nó GHI ĐÈ trường tương ứng trong DB → **mất phần founder đã tự sửa** ở
+ *       những trường đó. Hỏi founder trước khi chạy nếu họ đã dùng admin.
+ *   (b) Hoặc sửa thẳng trong admin `/tuvi-content` (khuyến nghị cho việc đổi CHỮ).
+ *
+ * File này VẪN là nguồn cho: `generateStaticParams` (danh sách route), sitemap,
+ * test, và **bản dự phòng** khi API/DB lỗi — nên vẫn phải giữ đầy đủ, đừng xoá bớt.
+ * Thêm cung/sao MỚI thì bắt buộc sửa ở đây (cần route + trang web tương ứng), rồi
+ * chạy workflow seed.
+ *
  * Each entry is intentionally factual + non-superstitious. We describe
  * what the palace/star traditionally REPRESENTS in Tử Vi Đẩu Số without
  * making predictive claims. AI Mentor is the layer that personalizes
