@@ -7,14 +7,22 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import {
   PALACES_CONTENT,
-  findPalaceContent,
   ALL_STARS_CONTENT,
   palaceMetaDescription,
 } from '@/lib/tuvi-content';
+import { getPalace } from '@/lib/tuvi-content-source';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { clampDescription } from '@/lib/seo/description';
 
+/** CMS Tử Vi bước 3: nội dung đọc từ DB (dự phòng = bản trong code), làm mới sau
+ *  5 phút → founder sửa trong admin `/tuvi-content` là web đổi, không cần deploy.
+ *  Next đòi giá trị HẰNG nên không dùng được biến import; giữ khớp với
+ *  TUVI_REVALIDATE_SECONDS trong lib/tuvi-content-source.ts. */
+export const revalidate = 300;
+
 export function generateStaticParams() {
+  // CỐ Ý lấy từ CODE, không từ DB: danh sách route phải đầy đủ + ổn định lúc
+  // dựng, kể cả khi API sập.
   return PALACES_CONTENT.map((p) => ({ palace: p.slug }));
 }
 
@@ -22,7 +30,7 @@ export async function generateMetadata(
   { params }: { params: Promise<{ palace: string }> },
 ): Promise<Metadata> {
   const { palace } = await params;
-  const data = findPalaceContent(palace);
+  const data = await getPalace(palace);
   if (!data) return {};
   return {
     title: `Cung ${data.name} trong Tử Vi Đẩu Số`,
@@ -48,7 +56,7 @@ export default async function PalacePage({
   params: Promise<{ palace: string }>;
 }) {
   const { palace } = await params;
-  const data = findPalaceContent(palace);
+  const data = await getPalace(palace);
   if (!data) notFound();
 
   const breadcrumbJsonLd = {
