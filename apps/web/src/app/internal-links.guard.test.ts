@@ -49,17 +49,23 @@ function routePaths(): string[] {
   ];
 }
 
+/** Thoát MỌI ký tự đặc biệt của regex, không chỉ vài ký tự đoán trước. */
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 /** Route → regex khớp URL thật (`[slug]` → một đoạn, `[...all]` → nhiều đoạn). */
 function routeMatchers(routes: string[]): RegExp[] {
-  return routes.map(
-    (r) =>
-      new RegExp(
-        `^${(r === '/' ? '' : r)
-          .replace(/\[\.\.\.[^\]]+\]/g, '.+')
-          .replace(/\[[^\]]+\]/g, '[^/]+')
-          .replace(/\//g, '\\/')}\\/?$`,
-      ),
-  );
+  return routes.map((r) => {
+    const body = r
+      .split('/')
+      .filter(Boolean)
+      .map((seg) => {
+        if (/^\[\.\.\..+\]$/.test(seg)) return '.+';
+        if (/^\[.+\]$/.test(seg)) return '[^/]+';
+        return escapeRe(seg);
+      })
+      .join('/');
+    return new RegExp(`^/${body}/?$`);
+  });
 }
 
 function sourceFiles(): string[] {
