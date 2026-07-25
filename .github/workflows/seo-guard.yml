@@ -1,39 +1,37 @@
-# SEO metadata guard (vault 172) — đo <title> + meta description trên HTML mà
-# `next build` sinh ra, tức đúng thứ Google thấy, KHÔNG đọc chuỗi trong source.
+# SEO metadata guard (vault 172) — đo <title> + meta description + JSON-LD trên
+# HTML mà `next build` sinh ra, tức đúng thứ Google thấy, KHÔNG đọc chuỗi trong
+# source.
 #
 # Vì sao phải build mới đo được: đợt SEO 2026-07-25 có PR rút chữ theo chuỗi
 # trong source, quên mất 12 ký tự hậu tố " · hieu.asia" mà root layout tự nối
 # vào <title> — nên "sửa xong" mà trang vẫn vượt ngưỡng, và không ai biết.
 #
-# CHỈ CHẠY khi PR đụng tới thứ có thể làm hỏng meta (xem `paths` bên dưới), nên
-# phần lớn PR không phải trả giá build lần hai.
+# HAI CỔNG HIỆU SUẤT — cùng khuôn với ci.yml:
+#   1. Job LUÔN CHẠY (nên check luôn báo kết quả và branch protection không bao
+#      giờ deadlock), nhưng các bước nặng (install + build + guard) chỉ chạy khi
+#      diff có đụng thứ có thể làm hỏng meta. PR không liên quan báo xanh trong
+#      vài giây.
+#      ⚠️ KHÔNG được đưa `paths:` lên cấp workflow. Làm thế là bỏ qua CẢ
+#      workflow, check không bao giờ báo, và nếu nó là required thì mọi PR
+#      không liên quan BLOCKED VĨNH VIỄN (GitHub coi required check của một
+#      workflow bị skip là "expected" mãi mãi). Bản đầu của file này mắc đúng
+#      lỗi đó — cùng cái bẫy mà `ci.yml` đã ghi chú sẵn.
+#   2. `concurrency` huỷ run cũ khi có commit mới trên cùng ref.
 #
-# Advisory: đây là check RIÊNG, không nằm trong job bắt buộc
-# "turbo lint + test + build", nên một lần báo nhầm không bao giờ chặn merge —
-# cho tới khi founder tự bật.
-# Để BẬT thành bắt buộc (không cần sửa file):
-#   GitHub → Settings → Branches → main → Require status checks to pass →
-#   thêm "seo-guard (vault 172)".
+# Chạy cả trên `push: main` để bắt trôi lệch SAU khi gộp: hai PR xanh riêng lẻ
+# vẫn có thể hỏng khi vào chung main, mà chỉ chạy trên pull_request thì không ai
+# đo lại trạng thái main.
+#
+# Hiện là advisory (không nằm trong required checks). Từ bản này, bật thành bắt
+# buộc là AN TOÀN: Settings → Branches → main → Require status checks →
+# thêm "seo-guard (vault 172)". Không cần sửa file.
 name: seo-guard
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
-    paths:
-      - 'apps/web/src/app/**/page.tsx'
-      - 'apps/web/src/app/**/layout.tsx'
-      # CẢ `lib/**`, không liệt kê từng file. Bản đầu chỉ khai `lib/*-data.ts`
-      # + 2 file cụ thể, và bỏ sót đúng những module sinh mô tả cho các cụm
-      # đang nằm trong ALLOWLIST — `tarot-card-pages*.ts`, `khai-truong.ts`,
-      # `learn/related.ts`. Tức là thao tác "rút chữ cho hết bị cắt" ở mấy cụm
-      # đó sẽ không kích hoạt guard. Guard vốn advisory và chỉ tốn 1 build, nên
-      # chạy dư rẻ hơn nhiều so với bỏ sót.
-      - 'apps/web/src/lib/**'
-      - 'apps/web/scripts/seo-guard.mjs'
-      - '.github/workflows/seo-guard.yml'
-      # Nâng Next có thể đổi hình dạng HTML render ra và làm chết regex đọc thẻ.
-      - 'apps/web/package.json'
-      - 'pnpm-lock.yaml'
   workflow_dispatch: {}
 
 permissions:
@@ -50,17 +48,77 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Cần lịch sử để diff với base branch ở bước dò bên dưới.
+          fetch-depth: 0
+
+      - name: Detect metadata-affecting changes
+        id: detect
+        # Đặt outputs.relevant=true khi diff đụng thứ có thể đổi <title>,
+        # description hoặc JSON-LD. Fail-safe: bất kỳ chỗ nào không chắc (không
+        # có base dùng được, thiếu commit) → relevant=true để guard vẫn chạy.
+        run: |
+          set -uo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+          fi
+          RELEVANT=true
+          if [ -n "$BASE" ] \
+            && [ "$BASE" != "0000000000000000000000000000000000000000" ] \
+            && git cat-file -e "$BASE" 2>/dev/null; then
+            RELEVANT=false
+            while IFS= read -r f; do
+              [ -z "$f" ] && continue
+              case "$f" in
+                # Mọi route: metadata nằm ở page.tsx / layout.tsx.
+                apps/web/src/app/*page.tsx | apps/web/src/app/*layout.tsx) RELEVANT=true ;;
+                # CẢ lib/**: module sinh title/description nằm rải rác ở đây
+                # (tuvi-content, hop-tuoi-pairs, tarot-card-pages, khai-truong,
+                # learn/related…). Liệt kê tay là chắc chắn bỏ sót.
+                apps/web/src/lib/*) RELEVANT=true ;;
+                # Component có phát JSON-LD. Liệt kê ĐÍCH DANH chứ không lấy cả
+                # `components/**`: quota Actions của repo chỉ 2.000 phút/tháng
+                # (xem ci.yml) mà mỗi lần chạy guard tốn ~10 phút, nên nới cả
+                # thư mục 261 file là đốt quota vô ích. Grep toàn repo chỉ có 3
+                # file này phát JSON-LD — nếu thêm file mới thì thêm vào đây.
+                apps/web/src/components/seo/* | apps/web/src/components/learn/LearnArticleView.tsx) RELEVANT=true ;;
+                # Chính guard và workflow của nó.
+                apps/web/scripts/seo-guard.mjs | .github/workflows/seo-guard.yml) RELEVANT=true ;;
+                # Nâng Next có thể đổi hình dạng HTML → chết regex đọc thẻ.
+                apps/web/package.json | pnpm-lock.yaml) RELEVANT=true ;;
+                *) : ;;
+              esac
+            done < <(git diff --name-only "$BASE" HEAD)
+          fi
+          echo "relevant=$RELEVANT" >> "$GITHUB_OUTPUT"
+          if [ "$RELEVANT" = "true" ]; then
+            echo "Có thay đổi ảnh hưởng metadata → chạy guard."
+          else
+            echo "Không đụng metadata → bỏ qua build, báo xanh."
+          fi
+
       - name: Setup pnpm
+        if: steps.detect.outputs.relevant == 'true'
         uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
         # pnpm version pinned via `packageManager` in package.json.
+
       - name: Setup Node
+        if: steps.detect.outputs.relevant == 'true'
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "22"
           cache: pnpm
+
       - name: Install dependencies
+        if: steps.detect.outputs.relevant == 'true'
         run: pnpm install --frozen-lockfile
+
       - name: Build web
+        if: steps.detect.outputs.relevant == 'true'
         run: pnpm --filter web build
+
       - name: Guard SEO metadata
+        if: steps.detect.outputs.relevant == 'true'
         run: node apps/web/scripts/seo-guard.mjs
