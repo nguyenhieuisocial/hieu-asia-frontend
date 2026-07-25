@@ -376,6 +376,26 @@ export default function PricingPage() {
           </p>
         </div>
 
+        {/* Link tới trang sản phẩm /reading — trang giải thích bài đọc 5 lăng
+            kính (thứ khách đang mua ở các gói trên). Trước bản này, /reading có
+            0 link từ trang CÔNG KHAI nào: 9 link trỏ tới nó đều nằm trong khu
+            đã-đăng-nhập mà robots.txt đã chặn (/reading/, /account, /decisions/d_)
+            ⇒ với Google nó là trang MỒ CÔI dù là trang bán hàng chính. Trang giá
+            mà không trỏ tới thứ đang bán cũng là một lỗ hổng điều hướng. Đặt ở
+            đây (sau bảng giá, cùng kiểu với dòng 1:1) để không cạnh tranh với
+            CTA chính "Bắt đầu miễn phí". */}
+        <div className="mx-auto mt-3 max-w-marketing px-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            Chưa rõ gói trả phí đọc những gì?{' '}
+            <a
+              href="/reading"
+              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+            >
+              Xem bài đọc 5 lăng kính gồm gì →
+            </a>
+          </p>
+        </div>
+
         {/* Wave 60.79.T2 (vault 112 P1 #6): TrustStrip lifted FROM between
             hero and pricing tiers TO right after the tiers + before FAQ. The
             audit caught the strip sitting ~120px below the hero CTA in a dead
