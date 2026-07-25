@@ -25,6 +25,7 @@
  * template. Survey + comparison table removed (PricingTierV2 has hybrid built-in).
  */
 
+import Link from 'next/link';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
@@ -373,6 +374,30 @@ export default function PricingPage() {
             >
               Xem buổi tư vấn riêng →
             </a>
+          </p>
+        </div>
+
+        {/* Link tới trang sản phẩm /reading — trang giải thích bài đọc 5 lăng
+            kính (thứ khách đang mua ở các gói trên). Trước bản này, /reading có
+            0 link từ trang CÔNG KHAI nào: 9 link trỏ tới nó đều nằm trong khu
+            đã-đăng-nhập mà robots.txt đã chặn (/reading/, /account, /decisions/d_)
+            ⇒ với Google nó là trang MỒ CÔI dù là trang bán hàng chính. Trang giá
+            mà không trỏ tới thứ đang bán cũng là một lỗ hổng điều hướng. Đặt ở
+            đây (sau bảng giá, cùng kiểu với dòng 1:1) để không cạnh tranh với
+            CTA chính "Bắt đầu miễn phí". */}
+        <div className="mx-auto mt-3 max-w-marketing px-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            Chưa rõ gói trả phí đọc những gì?{' '}
+            {/* PHẢI dùng `<Link>`: eslint `@next/next/no-html-link-for-pages` chặn
+                `<a href>` trỏ tới route CÓ THẬT. Dòng 1:1 phía trên vẫn dùng `<a>`
+                được vì `/checkout/founder-1on1` là route động → rule không resolve
+                nên không chặn. Đừng "đồng bộ style" bằng cách đổi lại thành `<a>`. */}
+            <Link
+              href="/reading"
+              className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+            >
+              Xem bài đọc 5 lăng kính gồm gì →
+            </Link>
           </p>
         </div>
 
