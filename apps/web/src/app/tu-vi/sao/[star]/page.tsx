@@ -7,6 +7,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { ALL_STARS_CONTENT, findStarContent } from '@/lib/tuvi-content';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { clampDescription } from '@/lib/seo/description';
 
 export function generateStaticParams() {
   return ALL_STARS_CONTENT.map((s) => ({ star: s.slug }));
@@ -20,7 +21,10 @@ export async function generateMetadata(
   if (!data) return {};
   return {
     title: `Sao ${data.name} trong Tử Vi Đẩu Số`,
-    description: `Sao ${data.name} — ${data.archetype} Ý nghĩa khi toạ cung Mệnh, Quan Lộc, Tài Bạch và cách luận trên lá số Tử Vi.`.slice(0, 158),
+    description: clampDescription(
+      `Sao ${data.name} — ${data.archetype} Ý nghĩa khi toạ cung Mệnh, Quan Lộc, Tài Bạch và cách luận trên lá số Tử Vi.`,
+      160,
+    ),
     alternates: { canonical: `https://hieu.asia/tu-vi/sao/${data.slug}` },
     openGraph: {
       title: `Sao ${data.name}`,

@@ -7,6 +7,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { PALACES_CONTENT, findPalaceContent, ALL_STARS_CONTENT } from '@/lib/tuvi-content';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { clampDescription } from '@/lib/seo/description';
 
 export function generateStaticParams() {
   return PALACES_CONTENT.map((p) => ({ palace: p.slug }));
@@ -20,7 +21,7 @@ export async function generateMetadata(
   if (!data) return {};
   return {
     title: `Cung ${data.name} trong Tử Vi Đẩu Số`,
-    description: `${data.overview.slice(0, 155)}`,
+    description: clampDescription(data.overview, 160),
     alternates: { canonical: `https://hieu.asia/tu-vi/${data.slug}` },
     openGraph: {
       title: `Cung ${data.name}`,

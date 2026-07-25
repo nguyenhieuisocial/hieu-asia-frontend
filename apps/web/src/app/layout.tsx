@@ -260,7 +260,6 @@ export default async function RootLayout({
             — that host is never hit from the browser in production. */}
         <link rel="preconnect" href="https://us.i.posthog.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://browser.sentry-cdn.com" crossOrigin="anonymous" />
-        <meta name="format-detection" content="telephone=no" />
       </head>
       <body>
         {/* Site-wide structured data (Organization + WebSite) — centralized via
