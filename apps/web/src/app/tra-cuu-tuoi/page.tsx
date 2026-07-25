@@ -78,7 +78,12 @@ const FAQS: FaqItem[] = [
   },
   {
     q: 'Công cụ có lưu dữ liệu của tôi không?',
-    a: 'Không. Toàn bộ phép tính chạy ngay trong trình duyệt của bạn, không gửi lên máy chủ, không lưu và không chia sẻ.',
+    // ĐỪNG rút gọn lại thành "không lưu" chung chung: từ 25/07/2026, người ĐÃ
+    // ĐĂNG NHẬP được lưu hồ sơ ngày sinh vào tài khoản (BirthProfileSync) để
+    // không phải nhập lại trên máy khác. Câu này phải khớp với hành vi thật +
+    // `/privacy` — Luật BVDLCN 91/2025 (quyền được biết). Với khách vãng lai thì
+    // vế "không rời khỏi máy" vẫn đúng nguyên, và vẫn là điểm mạnh.
+    a: 'Nếu bạn KHÔNG đăng nhập: toàn bộ phép tính chạy ngay trong trình duyệt, dữ liệu không rời khỏi máy bạn — không gửi lên máy chủ, không lưu, không chia sẻ. Nếu bạn ĐÃ đăng nhập: ngày sinh được lưu vào tài khoản để các công cụ khác tự điền và dùng lại được trên thiết bị khác. Muốn gỡ, bấm nút "Xoá" ngay cạnh dòng thông tin đã lưu ở mỗi công cụ — xoá cả trên máy lẫn trong tài khoản. Chi tiết ở trang Quyền riêng tư.',
   },
 ];
 
