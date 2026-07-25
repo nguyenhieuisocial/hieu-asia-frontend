@@ -29,13 +29,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const shortTitle = `Lá ${c.name_vi} (${c.name}) · Tarot | hieu.asia`;
   // og:title can be longer — social cards allow more space.
   const ogTitle = `Ý nghĩa lá ${c.name} (${c.name_vi}) — xuôi & ngược`;
-  // SEO-FIX: cắt bớt xuống 2 từ khoá xuôi + 1 ngược vẫn chưa đủ — tên lá và từ
-  // khoá dài khiến 11/78 lá vượt 160 ký tự (dài nhất 171: page-of-pentacles), bị
-  // Google cắt ngang giữa từ. clampDescription cắt ở biên từ + thêm dấu "…".
+  // Bọc clampDescription KHÔNG phải là sửa: độ dài "đạt" ≤160 nhưng chữ vẫn dài
+  // như cũ nên clamp phải cắt thật, và người tìm kiếm thấy câu cụt + dấu "…"
+  // trên SERP. Mẫu cũ (đuôi 53 ký tự "…và câu hỏi tự soi.") làm 11/78 lá vượt
+  // 160 — dài nhất 171 (page-of-pentacles) — nên 11 lá đó đều bị cắt.
+  //
+  // Cách sửa: rút ĐUÔI BOILERPLATE, giữ nguyên 2 từ khoá xuôi. Đuôi là chữ lặp
+  // y nhau trên cả 78 lá nên giá trị tìm kiếm thấp; từ khoá mới là phần riêng
+  // của từng lá và là thứ người ta gõ vào Google. Sau khi rút: dài nhất 153 ký
+  // tự, KHÔNG lá nào bị clamp cắt nữa (còn dư 7 ký tự cho biên tập về sau).
+  //
+  // clampDescription giữ lại làm lưới an toàn — nay là no-op, nhưng nếu ai sửa
+  // từ khoá dài ra thì nó chặn không cho mô tả vượt 160.
   const description = clampDescription(
     `Ý nghĩa lá ${c.name_vi} (${c.name}): xuôi — ${c.keyUp
       .slice(0, 2)
-      .join(', ')}; ngược — ${c.keyRev[0]}. Biểu tượng, tình cảm – công việc và câu hỏi tự soi.`,
+      .join(', ')}; ngược — ${c.keyRev[0]}. Biểu tượng, tình cảm – công việc.`,
   );
   const url = `https://hieu.asia/tarot/y-nghia/${c.slug}`;
   return {
