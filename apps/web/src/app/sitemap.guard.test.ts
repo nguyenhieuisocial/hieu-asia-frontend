@@ -17,6 +17,7 @@ import { describe, it, expect } from 'vitest';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import sitemap from './sitemap';
+import { GET as robotsGET } from './robots.txt/route';
 
 const APP_DIR = join(process.cwd(), 'src/app');
 const BASE_URL = 'https://hieu.asia';
@@ -105,5 +106,82 @@ describe('sitemap coverage', () => {
         `báo "Submitted URL marked noindex". Bỏ khỏi app/sitemap.ts:\n` +
         conflicting.map((r) => `  ${BASE_URL}${r}`).join('\n'),
     ).toEqual([]);
+  });
+});
+
+/**
+ * robots.txt CHẶN trang mà sitemap lại NỘP cho Google — kiểu hỏng nặng nhất
+ * trong SEO và im lặng nhất.
+ *
+ * Hai file này đều sửa TAY và KHÔNG có gì ràng buộc nhau: `robots.txt/route.ts`
+ * giữ danh sách `DISALLOW`, `sitemap.ts` giữ danh sách URL. Thêm một dòng chặn
+ * hơi rộng tay (ví dụ `/tu-vi` thay vì `/tu-vi/`) là giết sạch một cụm trăm
+ * trang — trang vẫn chạy, vẫn có nội dung, chỉ là Google không được phép vào.
+ * Search Console báo "Submitted URL blocked by robots.txt", nhưng phải có người
+ * mở GSC ra xem mới biết.
+ *
+ * Đo 2026-07-25 trên production: 978 URL sitemap, 16 dòng Disallow, 0 xung đột.
+ * Đáng chú ý `/reading` (trang sản phẩm, vừa được kéo hết mồ côi ở #954) KHÔNG
+ * bị `Disallow: /reading/` chặn vì robots khớp theo TIỀN TỐ — `/reading` không
+ * bắt đầu bằng `/reading/`. Quy tắc này chính xác nhưng mong manh: bỏ dấu `/`
+ * cuối là trang sản phẩm biến mất khỏi Google.
+ *
+ * Đọc trên ĐẦU RA render (`GET()`), không đọc mảng trong source — cùng kỷ luật
+ * với seo-guard: đo đúng thứ Google thấy.
+ */
+describe('robots.txt không được chặn trang đã nộp vào sitemap', () => {
+  const BLANK_LINE = /\r?\n\s*\r?\n/;
+  const WILDCARD_UA = /^User-Agent:\s*\*/m;
+
+  async function disallowForWildcard(): Promise<string[]> {
+    const body = await robotsGET().text();
+    // Nhóm đầu tiên là `User-Agent: *`; các nhóm cách nhau bằng dòng trống.
+    const group = body.split(BLANK_LINE).find((g) => WILDCARD_UA.test(g));
+    expect(group, 'robots.txt không còn nhóm "User-Agent: *" — kiểm tra lại route').toBeTruthy();
+    return (group ?? '')
+      .split('\n')
+      .filter((l) => l.toLowerCase().startsWith('disallow:'))
+      .map((l) => l.slice(l.indexOf(':') + 1).trim())
+      .filter(Boolean);
+  }
+
+  it('không URL nào trong sitemap khớp một dòng Disallow', async () => {
+    const disallow = await disallowForWildcard();
+    // Chốt kiểm tra: đọc được 0 dòng chặn nghĩa là parse hỏng, KHÔNG phải "sạch".
+    expect(
+      disallow.length,
+      'không đọc được dòng Disallow nào — parse hỏng, đừng kết luận là sạch',
+    ).toBeGreaterThan(0);
+
+    const entries = await sitemap();
+    expect(entries.length, 'sitemap rỗng — đừng kết luận là sạch').toBeGreaterThan(100);
+
+    const blocked = entries
+      .map((e) => e.url.replace(BASE_URL, '') || '/')
+      .flatMap((path) => {
+        const hit = disallow.find((d) => path.startsWith(d));
+        return hit ? [`${path}  <- bị chặn bởi "Disallow: ${hit}"`] : [];
+      });
+
+    expect(
+      blocked,
+      'Trang vừa nộp cho Google (sitemap) vừa bị robots.txt chặn -> Search Console ' +
+        'báo "Submitted URL blocked by robots.txt" và trang KHÔNG BAO GIỜ được index. ' +
+        'Sửa: bỏ URL khỏi app/sitemap.ts, HOẶC thu hẹp dòng Disallow trong ' +
+        'app/robots.txt/route.ts (thường là thiếu dấu "/" cuối): ' +
+        blocked.join(' | '),
+    ).toEqual([]);
+  });
+
+  it('robots.txt vẫn khai Sitemap: và cho phép crawl gốc', async () => {
+    const body = await robotsGET().text();
+    expect(body, 'thiếu dòng "Sitemap:" — Google phải tự dò tìm').toContain(
+      `Sitemap: ${BASE_URL}/sitemap.xml`,
+    );
+    const group = body.split(BLANK_LINE).find((g) => WILDCARD_UA.test(g)) ?? '';
+    expect(group, 'thiếu "Allow: /" cho User-Agent: *').toMatch(/^Allow:\s*\/$/m);
+    expect(group, 'CÓ "Disallow: /" trong nhóm User-Agent: * -> chặn TOÀN BỘ site').not.toMatch(
+      /^Disallow:\s*\/$/m,
+    );
   });
 });
