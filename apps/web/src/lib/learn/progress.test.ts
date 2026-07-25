@@ -28,6 +28,12 @@ describe('parseSummary', () => {
     expect(parseSummary('{"done":2.9,"total":6}')).toEqual({ done: 2, total: 6, ts: 0 });
   });
 
+  it('done > total (localStorage bị sửa tay) → kẹp về total, không hiện "8/6"', () => {
+    expect(parseSummary('{"done":8,"total":6,"ts":1}')).toEqual({ done: 6, total: 6, ts: 1 });
+    // total = 0 nghĩa là "không rõ tổng" (dữ liệu cũ) → không kẹp.
+    expect(parseSummary('{"done":8,"total":0,"ts":1}')).toEqual({ done: 8, total: 0, ts: 1 });
+  });
+
   it('sai kiểu / âm / NaN / garbage / null → null', () => {
     expect(parseSummary('{"done":"3","total":6}')).toBeNull();
     expect(parseSummary('{"done":-1,"total":6}')).toBeNull();

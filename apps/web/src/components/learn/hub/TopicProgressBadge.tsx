@@ -29,7 +29,10 @@ export function TopicProgressBadge({ slug }: { slug: string }) {
   return (
     <div className="mt-3 flex h-4 items-center gap-2 font-mono text-[12px] text-gold-700">
       {state === 'confident' ? (
-        <span>✓ Đã tự tin giải thích</span>
+        // ✓ là trang trí — để trần thì trình đọc màn hình đọc thêm "check mark".
+        <span>
+          <span aria-hidden="true">✓</span> Đã tự tin giải thích
+        </span>
       ) : state === 'in-progress' && summary ? (
         summary.total > 0 ? (
           <>
