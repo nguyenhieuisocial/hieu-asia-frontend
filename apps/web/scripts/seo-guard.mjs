@@ -196,6 +196,53 @@ export function checkCanonicalGraph(pages, sitemapUrls) {
 }
 
 /**
+ * Trang CHO-INDEX mà Google KHÔNG CÓ ĐƯỜNG NÀO tìm ra: vừa không có liên kết
+ * nội bộ trỏ tới, vừa không nằm trong sitemap. Trang kiểu này mất traffic hoàn
+ * toàn âm thầm — build xanh, test xanh, mở được nếu gõ đúng URL, chỉ Search
+ * Console mới hé lộ và thường là muộn.
+ *
+ * ⚠️ HAI LẦN THIẾT KẾ SAI TRƯỚC KHI RA ĐƯỢC LUẬT NÀY — đọc trước khi sửa
+ *
+ * 1. Bản đo đầu (vault 172 §4b, đã rút): biểu thức lọc href bỏ qua mọi đường dẫn
+ *    có `#`/`?` ⇒ trang CÓ link vẫn bị báo mồ côi. Bất đối xứng sai số ở đây là
+ *    chiều XẤU: bỏ sót một href sinh BÁO ĐỘNG GIẢ chứ không bỏ qua êm.
+ *
+ * 2. Bản thứ hai lấy MỌI `href=` ⇒ tính cả `<link rel="canonical">` của chính
+ *    trang, nên mọi trang đều tự "được trỏ tới" và luật KHÔNG BAO GIỜ ĐỎ ĐƯỢC.
+ *    Một chốt không thể đỏ còn tệ hơn không có chốt: nó tạo an toàn giả. Chỉ
+ *    kiểm đột biến mới lộ ra. ⇒ chỉ lấy href của thẻ `<a>`, và bỏ link tự trỏ.
+ *
+ * 3. Bản thứ ba chỉ xét liên kết nội bộ ⇒ báo 79 trang, nhưng bóc ra thì 0 cái
+ *    là vấn đề thật: 78 là chặng chuyển hướng cố ý, 1 là trang CÓ trong sitemap
+ *    (Google vẫn tìm ra) và có link render phía trình duyệt. Luật đo sai thứ cần
+ *    đo. ⇒ điều kiện đúng là **không link NỘI BỘ *VÀ* không có trong sitemap**.
+ *
+ * Đo trên 1.113 trang sau khi sửa: chỉ còn các chặng chuyển hướng cố ý (đã có
+ * mục miễn trừ sẵn). Thêm luật lúc số vi phạm thật bằng 0 nên không chặn ai.
+ *
+ * @param {{url: string, noindex: boolean}[]} pages
+ * @param {Set<string>} duocTro URL được trang KHÁC trỏ tới bằng thẻ `<a>`
+ * @param {Set<string>|null} sitemapUrls null = không đọc được sitemap → bỏ luật
+ */
+export function checkOrphanPages(pages, duocTro, sitemapUrls) {
+  if (!sitemapUrls) return [];
+  const out = [];
+  for (const p of pages) {
+    if (p.noindex || p.url === '/') continue;
+    if (duocTro.has(p.url) || sitemapUrls.has(p.url)) continue;
+    out.push({
+      url: p.url,
+      rule: 'orphan-page',
+      detail:
+        'KHÔNG có liên kết nội bộ nào trỏ tới VÀ cũng không nằm trong sitemap — ' +
+        'Google không có đường nào tìm ra trang này; thêm link từ trang hub liên quan, ' +
+        'đưa vào sitemap, hoặc cho noindex nếu là trang phụ',
+    });
+  }
+  return out;
+}
+
+/**
  * Node JSON-LD có khai `url`/`@id` trỏ ĐÚNG trang đang đứng không?
  *
  * VÌ SAO CẦN — đây là HẬU QUẢ THẬT của lỗi lớn nhất đợt SEO 25/07: schema của
@@ -598,15 +645,19 @@ export const ALLOWLIST = {
   // Đo 2026-07-25: 85 trang không có JSON-LD, và 0 trong số đó là trang công
   // khai có trong sitemap. Toàn bộ là hai nhóm dưới đây.
   '/tu-vi-thang/*': {
-    rules: ['jsonld-missing', 'h1-missing'],
+    rules: ['jsonld-missing', 'h1-missing', 'orphan-page'],
     max: 78,
     owner: 'Agent-1 (đúng thiết kế, không phải lỗi)',
-    note: 'Các tháng ĐÃ HẾT chỉ được dựng để 308 về evergreen, không render nội dung nên không có JSON-LD. Danh sách này đổi theo từng tháng nên dùng tiền tố thay vì liệt kê tay. Tháng đang mở VẪN có đủ JSON-LD nên luật vẫn canh được chúng.',
+    note: 'Các tháng ĐÃ HẾT chỉ được dựng để 308 về evergreen, không render nội dung nên không có JSON-LD. Danh sách này đổi theo từng tháng nên dùng tiền tố thay vì liệt kê tay. Tháng đang mở VẪN có đủ JSON-LD nên luật vẫn canh được chúng. `orphan-page`: chặng 308 thì đương nhiên không có link nội bộ và không nằm trong sitemap — đúng thiết kế. `max: 78` giữ nguyên vai trò chốt chặn: thêm tháng nào vượt số đó là có trang thật bị lọt vào đây.',
   },
   '/affiliate/leaderboard': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư, không nằm trong sitemap' },
   '/affiliate/network': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư, không nằm trong sitemap' },
   '/checkout/premium': { rules: ['jsonld-missing'], owner: 'n/a', note: 'luồng thanh toán, không index' },
-  '/dashboard': { rules: ['title-too-long', 'jsonld-missing', 'h1-missing'], owner: 'agent SEO sweep (app/layout.tsx)', note: 'dùng tiêu đề mặc định; đã chặn ở robots.txt' },
+  '/dashboard': {
+    rules: ['title-too-long', 'jsonld-missing', 'h1-missing', 'orphan-page'],
+    owner: 'agent SEO sweep (app/layout.tsx)',
+    note: 'dùng tiêu đề mặc định; đã chặn ở robots.txt. `orphan-page`: đây là chặng 308 CỐ Ý giữ cho bookmark/link cũ (xem chú thích trong app/dashboard/page.tsx) — mọi nơi trong site đã trỏ thẳng /account, nên KHÔNG có link nội bộ là đúng thiết kế, không phải thiếu sót.',
+  },
   '/reading/new': { rules: ['jsonld-missing'], owner: 'n/a', note: 'luồng nhập liệu riêng tư' },
   '/settings': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư' },
 };
@@ -657,6 +708,8 @@ function main() {
   const violations = [];
   const canonPages = [];
   const metaPages = [];
+  /** Mọi URL nội bộ được ít nhất một trang trỏ tới — để tìm trang mồ côi. */
+  const duocTro = new Set();
   // Sitemap: `next build` render nội dung ra `sitemap.xml.body` — còn
   // `sitemap.xml` là THƯ MỤC (chứa route.js). Đọc đúng cái tên `.xml` sẽ luôn
   // ném lỗi và luật cần sitemap bị tắt ÂM THẦM. Thử `.body` trước.
@@ -692,6 +745,34 @@ function main() {
     for (const v of checkDates(url, jsonld.nodes)) violations.push(v);
     canonPages.push({ url, canonical, noindex });
     metaPages.push({ url, title, description, noindex });
+
+    // Rút href để dựng đồ thị liên kết nội bộ. PHẢI rút đầy đủ: cả nháy đơn lẫn
+    // nháy kép, và CẮT `#`/`?` chứ đừng loại cả href — bỏ sót một href ở đây là
+    // sinh báo động giả "trang mồ côi" (xem ghi chú dài ở `checkOrphanPages`).
+    // CHỈ lấy href của thẻ <a>. Bản đầu lấy MỌI `href=` và luật hoá ra không bao
+    // giờ đỏ được — vì `<link rel="canonical" href="…">` của chính trang cũng là
+    // một `href`, nên mọi trang đều tự "được trỏ tới". Một chốt không thể đỏ còn
+    // tệ hơn không có chốt: nó tạo cảm giác an toàn giả. Kiểm đột biến mới lộ ra.
+    for (const m of html.matchAll(/<a\s[^>]*?href=(?:"([^"]*)"|'([^']*)')/g)) {
+      const tho = (m[1] !== undefined ? m[1] : m[2]).trim();
+      // Dùng lại `normalizeUrl` của chính file này — nó đã bỏ gốc site, cắt
+      // `?`/`#` và đuôi `/`. Viết lại phép chuẩn hoá thứ hai là mở đường cho hai
+      // cách hiểu URL lệch nhau ngay trong một công cụ.
+      const h = normalizeUrl(tho);
+      // Bỏ qua link TỰ TRỎ (breadcrumb/nav có thể trỏ về chính trang đang đứng):
+      // "có link nội bộ" phải nghĩa là có trang KHÁC trỏ tới.
+      if (h && h.startsWith('/') && h !== url) duocTro.add(h);
+    }
+  }
+
+  // Chốt kiểm: rút được quá ít href thì mọi trang sẽ trông như mồ côi. Một phép
+  // đo im lặng trả về "tất cả đều hỏng" trông y hệt một phép đo hỏng.
+  if (duocTro.size < 200) {
+    console.warn(
+      `seo-guard: canh bao — chi rut duoc ${duocTro.size} dich lien ket, BO luat "orphan-page" (nghi phep do hong). Cac luat khac van chay.`,
+    );
+  } else {
+    for (const v of checkOrphanPages(canonPages, duocTro, sitemapUrls)) violations.push(v);
   }
 
   for (const v of checkCanonicalGraph(canonPages, sitemapUrls)) violations.push(v);
