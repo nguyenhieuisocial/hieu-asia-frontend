@@ -1434,7 +1434,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Phúc Đức',
         reading:
-          'Nội tâm được nâng đỡ: hay gặp người nói đúng điều mình cần nghe, hoặc tự có khả năng tự an ủi lành mạnh. Đây là lớp đệm tinh thần, không phải lá bùa — vẫn cần chủ động nói ra khi mình đang khó, vì Hữu Bật giúp người biết mở lời.',
+          'Hay gặp đúng người nói đúng điều mình cần nghe, hoặc tự biết cách dỗ mình mà không cần chất kích thích. Đây là lớp đệm tinh thần thật, không phải lá bùa: nó chỉ hoạt động khi mình chịu mở lời. Người im lặng chịu đựng thì Hữu Bật cũng không đỡ được.',
       },
     ],
   },
@@ -1697,12 +1697,12 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Mệnh',
         reading:
-          'Người có Hoá Lộc thủ Mệnh thường xoay xở ra nguồn: nhìn thấy cơ hội kiếm sống ở chỗ người khác thấy bế tắc. Không đồng nghĩa giàu — đồng nghĩa ít khi cùng đường. Chỗ cần giữ là kỷ luật: Lộc mở nhiều cửa, đi hết mọi cửa thì không cửa nào sâu.',
+          'Khi Hoá Lộc rơi vào cung Mệnh, giai đoạn đó người ta xoay xở ra nguồn dễ hơn: thấy cơ hội kiếm sống ở chỗ người khác thấy bế tắc. Không đồng nghĩa giàu — đồng nghĩa ít khi cùng đường. Chỗ cần giữ là kỷ luật, vì Lộc mở nhiều cửa mà đi hết thì không cửa nào sâu.',
       },
       {
         palace: 'Phúc Đức',
         reading:
-          'Tinh thần thoải mái với chuyện tiền nong, ít bị nỗi sợ thiếu thốn chi phối — đây là lợi thế lớn mà người trong cuộc thường không nhận ra. Mặt cần để ý là dễ dãi với chi tiêu và với chính mình, vì cảm giác "kiểu gì cũng có".',
+          'Giai đoạn Hoá Lộc chiếu cung này, chuyện tiền bớt gây căng thẳng: dễ thấy đủ, ít bị nỗi sợ thiếu thốn chi phối. Đây là lúc thuận cho quyết định dài hơi vì đầu óc không bị tiền chi phối. Mặt cần canh là chi tiêu nới tay theo cảm giác kiểu gì cũng có.',
       },
     ],
   },
@@ -1741,7 +1741,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Quan Lộc',
         reading:
-          'Sự nghiệp là chủ đề có nút thắt trong giai đoạn: hay vướng thủ tục, hiểu lầm, việc làm mãi không xong. Đọc đúng là "đây là chỗ đáng đổ công nhất", không phải "nên bỏ nghề". Cụ thể hoá được nút thắt — thiếu kỹ năng gì, ai đang cản, quy trình nào hỏng — thì Kỵ chuyển thành lộ trình.',
+          'Công việc là chỗ hay tắc trong giai đoạn: thủ tục kéo dài, hiểu lầm, việc tưởng xong lại quay lại. Cách xử lý là gọi tên cái tắc cho cụ thể — thiếu kỹ năng gì, ai đang cản, quy trình nào hỏng — rồi xử từng cái một. Nút thắt được gọi đúng tên thường mất một nửa sức nặng.',
       },
     ],
   },
@@ -1780,7 +1780,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Quan Lộc',
         reading:
-          'Hợp nghề cần nghĩ khác: nghiên cứu, sáng tạo khái niệm, công nghệ mới, nghệ thuật. Kém hợp môi trường quy trình cứng, nơi "làm khác" bị tính là làm sai. Đường bền của bộ này là tìm chỗ trả tiền cho ý tưởng lệch chuẩn, thay vì cố gọt mình cho vừa khuôn có sẵn.',
+          'Khó bền trong môi trường quy trình cứng — không phải vì kém, mà vì động lực tụt rất nhanh khi bị yêu cầu phải giống mọi người. Dấu hiệu nhận ra sớm: làm đúng quy trình mà thấy trống rỗng. Đường dài là tìm nơi trả tiền cho cách nghĩ riêng, hoặc tự tạo ra chỗ đó.',
       },
     ],
   },
@@ -1818,7 +1818,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Phu Thê',
         reading:
-          'Trong quan hệ có xu hướng cầm lái — hoặc chính mình, hoặc chọn người mạnh rồi hai bên tranh lái. Không phải xấu, nhưng cần thoả thuận rõ ai quyết việc gì. Cặp có Hoá Quyền mà chia vai rành mạch thường vận hành rất hiệu quả.',
+          'Giai đoạn này trong quan hệ hay nổi lên câu hỏi ai quyết: một bên muốn cầm lái, hoặc cả hai cùng muốn. Không phải dấu hiệu xấu — là lúc nên chia vai rành mạch, ai quyết việc gì. Cặp làm được việc đó thường qua giai đoạn Hoá Quyền êm hơn hẳn cặp để mập mờ.',
       },
     ],
   },
@@ -1851,7 +1851,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Phúc Đức',
         reading:
-          'Nội tâm chuộng sự tử tế và có trước có sau; danh dự quan trọng hơn lợi trước mắt. Đây là nền tinh thần vững, ít khi làm việc để phải áy náy. Chỗ cần để ý là quá giữ tiếng: sợ mang tiếng đến mức không dám từ chối cũng là một dạng gánh nặng.',
+          'Giai đoạn Hoá Khoa chiếu cung này, tinh thần nghiêng về làm cho phải lẽ và giữ tiếng; ít khi làm việc rồi phải áy náy. Nền tâm lý này vững, hợp lúc cần quyết định có ảnh hưởng tới người khác. Chỗ cần canh: sợ mang tiếng tới mức không dám từ chối thì đã quá tay.',
       },
       {
         palace: 'Phụ Mẫu',
@@ -1927,7 +1927,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Tử Tức',
         reading:
-          'Chuyện con cái và những gì mình "sinh ra" — dự án, tác phẩm, lớp học — thường gắn với tin vui. Giai đoạn hỷ tinh đóng ở đây hợp cho việc bắt đầu và ra mắt. Vẫn là tín hiệu thời điểm THUẬN chứ không phải bảo đảm kết quả; phần chuẩn bị không vì thế mà bớt đi.',
+          'Giai đoạn thuận cho chuyện con cái và những dịp vui trong nhà: tin mừng, làm lễ, sum họp. Với người chưa có con thì thường là chặng quan hệ ấm lên và dễ nói chuyện tương lai. Là thời điểm thuận, không phải bảo đảm — phần chuẩn bị vẫn phải làm đủ.',
       },
       {
         palace: 'Phúc Đức',
@@ -1965,7 +1965,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Phúc Đức',
         reading:
-          'Nội tâm chuộng cái đẹp có chừng mực, thích thanh nhã hơn phô trương. Đây là bộ sao của thẩm mỹ điềm đạm: vui với một bữa ăn tươm tất, một chỗ ngồi sạch sẽ. Nền tinh thần này bền, ít đòi hỏi điều kiện lớn mới thấy đủ.',
+          'Thấy đủ với những thứ vừa phải mà tươm tất: một bữa ăn dọn đẹp, một chỗ ngồi sạch sẽ. Đây là thẩm mỹ điềm đạm chứ không phải thích phô trương. Nền tinh thần kiểu này bền vì nó không cần điều kiện lớn mới vận hành được.',
       },
       {
         palace: 'Phu Thê',
@@ -2046,7 +2046,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Huynh Đệ',
         reading:
-          'Ít anh em, hoặc có mà không gần. Quan hệ ruột thịt thiên về mỗi người một đường hơn là quây quần. Không cần ép cho giống nhà người khác — giữ liên lạc vừa đủ và thật lòng thường bền hơn gượng gạo họp mặt.',
+          'Quan hệ anh chị em thiên về mỗi người một đường hơn là quây quần — có thể do xa cách địa lý, do lịch sống lệch nhau, hoặc đơn giản do tính hướng nội. Không cần ép cho giống nhà người khác: giữ liên lạc vừa đủ và thật lòng thường bền hơn gượng gạo họp mặt.',
       },
     ],
   },
@@ -2079,7 +2079,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Tật Ách',
         reading:
-          'Liên quan dao kéo, phẫu thuật, chấn thương do va chạm. Đọc theo hướng phòng ngừa: nên nghiêm với an toàn lao động, giao thông, và đừng trì hoãn khi cơ thể báo hiệu. Thiên Hình cũng chủ kỷ luật — dùng kỷ luật đó cho sức khoẻ là dùng đúng chỗ.',
+          'Lời nhắc cẩn trọng về thương tích, không phải dự báo bệnh nặng: nhóm liên quan là dao kéo, phẫu thuật, va chạm. Việc nên làm rất đời thường — nghiêm với an toàn lao động và giao thông, đi khám sớm khi cơ thể báo. Thiên Hình vốn chủ kỷ luật; dùng nó cho sức khoẻ là dùng đúng chỗ.',
       },
       {
         palace: 'Phụ Mẫu',
@@ -2117,7 +2117,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Phúc Đức',
         reading:
-          'Nội tâm nhiều tầng, nhạy với cái ẩn: hợp nghiên cứu chiều sâu, tâm lý, huyền học. Trực giác thường đúng nhưng khó giải thích. Chỗ cần giữ là đừng để nhạy cảm thành đa nghi — nghi ngờ có bằng chứng là tỉnh táo, nghi ngờ không bằng chứng là tự làm khổ.',
+          'Nhạy với những gì không nói ra: hay đọc được không khí phòng họp, đoán được điều người khác giấu. Trực giác thường trúng nhưng khó giải thích, nên dễ bị coi là suy diễn. Ranh giới cần giữ: nghi ngờ có bằng chứng là tỉnh táo, nghi ngờ không bằng chứng là tự làm khổ.',
       },
       {
         palace: 'Tật Ách',
@@ -2160,7 +2160,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Nô Bộc',
         reading:
-          'Trong nhóm thường được đặt vào vai có tiếng nói: trưởng nhóm, người đại diện. Vị thế này đến khá tự nhiên. Đi kèm là kỳ vọng — nhận vai thì nhận luôn phần chịu trách nhiệm khi nhóm sai, đó là phần ít người tính trước.',
+          'Nhóm mình tham gia thường có thứ bậc rõ, và mình hay ở nửa trên. Điều đó mở cửa nhưng buộc phải giữ ý: lời của người có vị thế nặng hơn mình tưởng, nói đùa cũng thành chỉ đạo. Kỹ năng đáng luyện ở đây là nói ít mà đúng lúc, thay vì nói nhiều cho ra dáng.',
       },
     ],
   },
@@ -2193,12 +2193,12 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Phúc Đức',
         reading:
-          'Nền tinh thần hướng thiện, hay được người khác quý một cách âm thầm. Việc tử tế làm không kể công thường quay lại đúng lúc cần. Đây là loại vốn khó đo nhưng có thật — và chỉ tích được bằng thời gian.',
+          'Coi trọng lẽ phải tới mức khó chịu cả với bất công không nhắm vào mình. Đây là nền đạo đức rõ, giúp quyết nhanh trong những tình huống xám mà người khác còn phân vân. Mặt cần cân: đừng biến chuẩn của mình thành thước đo áp lên người xung quanh.',
       },
       {
         palace: 'Nô Bộc',
         reading:
-          'Bạn bè thiên về kiểu quý nhau bằng cái tình: ít ồn ào, nhưng lúc mình khó thì có mặt. Mạng lưới không rộng bằng người có Đào Hoa nhưng chắc hơn. Cách giữ là đừng chỉ liên lạc khi cần việc.',
+          'Trong mạng lưới nghề, tên mình hay được nhắc theo hướng tốt: người khác chủ động giới thiệu, hoặc đứng ra bảo chứng khi mình cần. Vốn này đến từ làm được việc và làm tử tế, không đến từ quảng giao rộng — nên nó chậm có nhưng khó mất.',
       },
     ],
   },
@@ -2270,12 +2270,12 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Phụ Mẫu',
         reading:
-          'Cung này với bộ Tang Bạch hay ứng vào sức khoẻ hoặc mất mát của người lớn tuổi trong nhà. Đọc theo hướng chuẩn bị: giữ liên lạc, đưa cha mẹ đi khám định kỳ, hỏi han sớm — chứ không phải ngồi lo. Chuẩn bị được thì phần lớn nỗi sợ tự bớt.',
+          'Giai đoạn có bộ này, sức khoẻ của người lớn tuổi trong nhà thường nổi lên thành việc phải để tâm. Việc cụ thể nên làm: đưa cha mẹ đi khám định kỳ, hỏi han thường xuyên hơn, sắp xếp trước những việc nhà hay bị hoãn. Chuẩn bị được thì phần lớn nỗi lo tự bớt.',
       },
       {
         palace: 'Phúc Đức',
         reading:
-          'Nội tâm có phần nặng, hay nghĩ tới chuyện được mất, sinh tử. Nhiều người có bộ này trưởng thành qua một mất mát cụ thể. Nỗi buồn đã đi qua và được nhìn thẳng thường để lại chiều sâu; nỗi buồn bị né tránh thì ở lại lâu hơn.',
+          'Trong giai đoạn có bộ này, tâm trí hay xoay quanh những thứ mình không kiểm soát nổi. Đây là màu của một chặng, không phải tính cách cố định. Chặng như vậy hợp việc chậm lại, giữ nếp sinh hoạt đều, và nói ra với người tin cậy thay vì tự gánh.',
       },
     ],
   },
@@ -2351,7 +2351,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Tật Ách',
         reading:
-          'Sức khoẻ có phần được che chở: bệnh thường phát hiện sớm hoặc chuyển nhẹ hơn dự đoán. Đây là bộ giải hạn ở cung này. Vẫn nên khám định kỳ — phúc giúp mình gặp đúng thầy đúng lúc, với điều kiện mình chịu đi khám.',
+          'Bộ này đóng vai giảm xóc ở cung Tật Ách: chuyện sức khoẻ thường bớt căng hơn mức đáng lo, hoặc gặp đúng người giúp đúng lúc. Không phải bùa hộ mệnh. Khám định kỳ vẫn là việc phải làm — giảm xóc chỉ có tác dụng khi mình vẫn đi đúng đường.',
       },
     ],
   },
@@ -2384,7 +2384,7 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Phúc Đức',
         reading:
-          'Nền tinh thần lành: dễ tha thứ, ít nuôi hận, hay được che chở lúc ngặt. Đây là loại phúc tích từ nếp sống chứ không từ may rủi. Giữ nếp đó — làm điều tử tế đều đặn — là cách duy nhất để nó còn tác dụng.',
+          'Nguôi giận nhanh và ít nuôi oán — nghe nhẹ nhưng là lợi thế sức khoẻ tinh thần thật, nhất là với người làm nghề hay va chạm. Bộ này không ngăn được chuyện xấu xảy ra; nó làm chuyện xấu bớt ở lại lâu trong đầu, và đó mới là phần quyết định mình phục hồi nhanh hay chậm.',
       },
       {
         palace: 'Phụ Mẫu',
@@ -2577,12 +2577,12 @@ export const AUX_STARS_CONTENT: StarContent[] = [
       {
         palace: 'Tật Ách',
         reading:
-          'Thiên về bền sức: hồi phục khá, ít bệnh nặng bất ngờ. Thiên Thọ chủ sự dai sức hơn là miễn nhiễm. Lợi thế này chỉ giữ được nếu không tiêu lạm — thức khuya và bỏ vận động vẫn bào mòn như thường, chỉ là chậm thấy hơn.',
+          'Thiên về bền sức chứ không phải miễn nhiễm: hồi phục thường khá hơn người cùng tuổi. Chính vì chậm thấy hậu quả nên dễ chủ quan — thức khuya và bỏ vận động vẫn bào mòn như thường, chỉ là hoá đơn tới muộn. Bộ này thưởng cho người giữ nếp đều.',
       },
       {
         palace: 'Phụ Mẫu',
         reading:
-          'Người lớn trong nhà thường sống thọ hoặc khoẻ hơn trung bình; có thể được ông bà nuôi dạy. Đây là nguồn kinh nghiệm sống đáng khai thác — nhiều người có bộ này học được từ thế hệ trên nhiều hơn từ trường lớp.',
+          'Thường gần gũi thế hệ trên: được ông bà nuôi dạy, hoặc lớn lên quanh người lớn tuổi. Cái thừa hưởng rõ nhất là lối sống điềm đạm và biết giữ sức. Đây là nguồn kinh nghiệm đáng khai thác — hỏi chuyện và ghi lại, vì đó là thứ không có trong sách.',
       },
     ],
   },
