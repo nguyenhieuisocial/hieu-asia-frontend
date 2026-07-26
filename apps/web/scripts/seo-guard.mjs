@@ -220,6 +220,22 @@ export function checkCanonicalGraph(pages, sitemapUrls) {
  * Đo trên 1.113 trang sau khi sửa: chỉ còn các chặng chuyển hướng cố ý (đã có
  * mục miễn trừ sẵn). Thêm luật lúc số vi phạm thật bằng 0 nên không chặn ai.
  *
+ * ⚠️ ĐIỂM MÙ ĐÃ BIẾT — ĐỌC TRƯỚC KHI TIN MỘT BÁO CÁO "MỒ CÔI"
+ * `duocTro` dựng từ HTML TĨNH (`collectHtml` chỉ lấy `*.html`). Trang render
+ * ĐỘNG không sinh file tĩnh, nên **mọi link nằm trên trang động đều vô hình**
+ * với phép đo này. Ví dụ thật trong repo: `/tu-vi-hom-nay` (`force-dynamic`) và
+ * `/bang-chung` đều không có `.html` — quét tĩnh tưởng chúng không trỏ đi đâu,
+ * trong khi trên production chúng trỏ tới đủ 12 trang con và tới
+ * `/bang-chung/do-chinh-xac`.
+ *
+ * Vì thế điều kiện phải là "không link nội bộ **VÀ** không trong sitemap": vế
+ * sitemap chính là cái cứu khỏi điểm mù này. ĐỪNG nới luật thành "chỉ cần thiếu
+ * link nội bộ" — sẽ báo sai hàng loạt trang chỉ được link từ hub động.
+ *
+ * Muốn đo mồ côi cho ĐÚNG thì phải đọc trang đã render (dev/prod server), không
+ * đọc `.next`. Lịch sử: đây là lần thứ BA phép đo này sai trong dự án — xem
+ * note 172 §4b (2 lần đầu) và §13 (lần thứ ba, 26/07).
+ *
  * @param {{url: string, noindex: boolean}[]} pages
  * @param {Set<string>} duocTro URL được trang KHÁC trỏ tới bằng thẻ `<a>`
  * @param {Set<string>|null} sitemapUrls null = không đọc được sitemap → bỏ luật
