@@ -16,7 +16,11 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi 12 cung, Học huyền học',
+  // Bỏ đuôi "Học huyền học": nó là nhãn nội bộ, không phải thứ ai gõ vào Google,
+  // mà lại chiếm chỗ trên dòng xanh của kết quả tìm kiếm. 11/18 chủ đề đã đổi
+  // sang tiêu đề mô tả từ các đợt trước; đây là 1 trong 7 trang còn sót.
+  // Giữ ≤60 ký tự KỂ CẢ đuôi " · hieu.asia" (12 ký tự) mà layout tự nối.
+  title: 'Tử Vi Đẩu Số — 12 cung & 14 chính tinh',
   // ≤160 ký tự (seo-guard vault 172) — dài hơn thì Google cắt mất câu chốt.
   description:
     'Bách khoa Tử Vi Đẩu Số: 12 cung, 14 chính tinh, miếu hãm, Tứ Hóa, Cục, Tuần Triệt, cách cục, đại vận lưu niên, kèm quy trình luận 6 bước.',

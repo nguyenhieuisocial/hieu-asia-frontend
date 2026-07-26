@@ -20,7 +20,8 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Kinh Dịch (Chu Dịch / I Ching): Học huyền học',
+  // Bỏ đuôi "Học huyền học" — lý do ở `learn/tu-vi/page.tsx`. ≤60 kể cả đuôi site.
+  title: 'Kinh Dịch — 64 quẻ, 384 hào & cách gieo quẻ',
   description:
     'Kinh Dịch là kinh về sự biến dịch: 64 quẻ kép, mỗi quẻ 6 hào âm dương, là gương soi thế cục để chiêm nghiệm — không phải sấm định mệnh.',
   alternates: { canonical: 'https://hieu.asia/learn/kinh-dich' },

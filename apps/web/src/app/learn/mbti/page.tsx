@@ -28,7 +28,10 @@ const TYPES_BY_GROUP = GROUP_ORDER.map((g) => ({
 }));
 
 export const metadata: Metadata = {
-  title: 'MBTI 16 loại tính cách | Học huyền học',
+  // Bỏ đuôi "Học huyền học" — lý do ở `learn/tu-vi/page.tsx`. Với MBTI/DISC/
+  // Big Five nó còn SAI BẢN CHẤT: đây là mô hình tâm lý, không phải huyền học —
+  // chính trang này có mục phê bình học thuật nói rõ điều đó.
+  title: 'MBTI 16 loại tính cách — 4 trục & giới hạn',
   description:
     'MBTI dựa trên 4 trục: Hướng nội/ngoại (I/E), Trực giác/Cảm nhận (N/S), Lý trí/Cảm xúc (T/F), Nguyên tắc/Linh hoạt (J/P), tạo nên 16 nhóm tính cách.',
   alternates: { canonical: 'https://hieu.asia/learn/mbti' },
