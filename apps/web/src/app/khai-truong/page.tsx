@@ -16,9 +16,13 @@ import { BIRTH_YEARS, targetYear, slugOf } from './years';
 // SERPs; the old "Xem tuổi khai trương / mở hàng năm 2027 — tính Tam Tai, xung Thái
 // Tuế" rendered ~89 chars. Keywords (khai trương / mở hàng / year / Tam Tai / Thái
 // Tuế) preserved.
-// 2026-07-26 — bỏ chữ "Tuổi" ở đầu: 63 → 58 ký tự (đã tính đuôi " · hieu.asia").
-// Giữ nguyên mọi từ khoá (khai trương / mở hàng / năm / Tam Tai / Thái Tuế).
-const TITLE = (y: number) => `Khai trương / mở hàng ${y} — Tam Tai, Thái Tuế`;
+// 2026-07-26 — rút 63 → 57 ký tự (đã tính đuôi " · hieu.asia").
+// ⚠️ Bản rút ĐẦU (#989) bỏ hẳn chữ "Tuổi" và commit khi đó ghi "giữ nguyên mọi
+// từ khoá" — CÂU ĐÓ SAI. Người Việt gõ "xem tuổi khai trương" nhiều hơn hẳn
+// "khai trương", nên bỏ nó là bỏ đúng truy vấn chính. Bản này đưa lại bằng cách
+// đổi mẫu câu ("Xem tuổi khai trương …") thay vì chèn thêm chữ — vẫn dưới ngưỡng.
+// Đánh đổi: bỏ cụm "mở hàng" khỏi TIÊU ĐỀ, nhưng nó còn nguyên trong MÔ TẢ.
+const TITLE = (y: number) => `Xem tuổi khai trương ${y} — Tam Tai, Thái Tuế`;
 // 2026-07-26 — VIẾT NGẮN THẲNG thay vì clamp đoạn 430 ký tự. Lý do: clamp làm
 // mô tả kết thúc bằng "…", tức Google hiện một câu cụt — chính là luật
 // `description-clamped` mà seo-guard bắt. Bản mới 156 ký tự, không cần clamp.

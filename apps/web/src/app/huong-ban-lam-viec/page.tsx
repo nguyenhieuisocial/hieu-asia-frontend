@@ -8,10 +8,12 @@ import { webPage, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { DESK_USE } from '@/lib/huong-ban-data';
 
 const url = 'https://hieu.asia/huong-ban-lam-viec';
-// 2026-07-26 — rút cho vừa ngưỡng SERP: tiêu đề 62 → 53 (đã tính đuôi
+// 2026-07-26 — rút cho vừa ngưỡng SERP: tiêu đề 62 → 48 (đã tính đuôi
 // " · hieu.asia"), mô tả 176 → 144. Trước đó cả hai nằm trong danh sách miễn
 // trừ của seo-guard; nay đã gỡ mục đó đi nên guard canh trang này như mọi trang.
-const title = 'Hướng bàn làm việc hợp tuổi theo năm sinh';
+// Lần rút đầu (#989) lỡ bỏ mất cụm "bàn học" — đó là truy vấn RIÊNG, không phải
+// chữ thừa. Đưa lại: vẫn còn dư 12 ký tự dưới ngưỡng nên không phải đánh đổi gì.
+const title = 'Hướng bàn làm việc, bàn học hợp tuổi';
 const description =
   'Bạn nên ngồi quay mặt về hướng nào khi làm việc, khi học? Nhập năm sinh và giới tính để tra theo Bát Trạch (cung phi) — minh bạch, để tham khảo.';
 

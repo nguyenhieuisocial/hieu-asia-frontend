@@ -126,8 +126,17 @@ describe('năm gõ cứng không được tụt lại phía sau ngày thật', (
     const boChuThich = (s: string) =>
       s.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
 
-    const khoiMeta = boChuThich(src.slice(src.indexOf('export const metadata')).split('\n};')[0] ?? '');
-    const khoiH1 = boChuThich((src.match(/<h1[\s\S]*?<\/h1>/g) ?? []).join(' '));
+    // BỎ CHÚ THÍCH TRƯỚC rồi mới dò <h1>. Làm ngược lại thì JSX bị comment kiểu
+    // `{/* <h1>…2025…</h1> */}` sẽ bị regex bắt được phần ruột, mà đoạn trích ra
+    // đã mất dấu `/*` nên không cách nào lọc — chốt đỏ oan vì một dòng đã chết.
+    const thanFile = boChuThich(src);
+    const viTriMeta = thanFile.indexOf('export const metadata');
+    // `indexOf` trả -1 thì `slice(-1)` lấy đúng KÝ TỰ CUỐI file — vẫn đỏ nhưng
+    // đỏ vì lý do vô nghĩa. Chặn tường minh để thông báo nói đúng bệnh.
+    expect(viTriMeta, 'annual-planning: không thấy `export const metadata` — trang chuyển sang generateMetadata()? Chốt này đang không bảo vệ gì.').toBeGreaterThan(-1);
+
+    const khoiMeta = thanFile.slice(viTriMeta).split('\n};')[0] ?? '';
+    const khoiH1 = (thanFile.match(/<h1[\s\S]*?<\/h1>/g) ?? []).join(' ');
     const beMatSEO = `${khoiMeta} ${khoiH1}`;
 
     expect(
@@ -135,9 +144,28 @@ describe('năm gõ cứng không được tụt lại phía sau ngày thật', (
       'annual-planning: không đọc được khối metadata hoặc <h1> — trang đổi cấu trúc? Chốt này đang không bảo vệ gì.',
     ).toBe(true);
 
-    const namCu = [...beMatSEO.matchAll(/\b(20\d{2})\b/g)]
-      .map((m) => Number(m[1]))
-      .filter((n) => n < NAM_NAY);
+    // Ranh giới `\n};` trượt một nấc là khối phình ra và nuốt luôn dòng
+    // 'Review 2025' ở thân trang ⇒ đỏ oan. Đo trên file thật: đúng 596 ký tự;
+    // trượt 1 nấc → 947; trượt 2 nấc → 2.484 (đã gồm 'Review 2025').
+    // Chặn ở 1.200 để trượt là đỏ NGAY ĐÂY với thông báo đúng bệnh.
+    expect(
+      khoiMeta.length,
+      `annual-planning: khối metadata bóc ra dài ${khoiMeta.length} ký tự (bình thường ~600) — ranh giới "\\n};" đã trượt, chốt sắp bắt nhầm phần thân trang. Sửa cách bóc, đừng nới ngưỡng.`,
+    ).toBeLessThan(1200);
+
+    const namTimThay = [...beMatSEO.matchAll(/\b(20\d{2})\b/g)];
+    // KHẲNG ĐỊNH DƯƠNG TÍNH — thiếu dòng này là chốt tự vô hiệu trong im lặng:
+    // chỉ cần ai đó nâng năm thành hằng số (`const NAM = 2026` rồi `${NAM}`) —
+    // một refactor rất tự nhiên, vì chính file này ở trên đang canh đúng kiểu
+    // hằng số đó — thì không còn token năm nào để quét, `namCu` rỗng vĩnh viễn
+    // và chốt xanh mãi mãi trong khi trang vẫn kẹt năm cũ. Chốt anh em
+    // `/lich-van-nien` có khẳng định dương tính; bản đầu của chốt này thì không.
+    expect(
+      namTimThay.length,
+      'annual-planning: không thấy token năm nào trong tiêu đề/H1 — năm đã bị đưa vào biến/hằng số? Chốt này đang không bảo vệ gì. Hoặc canh hằng số đó ở bảng HANG_SO, hoặc sửa cách dò.',
+    ).toBeGreaterThan(0);
+
+    const namCu = namTimThay.map((m) => Number(m[1])).filter((n) => n < NAM_NAY);
     expect(
       namCu,
       `/annual-planning còn năm gõ chết đã cũ (${[...new Set(namCu)].join(', ')}) giữa năm ${NAM_NAY}. ` +
