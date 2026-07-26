@@ -93,14 +93,23 @@ const newsreader = Newsreader({
   // làm mất một chữ nào. Đo được: 51 → 39 khai báo @font-face, CSS nội tuyến
   // (nạp trên MỌI trang) nhẹ đi ~5 KB.
   //
-  // ⚠️ ĐÃ CÂN NHẮC VÀ CỐ Ý KHÔNG BỎ `weight`. Newsreader là phông biến thiên
-  // (trục wght 200–800), bỏ `weight` sẽ gộp 24 khai báo tĩnh còn 6 và nhẹ thêm
-  // ~11 KB nữa. NHƯNG `MultiHero.tsx` có `.mh-soi-n { font-weight: 600 }` dùng
-  // đúng phông này: bản ghim cứng không có mức 600 nên trình duyệt đang render
-  // thành 700; bản biến thiên sẽ render ĐÚNG 600 ⇒ chữ hero mảnh đi thấy được.
-  // Đó là quyết định thẩm mỹ của founder, không phải quyết định kỹ thuật.
+  // 2026-07-26 — BỎ LUÔN `weight` (founder duyệt: "đổi đi"). Newsreader là
+  // phông BIẾN THIÊN, trục wght 200–800. Ghim 4 mức rời buộc next/font sinh 24
+  // khai báo @font-face tĩnh; bỏ đi thì còn 6 khai báo dùng đúng file biến
+  // thiên. Đo trên bản dựng: @font-face 51 → 33, CSS 238 → 233 KB (CSS này
+  // được NỘI TUYẾN vào HTML nên mỗi trang đều gánh).
+  //
+  // Đây KHÔNG phải thay đổi trung tính về hình thức — và đó là chủ ý:
+  // bản ghim không có mức 600, nên hai chỗ dưới đây đang bị trình duyệt làm
+  // tròn LÊN 700; từ nay chúng hiện ĐÚNG 600 (mảnh hơn một chút):
+  //   · `MultiHero.tsx` `.mh-gift strong` — dòng "Quà mở đầu…" ở hero
+  //   · `BigNumberRow.tsx:220` — hàng số cỡ lớn (clamp 3–6rem)
+  // Mọi chỗ khác dùng 300/400/500/700 nên hiện y nguyên.
+  // Muốn quay lại: thêm lại đúng dòng `weight` bên dưới, không cần sửa gì khác.
+  //
+  // Phụ: dải 200–800 giờ dùng được thật, đúng spec "Như giấy cũ" ghi ở trên
+  // ("italic 300–800") — bản ghim trước đó chỉ có 4 mức rời.
   subsets: ['vietnamese', 'latin'],
-  weight: ['300', '400', '500', '700'],
   style: ['normal', 'italic'],
   variable: '--font-newsreader',
   display: 'swap',
