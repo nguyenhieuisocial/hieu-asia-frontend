@@ -622,39 +622,22 @@ export const ALLOWLIST = {
   // xuống ≤160 và 12 trang /learn/tu-vi/[cung] đã thay cắt-cứng bằng câu hỏi
   // riêng của từng cung. Từ giờ guard canh cụm /learn như mọi cụm khác — thêm
   // trang mới mà mô tả quá dài là CI đỏ ngay, đúng ý đồ.
-  '/huong-ban-lam-viec': {
-    rules: ['title-too-long', 'description-too-long'],
-    owner: 'agent SEO sweep (cụm Bản mệnh + Phong thuỷ)',
-    note: 'tiêu đề 62 · mô tả 176',
-  },
-  '/khai-truong': {
-    rules: ['title-too-long', 'description-clamped'],
-    owner: 'agent SEO sweep (cụm Bản mệnh + Phong thuỷ)',
-    note: 'tiêu đề 63 · mô tả bị clamp cắt',
-  },
-  // 5 trang dưới đây KHÔNG tự khai tiêu đề nên thừa hưởng tiêu đề MẶC ĐỊNH của
-  // site trong `app/layout.tsx` — mà chuỗi đó dài 61 ký tự, TỰ NÓ đã vượt.
-  // Sửa 1 dòng ở root là hết cả 5. Nhưng câu hỏi thật là: /auth/callback,
-  // /connect-telegram, /dashboard là luồng riêng tư — có nên cho index không?
-  '/affiliate/poster': {
-    rules: ['title-too-long'],
-    owner: 'agent SEO sweep (app/layout.tsx)',
-    note: 'dùng tiêu đề mặc định của site (61 ký tự)',
-  },
-  '/auth/callback': {
-    rules: ['title-too-long'],
-    owner: 'agent SEO sweep (app/layout.tsx)',
-    note: 'dùng tiêu đề mặc định; nên cân nhắc noindex thay vì rút tiêu đề',
-  },
-  '/connect-telegram': {
-    rules: ['title-too-long'],
-    owner: 'agent SEO sweep (app/layout.tsx)',
-    note: 'dùng tiêu đề mặc định; nên cân nhắc noindex thay vì rút tiêu đề',
-  },
+  // 2026-07-26 — ĐÃ XOÁ (không phải bỏ quên) nợ cuối của cụm "Bản mệnh +
+  // Phong thuỷ": `/huong-ban-lam-viec` (tiêu đề 62→53, mô tả 176→144) và
+  // `/khai-truong` (tiêu đề 63→58, mô tả thôi clamp — viết ngắn thẳng 156).
+  //
+  // Cũng đã gỡ luật `title-too-long` khỏi 5 trang dùng TIÊU ĐỀ MẶC ĐỊNH: chuỗi
+  // mặc định trong `app/layout.tsx` dài đúng 61 ký tự nên tự nó vượt ngưỡng;
+  // rút xuống 60 là hết cả 5 trang cùng lúc. Các mục còn giữ ở đây chỉ vì lý do
+  // KHÁC (thiếu JSON-LD ở luồng riêng tư), không phải vì tiêu đề.
+  //
+  // ⚠️ Câu hỏi CHƯA ai trả lời, để nguyên đây cho lần sau: /auth/callback,
+  // /connect-telegram, /dashboard là luồng riêng tư — có nên cho Google lập chỉ
+  // mục không? Nếu KHÔNG thì đặt noindex, và mấy mục dưới đây biến mất luôn.
   '/onboarding-wizard': {
-    rules: ['title-too-long', 'jsonld-missing'],
+    rules: ['jsonld-missing'],
     owner: 'agent SEO sweep (app/layout.tsx)',
-    note: 'dùng tiêu đề mặc định của site; luồng riêng tư nên không cần JSON-LD',
+    note: 'luồng riêng tư nên không cần JSON-LD',
   },
 
   // ── Không có JSON-LD, và ĐÚNG là không cần ────────────────────────
@@ -670,7 +653,7 @@ export const ALLOWLIST = {
   '/affiliate/network': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư, không nằm trong sitemap' },
   '/checkout/premium': { rules: ['jsonld-missing'], owner: 'n/a', note: 'luồng thanh toán, không index' },
   '/dashboard': {
-    rules: ['title-too-long', 'jsonld-missing', 'h1-missing', 'orphan-page'],
+    rules: ['jsonld-missing', 'h1-missing', 'orphan-page'],
     owner: 'agent SEO sweep (app/layout.tsx)',
     note: 'dùng tiêu đề mặc định; đã chặn ở robots.txt. `orphan-page`: đây là chặng 308 CỐ Ý giữ cho bookmark/link cũ (xem chú thích trong app/dashboard/page.tsx) — mọi nơi trong site đã trỏ thẳng /account, nên KHÔNG có link nội bộ là đúng thiết kế, không phải thiếu sót.',
   },

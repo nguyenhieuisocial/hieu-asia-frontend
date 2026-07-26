@@ -126,7 +126,12 @@ export const metadata: Metadata = {
     // Tiêu đề mặc định phủ đủ 5 lăng kính (Tử Vi · Bát Tự · MBTI · Big Five ·
     // Xem Tướng) thay vì chỉ 2 — trước đây các trang không tự đặt title đều
     // hiện "Tử Vi & MBTI", bỏ sót 3 lăng kính còn lại.
-    default: 'hieu.asia — Tử Vi, Bát Tự, MBTI, Big Five & Xem Tướng bằng AI',
+    // 2026-07-26 — 61 → 60 ký tự (thay " & " bằng ", "). Dòng này dài đúng 1 ký
+    // tự so với ngưỡng, và vì nó là tiêu đề MẶC ĐỊNH nên 5 trang không tự đặt
+    // tiêu đề (/affiliate/poster, /auth/callback, /connect-telegram,
+    // /onboarding-wizard, /dashboard) đều bị tính là vượt ngưỡng và phải nằm
+    // trong danh sách miễn trừ của seo-guard. Sửa 1 chỗ ⇒ gỡ được cả 5 mục đó.
+    default: 'hieu.asia — Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng bằng AI',
     template: '%s · hieu.asia',
   },
   description:

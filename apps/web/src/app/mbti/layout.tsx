@@ -10,8 +10,13 @@ import type { Metadata } from 'next';
  */
 export const metadata: Metadata = {
   title: 'MBTI — 16 kiểu tâm trí',
+  // 176 → 128 ký tự. Ngưỡng Google là ~160; dài hơn thì câu chốt bị cắt.
+  // ⚠️ VÌ SAO CHỐT CANH KHÔNG BẮT ĐƯỢC: `seo-guard` chỉ đọc HTML TĨNH do
+  // `next build` sinh ra. Trang này là trang công cụ (render phía client) nên
+  // không có mặt trong tập đó ⇒ nó lọt lưới suốt nhiều đợt rà. Trang công cụ
+  // khác cũng vậy — đừng kết luận "guard xanh = toàn site sạch".
   description:
-    'MBTI: 16 kiểu tâm trí trên 4 trục E/I · N/S · T/F · J/P — ngôn ngữ tự nhận diện thiên hướng, không nhãn dán. Kết hợp Tử Vi, Bát Tự, Thần Số Học qua AI.',
+    'MBTI: 16 kiểu tâm trí trên 4 trục E/I · N/S · T/F · J/P — ngôn ngữ tự nhận diện thiên hướng, không nhãn dán, không phán số phận.',
   alternates: { canonical: 'https://hieu.asia/mbti' },
   robots: { index: true, follow: true },
   openGraph: {

@@ -6,7 +6,6 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { KhaiTruongChecker } from '@/components/khai-truong/KhaiTruongChecker';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { checkOpeningYear, OPENING_VERDICT_LABEL } from '@/lib/khai-truong';
-import { clampDescription } from '@/lib/seo/description';
 import { BIRTH_YEARS, targetYear, slugOf } from './years';
 
 // Năm mục tiêu lật vào mùng 1 Tết nên MỌI chỗ dùng nó phải tính lúc render —
@@ -17,13 +16,14 @@ import { BIRTH_YEARS, targetYear, slugOf } from './years';
 // SERPs; the old "Xem tuổi khai trương / mở hàng năm 2027 — tính Tam Tai, xung Thái
 // Tuế" rendered ~89 chars. Keywords (khai trương / mở hàng / year / Tam Tai / Thái
 // Tuế) preserved.
-const TITLE = (y: number) => `Tuổi khai trương / mở hàng ${y} — Tam Tai, Thái Tuế`;
-// Full paragraph kept but clamped to ≤160 for the SERP snippet (was ~430 chars).
+// 2026-07-26 — bỏ chữ "Tuổi" ở đầu: 63 → 58 ký tự (đã tính đuôi " · hieu.asia").
+// Giữ nguyên mọi từ khoá (khai trương / mở hàng / năm / Tam Tai / Thái Tuế).
+const TITLE = (y: number) => `Khai trương / mở hàng ${y} — Tam Tai, Thái Tuế`;
+// 2026-07-26 — VIẾT NGẮN THẲNG thay vì clamp đoạn 430 ký tự. Lý do: clamp làm
+// mô tả kết thúc bằng "…", tức Google hiện một câu cụt — chính là luật
+// `description-clamped` mà seo-guard bắt. Bản mới 156 ký tự, không cần clamp.
 const DESCRIPTION = (y: number) =>
-  clampDescription(
-    `Kiểm tra năm ${y} có hợp tuổi khai trương / mở hàng theo năm sinh chủ kinh doanh: Tam Tai (3 năm kiêng khởi sự) và xung Thái Tuế — hiển thị rõ từng bước tính, kèm các năm hợp tuổi gần nhất. Không xét Kim Lâu / Hoang Ốc (dành cho làm nhà, cưới hỏi). Tham khảo minh bạch, không phán số mệnh.`,
-    160,
-  );
+  `Năm ${y} có hợp tuổi khai trương / mở hàng không? Tra theo năm sinh chủ kinh doanh: Tam Tai và xung Thái Tuế, hiện rõ từng bước tính. Tham khảo, không phán.`;
 
 // Không có dòng này thì năm vẫn bị nướng vào HTML từ lúc build và Tết qua rồi
 // trang vẫn ghi năm cũ — đúng lỗi đang sửa.
