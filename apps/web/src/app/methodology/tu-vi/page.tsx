@@ -268,7 +268,11 @@ const STARS_114: StarRow[] = [
   { name: 'Phá Quân Lưu', group: 'Sao nhỏ/lưu sao', basis: 'Lưu niên', defaultShow: 'Ẩn' },
 ];
 
-const TODAY_ISO = '2026-05-21';
+// Ngày sửa nội dung gần nhất. RÀNG BUỘC: phải >= datePublished bên dưới
+// ('2026-05-22', đúng ngày file được tạo theo git). Trước 2026-07-26 hằng số này
+// là '2026-05-21' — SỚM HƠN ngày đăng, tức "sửa trước khi đăng": trình kiểm tra
+// dữ liệu có cấu trúc của Google báo lỗi, và không có gì ở repo bắt được.
+const TODAY_ISO = '2026-05-22';
 
 // SEO-FIX: trước đây khai tay và thiếu `image` — trường Google dùng cho rich
 // result của Article/TechArticle. Chuyển sang builder chung article()

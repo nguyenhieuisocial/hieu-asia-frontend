@@ -300,6 +300,62 @@ export function checkDuplicateMeta(pages) {
 }
 
 /**
+ * Ngày trong JSON-LD có hợp lệ không.
+ *
+ * VÌ SAO CẦN: `dateModified`/`datePublished` là tín hiệu độ mới của nội dung.
+ * Sai ở đây KHÔNG làm hỏng trang, không lỗi build — chỉ trình kiểm tra dữ liệu
+ * có cấu trúc của Google mới báo, mà phải có người mở nó ra kiểm.
+ *
+ * Ca thật đã bắt được (2026-07-26): `/methodology/tu-vi` khai `dateModified`
+ * 2026-05-21 trong khi `datePublished` là 2026-05-22 — "sửa TRƯỚC khi đăng".
+ * Do một hằng số tên `TODAY_ISO` bị đặt lệch 1 ngày so với ngày file thật sự
+ * được tạo. Không ai phát hiện suốt 2 tháng.
+ *
+ * Chỉ bắt cái SAI CHẮC CHẮN, không phán xét chuyện ngày cũ: một trang nội dung
+ * không đổi thì `dateModified` đứng yên là ĐÚNG, không phải lỗi.
+ *
+ * @param {string} url
+ * @param {any[]} nodes node JSON-LD đã phẳng hoá
+ * @param {Date} now mốc "hôm nay" — truyền vào để test khoá được hành vi
+ */
+export function checkDates(url, nodes, now = new Date()) {
+  const out = [];
+  const parse = (v) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(v ?? ''));
+    return m ? new Date(`${m[1]}-${m[2]}-${m[3]}T00:00:00Z`) : null;
+  };
+  const today = new Date(`${now.toISOString().slice(0, 10)}T00:00:00Z`);
+  for (const n of nodes) {
+    const pub = n.datePublished;
+    const mod = n.dateModified;
+    if (pub === undefined && mod === undefined) continue;
+    for (const [key, raw] of [['datePublished', pub], ['dateModified', mod]]) {
+      if (raw === undefined) continue;
+      const d = parse(raw);
+      if (!d) {
+        out.push({ rule: 'date-invalid', detail: `${key} "${raw}" không phải ngày ISO (YYYY-MM-DD)` });
+        continue;
+      }
+      if (d > today) {
+        out.push({
+          rule: 'date-invalid',
+          detail: `${key} "${raw}" nằm ở TƯƠNG LAI — Google coi là sai, nội dung chưa tồn tại mà đã khai ngày`,
+        });
+      }
+    }
+    const p = parse(pub);
+    const m2 = parse(mod);
+    if (p && m2 && m2 < p) {
+      out.push({
+        rule: 'date-invalid',
+        detail: `dateModified "${mod}" SỚM HƠN datePublished "${pub}" — sửa trước khi đăng là vô lý`,
+      });
+    }
+  }
+  return out.map((v) => ({ url, ...v }));
+}
+
+/**
  * Khoá miễn trừ khớp URL không? Hỗ trợ 2 dạng:
  *   "/khai-truong"        → khớp đúng URL đó
  *   "/tarot/y-nghia/*"    → khớp mọi URL trong cụm (dùng cho route template)
@@ -633,6 +689,7 @@ function main() {
     const jsonld = parseJsonLd(html);
     for (const v of checkJsonLd(jsonld)) violations.push({ url, ...v });
     for (const v of checkNodeUrls(url, jsonld.nodes, noindex)) violations.push({ url, ...v });
+    for (const v of checkDates(url, jsonld.nodes)) violations.push(v);
     canonPages.push({ url, canonical, noindex });
     metaPages.push({ url, title, description, noindex });
   }
@@ -644,7 +701,7 @@ function main() {
 
   console.log(`seo-guard: đã kiểm ${files.length} trang tĩnh.`);
   console.log(
-    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · đúng 1 <h1> (trang cho-index) · canonical không trỏ vào hư không/vòng tròn/sitemap · JSON-LD hợp lệ, url khai đúng trang, không trùng loại, title/mô tả không trùng giữa các trang, FAQ/breadcrumb đủ trường`,
+    `  luật: tiêu đề ≤${TITLE_MAX} · mô tả ≤${DESCRIPTION_MAX} · clamp không được cắt · đúng 1 <h1> (trang cho-index) · canonical không trỏ vào hư không/vòng tròn/sitemap · JSON-LD hợp lệ, url khai đúng trang, không trùng loại, title/mô tả không trùng giữa các trang, ngày hợp lệ, FAQ/breadcrumb đủ trường`,
   );
   console.log(`  vi phạm mới: ${blocking.length} · miễn trừ (có chủ): ${allowed.length}`);
 
