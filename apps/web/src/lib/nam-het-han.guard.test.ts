@@ -103,6 +103,50 @@ describe('năm gõ cứng không được tụt lại phía sau ngày thật', (
         `Cho nó đi qua hàm tính năm như các chỗ còn lại.`,
     ).toEqual([]);
   });
+
+  it('/annual-planning: năm trong tiêu đề và H1 không được kẹt ở năm cũ', () => {
+    // Trang này SÓT khỏi đợt dọn "năm chết" (rà lại 26/07 mới thấy): nó không
+    // khai hằng số nào nên không lọt vào bảng HANG_SO ở trên, và cũng không gọi
+    // `new Date()` nên không có chốt nào chạm tới. Năm 2026 nằm thẳng trong
+    // chuỗi `<title>`, `og:title` và `<h1>`.
+    //
+    // ⚠️ CỐ Ý KHÔNG TỰ NHẢY NĂM Ở ĐÂY — khác mọi trang mùa vụ khác.
+    // Ruột trang là luận giải RIÊNG của năm Bính Ngọ (13 chỗ, gồm cả lời khuyên
+    // "tránh leverage cao — Bính Ngọ dễ biến động"). Đổi số năm mà giữ nguyên
+    // chữ sẽ ra trang ghi "2027" nhưng nội dung của 2026 — SAI HƠN là để im.
+    // Vì vậy chốt này chỉ BÁO ĐỘNG, và cách sửa đúng là VIẾT LẠI nội dung cho
+    // năm mới (việc của founder/người viết), rồi mới đổi số năm.
+    // ⚠️ CHỈ soi TIÊU ĐỀ + H1, KHÔNG soi cả file. Bản đầu của chốt này quét
+    // toàn thân file và ĐỎ NGAY hôm nay vì dòng `'Review 2025: 3 việc làm được,
+    // 1 việc tiếc.'` trong kế hoạch quý 1 — đó là năm CŨ được nhắc HỢP LỆ
+    // (nhìn lại năm ngoái), không phải năm chết. Phải phân biệt "năm trang này
+    // NÓI VỀ" với "năm được nhắc trong nội dung", nếu không chốt sẽ kêu oan rồi
+    // bị ai đó tắt đi.
+    const src = doc('src/app/annual-planning/page.tsx');
+    const boChuThich = (s: string) =>
+      s.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
+
+    const khoiMeta = boChuThich(src.slice(src.indexOf('export const metadata')).split('\n};')[0] ?? '');
+    const khoiH1 = boChuThich((src.match(/<h1[\s\S]*?<\/h1>/g) ?? []).join(' '));
+    const beMatSEO = `${khoiMeta} ${khoiH1}`;
+
+    expect(
+      /title/.test(khoiMeta) && khoiH1.length > 0,
+      'annual-planning: không đọc được khối metadata hoặc <h1> — trang đổi cấu trúc? Chốt này đang không bảo vệ gì.',
+    ).toBe(true);
+
+    const namCu = [...beMatSEO.matchAll(/\b(20\d{2})\b/g)]
+      .map((m) => Number(m[1]))
+      .filter((n) => n < NAM_NAY);
+    expect(
+      namCu,
+      `/annual-planning còn năm gõ chết đã cũ (${[...new Set(namCu)].join(', ')}) giữa năm ${NAM_NAY}. ` +
+        `Trang này cho index, có canonical trỏ về chính nó và nằm trong sitemap — Google sẽ hiện nó là ` +
+        `"kế hoạch năm ${[...new Set(namCu)].join('/')}" cho người tìm kế hoạch năm ${NAM_NAY}, trông như web bỏ hoang. ` +
+        `Dựng lại KHÔNG chữa được (năm là chữ trong mã). ` +
+        `CÁCH SỬA: viết lại phần luận giải cho năm can-chi mới TRƯỚC, rồi mới đổi số năm — đừng chỉ bump số.`,
+    ).toEqual([]);
+  });
 });
 
 // Nửa còn lại của PR #965: 4 trang mùa vụ có `permanentRedirect` theo ngày
