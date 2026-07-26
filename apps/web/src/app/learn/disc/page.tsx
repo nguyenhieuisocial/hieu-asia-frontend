@@ -19,7 +19,9 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'DISC — 4 nhóm hành vi (D/I/S/C) | Học huyền học',
+  // Bỏ đuôi "Học huyền học" — vừa chiếm chỗ trên dòng xanh của Google, vừa SAI
+  // BẢN CHẤT (DISC là mô hình hành vi, không phải huyền học). Xem `learn/mbti`.
+  title: 'DISC — 4 nhóm hành vi D/I/S/C & cách đọc',
   description:
     'DISC: 4 thiên hướng hành vi — Thống trị (D), Ảnh hưởng (I), Kiên định (S), Tuân thủ (C). Cách bạn phản ứng với thử thách và con người — xu hướng, không nhãn.',
   alternates: { canonical: 'https://hieu.asia/learn/disc' },

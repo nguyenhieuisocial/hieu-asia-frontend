@@ -20,7 +20,9 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Bát Tự Tứ Trụ: Học huyền học',
+  // Bỏ đuôi "Học huyền học" (nhãn nội bộ, không ai tìm bằng cụm đó) — xem lý do
+  // đầy đủ ở `learn/tu-vi/page.tsx`. ≤60 ký tự kể cả " · hieu.asia".
+  title: 'Bát Tự Tứ Trụ — Thiên Can, Địa Chi & Dụng Thần',
   // ≤160 ký tự (seo-guard vault 172) — dài hơn thì Google cắt mất câu chốt.
   description:
     'Bát Tự (Tứ Trụ) từ nền tảng tới chuyên sâu: Thiên Can, Địa Chi, tàng can, Thập Thần, Dụng Thần, Thần Sát, Đại Vận – Lưu Niên. Góc nhìn để hiểu mình.',

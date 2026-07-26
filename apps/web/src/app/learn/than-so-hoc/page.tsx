@@ -19,7 +19,8 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Thần Số Học Pythagoras: Học huyền học',
+  // Bỏ đuôi "Học huyền học" — lý do ở `learn/tu-vi/page.tsx`. ≤60 kể cả đuôi site.
+  title: 'Thần Số Học — số chủ đạo tính từ ngày sinh',
   description:
     'Thần Số Học (Numerology) theo trường phái Pythagoras: rút số chủ đạo từ ngày sinh và tên, mỗi số mang một năng lượng riêng.',
   alternates: { canonical: 'https://hieu.asia/learn/than-so-hoc' },

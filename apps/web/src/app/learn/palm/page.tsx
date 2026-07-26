@@ -19,7 +19,8 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Xem chỉ tay — Học huyền học',
+  // Bỏ đuôi "Học huyền học" — lý do ở `learn/tu-vi/page.tsx`. ≤60 kể cả đuôi site.
+  title: 'Xem chỉ tay — 7 đường, các gò & tay thuận',
   // ≤160 ký tự (seo-guard vault 172) — dài hơn thì Google cắt mất câu chốt.
   description:
     'Xem chỉ tay: bảy đường tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, thuỷ tinh, hôn nhân cùng các gò và quy ước tay thuận. Đọc xu hướng, không phán số mệnh.',
