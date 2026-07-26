@@ -80,6 +80,38 @@ describe('Tử Vi — nội dung bách khoa sao & cung', () => {
     }
   });
 
+  // Trước 2026-07-26 phụ tinh chỉ có 2–3 mục byPalace (chính tinh 4–5), nên 33
+  // trang /tu-vi/sao/* phụ tinh mỏng hơn hẳn: 1.308–1.769 ký tự so với
+  // 2.100–3.460 của chính tinh. Đã bổ sung để mọi sao đạt >= 4 mục. Khoá lại ở
+  // đây để không tụt lại — thêm sao mới mà quên viết đủ là test đỏ ngay.
+  it('mỗi PHỤ TINH cũng có byPalace >= 4 mục', () => {
+    for (const s of AUX_STARS_CONTENT) {
+      expect(s.byPalace.length, `Phụ tinh ${s.name} cần >= 4 mục byPalace`).toBeGreaterThanOrEqual(4);
+    }
+  });
+
+  // Mỗi đoạn luận phải là một đoạn thật, không phải câu cụt lấp chỗ. Ngưỡng 120
+  // đặt dưới đoạn ngắn nhất đang có (133) để bắt câu lấp chỗ mà không bắt nhầm
+  // các đoạn súc tích sẵn có.
+  it('mọi đoạn byPalace đủ dài để có nội dung thật', () => {
+    for (const s of ALL_STARS_CONTENT) {
+      for (const bp of s.byPalace) {
+        expect(
+          bp.reading.length,
+          `${s.name} / cung ${bp.palace}: đoạn luận quá ngắn, nghi câu lấp chỗ`,
+        ).toBeGreaterThanOrEqual(120);
+      }
+    }
+  });
+
+  // Cùng một sao không được lặp cung: dấu hiệu copy-paste lúc bổ sung hàng loạt.
+  it('không sao nào lặp cùng một cung trong byPalace', () => {
+    for (const s of ALL_STARS_CONTENT) {
+      const pals = s.byPalace.map((b) => b.palace);
+      expect(new Set(pals).size, `Sao ${s.name} có cung bị lặp trong byPalace`).toBe(pals.length);
+    }
+  });
+
   it('slug duy nhất trên toàn ALL_STARS_CONTENT', () => {
     const slugs = ALL_STARS_CONTENT.map((s) => s.slug);
     expect(new Set(slugs).size, 'Có slug sao bị trùng').toBe(slugs.length);
