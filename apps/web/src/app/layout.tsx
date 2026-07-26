@@ -86,7 +86,20 @@ const newsreader = Newsreader({
   // 2026-06-22 — +'vietnamese' subset: Newsreader giờ là serif display DUY NHẤT
   // (marketing-display cũng trỏ về đây sau VN-fix) nên cần phủ trọn dấu tiếng Việt,
   // không phụ thuộc latin-ext (tránh fallback sang sans gây lẫn font).
-  subsets: ['vietnamese', 'latin', 'latin-ext'],
+  // 2026-07-26 — BỎ `latin-ext`. `latin-ext` là bộ ký tự Trung/Đông Âu
+  // (ą ć ę ł ř š ž…). Đã quét TOÀN BỘ source: 0 ký tự latin-ext nào. Bốn ký tự
+  // trông giống latin-ext — ũ ĩ Ũ Ĩ (1815 + 1538 + 30 + 9 lần) — thực ra nằm
+  // trong bộ `vietnamese` (U+0128-0129, U+0168-0169), nên bỏ latin-ext KHÔNG
+  // làm mất một chữ nào. Đo được: 51 → 39 khai báo @font-face, CSS nội tuyến
+  // (nạp trên MỌI trang) nhẹ đi ~5 KB.
+  //
+  // ⚠️ ĐÃ CÂN NHẮC VÀ CỐ Ý KHÔNG BỎ `weight`. Newsreader là phông biến thiên
+  // (trục wght 200–800), bỏ `weight` sẽ gộp 24 khai báo tĩnh còn 6 và nhẹ thêm
+  // ~11 KB nữa. NHƯNG `MultiHero.tsx` có `.mh-soi-n { font-weight: 600 }` dùng
+  // đúng phông này: bản ghim cứng không có mức 600 nên trình duyệt đang render
+  // thành 700; bản biến thiên sẽ render ĐÚNG 600 ⇒ chữ hero mảnh đi thấy được.
+  // Đó là quyết định thẩm mỹ của founder, không phải quyết định kỹ thuật.
+  subsets: ['vietnamese', 'latin'],
   weight: ['300', '400', '500', '700'],
   style: ['normal', 'italic'],
   variable: '--font-newsreader',
