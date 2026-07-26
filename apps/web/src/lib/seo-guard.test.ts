@@ -17,6 +17,7 @@ import {
   extractMeta,
   normalizeUrl,
   checkCanonicalGraph,
+  checkOrphanPages,
   checkNodeUrls,
   checkDuplicateMeta,
   checkDates,
@@ -511,5 +512,36 @@ describe('JSON-LD — dữ liệu có cấu trúc', () => {
   it('đọc được cả dạng @graph và mảng', () => {
     expect(parseJsonLd(ld({ '@graph': [crumb, faq] })).nodes).toHaveLength(2);
     expect(parseJsonLd(ld([crumb, faq])).nodes).toHaveLength(2);
+  });
+});
+
+// Luật này mất ba lần thiết kế mới đúng (xem ghi chú dài ở `checkOrphanPages`).
+// Các bài dưới khoá lại ĐÚNG những chỗ từng sai, để không ai "đơn giản hoá" nó
+// về lại một trong ba bản hỏng.
+describe('checkOrphanPages — trang Google không có đường nào tìm ra', () => {
+  const T = (url: string, noindex = false) => ({ url, noindex });
+
+  it('bắt trang vừa không có link nội bộ vừa không có trong sitemap', () => {
+    const out = checkOrphanPages([T('/co-that')], new Set<string>(), new Set<string>());
+    expect(out).toHaveLength(1);
+    expect(out[0]!.rule).toBe('orphan-page');
+  });
+
+  it('CÓ trong sitemap thì thôi — Google vẫn tìm ra dù không ai link', () => {
+    expect(checkOrphanPages([T('/a')], new Set<string>(), new Set(['/a']))).toEqual([]);
+  });
+
+  it('CÓ link nội bộ thì thôi — dù không nằm trong sitemap', () => {
+    expect(checkOrphanPages([T('/a')], new Set(['/a']), new Set<string>())).toEqual([]);
+  });
+
+  it('bỏ qua trang noindex và trang chủ', () => {
+    expect(checkOrphanPages([T('/rieng-tu', true)], new Set<string>(), new Set<string>())).toEqual([]);
+    expect(checkOrphanPages([T('/')], new Set<string>(), new Set<string>())).toEqual([]);
+  });
+
+  it('không đọc được sitemap thì BỎ luật, không đoán bừa', () => {
+    // Thà bỏ một luật còn hơn báo 1.000 trang mồ côi giả vì thiếu dữ liệu.
+    expect(checkOrphanPages([T('/a')], new Set<string>(), null)).toEqual([]);
   });
 });
