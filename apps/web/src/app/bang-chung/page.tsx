@@ -6,8 +6,11 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { deriveProofCard, firstParam } from '@/lib/bang-chung/share-card';
 
+// Bản rút gọn đầu cắt mất câu cam kết trung thực ("thành thật cả khi không
+// khớp") — đó là điểm khác biệt của chính trang này, không phải chữ thừa. Giữ
+// lại bằng vế cuối, vẫn lọt 160.
 const DESC =
-  'Đừng vội tin lá số — hãy KIỂM CHỨNG nó bằng chính quá khứ của bạn. Nhập vài sự kiện đời thật đã xảy ra, hệ thống tính lại lá số đúng như nó đứng ở từng năm đó và cho thấy lá số có ghi dấu lĩnh vực ấy không — thành thật cả khi không khớp. Con số là thật, không bói mù.';
+  'Đừng vội tin lá số — kiểm chứng bằng chính quá khứ của bạn. Nhập vài sự kiện đã xảy ra, hệ thống tính lại lá số đúng năm đó, khớp hay không đều nói thật.';
 
 const TITLE = 'Bằng chứng — kiểm chứng độ chính xác lá số';
 

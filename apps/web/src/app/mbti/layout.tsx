@@ -10,7 +10,9 @@ import type { Metadata } from 'next';
  */
 export const metadata: Metadata = {
   title: 'MBTI — 16 kiểu tâm trí',
-  // 176 → 128 ký tự. Ngưỡng Google là ~160; dài hơn thì câu chốt bị cắt.
+  // ⚠️ MÔ TẢ NÀY KHÔNG RA TRANG: `page.tsx` có `generateMetadata` nên nó ĐÈ
+  // toàn bộ metadata của layout. Muốn đổi mô tả /mbti thì sửa `MBTI_META_DESC`
+  // trong `page.tsx`. Giữ ở đây làm mặc định cho route con nào không tự khai.
   // ⚠️ VÌ SAO CHỐT CANH KHÔNG BẮT ĐƯỢC: `seo-guard` chỉ đọc HTML TĨNH do
   // `next build` sinh ra. Trang này là trang công cụ (render phía client) nên
   // không có mặt trong tập đó ⇒ nó lọt lưới suốt nhiều đợt rà. Trang công cụ

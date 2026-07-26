@@ -9,6 +9,7 @@
     "lint": "next lint",
     "ui-guard": "node scripts/ui-guard.mjs",
     "seo-guard": "node scripts/seo-guard.mjs",
+    "seo-live": "node scripts/seo-live.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:a11y": "playwright test tests/a11y.spec.ts tests/a11y-dark.spec.ts",

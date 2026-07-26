@@ -130,8 +130,11 @@ const FAQ_JSONLD = {
   })),
 };
 
+// ⚠️ ĐÂY mới là mô tả THẬT của /mbti. `layout.tsx` cũng khai `description`
+// nhưng metadata của page ĐÈ layout ⇒ sửa mỗi layout là sửa vào chỗ không ai
+// đọc (tôi đã mắc đúng lỗi này một lần: trang vẫn 176 ký tự sau khi "đã vá").
 const MBTI_META_DESC =
-  'MBTI tại hieu.asia: 4 trục, 16 kiểu — làm bài test 24 câu ra kiểu của bạn, rồi đối chiếu cùng Tử Vi, Bát Tự, Big Five, Xem Tướng. Một ngôn ngữ tự nhận diện, không phán số mệnh.';
+  'MBTI tại hieu.asia: 4 trục, 16 kiểu — làm bài test 24 câu ra kiểu của bạn, rồi đối chiếu cùng Tử Vi, Bát Tự, Big Five, Xem Tướng. Không phán số mệnh.';
 
 // Link chia sẻ kết quả (?r=EI-SN-TF-JP) → ảnh OG ĐỘNG hiện "Tôi là INTJ ·
 // Nhà Chiến Lược" (preview FB/Zalo cá-nhân-hoá, click nhiều hơn ảnh generic).

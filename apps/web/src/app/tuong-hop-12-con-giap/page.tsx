@@ -14,9 +14,15 @@ import {
 } from '@/lib/hop-tuoi-pairs';
 import { TuongHopMatrix } from './TuongHopMatrix';
 
-const TITLE = 'Bản đồ tương hợp 12 con giáp: tam hợp, lục xung, ngũ hành';
+// ⚠️ 59/60 ký tự SAU khi root layout nối đuôi " · hieu.asia" (12 ký tự) —
+// CÒN ĐÚNG 1 KÝ TỰ. Thêm bất cứ chữ nào vào TITLE là vượt ngưỡng và
+// `seo-guard` sẽ đỏ. Muốn thêm thì phải bớt chỗ khác.
+// Bản rút gọn đầu bỏ mất "ngũ hành" (thẻ mô tả), "cùng tuổi", "bình hoà" —
+// đều là loại quan hệ CÓ THẬT trong ma trận và là truy vấn thật, nên đã đưa
+// lại hết vào mô tả.
+const TITLE = 'Bản đồ tương hợp 12 con giáp: tam hợp, lục xung';
 const DESCRIPTION =
-  'Chọn con giáp của bạn: xem ngay hợp / khắc với cả 11 con còn lại — Tam Hợp, Lục Hợp, Lục Xung, Lục Hại, cùng tuổi, bình hoà và ngũ hành sinh – khắc. Cả 144 quan hệ trên một bản đồ, tính minh bạch theo Can Chi để tham khảo, không phán, không bói.';
+  'Chọn con giáp, xem ngay hợp/khắc với 11 con còn lại: Tam Hợp, Lục Hợp, Lục Xung, Lục Hại, cùng tuổi, bình hoà, ngũ hành sinh khắc. 144 quan hệ, không bói.';
 const URL = 'https://hieu.asia/tuong-hop-12-con-giap';
 
 export const metadata: Metadata = {
