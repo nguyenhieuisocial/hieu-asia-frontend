@@ -131,6 +131,11 @@ export const metadata: Metadata = {
     // tiêu đề (/affiliate/poster, /auth/callback, /connect-telegram,
     // /onboarding-wizard, /dashboard) đều bị tính là vượt ngưỡng và phải nằm
     // trong danh sách miễn trừ của seo-guard. Sửa 1 chỗ ⇒ gỡ được cả 5 mục đó.
+    //
+    // ⚠️ CHUỖI NÀY DÀI ĐÚNG 60 — BẰNG NGƯỠNG, DƯ ĐỊA BẰNG 0.
+    // Thêm một ký tự vào đây là 5 trang đỏ CÙNG LÚC trong seo-guard (luật
+    // `title-too-long`, ngưỡng `TITLE_MAX = 60`, phép kiểm là `> 60`).
+    // Muốn thêm chữ thì phải bớt chữ khác trong chính dòng này.
     default: 'hieu.asia — Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng bằng AI',
     template: '%s · hieu.asia',
   },
