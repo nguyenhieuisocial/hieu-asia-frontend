@@ -1350,6 +1350,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Tiền tài gắn với di chuyển: nguồn thu từ nơi xa, việc chạy ngoài, giao thương. Gặp Lộc Tồn thành cách Lộc Mã — dòng tiền theo bước chân; càng chịu đi, cửa kiếm càng mở.',
       },
+      {
+        palace: 'Quan Lộc',
+        reading:
+          'Nghề hợp là nghề có chuyển động: kinh doanh vùng, logistics, tư vấn đi hiện trường, việc phải bay nhảy. Ngồi một chỗ lâu là hao người. Thiên Mã không tự làm nên sự nghiệp — nó tăng tốc cho hướng đã chọn, nên chọn hướng trước rồi hãy tăng tốc.',
+      },
+      {
+        palace: 'Phu Thê',
+        reading:
+          'Quan hệ dễ có yếu tố xa cách địa lý hoặc lịch trình lệch nhau: một người hay đi, hoặc hai người quen nhau ở nơi không phải quê nhà. Không phải điềm chia ly — là kiểu quan hệ cần chủ động tạo điểm chạm, vì nó không tự có nhờ ở gần.',
+      },
     ],
   },
   {
@@ -1377,6 +1387,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Quan Lộc',
         reading:
           'Hợp vai trò có đội ngũ cùng làm, không hợp chiến đấu một mình. Sự nghiệp lên nhanh nhất khi bạn ở trong một ê-kíp tốt — chọn đội trước khi chọn việc là chiến lược đúng với sao này.',
+      },
+      {
+        palace: 'Nô Bộc',
+        reading:
+          'Cung của bạn bè và cấp dưới là sân nhà của trợ tinh: dễ có người sẵn lòng gánh việc cùng, đội ngũ gắn kết hơn mức trung bình. Đổi lại phải chịu khó giữ quan hệ hai chiều — Tả Phụ báo có người giúp, không báo mình được giúp mà không cần cho đi.',
+      },
+      {
+        palace: 'Huynh Đệ',
+        reading:
+          'Anh chị em hoặc cộng sự ruột thường là chỗ dựa thật, nhất là lúc cần người xắn tay vào việc. Nếu lá số thiếu chính tinh mạnh, đây có khi là nguồn lực đáng kể nhất — đáng đầu tư thời gian giữ, thay vì chỉ tìm quý nhân ở ngoài.',
       },
     ],
   },
@@ -1406,6 +1426,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Hôn nhân có hỗ trợ từ bạn bè, gia đình hai bên — quan hệ không đơn độc mà có cả một mạng lưới đỡ phía sau. Giữ được sự quý mến của hai họ và nhóm bạn chung là một khoản bảo hiểm tình cảm đáng giá.',
       },
+      {
+        palace: 'Nô Bộc',
+        reading:
+          'Bạn bè quanh mình thiên về kiểu đồng hành tinh thần: người lắng nghe, có mặt lúc mình xuống. Khác Tả Phụ đỡ việc, Hữu Bật đỡ người. Mạng lưới này ít giúp được chuyện chuyên môn nhưng giữ mình đứng vững qua giai đoạn khó — biết vậy thì đừng trách bạn "không giúp được gì".',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Hay gặp đúng người nói đúng điều mình cần nghe, hoặc tự biết cách dỗ mình mà không cần chất kích thích. Đây là lớp đệm tinh thần thật, không phải lá bùa: nó chỉ hoạt động khi mình chịu mở lời. Người im lặng chịu đựng thì Hữu Bật cũng không đỡ được.',
+      },
     ],
   },
   {
@@ -1433,6 +1463,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Quan Lộc',
         reading:
           'Hợp ngành giáo dục, xuất bản, truyền thông, nghiên cứu — nơi chữ nghĩa là công cụ chính. Bằng cấp, chứng chỉ, bài viết có tên mình là những viên gạch thăng tiến cụ thể của người có Văn Xương tại đây.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Đời sống tinh thần gắn với chữ nghĩa: đọc, viết, ghi chép là cách tự chữa lành tự nhiên. Người có Văn Xương ở đây thường nghĩ rõ hơn khi viết ra. Mặt cần để ý là nghĩ nhiều hơn sống — hiểu vấn đề rất sáng mà chậm bước vào thực tế.',
+      },
+      {
+        palace: 'Tử Tức',
+        reading:
+          'Chuyện học hành của con cái, hoặc những gì mình "sinh ra" bằng chữ — sách, giáo trình, nội dung. Hợp giai đoạn ra mắt tác phẩm viết. Với con cái, thiên hướng là kèm học tốt; nhớ rằng kỳ vọng học vấn quá nặng cũng là một dạng áp lực.',
       },
     ],
   },
@@ -1462,6 +1502,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Hợp nghệ thuật, ca hát, biểu diễn, sáng tạo nội dung — nghề mà cảm xúc và cái duyên là công cụ lao động. Xây kho tác phẩm đều đặn quan trọng hơn chờ một cú toả sáng: nghề này thắng bằng sự bền.',
       },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Nội tâm giàu thẩm mỹ: âm nhạc, cái đẹp, không khí là nhu cầu thật chứ không phải xa xỉ. Sống trong môi trường xấu xí hoặc ồn ào lâu dài bào mòn người có Văn Khúc ở đây nhanh hơn người khác — đầu tư vào không gian sống là đầu tư sức khoẻ tinh thần.',
+      },
+      {
+        palace: 'Phu Thê',
+        reading:
+          'Hợp người bạn đời biết nói chuyện, có gu chung. Cái kéo hai người lại thường là thẩm mỹ và cảm xúc hơn là điều kiện. Rủi ro là lời nói: Văn Khúc sắc lời, lúc giận dễ nói câu đúng chỗ đau — kỹ năng cần luyện chính là im lặng đúng lúc.',
+      },
     ],
   },
   {
@@ -1490,6 +1540,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Sự nghiệp thuận hơn hẳn khi có người dẫn dắt: hợp môi trường có lớp lang thầy trò, tiền bối hậu bối. Chọn sếp giỏi quan trọng không kém chọn công ty — với bộ sao này, một người thầy tốt đáng giá bằng nhiều năm tự mò.',
       },
+      {
+        palace: 'Phụ Mẫu',
+        reading:
+          'Cha mẹ hoặc người vai trên trong nhà thường là quý nhân đầu đời: mở đường học hành, giới thiệu nghề, đứng ra bảo lãnh. Nếu không phải cha mẹ ruột thì là thầy, chú bác, sếp đầu tiên. Bài học đi kèm: biết nhận giúp đỡ mà không thành ỷ lại.',
+      },
+      {
+        palace: 'Thiên Di',
+        reading:
+          'Ra ngoài dễ gặp người đỡ đầu — chuyển vùng, du học, sang công ty mới thường có người dày dạn chỉ đường. Đây là lý do nhiều người có Khôi Việt phát triển nhanh hơn khi rời quê. Quý nhân xuất hiện đúng lúc bế tắc, nhưng chỉ tìm được nếu mình chịu ra khỏi vòng quen.',
+      },
     ],
   },
   {
@@ -1517,6 +1577,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Mệnh',
         reading:
           'Người chắc chắn, quý sự ổn định, không thích nợ nần. Xung quanh hay nhờ giữ tiền, giữ quỹ vì độ tin cậy cao. Chỉ cần nhớ chừa chỗ cho vài cơ hội có kiểm soát, đừng để sự an toàn đóng hết mọi cánh cửa.',
+      },
+      {
+        palace: 'Điền Trạch',
+        reading:
+          'Thiên về tích luỹ được: nhà cửa, đất đai, tài sản giữ lâu dài. Lộc Tồn ở đây hợp cách làm chậm mà chắc — mua để ở và giữ, hơn là lướt sóng. Cần nhớ Lộc Tồn luôn bị Kình Đà kẹp hai bên: tài sản có, nhưng thường kèm ràng buộc hoặc trách nhiệm đi cùng.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Cảm giác an toàn về vật chất ảnh hưởng lớn tới tinh thần: đủ ăn đủ để thì yên, thiếu hụt là bất an hơn người khác. Biết đặc điểm này thì nên xây quỹ dự phòng sớm — với người có Lộc Tồn ở đây, tiền tiết kiệm mua được sự bình an chứ không chỉ mua được đồ.',
       },
     ],
   },
@@ -1547,6 +1617,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Lời nhắc cẩn trọng thương tích, va chạm khi vận động và di chuyển — không phải dự báo bệnh nặng. Người có bộ này nên coi trọng đồ bảo hộ, khởi động kỹ, và đừng làm việc nặng lúc đang nóng giận.',
       },
+      {
+        palace: 'Quan Lộc',
+        reading:
+          'Nghề có cạnh tranh, có hạn chót, có đối thủ thì hợp — ma sát ở đây chuyển thành động lực. Kình Dương hợp việc cần quyết dứt khoát; Đà La hợp việc cần lì và bền. Rủi ro là va chạm với đồng nghiệp: cùng một câu, người có sát tinh nói ra thường sắc hơn mình tưởng.',
+      },
+      {
+        palace: 'Phu Thê',
+        reading:
+          'Quan hệ có độ ma sát: dễ nảy lửa hoặc âm ỉ kéo dài, tuỳ mình nghiêng về Kình hay Đà. Đừng đọc thành "khắc nhau" — đọc là cặp này cần kỹ năng hạ nhiệt nhiều hơn cặp khác. Thoả thuận sẵn cách xử lý lúc căng (tạm dừng, hẹn nói lại sau) có giá trị hơn mọi lời khuyên chung chung.',
+      },
     ],
   },
   {
@@ -1576,6 +1656,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Tiền đến và đi đều có thể đột ngột: khoản thu bất ngờ, khoản chi bốc đồng. Gặp Tham Lang cùng bộ là cách Hỏa Tham — có những cú phát nhanh; nguyên tắc là chốt một phần thành quả ngay, đừng để lửa cháy hết rơm.',
       },
+      {
+        palace: 'Quan Lộc',
+        reading:
+          'Hợp nghề có nhịp gấp và cần bùng nổ đúng lúc: khởi nghiệp, bán hàng chiến dịch, cấp cứu, sự kiện. Hỏa Tinh cháy nhanh, Linh Tinh âm ỉ dai. Điểm yếu chung là bền: hợp chạy nước rút hơn chạy đường trường, nên chọn việc chia được thành đợt.',
+      },
+      {
+        palace: 'Phu Thê',
+        reading:
+          'Quan hệ dễ có lúc bốc: giận nhanh, làm lành cũng nhanh nếu là Hỏa; ngấm ngầm khó gỡ hơn nếu là Linh. Không phải cặp xấu — là cặp cần quy ước rõ lúc nóng. Với bộ này, thứ hiệu quả nhất thường là tách ra vài giờ rồi mới nói tiếp.',
+      },
     ],
   },
   {
@@ -1603,6 +1693,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Tài Bạch',
         reading:
           'Giai đoạn dòng tiền vào thuận, hợp tích luỹ. Nguyên tắc dùng đúng: trích ngay một phần vào tiết kiệm hoặc tài sản dài hạn khi tiền về — lộc chỉ thành của khi được giữ lại.',
+      },
+      {
+        palace: 'Mệnh',
+        reading:
+          'Khi Hoá Lộc rơi vào cung Mệnh, giai đoạn đó người ta xoay xở ra nguồn dễ hơn: thấy cơ hội kiếm sống ở chỗ người khác thấy bế tắc. Không đồng nghĩa giàu — đồng nghĩa ít khi cùng đường. Chỗ cần giữ là kỷ luật, vì Lộc mở nhiều cửa mà đi hết thì không cửa nào sâu.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Giai đoạn Hoá Lộc chiếu cung này, chuyện tiền bớt gây căng thẳng: dễ thấy đủ, ít bị nỗi sợ thiếu thốn chi phối. Đây là lúc thuận cho quyết định dài hơi vì đầu óc không bị tiền chi phối. Mặt cần canh là chi tiêu nới tay theo cảm giác kiểu gì cũng có.',
       },
     ],
   },
@@ -1638,6 +1738,11 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Giai đoạn cần giao tiếp kỳ vọng rõ — dễ hiểu lầm trong quan hệ, chuyện nhỏ xé ra to. Cách gỡ cụ thể: nói chuyện trực tiếp thay vì nhắn tin, hỏi lại trước khi suy diễn, và đừng để bụng qua đêm.',
       },
+      {
+        palace: 'Quan Lộc',
+        reading:
+          'Công việc là chỗ hay tắc trong giai đoạn: thủ tục kéo dài, hiểu lầm, việc tưởng xong lại quay lại. Cách xử lý là gọi tên cái tắc cho cụ thể — thiếu kỹ năng gì, ai đang cản, quy trình nào hỏng — rồi xử từng cái một. Nút thắt được gọi đúng tên thường mất một nửa sức nặng.',
+      },
     ],
   },
   {
@@ -1667,6 +1772,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Tiền hợp với chuyên môn và sáng tạo hơn là buôn bán đầu cơ. Nguyên tắc an toàn của bộ này: không đòn bẩy lớn, không bỏ hết trứng vào một vụ đặt cược, và để một người thực tế hơn cùng soát các quyết định tiền bạc lớn.',
       },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Đời sống tinh thần sâu, hay đặt câu hỏi lớn: ý nghĩa, mất mát, giá trị thật của thứ mình đang đuổi theo. Nhiều người có bộ này tìm đến thiền, tôn giáo hoặc triết học — không phải vì bi quan mà vì không thoả mãn với câu trả lời có sẵn. Chỗ cần giữ: đừng để hoài nghi trượt thành hư vô.',
+      },
+      {
+        palace: 'Quan Lộc',
+        reading:
+          'Khó bền trong môi trường quy trình cứng — không phải vì kém, mà vì động lực tụt rất nhanh khi bị yêu cầu phải giống mọi người. Dấu hiệu nhận ra sớm: làm đúng quy trình mà thấy trống rỗng. Đường dài là tìm nơi trả tiền cho cách nghĩ riêng, hoặc tự tạo ra chỗ đó.',
+      },
     ],
   },
   {
@@ -1694,6 +1809,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Mệnh',
         reading:
           'Khí chất mạnh lên, dám đứng mũi chịu sào, dám va chạm để bảo vệ quan điểm. Để ý giọng nói với người thân: năng lượng "làm chủ" mang về nhà nguyên đai nguyên kiện dễ thành áp đặt.',
+      },
+      {
+        palace: 'Tài Bạch',
+        reading:
+          'Tiền đi cùng quyền quyết: thu nhập tăng khi mình nắm được quyền định giá, quyền phân bổ, quyền ký. Hợp làm chủ hoặc nắm ngân sách hơn là làm công ăn lương thuần. Rủi ro là ôm quyền quá tay rồi tự tay ôm luôn rủi ro.',
+      },
+      {
+        palace: 'Phu Thê',
+        reading:
+          'Giai đoạn này trong quan hệ hay nổi lên câu hỏi ai quyết: một bên muốn cầm lái, hoặc cả hai cùng muốn. Không phải dấu hiệu xấu — là lúc nên chia vai rành mạch, ai quyết việc gì. Cặp làm được việc đó thường qua giai đoạn Hoá Quyền êm hơn hẳn cặp để mập mờ.',
       },
     ],
   },
@@ -1723,6 +1848,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Phong thái nhã nhặn, dễ được tin tưởng; người khác sẵn lòng gửi gắm việc quan trọng. Tận dụng bằng cách xuất hiện đúng chỗ: hội thảo, cộng đồng nghề, nơi uy tín cá nhân được nhìn thấy.',
       },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Giai đoạn Hoá Khoa chiếu cung này, tinh thần nghiêng về làm cho phải lẽ và giữ tiếng; ít khi làm việc rồi phải áy náy. Nền tâm lý này vững, hợp lúc cần quyết định có ảnh hưởng tới người khác. Chỗ cần canh: sợ mang tiếng tới mức không dám từ chối thì đã quá tay.',
+      },
+      {
+        palace: 'Phụ Mẫu',
+        reading:
+          'Quan hệ với cha mẹ, thầy cô thường có tiếng thơm: được ghi nhận, được nhắc đến tử tế. Hợp việc học có bằng cấp, có người bảo trợ danh chính ngôn thuận. Nếu đang cần một lời giới thiệu chính thức, đây là giai đoạn xin dễ được.',
+      },
     ],
   },
   {
@@ -1750,6 +1885,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Phu Thê',
         reading:
           'Tình duyên sôi nổi, không thiếu lựa chọn; bài toán không phải là tìm mà là giữ. Hợp chủ động vun đắp sự chung thuỷ: ranh giới rõ với các mối quan hệ ngoài, và ưu tiên thời gian cho người mình chọn.',
+      },
+      {
+        palace: 'Thiên Di',
+        reading:
+          'Ra ngoài dễ được chú ý — đi công tác, đổi môi trường, đứng trước đám đông đều thuận. Người lạ có thiện cảm trước cả khi mình kịp chứng minh năng lực, nên cơ hội thường đến sớm hơn người khác. Mặt trái là quen rộng mà sâu ít: nên chủ động chọn vài mối đi đường dài, thay vì để danh sách quen biết tự phình ra.',
+      },
+      {
+        palace: 'Quan Lộc',
+        reading:
+          'Duyên là vốn nghề thật: hợp việc phải đứng trước người — bán hàng, tư vấn, đào tạo, truyền thông, dịch vụ. Đào Hoa ở cung này không hứa thăng tiến, nó hứa cánh cửa mở nhanh hơn. Giữ được ghế hay không là phần chuyên môn phía sau: duyên đưa mình vào phòng, năng lực mới giữ mình ở lại.',
       },
     ],
   },
@@ -1779,6 +1924,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Người vui vẻ, lạc quan, thu hút thiện cảm — kiểu người được mời làm cầu nối, chủ xị những dịp sum vầy. Năng lượng tích cực này là vốn xã hội: giữ nó bằng cách chọn ở gần những người cũng tử tế với mình.',
       },
+      {
+        palace: 'Tử Tức',
+        reading:
+          'Giai đoạn thuận cho chuyện con cái và những dịp vui trong nhà: tin mừng, làm lễ, sum họp. Với người chưa có con thì thường là chặng quan hệ ấm lên và dễ nói chuyện tương lai. Là thời điểm thuận, không phải bảo đảm — phần chuẩn bị vẫn phải làm đủ.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Nội tâm nghiêng về phía sáng: dễ thấy vui với chuyện nhỏ, hồi phục nhanh sau va vấp. Đây là vốn tinh thần thật, đáng giá nhất đúng lúc khó. Chỗ cần để ý là thói quen né chuyện nặng — vui vẻ mà không dám nhìn thẳng vấn đề thì niềm vui đó mỏng, và vấn đề vẫn ở nguyên đó.',
+      },
     ],
   },
   {
@@ -1806,6 +1961,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Mệnh',
         reading:
           'Người nhã nhặn, ưa sự chỉn chu, tinh tế từ lời ăn tiếng nói đến đồ dùng. Được quý vì phong thái; chỉ cần tránh để sự cầu kỳ thành thước đo xét nét người khác.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Thấy đủ với những thứ vừa phải mà tươm tất: một bữa ăn dọn đẹp, một chỗ ngồi sạch sẽ. Đây là thẩm mỹ điềm đạm chứ không phải thích phô trương. Nền tinh thần kiểu này bền vì nó không cần điều kiện lớn mới vận hành được.',
+      },
+      {
+        palace: 'Phu Thê',
+        reading:
+          'Duyên thường đến theo cách nền nã: quen qua người quen, qua môi trường có văn hoá chung, hơn là gặp gỡ ồn ào. Hợp mối quan hệ xây chậm. Cặp sao này không hứa nồng nhiệt, nó hứa sự dễ chịu lâu dài — biết vậy thì đừng đòi kịch tính.',
       },
     ],
   },
@@ -1835,6 +2000,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Đời sống tinh thần cần được chăm chủ động: người có bộ này không hợp kiểu "kệ, tự khắc ổn". Một nhịp sống có neo — giờ ngủ đều, người tri kỷ, thói quen nuôi tâm trí — đáng giá hơn mọi lời khuyên lạc quan suông.',
       },
+      {
+        palace: 'Tật Ách',
+        reading:
+          'Cung này với bộ Khốc Hư nên đọc theo hướng tinh thần trước: buồn kéo dài, mất ngủ, lo âu ảnh hưởng lên thân. Không phải án bệnh — là lời nhắc rằng với người này, chăm sức khoẻ tinh thần chính là chăm sức khoẻ. Tìm người chuyên môn khi cần là việc nên làm sớm.',
+      },
+      {
+        palace: 'Phụ Mẫu',
+        reading:
+          'Quan hệ với cha mẹ có thể mang sắc trầm: xa cách, hoặc gánh nỗi buồn của thế hệ trước. Nhiều người có bộ này lớn lên sớm hơn tuổi. Đọc đúng là biết nguồn gốc của cái nặng mình mang, để chọn không truyền tiếp nó xuống đời sau.',
+      },
     ],
   },
   {
@@ -1862,6 +2037,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Phu Thê',
         reading:
           'Cần chủ động vun đắp gần gũi, tránh trượt vào lối sống "ai việc nấy" dưới một mái nhà. Cách gỡ cụ thể: giữ những nghi thức chung nhỏ mà đều — bữa tối cùng nhau, chuyến đi định kỳ, giờ trò chuyện không màn hình.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Thích ở một mình, và ở một mình không thấy khổ — đây là điểm người ngoài hay hiểu nhầm. Nội tâm tự đủ là lợi thế: ít bị đám đông cuốn, nghĩ được việc dài. Chỗ cần canh là ranh giới giữa tự đủ và tự cô lập, nhất là những giai đoạn khó.',
+      },
+      {
+        palace: 'Huynh Đệ',
+        reading:
+          'Quan hệ anh chị em thiên về mỗi người một đường hơn là quây quần — có thể do xa cách địa lý, do lịch sống lệch nhau, hoặc đơn giản do tính hướng nội. Không cần ép cho giống nhà người khác: giữ liên lạc vừa đủ và thật lòng thường bền hơn gượng gạo họp mặt.',
       },
     ],
   },
@@ -1891,6 +2076,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Người cương trực, rạch ròi đúng sai, ghét sự lấp lửng. Được nể vì thẳng, nhưng nên học thêm cách nói thẳng mà không sắc — cùng một sự thật, cách đưa quyết định người nghe tiếp thu hay tự vệ.',
       },
+      {
+        palace: 'Tật Ách',
+        reading:
+          'Lời nhắc cẩn trọng về thương tích, không phải dự báo bệnh nặng: nhóm liên quan là dao kéo, phẫu thuật, va chạm. Việc nên làm rất đời thường — nghiêm với an toàn lao động và giao thông, đi khám sớm khi cơ thể báo. Thiên Hình vốn chủ kỷ luật; dùng nó cho sức khoẻ là dùng đúng chỗ.',
+      },
+      {
+        palace: 'Phụ Mẫu',
+        reading:
+          'Gia phong nghiêm, kỷ luật sớm; hoặc có người trong nhà làm nghề liên quan luật pháp, y tế. Người lớn lên trong khuôn khổ chặt thường rất có nguyên tắc, đổi lại hay khắt khe với chính mình. Nhận ra điều đó là bước đầu để bớt nghiêm với bản thân.',
+      },
     ],
   },
   {
@@ -1918,6 +2113,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Phu Thê',
         reading:
           'Đời sống tình cảm nhiều sắc thái, cảm xúc đậm và phức tạp hơn mặt bằng chung. Nguyên tắc giữ quan hệ bền: minh bạch sớm — nói rõ mình cần gì, đang thấy gì — trước khi cảm xúc kịp rẽ sang đường vòng.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Nhạy với những gì không nói ra: hay đọc được không khí phòng họp, đoán được điều người khác giấu. Trực giác thường trúng nhưng khó giải thích, nên dễ bị coi là suy diễn. Ranh giới cần giữ: nghi ngờ có bằng chứng là tỉnh táo, nghi ngờ không bằng chứng là tự làm khổ.',
+      },
+      {
+        palace: 'Tật Ách',
+        reading:
+          'Sức khoẻ chịu ảnh hưởng của tâm trạng rõ hơn người khác: nghĩ nhiều mất ngủ, lo lắng ảnh hưởng tiêu hoá. Chữa phần thân mà bỏ phần tâm thường không dứt. Với bộ này, ngủ đủ và bớt nghĩ đêm là thuốc rẻ nhất.',
       },
     ],
   },
@@ -1947,6 +2152,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Phong thái đĩnh đạc, được nể trọng; vào đám đông thường được nhường vai chủ toạ một cách tự nhiên. Vị thế ấy bền khi bạn dùng nó để nâng người khác lên, không phải để đứng cao hơn họ.',
       },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Được ghi nhận là nhu cầu tinh thần thật với bộ sao này — không phải háo danh, mà là cần thấy việc mình làm có chỗ đứng. Biết vậy thì chọn môi trường biết ghi công: cùng một việc, nơi ghi nhận sẽ giữ mình lâu hơn nơi trả cao mà im lặng.',
+      },
+      {
+        palace: 'Nô Bộc',
+        reading:
+          'Nhóm mình tham gia thường có thứ bậc rõ, và mình hay ở nửa trên. Điều đó mở cửa nhưng buộc phải giữ ý: lời của người có vị thế nặng hơn mình tưởng, nói đùa cũng thành chỉ đạo. Kỹ năng đáng luyện ở đây là nói ít mà đúng lúc, thay vì nói nhiều cho ra dáng.',
+      },
     ],
   },
   {
@@ -1975,6 +2190,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Dễ được tin tưởng, giao việc quan trọng; hồ sơ cá nhân thường đẹp hơn tuổi nghề. Giữ chữ tín như giữ vốn — với cặp sao này, uy tín là thứ sinh lãi kép qua từng năm.',
       },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Coi trọng lẽ phải tới mức khó chịu cả với bất công không nhắm vào mình. Đây là nền đạo đức rõ, giúp quyết nhanh trong những tình huống xám mà người khác còn phân vân. Mặt cần cân: đừng biến chuẩn của mình thành thước đo áp lên người xung quanh.',
+      },
+      {
+        palace: 'Nô Bộc',
+        reading:
+          'Trong mạng lưới nghề, tên mình hay được nhắc theo hướng tốt: người khác chủ động giới thiệu, hoặc đứng ra bảo chứng khi mình cần. Vốn này đến từ làm được việc và làm tử tế, không đến từ quảng giao rộng — nên nó chậm có nhưng khó mất.',
+      },
     ],
   },
   {
@@ -2002,6 +2227,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Phúc Đức',
         reading:
           'Đời sống tinh thần phong phú, ưa chiêm nghiệm; một buổi một mình với sách, trà, thiên nhiên nạp năng lượng hơn một bữa tiệc. Cứ sống đúng nhịp đó, chỉ cần đừng để sự một mình thành sự cô lập.',
+      },
+      {
+        palace: 'Quan Lộc',
+        reading:
+          'Hợp nghề cần cốt cách riêng: nghệ thuật, học thuật, nghề tay nghề cao, việc đòi khí chất hơn đòi hoà đồng. Hoa Cái làm người ta nổi bật nhưng cũng khó lẫn vào tập thể — chọn môi trường coi trọng cá tính thay vì môi trường đòi đồng phục.',
+      },
+      {
+        palace: 'Phu Thê',
+        reading:
+          'Kén, và kén thật chứ không phải làm giá. Tiêu chuẩn cao về tinh thần khiến quá trình tìm lâu hơn người khác, nhưng tìm được thì gắn bó. Chỗ cần tỉnh: phân biệt giữa tiêu chuẩn và cố chấp — cái đầu bảo vệ mình, cái sau nhốt mình.',
       },
     ],
   },
@@ -2032,6 +2267,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Nhắc kiểm tra sức khoẻ định kỳ, đề phòng va chạm nhỏ khi đi lại, chơi thể thao. Là lời nhắc tầm soát chủ động — việc vốn ai cũng nên làm, cặp sao này chỉ khiến ta chịu làm thật.',
       },
+      {
+        palace: 'Phụ Mẫu',
+        reading:
+          'Giai đoạn có bộ này, sức khoẻ của người lớn tuổi trong nhà thường nổi lên thành việc phải để tâm. Việc cụ thể nên làm: đưa cha mẹ đi khám định kỳ, hỏi han thường xuyên hơn, sắp xếp trước những việc nhà hay bị hoãn. Chuẩn bị được thì phần lớn nỗi lo tự bớt.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Trong giai đoạn có bộ này, tâm trí hay xoay quanh những thứ mình không kiểm soát nổi. Đây là màu của một chặng, không phải tính cách cố định. Chặng như vậy hợp việc chậm lại, giữ nếp sinh hoạt đều, và nói ra với người tin cậy thay vì tự gánh.',
+      },
     ],
   },
   {
@@ -2059,6 +2304,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Mệnh',
         reading:
           'Giai đoạn hợp làm gì cũng rõ ràng văn bản, minh bạch: giữ hoá đơn, lưu biên bản, chốt việc qua thư từ. Kỷ luật giấy tờ vài tháng đổi lấy sự yên tâm cả năm — một giao dịch có lời.',
+      },
+      {
+        palace: 'Tài Bạch',
+        reading:
+          'Tiền bạc dễ vướng giấy tờ: hợp đồng, thuế, tranh chấp, nợ khó đòi. Không phải điềm mất tiền — là lời nhắc rằng phần pháp lý của đồng tiền quan trọng ngang phần kiếm ra nó. Ký gì cũng đọc kỹ và giữ bản lưu.',
+      },
+      {
+        palace: 'Phu Thê',
+        reading:
+          'Quan hệ dễ có yếu tố giấy tờ hoặc lời qua tiếng lại: thủ tục hôn nhân, tài sản chung, hoặc đơn giản là hay tranh luận đúng sai. Cách nhẹ nhất là rõ ràng từ đầu — thoả thuận sớm luôn rẻ hơn phân xử muộn.',
       },
     ],
   },
@@ -2088,6 +2343,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Người hiền lành, hay được giúp lúc khó; đi đến đâu cũng có người thương. Của cho không bằng cách sống: chính sự tử tế tích luỹ hàng ngày là nguồn của những cú "may đúng lúc" ấy.',
       },
+      {
+        palace: 'Quan Lộc',
+        reading:
+          'Có phúc trong công việc: hay gặp việc nhẹ hơn tưởng, hoặc có người gánh đỡ đúng lúc. Bộ này giảm sát khí của lá số. Đừng nhầm thành ỷ lại — nó làm đường bớt gập ghềnh, không làm thay việc phải đi.',
+      },
+      {
+        palace: 'Tật Ách',
+        reading:
+          'Bộ này đóng vai giảm xóc ở cung Tật Ách: chuyện sức khoẻ thường bớt căng hơn mức đáng lo, hoặc gặp đúng người giúp đúng lúc. Không phải bùa hộ mệnh. Khám định kỳ vẫn là việc phải làm — giảm xóc chỉ có tác dụng khi mình vẫn đi đúng đường.',
+      },
     ],
   },
   {
@@ -2115,6 +2380,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Tật Ách',
         reading:
           'Khi có hạn, thường gặp yếu tố giảm nhẹ: phát hiện sớm, gặp thầy gặp thuốc, có người chăm. Vẫn là lời nhắc khám định kỳ và sống điều độ — đức tinh giảm xóc, không thay được phanh.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Nguôi giận nhanh và ít nuôi oán — nghe nhẹ nhưng là lợi thế sức khoẻ tinh thần thật, nhất là với người làm nghề hay va chạm. Bộ này không ngăn được chuyện xấu xảy ra; nó làm chuyện xấu bớt ở lại lâu trong đầu, và đó mới là phần quyết định mình phục hồi nhanh hay chậm.',
+      },
+      {
+        palace: 'Phụ Mẫu',
+        reading:
+          'Thường có người lớn trong nhà sống hiền, để lại nếp tốt hoặc phúc ấm. Nhiều người có bộ này thừa hưởng một câu dạy hoặc một thói quen tử tế hơn là thừa hưởng tài sản. Nhận ra và giữ nếp ấy là cách trả ơn thực chất nhất.',
       },
     ],
   },
@@ -2145,6 +2420,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Cuộc đời nhiều khúc rẽ; bản lĩnh được tôi qua biến động. Người khác sợ thay đổi, bạn thì quen dần với nó — hãy biến kinh nghiệm ứng biến ấy thành nghề: xử lý khủng hoảng, vận hành, thị trường nhanh.',
       },
+      {
+        palace: 'Thiên Di',
+        reading:
+          'Ra ngoài dễ gặp chuyện đổi hướng đột ngột: chuyến đi hỏng kế hoạch, đối tác đổi ý phút chót. Đọc theo hướng quản trị rủi ro — đi đâu cũng nên có phương án hai, mua bảo hiểm chuyến, chừa biên độ thời gian. Chuẩn bị được thì cú rẽ chỉ là bất tiện.',
+      },
+      {
+        palace: 'Quan Lộc',
+        reading:
+          'Sự nghiệp có những khúc rẽ ngoài dự tính: dự án dừng, sếp đổi, ngành xoay. Người có Kiếp Sát ở đây thường học được cách xoay nhanh. Cách sống chung là đừng đặt hết trứng một giỏ — giữ kỹ năng chuyển ngành được và quan hệ ngoài công ty.',
+      },
     ],
   },
   {
@@ -2173,6 +2458,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Quan Lộc',
         reading:
           'Sự nghiệp lập muộn hoặc rẽ ngang rồi mới vững: học một ngành làm một nghề, đổi hướng giữa chừng rồi mới gặp đúng việc. Đừng đọc đó là thất bại — với Tuần Triệt, đường vòng chính là đường chính.',
+      },
+      {
+        palace: 'Tài Bạch',
+        reading:
+          'Tiền hay bị chặn giữa chừng: khoản sắp về thì hoãn, hợp đồng sắp ký thì dừng. Tuần Triệt là lực hoãn chứ không phải lực mất — phần lớn là chậm lại, không phải biến mất. Cách sống chung là để dư biên thời gian và đừng tính sát dòng tiền.',
+      },
+      {
+        palace: 'Phu Thê',
+        reading:
+          'Duyên hay đến muộn hoặc có đoạn gián đoạn rồi nối lại. Nhiều người có bộ này lập gia đình trễ hơn bạn bè và ổn định hơn khi đã trễ. Đừng đọc thành không có duyên — đọc là duyên tới sau khi mình đủ chín, và điều đó thường có lợi.',
       },
     ],
   },
@@ -2203,6 +2498,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Tính phóng khoáng, rộng rãi, khó nhìn người thân thiếu thốn mà làm ngơ. Đức tính đẹp — chỉ cần học kỷ luật tài chính sớm để sự hào phóng có nền: mình vững thì mới đỡ được người lâu dài.',
       },
+      {
+        palace: 'Điền Trạch',
+        reading:
+          'Tài sản dễ hao theo kiểu rò rỉ: sửa nhà liên miên, chi phí phát sinh, mua rồi bán lỗ. Không phải không giữ được nhà — là phải quản chi phí vận hành kỹ hơn người khác. Với bộ này, mua vừa sức và giữ quỹ bảo trì quan trọng hơn mua to.',
+      },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Hay bất an về tiền dù thực tế chưa thiếu — cảm giác tiêu là mất theo suốt. Biết đây là nét tâm lý chứ không phải sự thật tài chính thì bớt khổ nhiều. Lập ngân sách rõ ràng chữa được phần lớn nỗi lo này, vì nó thay cảm giác bằng con số.',
+      },
     ],
   },
   {
@@ -2231,6 +2536,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         reading:
           'Hợp môi trường trọng bằng cấp, danh vị: cơ quan, tập đoàn lớn, học thuật. Ở môi trường xuề xoà, thế mạnh này ít đất diễn; ở nơi coi trọng chính danh, nó là bệ phóng thật sự.',
       },
+      {
+        palace: 'Phúc Đức',
+        reading:
+          'Coi trọng danh phận và sự chỉn chu; thấy yên khi mọi thứ đúng vị trí. Đây là nền tinh thần ngăn nắp, hợp việc dài hơi. Chỗ cần nới là tính hình thức — không phải chuyện gì cũng cần đúng thủ tục mới đáng làm.',
+      },
+      {
+        palace: 'Phụ Mẫu',
+        reading:
+          'Gia đình có nề nếp, coi trọng học hành và danh dự; hoặc có người thân làm trong hệ thống, cơ quan. Nếp này cho mình lợi thế về kỷ luật. Đi kèm là kỳ vọng — biết tách kỳ vọng của cha mẹ khỏi lựa chọn của mình là bài học của cung này.',
+      },
     ],
   },
   {
@@ -2258,6 +2573,16 @@ export const AUX_STARS_CONTENT: StarContent[] = [
         palace: 'Phúc Đức',
         reading:
           'Phúc thọ, tâm an; hợp lối sống điều độ: ngủ đủ, ăn lành, vận động đều. Với cặp sao này, sự đều đặn không nhàm chán — nó là cách bạn nạp năng lượng và giữ được sự bền bỉ hiếm có của mình.',
+      },
+      {
+        palace: 'Tật Ách',
+        reading:
+          'Thiên về bền sức chứ không phải miễn nhiễm: hồi phục thường khá hơn người cùng tuổi. Chính vì chậm thấy hậu quả nên dễ chủ quan — thức khuya và bỏ vận động vẫn bào mòn như thường, chỉ là hoá đơn tới muộn. Bộ này thưởng cho người giữ nếp đều.',
+      },
+      {
+        palace: 'Phụ Mẫu',
+        reading:
+          'Thường gần gũi thế hệ trên: được ông bà nuôi dạy, hoặc lớn lên quanh người lớn tuổi. Cái thừa hưởng rõ nhất là lối sống điềm đạm và biết giữ sức. Đây là nguồn kinh nghiệm đáng khai thác — hỏi chuyện và ghi lại, vì đó là thứ không có trong sách.',
       },
     ],
   },
