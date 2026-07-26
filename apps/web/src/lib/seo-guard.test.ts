@@ -19,6 +19,7 @@ import {
   checkCanonicalGraph,
   checkNodeUrls,
   checkDuplicateMeta,
+  checkDates,
   TITLE_MAX,
   DESCRIPTION_MAX,
   ALLOWLIST,
@@ -65,6 +66,55 @@ describe('checkPage — bắt đúng cái xấu', () => {
     expect(checkPage({ ...ok, description: null }).map((x: { rule: string }) => x.rule)).toContain(
       'description-missing',
     );
+  });
+});
+
+describe('date-invalid — ngày trong JSON-LD', () => {
+  // Ca THẬT đã bắt được 2026-07-26: /methodology/tu-vi khai dateModified
+  // 2026-05-21 trong khi datePublished là 2026-05-22 — "sửa trước khi đăng".
+  // Một hằng số `TODAY_ISO` đặt lệch 1 ngày, nằm im 2 tháng, không gì bắt được.
+  const NOW = new Date('2026-07-26T00:00:00Z');
+
+  it('ngày hợp lệ thì im lặng', () => {
+    const out = checkDates('/a', [{ datePublished: '2026-01-01', dateModified: '2026-05-01' }], NOW);
+    expect(out).toEqual([]);
+  });
+
+  it('bằng nhau cũng hợp lệ (đăng xong chưa sửa lần nào)', () => {
+    const out = checkDates('/a', [{ datePublished: '2026-05-22', dateModified: '2026-05-22' }], NOW);
+    expect(out).toEqual([]);
+  });
+
+  it('bắt dateModified SỚM HƠN datePublished', () => {
+    const out = checkDates('/a', [{ datePublished: '2026-05-22', dateModified: '2026-05-21' }], NOW);
+    expect(out.map((v: { rule: string }) => v.rule)).toEqual(['date-invalid']);
+    expect(out[0]?.detail).toContain('SỚM HƠN');
+  });
+
+  it('bắt ngày ở tương lai', () => {
+    const out = checkDates('/a', [{ datePublished: '2027-01-01' }], NOW);
+    expect(out).toHaveLength(1);
+    expect(out[0]?.detail).toContain('TƯƠNG LAI');
+  });
+
+  it('bắt ngày sai định dạng', () => {
+    const out = checkDates('/a', [{ dateModified: '22/05/2026' }], NOW);
+    expect(out).toHaveLength(1);
+    expect(out[0]?.detail).toContain('không phải ngày ISO');
+  });
+
+  it('node không khai ngày thì bỏ qua', () => {
+    expect(checkDates('/a', [{ '@type': 'WebPage' }], NOW)).toEqual([]);
+  });
+
+  // KHÔNG phán xét ngày cũ: nội dung không đổi thì dateModified đứng yên là ĐÚNG.
+  it('ngày cũ KHÔNG bị coi là lỗi', () => {
+    expect(checkDates('/a', [{ datePublished: '2020-01-01', dateModified: '2020-01-01' }], NOW)).toEqual([]);
+  });
+
+  it('gắn đúng url vào vi phạm', () => {
+    const out = checkDates('/x', [{ datePublished: '2026-05-22', dateModified: '2026-05-21' }], NOW);
+    expect(out[0]?.url).toBe('/x');
   });
 });
 
