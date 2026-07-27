@@ -22,9 +22,10 @@
 # vẫn có thể hỏng khi vào chung main, mà chỉ chạy trên pull_request thì không ai
 # đo lại trạng thái main.
 #
-# Hiện là advisory (không nằm trong required checks). Từ bản này, bật thành bắt
-# buộc là AN TOÀN: Settings → Branches → main → Require status checks →
-# thêm "seo-guard (vault 172)". Không cần sửa file.
+# ⛔ ĐÃ LÀ REQUIRED CHECK (bật 2026-07-25), tên trong branch protection là
+# "seo-guard (vault 172)" — vi phạm CHẶN merge, không còn advisory. Sửa job này
+# (đổi tên job, đổi bộ lọc RELEVANT, cho phép fail) là đụng vào cổng chặn của
+# main: đọc kỹ trước khi đổi.
 name: seo-guard
 
 on:
