@@ -20,9 +20,10 @@
  * DÙNG
  *   pnpm --filter web build && pnpm --filter web seo-guard
  *
- * Advisory theo thiết kế (giống ui-guard): chạy ở workflow riêng, chưa phải
- * required check. Muốn bắt buộc thì bật ở branch protection — đó là cài đặt
- * GitHub, không phải sửa file.
+ * ⛔ ĐÃ LÀ REQUIRED CHECK (từ 2026-07-27, founder bật ở branch protection với tên
+ * "seo-guard (vault 172)"). Chạy ở workflow riêng, nhưng vi phạm giờ CHẶN merge —
+ * không còn advisory như thiết kế ban đầu. Thêm luật mới thì đo trước cho chắc
+ * số vi phạm đang bằng 0, kẻo chặn nhầm việc của người khác.
  *
  * Các hàm kiểm tra bên dưới là HÀM THUẦN (không I/O, không exit) để
  * `src/lib/seo-guard.test.ts` khoá được hành vi. Phần CLI ở cuối file chỉ chạy

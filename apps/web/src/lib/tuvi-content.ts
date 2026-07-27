@@ -23,6 +23,13 @@
  * Thêm cung/sao MỚI thì bắt buộc sửa ở đây (cần route + trang web tương ứng), rồi
  * chạy workflow seed.
  *
+ * 📅 SAU MỘT ĐỢT VIẾT THÊM NỘI DUNG LỚN: bump `STAR_CONTENT_DATE` (cụm sao) hoặc
+ * `SITE_CONTENT_DATE` (toàn site) trong `app/sitemap.ts` — đó là tín hiệu DUY NHẤT
+ * báo Google "trang này có nội dung mới" (các trang này không có Article/dateModified
+ * trong JSON-LD, cũng không có header Last-Modified). Không có test nào canh việc
+ * này: sửa chữ lặt vặt thì KHÔNG nên bump, nên máy không tự quyết thay người được.
+ * Bỏ quên đúng một lần rồi — #988 viết thêm 65 đoạn mà sitemap vẫn khai mốc 02/07.
+ *
  * Each entry is intentionally factual + non-superstitious. We describe
  * what the palace/star traditionally REPRESENTS in Tử Vi Đẩu Số without
  * making predictive claims. AI Mentor is the layer that personalizes
