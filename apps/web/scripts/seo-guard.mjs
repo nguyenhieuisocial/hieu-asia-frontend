@@ -20,10 +20,10 @@
  * DÙNG
  *   pnpm --filter web build && pnpm --filter web seo-guard
  *
- * ⛔ ĐÃ LÀ REQUIRED CHECK (từ 2026-07-27, founder bật ở branch protection với tên
- * "seo-guard (vault 172)"). Chạy ở workflow riêng, nhưng vi phạm giờ CHẶN merge —
- * không còn advisory như thiết kế ban đầu. Thêm luật mới thì đo trước cho chắc
- * số vi phạm đang bằng 0, kẻo chặn nhầm việc của người khác.
+ * ⛔ ĐÃ LÀ REQUIRED CHECK (bật 2026-07-25 ở branch protection, tên
+ * "seo-guard (vault 172)"; xem vault 94). Chạy ở workflow riêng, nhưng vi phạm giờ
+ * CHẶN merge — không còn advisory như thiết kế ban đầu. Thêm luật mới thì đo trước
+ * cho chắc số vi phạm đang bằng 0, kẻo chặn nhầm việc của người khác.
  *
  * Các hàm kiểm tra bên dưới là HÀM THUẦN (không I/O, không exit) để
  * `src/lib/seo-guard.test.ts` khoá được hành vi. Phần CLI ở cuối file chỉ chạy
