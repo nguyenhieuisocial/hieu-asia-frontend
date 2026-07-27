@@ -53,6 +53,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const SITE_CONTENT_DATE = new Date('2026-07-02T00:00:00Z');
   const now = SITE_CONTENT_DATE;
 
+  // Mốc RIÊNG cho cụm `/tu-vi/sao`: #988 (2026-07-26) viết thêm 65 đoạn luận
+  // theo cung cho 33 phụ tinh — mỗi trang dày lên gấp ~1,5 lần. KHÔNG bump
+  // `SITE_CONTENT_DATE` để báo việc này: mốc đó phủ 962 URL, bump cả cụm sẽ
+  // khai "đổi hôm nay" cho ~915 trang KHÔNG hề đổi — đúng kiểu lastmod thiếu
+  // trung thực mà chú thích trên vừa nói là làm Google ngừng tin tín hiệu này.
+  // Cụm nào đổi thì cụm đó mang mốc của mình.
+  const STAR_CONTENT_DATE = new Date('2026-07-26T00:00:00Z');
+
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
     url: `${BASE_URL}/tu-vi/${p.slug}`,
     lastModified: now,
@@ -62,7 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const starUrls: MetadataRoute.Sitemap = ALL_STARS_CONTENT.map((s) => ({
     url: `${BASE_URL}/tu-vi/sao/${s.slug}`,
-    lastModified: now,
+    lastModified: STAR_CONTENT_DATE,
     changeFrequency: 'monthly' as const,
     priority: 0.55,
   }));
