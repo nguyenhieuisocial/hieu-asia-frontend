@@ -130,9 +130,16 @@ const FAQ_JSONLD = {
   })),
 };
 
-// ⚠️ ĐÂY mới là mô tả THẬT của /mbti. `layout.tsx` cũng khai `description`
+// ⚠️ ĐÂY mới là tiêu đề + mô tả THẬT của /mbti. `layout.tsx` cũng khai chúng
 // nhưng metadata của page ĐÈ layout ⇒ sửa mỗi layout là sửa vào chỗ không ai
 // đọc (tôi đã mắc đúng lỗi này một lần: trang vẫn 176 ký tự sau khi "đã vá").
+//
+// ⚠️ TIÊU ĐỀ PHẢI LÀ HẰNG CẤP MODULE, đừng viết thẳng vào `generateMetadata`.
+// Lý do: chốt canh `meta-trang-dong.guard.test.ts` đo bằng cách đọc hằng có
+// TÊN DUY NHẤT trong file. Khi tiêu đề nằm inline, chốt phải dò `title:` và
+// vớ ngay thẻ giao diện đầu tiên — đã xảy ra thật, phép đo thành vô nghĩa
+// suốt một lượt merge. `MBTI_META_TITLE` là cách giữ cho chốt đo đúng chỗ.
+const MBTI_META_TITLE = 'MBTI — 16 kiểu tâm trí, 4 trục';
 const MBTI_META_DESC =
   'MBTI tại hieu.asia: 4 trục, 16 kiểu — làm bài test 24 câu ra kiểu của bạn, rồi đối chiếu cùng Tử Vi, Bát Tự, Big Five, Xem Tướng. Không phán số mệnh.';
 
@@ -147,7 +154,7 @@ export async function generateMetadata({
   searchParams: Promise<{ r?: string }>;
 }): Promise<Metadata> {
   const base: Metadata = {
-    title: 'MBTI — 16 kiểu tâm trí, 4 trục',
+    title: MBTI_META_TITLE,
     description: MBTI_META_DESC,
     alternates: { canonical: 'https://hieu.asia/mbti' },
   };

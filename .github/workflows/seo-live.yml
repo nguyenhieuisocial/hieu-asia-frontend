@@ -65,25 +65,53 @@ jobs:
       # ⚠️ RÀNG BUỘC: nếu sau này ai thêm một import npm vào `seo-guard.mjs`,
       # job này chết với ERR_MODULE_NOT_FOUND. Thêm lại bước cài khi đó.
       - name: Đo SEO trên site thật
+        id: do
         # ⚠️ `goc` đi qua `env`, KHÔNG nội suy `${{ }}` thẳng vào `run`. GitHub
         # thay chuỗi vào shell TRƯỚC khi chạy, nên một input chứa dấu nháy kép
         # sẽ thoát ra và chạy được lệnh tuỳ ý.
+        #
+        # ⚠️ BẮT mã thoát rồi mới thoát lại: script tách 1 (vi phạm SEO) khỏi
+        # 2 (hạ tầng hỏng), nhưng nếu để bước này fail thẳng thì bước báo
+        # Telegram chỉ biết "đỏ" và gửi một câu chung chung — người trực trên
+        # điện thoại KHÔNG phân biệt được "meta sai" với "site chết", tức là
+        # mất đúng thứ mà việc tách mã thoát sinh ra để cho.
         env:
           GOC: ${{ inputs.goc || 'https://hieu.asia' }}
-        run: node apps/web/scripts/seo-live.mjs "$GOC"
+        run: |
+          set +e
+          node apps/web/scripts/seo-live.mjs "$GOC" | tee /tmp/seo-live.log
+          MA=${PIPESTATUS[0]}
+          set -e
+          echo "ma=$MA" >> "$GITHUB_OUTPUT"
+          # Dòng tổng kết có đủ "đạt X · Y trang sai · lỗi hạ tầng Z" — gửi kèm
+          # để người trực thấy SỐ THẬT thay vì phải đoán từ một câu chữ.
+          echo "tomtat=$(grep -m1 '^seo-live:' /tmp/seo-live.log | tail -c 300)" >> "$GITHUB_OUTPUT"
+          exit $MA
 
       - name: Báo Telegram khi đỏ
         if: failure()
         env:
           TOKEN: ${{ secrets.ADMIN_BOT_TOKEN }}
           REPO: ${{ github.repository }}
+          MA: ${{ steps.do.outputs.ma }}
+          TOMTAT: ${{ steps.do.outputs.tomtat }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         # Chốt chạy theo lịch mà hỏng trong im lặng thì vô dụng: GitHub chỉ gửi
         # email cho người commit cuối, rất dễ chìm. Dùng lại đường báo của
         # `notify-ship.yml`.
         run: |
           if [ -z "$TOKEN" ]; then echo "ADMIN_BOT_TOKEN thiếu — bỏ qua"; exit 0; fi
-          TEXT=$(printf '🔴 seo-live ĐỎ — %s\nMeta trên site thật đang sai hoặc site không đo được.\n%s' "$REPO" "$RUN_URL")
+          case "$MA" in
+            1) LY_DO='Meta SEO trên site thật đang SAI (tiêu đề/mô tả vượt ngưỡng, hoặc URL trong sitemap trả lỗi).' ;;
+            # ⚠️ KHÔNG được viết "đây không phải lỗi nội dung". `seo-live.mjs`
+            # trả 2 ngay khi CÓ lỗi hạ tầng, TRƯỚC khi xét vi phạm nội dung —
+            # nên một URL rớt mạng lẻ + 40 tiêu đề vượt ngưỡng thật vẫn ra mã 2.
+            # Câu chữ phủ định dứt khoát ở đó là nói sai. Dòng tóm tắt kèm theo
+            # có số thật để tự phán đoán.
+            2) LY_DO='KHÔNG ĐO ĐƯỢC ĐẦY ĐỦ — site không phản hồi, sitemap teo dưới sàn, hoặc hàng loạt URL cùng một lỗi (đang bảo trì?). VẪN CÓ THỂ còn vi phạm nội dung — xem số ở dòng dưới.' ;;
+            *) LY_DO='Job hỏng TRƯỚC khi đo (checkout/setup-node?). Chưa kết luận được gì về SEO.' ;;
+          esac
+          TEXT=$(printf '🔴 seo-live ĐỎ — %s\n%s\n%s\n%s' "$REPO" "$LY_DO" "${TOMTAT:-(không có dòng tổng kết)}" "$RUN_URL")
           curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
             -d chat_id=-1003982280451 \
             -d message_thread_id=2 \
