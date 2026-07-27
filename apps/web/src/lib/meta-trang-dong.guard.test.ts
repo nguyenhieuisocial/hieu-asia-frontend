@@ -21,10 +21,23 @@ import { describe, it, expect } from 'vitest';
 
 import { TITLE_MAX, DESCRIPTION_MAX } from '../../scripts/seo-guard.mjs';
 
-/** Hậu tố `'%s · hieu.asia'` mà root layout tự nối vào mọi title không `absolute`. */
-const HAU_TO = ' · hieu.asia'.length;
-
 const goc = join(process.cwd(), 'src', 'app');
+
+/**
+ * Hậu tố mà root layout tự nối vào mọi title không dùng `absolute` — ĐỌC TỪ
+ * `layout.tsx`, KHÔNG gõ cứng.
+ *
+ * ⚠️ Bản đầu gõ cứng `' · hieu.asia'.length`. Đổi hậu tố ở layout thì cả 4 phép
+ * đo dưới đây lặng lẽ tính theo ngân sách cũ — đúng họ lỗi mà file này sinh ra
+ * để chống. Nay lấy thẳng từ nguồn; đổi hậu tố là mọi con số tự đúng theo.
+ */
+function docHauTo(): number {
+  const layout = readFileSync(join(goc, 'layout.tsx'), 'utf8');
+  const m = layout.match(/template:\s*'%s([^']*)'/);
+  if (!m?.[1]) throw new Error('Không đọc được `template: \'%s…\'` trong app/layout.tsx');
+  return m[1].length;
+}
+const HAU_TO = docHauTo();
 const boChuThich = (s: string) =>
   s.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
 
@@ -43,33 +56,46 @@ const boChuThich = (s: string) =>
  * literal, gọi hàm) → trả `null` để chốt ĐỎ, chứ không đo một phần rồi báo đạt.
  */
 function docHang(than: string, ten: string): string | null {
-  const dau = than.search(new RegExp(`\\bconst ${ten}\\s*=`));
-  if (dau === -1) return null;
+  // ⚠️ PHẢI DUY NHẤT. Bản trước lấy khớp ĐẦU TIÊN, nên chỉ cần một `const TITLE`
+  // trùng tên nằm trong một hàm phụ phía trên là phép đo trượt sang đó và trang
+  // thật vượt ngưỡng bao nhiêu cũng xanh — đã chứng minh bằng đột biến. Nhiều
+  // hơn một khai báo ⇒ trả null ⇒ chốt ĐỎ, buộc người sửa đặt tên khác.
+  const khop = [...than.matchAll(new RegExp(`\\bconst ${ten}\\s*=`, 'g'))];
+  if (khop.length !== 1) return null;
+  const dau = khop[0]!.index;
   return ghepLiteral(than.slice(than.indexOf('=', dau) + 1));
 }
 
-/** Đọc `title: '…'` khai trực tiếp trong object (dùng cho generateMetadata). */
-function docThuocTinh(than: string, ten: string): string | null {
-  const dau = than.search(new RegExp(`\\b${ten}:\\s*'`));
-  if (dau === -1) return null;
-  return ghepLiteral(than.slice(than.indexOf(':', dau) + 1), ',');
-}
+/**
+ * ⛔ ĐÃ BỎ HẲN CÁCH ĐỌC `title: '…'` TRONG OBJECT — đừng dựng lại.
+ *
+ * Cách đó dò thuộc tính rồi lấy khớp đầu tiên, và đã hỏng HAI LẦN liên tiếp:
+ *  ① không có mốc  → vớ tiêu đề một thẻ giao diện cách metadata 90 dòng;
+ *  ② có mốc rồi    → vẫn vớ `openGraph: { title: … }` nếu nó nằm trên
+ *                     `title:` thật trong cùng object.
+ * Neo nội dung cũng không cứu được, vì trên `/mbti` gần như MỌI chuỗi ứng viên
+ * đều chứa "MBTI".
+ *
+ * Cách chữa tận gốc: bắt trang khai tiêu đề thành HẰNG CẤP MODULE có tên riêng
+ * (`MBTI_META_TITLE`), rồi dùng CHUNG `docHang` — reader duy nhất, có kiểm
+ * DUY NHẤT. Bốn trang nay đi cùng một đường, hết chỗ cho ca đặc biệt.
+ */
 
 /**
- * Ghép các literal nháy đơn cho tới dấu kết thúc, BỎ QUA dấu nằm trong chuỗi
- * (mô tả tiếng Việt có thể chứa dấu chấm phẩy hoặc phẩy). Trả `null` nếu vế
- * phải có phần động.
+ * Ghép các literal nháy đơn cho tới MỘT TRONG các dấu kết thúc, BỎ QUA dấu nằm
+ * trong chuỗi (mô tả tiếng Việt có thể chứa dấu chấm phẩy hoặc phẩy). Trả
+ * `null` nếu vế phải có phần động.
  */
 function ghepLiteral(vePhaiThoo: string, ketThuc = ';'): string | null {
   let i = 0;
   let trongChuoi = false;
   while (i < vePhaiThoo.length) {
-    const c = vePhaiThoo[i];
+    const c = vePhaiThoo[i] ?? '';
     if (trongChuoi) {
       if (c === '\\') i++;
       else if (c === "'") trongChuoi = false;
     } else if (c === "'") trongChuoi = true;
-    else if (c === ketThuc) break;
+    else if (ketThuc.includes(c)) break;
     i++;
   }
   const vePhai = vePhaiThoo.slice(0, i);
@@ -82,34 +108,31 @@ function ghepLiteral(vePhaiThoo: string, ketThuc = ';'): string | null {
   return literal.join('').replace(/\\'/g, "'");
 }
 
-// `title`/`desc` = tên HẰNG cấp module. `titleThuocTinh` = tiêu đề khai trực
-// tiếp trong object của `generateMetadata` (trường hợp /mbti — trước đây bị bỏ
-// trắng nên tiêu đề /mbti KHÔNG có chốt PR-time nào, chỉ còn cron 24h).
+// Cả bốn trang khai tiêu đề + mô tả bằng HẰNG CẤP MODULE có tên riêng, đọc
+// bằng CÙNG MỘT reader. `/mbti` từng là ca đặc biệt (tiêu đề viết thẳng trong
+// `generateMetadata`) và chính ca đặc biệt đó đẻ ra hai lỗ liên tiếp — nay đã
+// đưa về `MBTI_META_TITLE` để không còn đường nhánh nào.
 const TRANG = [
   { duong: 'tuong-hop-12-con-giap/page.tsx', title: 'TITLE', desc: 'DESCRIPTION' },
   { duong: 'tra-cuu-tuoi/page.tsx', title: 'TITLE', desc: 'DESCRIPTION' },
   { duong: 'bang-chung/page.tsx', title: 'TITLE', desc: 'DESC' },
-  { duong: 'mbti/page.tsx', titleThuocTinh: 'title', desc: 'MBTI_META_DESC' },
+  { duong: 'mbti/page.tsx', title: 'MBTI_META_TITLE', desc: 'MBTI_META_DESC' },
 ] as const;
 
 describe('meta trang render động (seo-guard không thấy)', () => {
   for (const t of TRANG) {
     const than = boChuThich(readFileSync(join(goc, t.duong), 'utf8'));
-
-    const tenTieuDe: string | undefined =
-      'title' in t ? t.title : 'titleThuocTinh' in t ? t.titleThuocTinh : undefined;
-    const docTieuDe = () =>
-      'title' in t ? docHang(than, t.title) : docThuocTinh(than, t.titleThuocTinh);
+    const tenTieuDe = t.title;
 
     it(`${t.duong} — tiêu đề + hậu tố ≤ ${TITLE_MAX}`, () => {
-      const v = docTieuDe();
+      const v = docHang(than, t.title);
       expect(
         v,
         `Không đọc được tiêu đề (\`${tenTieuDe}\`) trong ${t.duong}. Hằng bị đổi ` +
           'tên, chuyển sang template literal, hoặc nối thêm phần động ⇒ chốt ' +
           'canh này đang KHÔNG canh gì cả. Sửa test cho khớp, đừng xoá.',
       ).not.toBeNull();
-      expect(v!.length + HAU_TO, `"${v}" + " · hieu.asia"`).toBeLessThanOrEqual(TITLE_MAX);
+      expect(v!.length + HAU_TO, `"${v}" + hậu tố ${HAU_TO} ký tự`).toBeLessThanOrEqual(TITLE_MAX);
     });
 
     it(`${t.duong} — mô tả ≤ ${DESCRIPTION_MAX}`, () => {
@@ -139,8 +162,27 @@ describe('meta trang render động (seo-guard không thấy)', () => {
     expect(docHang("const U = 'a' as const;", 'U')).toBe('a');
     expect(docHang("const T = 'x';", 'KHONG_CO')).toBeNull();
 
-    expect(docThuocTinh("  title: 'Tiêu đề', url: 'x',", 'title')).toBe('Tiêu đề');
-    expect(docThuocTinh('  title: `Tôi là ${x}`,', 'title')).toBeNull();
+  });
+
+  it('HẰNG TRÙNG TÊN phải làm chốt ĐỎ, không được lặng lẽ lấy cái đầu tiên', () => {
+    // Ca thật đã chứng minh bằng đột biến: chèn `const TITLE = 'Cột';` trong một
+    // hàm phụ phía trên (hợp lệ TypeScript, khác scope) thì phép đo trượt sang
+    // đó, và tiêu đề THẬT dài 95 ký tự vẫn xanh. Nay hai khai báo ⇒ null ⇒ đỏ.
+    const haiKhai = "function phu() { const TITLE = 'Cột'; }\nconst TITLE = 'That su rat dai';";
+    expect(docHang(haiKhai, 'TITLE')).toBeNull();
+    expect(docHang("const TITLE = 'chi mot';", 'TITLE')).toBe('chi mot');
+  });
+
+  it('mỗi tên hằng trong bảng TRANG phải là DUY NHẤT trong file của nó', () => {
+    // Khẳng định dương cho chính phép kiểm duy-nhất ở trên: nếu một ngày file
+    // thật có hai khai báo trùng tên, test này chỉ đích danh file đó.
+    for (const t of TRANG) {
+      const than = boChuThich(readFileSync(join(goc, t.duong), 'utf8'));
+      for (const ten of [t.title, t.desc]) {
+        const soLan = [...than.matchAll(new RegExp(`\\bconst ${ten}\\s*=`, 'g'))].length;
+        expect(soLan, `\`const ${ten}\` xuất hiện ${soLan} lần trong ${t.duong}`).toBe(1);
+      }
+    }
   });
 
   it('mô tả thật của /mbti nằm ở page.tsx, KHÔNG phải layout.tsx', () => {
