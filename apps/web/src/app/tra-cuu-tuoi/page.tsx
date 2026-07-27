@@ -6,9 +6,14 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, faqPage, type FaqItem } from '@/lib/seo/jsonld';
 import { TraCuuTuoi } from './TraCuuTuoi';
 
-const TITLE = 'Tra cứu tuổi trọn đời: Can Chi, mệnh, hướng, sao hạn';
+// Bỏ "trọn đời" để tiêu đề còn 55 ký tự sau đuôi " · hieu.asia" (ngân sách 48
+// cho phần này). Từ khoá tra cứu trong TITLE giữ y — nhưng bản rút gọn đầu
+// làm rụng "con giáp" khỏi MÔ TẢ (trong khi title lẫn <h1> đều không có nó),
+// nên đã đưa lại; đổi "sao hạn năm nay" → "sao hạn" để bù chỗ, tiện thể bỏ
+// một cụm phụ thuộc thời gian.
+const TITLE = 'Tra cứu tuổi: Can Chi, mệnh, hướng, sao hạn';
 const DESCRIPTION =
-  'Nhập năm sinh + giới tính, xem ngay mọi lát cắt của tuổi: Can Chi, nạp âm, mệnh ngũ hành, Kim Lâu, Tam Tai, Hoang Ốc, hướng nhà theo cung phi, sao hạn năm nay, con giáp, màu & nghề hợp. Phong tục dân gian tính minh bạch để tham khảo.';
+  'Nhập năm sinh và giới tính: Can Chi, con giáp, nạp âm, mệnh ngũ hành, Kim Lâu, Tam Tai, Hoang Ốc, hướng nhà theo cung phi, sao hạn, nghề hợp — để tham khảo.';
 const URL = 'https://hieu.asia/tra-cuu-tuoi';
 
 export const metadata: Metadata = {

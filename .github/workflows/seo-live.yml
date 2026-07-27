@@ -1,0 +1,90 @@
+# seo-live — đo <title> + meta description trên SITE ĐANG CHẠY THẬT.
+#
+# VÌ SAO CÓ THÊM WORKFLOW NÀY BÊN CẠNH `seo-guard`:
+# `seo-guard` chỉ đọc `*.html` do `next build` sinh ra. Trang không tiền-dựng
+# (metadata động, hoặc render phía client) KHÔNG có `.html` ⇒ nó không thấy.
+# Ngày 2026-07-26 quét thật phát hiện 4 trang loại đó đã vượt ngưỡng từ lâu
+# trong khi `seo-guard` báo xanh suốt: /bang-chung, /mbti,
+# /tuong-hop-12-con-giap, /tra-cuu-tuoi. Hai chốt bù cho nhau:
+#   · seo-guard  → gác PR, đo bản dựng, thấy 1.113 trang tĩnh.
+#   · seo-live   → gác SITE, đo bản đã deploy, thấy 978 URL trong sitemap
+#                  (gồm cả trang động mà bên kia mù).
+#
+# ⚠️ VÌ SAO KHÔNG CHẠY TRÊN `push: main`:
+# Repo này deploy bằng Vercel GitHub App (workflow `deploy` đã tắt), nên tại
+# thời điểm push xong, production VẪN LÀ BẢN CŨ. Chạy ngay sẽ đo nhầm bản
+# trước đó — đỏ oan cho PR vừa sửa, hoặc xanh oan cho PR vừa làm hỏng. Đúng
+# cái bẫy `lighthouse-ci.yml` đã ghi lại. Nên: chạy theo lịch mỗi ngày (bắt
+# trôi lệch trong vòng 24h) + bấm tay khi cần kiểm ngay sau deploy.
+#
+# Lỗi hạ tầng (site chết, mạng lỗi, sitemap teo dưới sàn) thoát mã 2, khác với
+# mã 1 của vi phạm SEO — để không đọc nhầm "site đang chết" thành "SEO đỏ".
+#
+# ⚠️ GITHUB TỰ TẮT WORKFLOW CHẠY THEO LỊCH sau 60 ngày repo không có commit nào.
+# Repo này đang hoạt động hằng ngày nên chưa chạm ngưỡng, nhưng nếu có kỳ nghỉ
+# dài thì chốt an toàn DUY NHẤT cho trang động sẽ im lặng biến mất — đúng kiểu
+# hỏng mà chính nó sinh ra để chống. Kiểm tra tab Actions sau mỗi đợt nghỉ dài.
+name: seo-live
+
+on:
+  schedule:
+    # 01:00 UTC = 08:00 giờ VN, sau khi mọi deploy trong đêm đã ổn định.
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    inputs:
+      goc:
+        description: 'URL gốc cần đo (mặc định production)'
+        required: false
+        default: 'https://hieu.asia'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seo-live
+  cancel-in-progress: false
+
+jobs:
+  seo-live:
+    name: seo-live (đo trang thật)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      # Không cần `pnpm install`: script chỉ dùng `fetch` + node builtins và
+      # import hai hằng số ngưỡng từ `seo-guard.mjs` (file đó cũng chỉ import
+      # node builtins). Bỏ bước cài giúp job chạy trong ~1 phút, đủ rẻ để chạy
+      # hằng ngày.
+      # ⚠️ RÀNG BUỘC: nếu sau này ai thêm một import npm vào `seo-guard.mjs`,
+      # job này chết với ERR_MODULE_NOT_FOUND. Thêm lại bước cài khi đó.
+      - name: Đo SEO trên site thật
+        # ⚠️ `goc` đi qua `env`, KHÔNG nội suy `${{ }}` thẳng vào `run`. GitHub
+        # thay chuỗi vào shell TRƯỚC khi chạy, nên một input chứa dấu nháy kép
+        # sẽ thoát ra và chạy được lệnh tuỳ ý.
+        env:
+          GOC: ${{ inputs.goc || 'https://hieu.asia' }}
+        run: node apps/web/scripts/seo-live.mjs "$GOC"
+
+      - name: Báo Telegram khi đỏ
+        if: failure()
+        env:
+          TOKEN: ${{ secrets.ADMIN_BOT_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        # Chốt chạy theo lịch mà hỏng trong im lặng thì vô dụng: GitHub chỉ gửi
+        # email cho người commit cuối, rất dễ chìm. Dùng lại đường báo của
+        # `notify-ship.yml`.
+        run: |
+          if [ -z "$TOKEN" ]; then echo "ADMIN_BOT_TOKEN thiếu — bỏ qua"; exit 0; fi
+          TEXT=$(printf '🔴 seo-live ĐỎ — %s\nMeta trên site thật đang sai hoặc site không đo được.\n%s' "$REPO" "$RUN_URL")
+          curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            -d chat_id=-1003982280451 \
+            -d message_thread_id=2 \
+            --data-urlencode text="$TEXT" >/dev/null || true
