@@ -241,6 +241,38 @@ export function checkCanonicalGraph(pages, sitemapUrls) {
  * @param {Set<string>} duocTro URL được trang KHÁC trỏ tới bằng thẻ `<a>`
  * @param {Set<string>|null} sitemapUrls null = không đọc được sitemap → bỏ luật
  */
+/**
+ * Không đọc được sitemap trong build ⇒ HAI luật tự tắt: `canonical-ceded-in-sitemap`
+ * (xem `checkCanonicalGraph`) và `orphan-page` (ngay dưới). Cả hai CỐ Ý khoan dung
+ * với `null` để những luật còn lại vẫn chạy — đó là thiết kế đúng, có test khoá.
+ *
+ * Cái SAI là ở phần CLI: trước đây nó chỉ `console.warn` rồi vẫn in "✅ không có vi
+ * phạm" và thoát 0. Guard bỏ luật mà CI vẫn xanh là kiểu hỏng tệ nhất, và đây KHÔNG
+ * phải giả định — vault 172 §4c ghi ca thật: `sitemap.xml` trong build là THƯ MỤC
+ * (file thật tên `sitemap.xml.body`), đọc nhầm tên làm luật tắt ÂM THẦM nhiều ngày
+ * trong khi guard vẫn báo sạch.
+ *
+ * ⇒ Coi "không đọc được sitemap" LÀ MỘT VI PHẠM có tên, để nó chặn merge như mọi vi
+ * phạm khác. Thà đỏ CI vì guard hỏng, còn hơn xanh CI vì guard đã thôi kiểm.
+ *
+ * @param {Set<string>|null} sitemapUrls
+ */
+export function checkSitemapReadable(sitemapUrls) {
+  if (sitemapUrls) return [];
+  return [
+    {
+      url: '(toàn build)',
+      rule: 'guard-sitemap-unreadable',
+      detail:
+        'KHÔNG đọc được sitemap trong thư mục build ⇒ 2 luật đã bị bỏ: ' +
+        '`canonical-ceded-in-sitemap` và `orphan-page`. Guard không được báo sạch khi ' +
+        'đang thiếu luật. Kiểm: build có sinh `sitemap.xml.body` không (LƯU Ý `sitemap.xml` ' +
+        'là THƯ MỤC, không phải file); nếu Next đổi tên đầu ra thì thêm tên mới vào danh ' +
+        'sách thử trong `main()`',
+    },
+  ];
+}
+
 export function checkOrphanPages(pages, duocTro, sitemapUrls) {
   if (!sitemapUrls) return [];
   const out = [];
@@ -723,13 +755,10 @@ function main() {
       // thử tên tiếp theo
     }
   }
-  // Bỏ luật thì phải NÓI RA. Guard im lặng tự vô hiệu là cách hỏng tệ nhất
-  // (vault 172 §6): vẫn in "không có vi phạm" trong khi đã thôi kiểm.
-  if (sitemapUrls === null) {
-    console.warn(
-      'seo-guard: canh bao — khong doc duoc sitemap trong build, BO luat "canonical-ceded-in-sitemap". Cac luat khac van chay.',
-    );
-  }
+  // Bỏ luật thì phải CHẶN, không phải nhắc suông. Trước đây chỗ này chỉ
+  // `console.warn` rồi vẫn thoát 0 → guard tự vô hiệu mà CI vẫn xanh (vault 172
+  // §4c: ca thật, tắt luật âm thầm nhiều ngày). Nay nó là vi phạm có tên.
+  for (const v of checkSitemapReadable(sitemapUrls)) violations.push(v);
 
   for (const f of files) {
     const rel = relative(appDir, f).split(sep).join('/').replace(/\.html$/, '');
