@@ -19,7 +19,15 @@
  *        pnpm --filter web seo-live -- <url>   (đo môi trường khác — mọi URL
  *                                               lấy từ sitemap đều được ĐỔI VỀ
  *                                               gốc này trước khi tải)
- * Mã thoát:  0 sạch · 1 có vi phạm SEO · 2 hạ tầng hỏng (không kết luận được).
+ * Mã thoát:  0 sạch · 1 vi phạm SEO · 2 hạ tầng hỏng (không kết luận được)
+ *            3 LỖI CỦA NGƯỜI VIẾT PR (sitemap teo, danh sách bỏ qua sai).
+ *
+ * ⚠️ VÌ SAO TÁCH 3 KHỎI 2: nơi gọi ở CI map mã 2 thành `::warning::` + không
+ * chặn (đúng, vì mạng chập không phải lỗi của PR). Nhưng "sitemap teo mất cả
+ * cụm" và "danh sách bỏ qua ăn quá rộng" LÀ lỗi của PR — để chung mã 2 thì
+ * chúng thành advisory và merge được, tức chốt canh tự vô hiệu. Cụ thể: viết
+ * `--bo-qua` ăn 50% site sẽ ra "cảnh báo hạ tầng" và check VẪN XANH dù không
+ * đo gì. Mã 3 buộc nơi gọi phải chặn.
  * Tách 1/2 là cố ý, cùng quy ước với `seo-guard.mjs`: CI phải phân biệt được
  * "PR này làm hỏng SEO" với "site đang chết / mạng lỗi".
  *
@@ -97,6 +105,34 @@ export const CUM_TOI_THIEU = {
   '/cam-nang': 6,
 };
 
+/**
+ * Tỷ lệ lỗi hạ tầng tối đa còn KẾT LUẬN ĐƯỢC. Trên ngưỡng ⇒ mã 2.
+ *
+ * ⚠️ VÌ SAO KHÔNG PHẢI "0". Bản trước là `if (loiHaTang.length) exit(2)` — CHỈ
+ * MỘT request rớt trong 978 là cả lượt quét thành "không kết luận được", tức
+ * toàn bộ lớp bảo vệ TỰ TẮT mà vẫn báo xanh ở CI (vì mã 2 chỉ cảnh báo). Một
+ * hiccup CDN là đủ. Nay vài lỗi lẻ vẫn cho phép kết luận về 97%+ còn lại —
+ * chúng được IN RA, và lượt chạy theo lịch hôm sau sẽ đo lại đúng mấy trang đó.
+ */
+export const NGUONG_HA_TANG = 0.02;
+
+/**
+ * Ngưỡng MẶC ĐỊNH là 0 — phải truyền `--chiu-loi=N` mới nới.
+ *
+ * ⚠️ VÌ SAO KHÔNG NỚI MẶC ĐỊNH: hai nơi gọi có hậu quả NGƯỢC NHAU khi ra mã 2.
+ *  · Ở CI (`seo-guard.yml`) mã 2 = cảnh báo câm ⇒ ngưỡng 0 làm cả lớp bảo vệ
+ *    tự tắt vì một hiccup. Ở đó CẦN nới.
+ *  · Ở lượt chạy theo lịch (`seo-live.yml`) mã 2 = FAIL + bắn Telegram ⇒ nó
+ *    vốn đã "loud". Nới mặc định ở đây thành ra: 19 URL production chết mà
+ *    KHÔNG ai được báo — 19 trang chết trong sitemap là vấn đề SEO thật, không
+ *    phải nhiễu. Nới toàn cục là dịch lỗ sang chỗ tệ hơn.
+ * Nên: nghiêm mặc định, CI tự khai mức chịu đựng của mình.
+ */
+export function docChiuLoi(thamSo) {
+  const m = (thamSo ?? '').match(/^--chiu-loi=(\d+(?:\.\d+)?)$/);
+  if (!m) return 0;
+  return Math.min(Number(m[1]) / 100, NGUONG_HA_TANG);
+}
 export const CHO_TOI_DA_MS = 15000;
 export const SO_LAN_THU_LAI = 2;
 export const SONG_SONG = 12;
@@ -272,6 +308,62 @@ export function doHongDongLoat(viPham, tongUrl) {
   return null;
 }
 
+/**
+ * Tách danh sách URL thành {do, boQua} theo tiền tố đường dẫn.
+ *
+ * ⚠️ VÌ SAO CẦN BỎ QUA KHI ĐO TRÊN BẢN DỰNG CI: một số route render động bằng
+ * cách `fetch` RA NGOÀI ngay lúc nhận request (`/cam-nang` gọi API nội dung,
+ * `/tu-vi-hom-nay` gọi `hieu.asia`, `/hop-tuoi` cũng có). Trên CI điều đó gây
+ * HAI hỏng thật:
+ *  ① API chập → `fetchPillar` trả null → `notFound()` → HTTP 404 → bị xếp là
+ *    VI PHẠM (không phải lỗi hạ tầng) → mã 1 → CHẶN MỌI PR, kể cả PR chỉ sửa
+ *    CSS. Required check đỏ oan.
+ *  ② Trang lấy nội dung từ PRODUCTION nên phép đo không nói gì về bản dựng của
+ *    PR — đo mà không trung thực còn tệ hơn không đo.
+ * Lượt chạy theo lịch trên production vẫn phủ chúng, ở đó phép đo mới có nghĩa.
+ *
+ * ⚠️ Bỏ qua chỉ áp cho việc TẢI. Sàn `MIN_TRANG`/`CUM_TOI_THIEU` vẫn chạy trên
+ * DANH SÁCH ĐẦY ĐỦ, nên "thiếu cả cụm trong sitemap" vẫn bị bắt như thường.
+ */
+export function tachBoQua(urls, mau) {
+  if (!mau?.length) return { do: urls, boQua: [] };
+  const dinh = (u) => {
+    let p;
+    try {
+      p = new URL(u).pathname;
+    } catch {
+      return false;
+    }
+    return mau.some((m) =>
+      m.endsWith('/*') ? p === m.slice(0, -2) || p.startsWith(m.slice(0, -1)) : p === m,
+    );
+  };
+  return { do: urls.filter((u) => !dinh(u)), boQua: urls.filter(dinh) };
+}
+
+/**
+ * Chặn danh sách bỏ qua phình to trong im lặng.
+ *
+ * ⚠️ CA THẬT ĐÃ SẬP VÀO: tôi viết `--bo-qua=/hop-tuoi` định loại 3 trang động,
+ * nhưng nó ăn theo tiền tố nên loại luôn **83** URL — 80 trang TĨNH đang được
+ * đo tốt bỗng ra khỏi lưới mà không có gì báo. Nay mẫu phải ghi rõ `/x/*` mới
+ * ăn cả nhánh, và tỷ lệ bỏ qua vượt ngưỡng thì ĐỎ.
+ */
+/** Mẫu bỏ qua nào không khớp URL nào — dấu hiệu gõ sai hoặc route đã đổi tên. */
+export function mauKhongKhop(urls, mau) {
+  return (mau ?? []).filter((m) => tachBoQua(urls, [m]).boQua.length === 0);
+}
+
+export const BO_QUA_TOI_DA = 0.05;
+export function kiemBoQua(soBoQua, tong) {
+  if (tong === 0 || soBoQua / tong <= BO_QUA_TOI_DA) return null;
+  return (
+    `danh sách bỏ qua ăn ${soBoQua}/${tong} URL ` +
+    `(quá ${Math.round(BO_QUA_TOI_DA * 100)}%) — gần như chắc chắn một mẫu đang ` +
+    'ăn rộng hơn ý định. Ghi rõ từng đường dẫn, hoặc `/nhánh/*` nếu thật sự muốn cả nhánh.'
+  );
+}
+
 /** Trạng thái dùng chung của các luồng quét. Tách ra để test được. */
 export function trangThaiMoi() {
   return { viPham: [], loiHaTang: [], dat: 0, trangHong: 0, loiLienTiep: 0, dungSom: false };
@@ -375,8 +467,43 @@ const taiXml = async (u) => {
   return bocSitemap(u, r.ok, r.status, r.ok ? await r.text() : '');
 };
 
+/**
+ * Kiểm tham số dòng lệnh. Trả chuỗi lỗi, hoặc `null` nếu ổn.
+ *
+ * ⚠️ MỌI LỖI GÕ TRƯỚC ĐÂY ĐỀU IM LẶNG HOẶC BỊ CHẨN ĐOÁN NGƯỢC:
+ *  · quên URL, để cờ ở vị trí đầu ⇒ `goc = "--bo-qua=…"` ⇒ fetch ném ⇒ mã 2 ⇒
+ *    Telegram báo "site không phản hồi" trong khi site vẫn sống;
+ *  · viết `--bo-qua /x` (dấu cách thay `=`) ⇒ cờ thành một mẫu vô nghĩa ⇒ KHÔNG
+ *    bỏ qua gì ⇒ mấy cụm gọi API trả 404 ⇒ mã 1 ⇒ chặn mọi PR, không dòng nào
+ *    nói "cờ của bạn vô hiệu".
+ */
+export function kiemThamSo(goc, co) {
+  try {
+    const u = new URL(goc);
+    if (!/^https?:$/.test(u.protocol)) return `gốc "${goc}" phải là http(s)`;
+  } catch {
+    return `gốc "${goc}" không phải URL hợp lệ — nhớ truyền URL TRƯỚC các cờ`;
+  }
+  for (const c of co)
+    if (!/^--(bo-qua|chiu-loi)=/.test(c))
+      return `tham số "${c}" không nhận ra (chỉ có --bo-qua= và --chiu-loi=, phải dùng dấu =)`;
+  return null;
+}
+
 async function main() {
   const goc = (argv[2] || 'https://hieu.asia').replace(/\/$/, '');
+  const co = argv.slice(3).filter(Boolean);
+  const loiThamSo = kiemThamSo(goc, co);
+  if (loiThamSo) {
+    console.error(`seo-live: ${loiThamSo}`);
+    return exit(3);
+  }
+  const chiuLoi = docChiuLoi(co.find((c) => c.startsWith('--chiu-loi=')));
+  const tienToBoQua = (co.find((c) => c.startsWith('--bo-qua=')) ?? '')
+    .replace(/^--bo-qua=/, '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   let urls;
   try {
@@ -396,7 +523,27 @@ async function main() {
       'Nếu đây là thay đổi nội dung CÓ CHỦ Ý, cập nhật CUM_TOI_THIEU trong ' +
         'apps/web/scripts/seo-live.mjs kèm lý do.',
     );
-    return exit(2);
+    return exit(3);
+  }
+
+  // Sàn đã chạy trên DANH SÁCH ĐẦY ĐỦ ở trên — giờ mới bỏ bớt phần không đo.
+  const { do: canDo, boQua } = tachBoQua(urls, tienToBoQua);
+  if (tienToBoQua.length) {
+    console.log(
+      `seo-live: BỎ QUA ${boQua.length} URL theo yêu cầu (${tienToBoQua.join(', ')}) — ` +
+        'chúng gọi mạng ra ngoài lúc render nên đo ở đây vừa nhiễu vừa không ' +
+        'nói gì về bản dựng này. Lượt chạy theo lịch trên production vẫn phủ.',
+    );
+    // Mẫu khớp 0 URL = route bị đổi tên, hoặc gõ sai (thiếu `/` đầu, dùng dấu
+    // cách thay `=`). Im lặng ở đây nghĩa là cụm đó BỖNG được đo lại và sẽ đỏ
+    // oan — phải nói ra.
+    for (const m of mauKhongKhop(urls, tienToBoQua))
+      console.error(`seo-live: ⚠ mẫu bỏ qua "${m}" không khớp URL nào — gõ sai hay route đã đổi?`);
+    const qua = kiemBoQua(boQua.length, urls.length);
+    if (qua) {
+      console.error(`seo-live: ${qua}`);
+      return exit(3);
+    }
   }
 
   const so = trangThaiMoi();
@@ -439,16 +586,17 @@ async function main() {
       } else so.dat++;
     }
   };
-  await Promise.all(chiaLuong(urls, SONG_SONG).map(quet));
+  await Promise.all(chiaLuong(canDo, SONG_SONG).map(quet));
 
   const { dat, trangHong, viPham, loiHaTang } = so;
   // ĐẾM THEO TRANG, không theo vi phạm: một trang thiếu cả tiêu đề lẫn mô tả
   // sinh 2 phần tử trong `viPham`. Bản trước trừ `viPham.length` nên con số
   // "chưa đo" lệch, và ở trường hợp xấu còn ra SỐ ÂM.
-  const chuaDo = urls.length - dat - trangHong - loiHaTang.length;
+  const chuaDo = canDo.length - dat - trangHong - loiHaTang.length;
   console.log(
-    `seo-live: ${goc} — ${urls.length} URL trong sitemap · ` +
-      `đạt ${dat} · ${trangHong} trang sai (${viPham.length} vi phạm) · ` +
+    `seo-live: ${goc} — ${urls.length} URL trong sitemap` +
+      (boQua.length ? ` (đo ${canDo.length}, bỏ qua ${boQua.length})` : '') +
+      ` · đạt ${dat} · ${trangHong} trang sai (${viPham.length} vi phạm) · ` +
       `lỗi hạ tầng ${loiHaTang.length}` +
       (so.dungSom ? ` · NGƯNG SỚM, ${chuaDo} URL chưa đo` : ''),
   );
@@ -456,9 +604,24 @@ async function main() {
   for (const v of viPham) console.log(`  ✗ ${v.duong.padEnd(40)} ${v.luat.padEnd(22)} ${v.chiTiet}`);
   for (const v of loiHaTang) console.log(`  ⚠ ${v.duong.padEnd(40)} ${v.luat.padEnd(22)} ${v.chiTiet}`);
 
-  if (loiHaTang.length) return exit(2);
+  // Quá NGƯỠNG (hoặc đã ngưng sớm) ⇒ không kết luận được, mã 2. Dưới ngưỡng ⇒
+  // vẫn kết luận trên phần đã đo được; mấy trang lẻ đã in ở trên và lượt chạy
+  // theo lịch hôm sau sẽ đo lại. Bản trước exit(2) ngay từ MỘT lỗi, khiến cả
+  // lớp bảo vệ tự tắt vì một hiccup mạng.
+  if (so.dungSom || (canDo.length > 0 && loiHaTang.length / canDo.length > chiuLoi)) {
+    console.error(
+      `seo-live: ${loiHaTang.length}/${canDo.length} URL không tải được ` +
+        `(quá mức chịu ${Math.round(chiuLoi * 100)}%) ⇒ KHÔNG kết luận được.`,
+    );
+    return exit(2);
+  }
+  if (loiHaTang.length)
+    console.log(
+      `::warning::seo-live: ${loiHaTang.length} URL không tải được nhưng dưới mức ` +
+        'chịu — kết luận chỉ áp cho phần đã đo. Xem danh sách ⚠ ở trên.',
+    );
 
-  const dongLoat = doHongDongLoat(viPham, urls.length);
+  const dongLoat = doHongDongLoat(viPham, canDo.length);
   if (dongLoat) {
     console.error(`seo-live: ${dongLoat} ⇒ xếp là HẠ TẦNG, không phải lỗi nội dung.`);
     return exit(2);

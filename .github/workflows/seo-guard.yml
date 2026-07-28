@@ -46,6 +46,9 @@ jobs:
   seo-guard:
     name: seo-guard (vault 172)
     runs-on: ubuntu-latest
+    # Job này giờ có khởi động server → phải có trần riêng. Mặc định của GitHub
+    # là 360 phút; một route treo lúc render có thể đốt hàng giờ Actions.
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -95,7 +98,12 @@ jobs:
                 # mẫu nào ở đây thì test đỏ.
                 apps/web/src/*) RELEVANT=true ;;
                 # Chính guard và workflow của nó.
-                apps/web/scripts/seo-guard.mjs | .github/workflows/seo-guard.yml) RELEVANT=true ;;
+                # ⚠️ PHẢI CÓ CẢ `seo-live.mjs`: workflow này GỌI nó ở bước cuối.
+                # Thiếu dòng đó thì một PR chỉ sửa `seo-live.mjs` — nới ngưỡng
+                # chịu lỗi, thêm mẫu bỏ qua, đổi `tachBoQua` — sẽ KHÔNG chạy
+                # bước đo nào và báo xanh trong vài giây. Đúng cái bẫy mà khối
+                # chú thích phía trên tự hào đã bịt, mà chính nó lại sập vào.
+                apps/web/scripts/seo-guard.mjs | apps/web/scripts/seo-live.mjs | .github/workflows/seo-guard.yml) RELEVANT=true ;;
                 # Nâng Next có thể đổi hình dạng HTML → chết regex đọc thẻ.
                 apps/web/package.json | pnpm-lock.yaml) RELEVANT=true ;;
                 *) : ;;
@@ -132,3 +140,57 @@ jobs:
       - name: Guard SEO metadata
         if: steps.detect.outputs.relevant == 'true'
         run: node apps/web/scripts/seo-guard.mjs
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Bịt điểm mù CHÍNH của bước trên: `seo-guard.mjs` chỉ đọc `*.html` do
+      # build sinh ra, mà 49/978 URL trong sitemap thuộc 15 route RENDER ĐỘNG
+      # nên không có `.html` ⇒ nó không thấy. Đó là lý do 4 trang vượt ngưỡng
+      # nằm im nhiều tuần trong khi CI xanh (chi tiết: vault 172 mục 16).
+      #
+      # Cách bịt: dựng xong thì CHẠY THẬT bản dựng rồi đo qua sitemap bằng
+      # chính `seo-live.mjs` — đo đúng thứ Google thấy, không đoán chuỗi trong
+      # source. Đã kiểm cục bộ: 49/49 trang động render được, 978/978 đo được.
+      # Rẻ vì tái dùng bản dựng vừa có; tốn thêm ~1 phút.
+      - name: Đo SEO trên bản dựng đang chạy (phủ cả trang động)
+        if: steps.detect.outputs.relevant == 'true'
+        run: |
+          set +e
+          pnpm --filter web exec next start -p 3000 > /tmp/next-ci.log 2>&1 &
+          for i in $(seq 1 60); do
+            grep -q 'Ready in' /tmp/next-ci.log && break
+            sleep 1
+          done
+          if ! grep -q 'Ready in' /tmp/next-ci.log; then
+            echo "::warning::Không dựng nổi server để đo trang động — bỏ qua bước này."
+            tail -20 /tmp/next-ci.log
+            exit 0
+          fi
+          # ⚠️ BỎ QUA 3 cụm gọi mạng RA NGOÀI lúc render (`/cam-nang` gọi API
+          # nội dung, `/tu-vi-hom-nay` gọi hieu.asia, `/hop-tuoi` cũng có).
+          # Nếu đo chúng ở đây thì: ① API chập → trang trả 404 → bị tính là VI
+          # PHẠM → mã 1 → CHẶN MỌI PR kể cả PR chỉ sửa CSS; ② nội dung lấy từ
+          # PRODUCTION nên phép đo chẳng nói gì về bản dựng của PR.
+          # Chúng vẫn được lượt chạy theo lịch trên production phủ — ở đó phép
+          # đo mới có nghĩa. Sàn sitemap vẫn chạy trên DANH SÁCH ĐẦY ĐỦ.
+          # `/x/*` = cả nhánh; không có `/*` = ĐÚNG một đường dẫn. Phân biệt này
+          # quan trọng: `/hop-tuoi` có 83 URL nhưng chỉ 3 trang là động — viết
+          # `/hop-tuoi` kiểu tiền tố sẽ loại nhầm 80 trang TĨNH đang đo tốt.
+          # (Tôi đã sập đúng vào đó lúc diễn thử; nay `kiemBoQua` chặn luôn ca
+          # danh sách bỏ qua phình quá 5%.)
+          node apps/web/scripts/seo-live.mjs http://127.0.0.1:3000 \
+            '--bo-qua=/cam-nang/*,/tu-vi-hom-nay/*,/hop-tuoi/business,/hop-tuoi/birth-child,/hop-tuoi/xong-dat' \
+            --chiu-loi=2
+          MA=$?
+          kill %1 2>/dev/null
+          # Mã 1 = vi phạm SEO THẬT        ⇒ CHẶN (đây là required check).
+          # Mã 3 = lỗi của chính PR này    ⇒ CHẶN (sitemap teo mất cả cụm, hoặc
+          #        danh sách bỏ qua ăn quá rộng). Để chung mã 2 thì hai ca đó
+          #        thành advisory và merge được — tức chốt canh tự vô hiệu.
+          # Mã 2 = hạ tầng (mạng chập, cổng bận…) ⇒ chỉ cảnh báo, vì đó không
+          #        phải lỗi của người mở PR. Nhưng KHÔNG im: ::warning:: nổi lên
+          #        tóm tắt của run.
+          if [ "$MA" = "2" ]; then
+            echo "::warning::seo-live thoát mã 2 (hạ tầng) — chưa kết luận được về SEO, xem log."
+            exit 0
+          fi
+          exit $MA

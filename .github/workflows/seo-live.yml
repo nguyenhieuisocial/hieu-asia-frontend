@@ -103,12 +103,15 @@ jobs:
           if [ -z "$TOKEN" ]; then echo "ADMIN_BOT_TOKEN thiếu — bỏ qua"; exit 0; fi
           case "$MA" in
             1) LY_DO='Meta SEO trên site thật đang SAI (tiêu đề/mô tả vượt ngưỡng, hoặc URL trong sitemap trả lỗi).' ;;
-            # ⚠️ KHÔNG được viết "đây không phải lỗi nội dung". `seo-live.mjs`
-            # trả 2 ngay khi CÓ lỗi hạ tầng, TRƯỚC khi xét vi phạm nội dung —
-            # nên một URL rớt mạng lẻ + 40 tiêu đề vượt ngưỡng thật vẫn ra mã 2.
-            # Câu chữ phủ định dứt khoát ở đó là nói sai. Dòng tóm tắt kèm theo
+            # ⚠️ KHÔNG được viết "đây không phải lỗi nội dung": khi ra mã 2 thì
+            # phần chưa đo được vẫn có thể chứa vi phạm. Dòng tóm tắt kèm theo
             # có số thật để tự phán đoán.
-            2) LY_DO='KHÔNG ĐO ĐƯỢC ĐẦY ĐỦ — site không phản hồi, sitemap teo dưới sàn, hoặc hàng loạt URL cùng một lỗi (đang bảo trì?). VẪN CÓ THỂ còn vi phạm nội dung — xem số ở dòng dưới.' ;;
+            # (Lượt chạy theo lịch KHÔNG truyền `--chiu-loi` nên mức chịu là 0:
+            # chỉ cần MỘT URL production không tải được là ra mã 2 và có báo.
+            # Cố ý — ở đây mã 2 bắn Telegram nên nó "loud"; còn ở `seo-guard.yml`
+            # mã 2 chỉ là cảnh báo câm nên bên đó mới cần nới lên 2%.)
+            2) LY_DO='KHÔNG ĐO ĐƯỢC ĐẦY ĐỦ — site không phản hồi, hoặc hàng loạt URL cùng một lỗi (đang bảo trì?). VẪN CÓ THỂ còn vi phạm nội dung — xem số ở dòng dưới.' ;;
+            3) LY_DO='SITEMAP ĐANG THIẾU TRANG (teo dưới sàn tổng hoặc sàn từng cụm). Đây là lỗi NỘI DUNG, không phải mạng — nhiều khả năng một cụm vừa biến mất khỏi sitemap.' ;;
             *) LY_DO='Job hỏng TRƯỚC khi đo (checkout/setup-node?). Chưa kết luận được gì về SEO.' ;;
           esac
           TEXT=$(printf '🔴 seo-live ĐỎ — %s\n%s\n%s\n%s' "$REPO" "$LY_DO" "${TOMTAT:-(không có dòng tổng kết)}" "$RUN_URL")
