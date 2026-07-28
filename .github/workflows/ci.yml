@@ -15,6 +15,11 @@
 #      from a skipped workflow as permanently "expected").
 #   2. `concurrency` cancels in-flight runs when a newer commit lands on
 #      the same ref, so rapid pushes don't queue redundant builds.
+# Và MỘT ngoại lệ đi ngược hai gate trên, cố ý đánh đổi quota lấy tính đúng:
+#   3. PR đụng `.github/**` thì BỎ bộ lọc "chỉ package bị ảnh hưởng" và chạy
+#      toàn bộ. Không có nó, PR sửa cấu hình CI qua cổng mà chạy 0 việc — đo
+#      được ở PR #969: 46 giây, `Tasks: 0 successful, 0 total`, check vẫn xanh.
+#      Chi tiết ở bước "Detect non-docs changes".
 name: ci
 
 on:
@@ -49,6 +54,19 @@ jobs:
         # Sets outputs.code=true when the change touches anything other than
         # docs (**/*.md, docs/**, LICENSE). Fail-safe: any uncertainty (no
         # usable base, missing commit) → code=true so real CI always runs.
+        #
+        # Also sets outputs.infra=true when the change touches `.github/**`.
+        # Lý do (đo được, không phải phòng xa): file trong `.github/` KHÔNG
+        # thuộc package nào, nên `--filter='[origin/main]'` ở bước turbo thấy
+        # 0 package bị ảnh hưởng ⇒ chạy 0 việc ⇒ check bắt buộc vẫn XANH.
+        # Bằng chứng, PR #969 (sửa đúng 1 file `.github/workflows/seo-guard.yml`):
+        # check "turbo lint + test + build" hết 46 giây và log ghi
+        # `Tasks: 0 successful, 0 total` — trong khi một lần chạy thật mất ~4 phút.
+        # Hậu quả: PR thu hẹp bộ lọc kích hoạt của seo-guard, hoặc sửa chính file
+        # này, đi qua cổng mà KHÔNG chạy một bài test canh nào. Cổng tự tháo được
+        # chính nó. ⇒ Đụng `.github/**` thì bỏ bộ lọc "chỉ package bị ảnh hưởng"
+        # và chạy TOÀN BỘ. Đắt hơn (~4 phút thay vì ~46 giây) nhưng `.github/`
+        # hiếm khi đổi, và một cổng không bao giờ chạy thì không phải là cổng.
         run: |
           set -uo pipefail
           if [ "${{ github.event_name }}" = "pull_request" ]; then
@@ -57,23 +75,30 @@ jobs:
             BASE="${{ github.event.before }}"
           fi
           CODE=true
+          INFRA=true
           if [ -n "$BASE" ] \
             && [ "$BASE" != "0000000000000000000000000000000000000000" ] \
             && git cat-file -e "$BASE" 2>/dev/null; then
             CODE=false
+            INFRA=false
             while IFS= read -r f; do
               [ -z "$f" ] && continue
               case "$f" in
                 *.md | docs/* | LICENSE) : ;;   # docs-only → ignore
+                .github/*) CODE=true; INFRA=true ;;
                 *) CODE=true ;;
               esac
             done < <(git diff --name-only "$BASE" HEAD)
           fi
           echo "code=$CODE" >> "$GITHUB_OUTPUT"
+          echo "infra=$INFRA" >> "$GITHUB_OUTPUT"
           if [ "$CODE" = "true" ]; then
             echo "Non-docs changes detected → running full CI."
           else
             echo "Docs-only change → skipping heavy steps, reporting check as passed."
+          fi
+          if [ "$INFRA" = "true" ]; then
+            echo "Đụng .github/** → bỏ bộ lọc affected, chạy TOÀN BỘ lint/test/build."
           fi
 
       - name: Setup pnpm
@@ -108,7 +133,10 @@ jobs:
         # build it manually after `zmp login`.
         run: |
           FILTER='--filter=!@hieu-asia/miniapp-zalo'
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          # PR thường: chỉ chạy package bị ảnh hưởng (tiết kiệm quota).
+          # PR đụng `.github/**`: bỏ lọc, chạy hết — xem lý do dài ở bước detect.
+          if [ "${{ github.event_name }}" = "pull_request" ] \
+            && [ "${{ steps.detect.outputs.infra }}" != "true" ]; then
             pnpm turbo lint test build "$FILTER" --filter='[origin/main]'
           else
             pnpm turbo lint test build "$FILTER"
