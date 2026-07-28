@@ -18,6 +18,7 @@ import {
   normalizeUrl,
   checkCanonicalGraph,
   checkOrphanPages,
+  checkSitemapReadable,
   checkNodeUrls,
   checkDuplicateMeta,
   checkDates,
@@ -542,6 +543,32 @@ describe('checkOrphanPages — trang Google không có đường nào tìm ra', 
 
   it('không đọc được sitemap thì BỎ luật, không đoán bừa', () => {
     // Thà bỏ một luật còn hơn báo 1.000 trang mồ côi giả vì thiếu dữ liệu.
+    // NHƯNG bỏ luật thì phải BÁO ĐỎ — xem `checkSitemapReadable` ngay dưới.
     expect(checkOrphanPages([T('/a')], new Set<string>(), null)).toEqual([]);
+  });
+});
+
+// Guard bỏ luật mà CI vẫn xanh là kiểu hỏng tệ nhất: nó trông y hệt "mọi thứ đều ổn".
+// Đã xảy ra thật (vault 172 §4c) — đọc nhầm `sitemap.xml` (là THƯ MỤC trong build)
+// nên 2 luật tắt âm thầm nhiều ngày trong khi guard vẫn in "không có vi phạm".
+describe('checkSitemapReadable — đọc hụt sitemap phải CHẶN, không nhắc suông', () => {
+  it('đọc được sitemap thì không phàn nàn gì', () => {
+    expect(checkSitemapReadable(new Set(['/a']))).toEqual([]);
+    expect(checkSitemapReadable(new Set<string>())).toEqual([]);
+  });
+
+  it('null thì sinh vi phạm chặn merge, không phải cảnh báo suông', () => {
+    const out = checkSitemapReadable(null);
+    expect(out).toHaveLength(1);
+    expect(out[0]?.rule).toBe('guard-sitemap-unreadable');
+  });
+
+  it('lời nhắn phải chỉ đúng 2 luật bị tắt + bẫy sitemap.xml là thư mục', () => {
+    // Người đọc log lúc CI đỏ cần biết NGAY mất luật gì và tìm ở đâu, đừng bắt họ
+    // đi đọc lại mã nguồn mới hiểu chuyện gì vừa xảy ra.
+    const out = checkSitemapReadable(null);
+    expect(out[0]?.detail).toContain('canonical-ceded-in-sitemap');
+    expect(out[0]?.detail).toContain('orphan-page');
+    expect(out[0]?.detail).toContain('sitemap.xml.body');
   });
 });
