@@ -1,8 +1,8 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "//": "globalDependencies: file workflow LÀ đầu vào của test. Không khai thì hash của `web#test` không chứa byte nào của .github/**, nên PR chỉ sửa workflow sẽ CACHE HIT và vitest KHÔNG chạy — trong khi có sẵn nhiều test đọc thẳng YAML để canh chính các cổng đó (seo-live.test.ts, seo-guard-trigger.guard.test.ts). Đo thật trước khi vá: web#test có 1037 input, 0 input thuộc .github. Hệ quả: ai gỡ một file khỏi bộ lọc kích hoạt, hoặc đổi mã thoát được tha, đều đi qua mà không test nào đỏ — log còn ghi 'cached' nên trông như đã chạy. PR #997 đã bỏ bộ lọc affected cho PR đụng .github/**, nhưng bỏ bộ lọc KHÔNG bằng chạy thật khi cache còn ấm.",
-  "globalDependencies": [".github/workflows/**"],
+  "//": "globalDependencies: file workflow LÀ đầu vào của test. Không khai thì hash của `web#test` không chứa byte nào của .github/**, nên PR chỉ sửa workflow sẽ CACHE HIT và vitest KHÔNG chạy — trong khi có sẵn nhiều test đọc thẳng YAML để canh chính các cổng đó (seo-live.test.ts, seo-guard-trigger.guard.test.ts). Đo thật trước khi vá: web#test có 1037 input, 0 input thuộc .github. Hệ quả: ai gỡ một file khỏi bộ lọc kích hoạt, hoặc đổi mã thoát được tha, đều đi qua mà không test nào đỏ — log còn ghi 'cached' nên trông như đã chạy. PR #997 đã bỏ bộ lọc affected cho PR đụng .github/**, nhưng bỏ bộ lọc KHÔNG bằng chạy thật khi cache còn ấm. — `scripts/**` vào đây vì CÙNG LÝ DO qua đường khác: `scripts/audit-guard.mjs` là chốt bảo mật có test trong apps/web nhưng nằm NGOÀI mọi package, nên `--filter='[origin/main]'` không chọn package nào ⇒ PR chỉ sửa nó chạy 0 test; ai xoá sạch DA_XET hay làm bocAdvisory trả [] đều đi qua với CI xanh. — LƯU Ý CÚ PHÁP: turbo chỉ nhận ĐÚNG MỘT khoá chú thích tên `//`; thêm khoá kiểu `//scripts` làm turbo.json KHÔNG PARSE ĐƯỢC và mọi lệnh turbo chết.",
+  "globalDependencies": [".github/workflows/**", "scripts/**"],
   "globalEnv": [
     "NEXT_PUBLIC_API_URL",
     "NEXT_PUBLIC_SUPABASE_URL",
