@@ -62,21 +62,44 @@ function mauTrongWorkflow(): string[] {
   return mau;
 }
 
-/** Mọi file .ts/.tsx trong apps/web/src, trả về đường dẫn tính từ gốc repo. */
+/**
+ * Mọi file .ts/.tsx trong `apps/web/src` VÀ trong `packages/<gói>/src`,
+ * trả về đường dẫn tính từ gốc repo.
+ *
+ * Vì sao quét cả `packages/`: 247 file trong web import `@hieu-asia/ui`, nên
+ * một component DÙNG CHUNG dựng `<h1>` sẽ đổi đúng thứ guard đo — y hệt ca
+ * `ToolPageShell` trong khối chú thích đầu file, chỉ nằm xa hơn một tầng.
+ *
+ * Đo 2026-07-29: hiện **0 file** trong `packages/` mang dấu hiệu nào bên dưới
+ * (`Logo.tsx` chỉ có `<title>` của SVG, không phải thẻ trang) ⇒ **cố ý KHÔNG**
+ * thêm `packages/*` vào bộ lọc kích hoạt: làm vậy là bắt job 10 phút chạy thêm
+ * cho lợi ích đang bằng 0. Thay vào đó mở rộng phạm vi bài test này — ngày ai
+ * đó thêm `<h1>` / JSON-LD / metadata vào một gói dùng chung thì test đỏ ngay
+ * và bắt họ khai đường dẫn, thay vì lọt im lặng. Rẻ bây giờ, bắt được về sau.
+ */
 function fileNguon(): string[] {
-  const goc = join(WEB, 'src');
   const out: string[] = [];
   const di = (d: string) => {
     for (const e of readdirSync(d, { withFileTypes: true })) {
       const p = join(d, e.name);
       if (e.isDirectory()) {
-        if (!/node_modules|\.next/.test(e.name)) di(p);
+        if (!/node_modules|\.next|dist/.test(e.name)) di(p);
       } else if (/\.tsx?$/.test(e.name)) {
         out.push(relative(REPO, p).split(sep).join('/'));
       }
     }
   };
-  di(goc);
+  di(join(WEB, 'src'));
+  const gocGoi = join(REPO, 'packages');
+  for (const e of readdirSync(gocGoi, { withFileTypes: true })) {
+    if (!e.isDirectory()) continue;
+    const src = join(gocGoi, e.name, 'src');
+    try {
+      di(src);
+    } catch {
+      // gói không có thư mục `src` — bỏ qua, không phải lỗi
+    }
+  }
   return out;
 }
 

@@ -105,7 +105,18 @@ jobs:
                 # chú thích phía trên tự hào đã bịt, mà chính nó lại sập vào.
                 apps/web/scripts/seo-guard.mjs | apps/web/scripts/seo-live.mjs | .github/workflows/seo-guard.yml) RELEVANT=true ;;
                 # Nâng Next có thể đổi hình dạng HTML → chết regex đọc thẻ.
-                apps/web/package.json | pnpm-lock.yaml) RELEVANT=true ;;
+                # `next.config.ts` cùng loại: đổi cấu hình render/output là đổi
+                # hình dạng HTML mà guard đọc bằng regex. Hiếm khi sửa nên gần
+                # như không tốn thêm quota.
+                apps/web/package.json | pnpm-lock.yaml | apps/web/next.config.ts) RELEVANT=true ;;
+                # ⚠️ CỐ Ý KHÔNG có `packages/*` — đọc trước khi thêm vào.
+                # Đo 2026-07-29: 0 file trong `packages/*/src` dựng <h1> /
+                # JSON-LD / metadata (Logo.tsx chỉ có <title> của SVG). Thêm vào
+                # là bắt job ~10 phút chạy cho mọi PR đụng packages, đổi lấy lợi
+                # ích đang bằng 0. Chốt chặn cho ngày đó khác: bài
+                # `seo-guard-trigger.guard.test.ts` NAY QUÉT CẢ `packages/*/src`
+                # → ai thêm <h1> vào gói dùng chung là test đỏ và bắt khai
+                # đường dẫn ở đây. Đỏ rồi mới thêm, đừng thêm phòng xa.
                 *) : ;;
               esac
             done < <(git diff --name-only "$BASE" HEAD)
