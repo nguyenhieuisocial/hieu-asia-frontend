@@ -284,6 +284,19 @@ describe('kiemThamSo — lỗi gõ phải nói ra, không được chẩn đoán
   it('tham số hợp lệ thì không kêu', () => {
     expect(kiemThamSo('https://hieu.asia', ['--bo-qua=/x', '--chiu-loi=2'])).toBeNull();
     expect(kiemThamSo('http://127.0.0.1:3000', [])).toBeNull();
+    expect(kiemThamSo('https://hieu.asia', ['--chiu-loi=2.5'])).toBeNull();
+  });
+
+  it('giá trị --chiu-loi sai định dạng phải BÁO, không âm thầm về 0', () => {
+    // `--chiu-loi=2%` khớp tiền tố nên bản trước cho qua rồi `docChiuLoi` trả 0.
+    // Mức chịu 0 ở seo-guard.yml nghĩa là MỘT URL rớt lẻ cũng ra mã 2 ⇒ cảnh
+    // báo ⇒ toàn bộ phép đo live thành advisory. Một dấu `%` thừa tháo cả cổng.
+    for (const xau of ['--chiu-loi=2%', '--chiu-loi=abc', '--chiu-loi=', '--chiu-loi=-1'])
+      expect(kiemThamSo('https://hieu.asia', [xau]), xau).toContain('sai định dạng');
+  });
+
+  it('--bo-qua= rỗng phải báo thay vì lặng lẽ không bỏ qua gì', () => {
+    expect(kiemThamSo('https://hieu.asia', ['--bo-qua='])).toContain('rỗng');
   });
 
   it('mẫu bỏ qua không khớp URL nào phải bị nêu tên', () => {

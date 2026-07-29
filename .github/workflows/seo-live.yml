@@ -79,13 +79,21 @@ jobs:
           GOC: ${{ inputs.goc || 'https://hieu.asia' }}
         run: |
           set +e
-          node apps/web/scripts/seo-live.mjs "$GOC" | tee /tmp/seo-live.log
+          # `2>&1` BẮT BUỘC: mọi đường ra mã 3 (sitemap teo, danh sách bỏ qua
+          # sai) chỉ in ra stderr và `return` TRƯỚC dòng tổng kết ở stdout. Thiếu
+          # nó thì tin nhắn Telegram cho mã 3 luôn là "(không có dòng tổng kết)"
+          # — người trực nhận đúng một câu chung, không tên cụm, không con số,
+          # trong khi log đã có sẵn "⚠ cụm /learn chỉ còn 40 URL, dưới sàn 46".
+          node apps/web/scripts/seo-live.mjs "$GOC" 2>&1 | tee /tmp/seo-live.log
           MA=${PIPESTATUS[0]}
           set -e
           echo "ma=$MA" >> "$GITHUB_OUTPUT"
           # Dòng tổng kết có đủ "đạt X · Y trang sai · lỗi hạ tầng Z" — gửi kèm
           # để người trực thấy SỐ THẬT thay vì phải đoán từ một câu chữ.
-          echo "tomtat=$(grep -m1 '^seo-live:' /tmp/seo-live.log | tail -c 300)" >> "$GITHUB_OUTPUT"
+          # Ưu tiên dòng tổng kết; nếu không có (mã 3 thoát sớm) thì lấy dòng
+          # ⚠ đầu tiên — đó mới là chỗ ghi cụm nào thiếu bao nhiêu URL.
+          TT=$(grep -m1 '^seo-live: http' /tmp/seo-live.log || grep -m1 '⚠' /tmp/seo-live.log || true)
+          echo "tomtat=$(printf '%s' "$TT" | tail -c 300)" >> "$GITHUB_OUTPUT"
           exit $MA
 
       - name: Báo Telegram khi đỏ

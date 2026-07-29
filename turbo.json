@@ -1,6 +1,8 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "//": "globalDependencies: file workflow LÀ đầu vào của test. Không khai thì hash của `web#test` không chứa byte nào của .github/**, nên PR chỉ sửa workflow sẽ CACHE HIT và vitest KHÔNG chạy — trong khi có sẵn nhiều test đọc thẳng YAML để canh chính các cổng đó (seo-live.test.ts, seo-guard-trigger.guard.test.ts). Đo thật trước khi vá: web#test có 1037 input, 0 input thuộc .github. Hệ quả: ai gỡ một file khỏi bộ lọc kích hoạt, hoặc đổi mã thoát được tha, đều đi qua mà không test nào đỏ — log còn ghi 'cached' nên trông như đã chạy. PR #997 đã bỏ bộ lọc affected cho PR đụng .github/**, nhưng bỏ bộ lọc KHÔNG bằng chạy thật khi cache còn ấm.",
+  "globalDependencies": [".github/workflows/**"],
   "globalEnv": [
     "NEXT_PUBLIC_API_URL",
     "NEXT_PUBLIC_SUPABASE_URL",

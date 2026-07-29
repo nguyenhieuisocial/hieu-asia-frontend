@@ -163,6 +163,15 @@ jobs:
           if ! grep -q 'Ready in' /tmp/next-ci.log; then
             echo "::warning::Không dựng nổi server để đo trang động — bỏ qua bước này."
             tail -20 /tmp/next-ci.log
+            # Ghi cả vào job summary: `::warning::` trên một check XANH rất dễ
+            # chìm. Nếu bước này hỏng liên tục thì suốt thời gian đó KHÔNG có
+            # URL động nào được đo mà mọi check vẫn xanh — đúng loại "chốt canh
+            # thôi kiểm trong im lặng" mà cả PR này sinh ra để chống.
+            {
+              echo "### ⚠️ seo-live KHÔNG chạy được"
+              echo "Không dựng nổi \`next start\` trong 60s ⇒ **49 URL render động không được đo lượt này**."
+              echo "Chốt bù duy nhất là workflow \`seo-live\` chạy theo lịch hằng ngày."
+            } >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           # ⚠️ BỎ QUA 3 cụm gọi mạng RA NGOÀI lúc render (`/cam-nang` gọi API

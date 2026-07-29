@@ -484,9 +484,17 @@ export function kiemThamSo(goc, co) {
   } catch {
     return `gốc "${goc}" không phải URL hợp lệ — nhớ truyền URL TRƯỚC các cờ`;
   }
-  for (const c of co)
+  for (const c of co) {
     if (!/^--(bo-qua|chiu-loi)=/.test(c))
       return `tham số "${c}" không nhận ra (chỉ có --bo-qua= và --chiu-loi=, phải dùng dấu =)`;
+    // ⚠️ PHẢI SOI CẢ GIÁ TRỊ, không chỉ tiền tố. `--chiu-loi=2%` khớp tiền tố
+    // nên lọt, rồi `docChiuLoi` âm thầm trả 0 — mà ở `seo-guard.yml` mức chịu 0
+    // nghĩa là MỘT URL rớt lẻ cũng ra mã 2 ⇒ map thành cảnh báo ⇒ toàn bộ phép
+    // đo live thành advisory, check xanh. Một dấu `%` thừa là đủ tháo cổng.
+    if (c.startsWith('--chiu-loi=') && !/^--chiu-loi=\d+(\.\d+)?$/.test(c))
+      return `"${c}" sai định dạng — chỉ nhận số phần trăm, ví dụ --chiu-loi=2 (KHÔNG có dấu %)`;
+    if (c === '--bo-qua=') return '--bo-qua= rỗng — bỏ hẳn cờ nếu không muốn bỏ qua gì';
+  }
   return null;
 }
 
