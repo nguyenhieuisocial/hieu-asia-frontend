@@ -594,15 +594,34 @@ export function parseJsonLd(html) {
 
 /**
  * Kiểm dữ liệu có cấu trúc của một trang.
+ *
+ * `noindex` ⇒ BỎ luật `jsonld-missing`. Dữ liệu có cấu trúc chỉ có tác dụng khi
+ * Google lập chỉ mục trang; trang đã `noindex` thì nó không đọc tới, nên bắt
+ * trang đó phải có JSON-LD là **luật vô nghĩa**. Cùng lối nghĩ với luật `h1`
+ * (chỉ soi trang cho-index) — nay áp nhất quán cho cả JSON-LD.
+ *
+ * Đây là **sửa tận gốc cho 5 mục miễn trừ `owner: 'n/a'`** (nợ ⑥ ở 172 §15).
+ * Đo 2026-07-29 trên trang thật: `/affiliate/leaderboard`, `/affiliate/network`,
+ * `/checkout/premium`, `/reading/new`, `/settings` — **cả 5 đã `noindex`, KHÔNG
+ * nằm trong sitemap, VÀ bị chặn ở robots.txt**, tức đã xử lý đúng từ lâu. Chúng
+ * phải nằm trong ALLOWLIST chỉ vì luật này không biết phân biệt. Sửa luật thì 5
+ * mục đó tự biến mất — không cần đi gán chủ cho những dòng lẽ ra không tồn tại.
+ *
+ * `jsonld-invalid` thì VẪN kiểm cả trang noindex, cố ý: JSON-LD hỏng cú pháp là
+ * lỗi code, và trang noindex hôm nay có thể thành cho-index ngày mai.
+ *
  * @param {{nodes: any[], invalid: number, blockCount: number}} ld
+ * @param {boolean} noindex trang có thẻ robots `noindex` hay không
  */
-export function checkJsonLd(ld) {
+export function checkJsonLd(ld, noindex = false) {
   const out = [];
   if (ld.invalid > 0) {
     out.push({ rule: 'jsonld-invalid', detail: `${ld.invalid} khối JSON-LD không parse được` });
   }
   if (ld.blockCount === 0) {
-    out.push({ rule: 'jsonld-missing', detail: 'trang không có khối JSON-LD nào' });
+    if (!noindex) {
+      out.push({ rule: 'jsonld-missing', detail: 'trang không có khối JSON-LD nào' });
+    }
     return out;
   }
 
@@ -688,14 +707,22 @@ export const ALLOWLIST = {
   // rút xuống 60 là hết cả 5 trang cùng lúc. Các mục còn giữ ở đây chỉ vì lý do
   // KHÁC (thiếu JSON-LD ở luồng riêng tư), không phải vì tiêu đề.
   //
-  // ⚠️ Câu hỏi CHƯA ai trả lời, để nguyên đây cho lần sau: /auth/callback,
-  // /connect-telegram, /dashboard là luồng riêng tư — có nên cho Google lập chỉ
-  // mục không? Nếu KHÔNG thì đặt noindex, và mấy mục dưới đây biến mất luôn.
-  '/onboarding-wizard': {
-    rules: ['jsonld-missing'],
-    owner: 'agent SEO sweep (app/layout.tsx)',
-    note: 'luồng riêng tư nên không cần JSON-LD',
-  },
+  // ✅ CÂU HỎI TRÊN ĐÃ CÓ TRẢ LỜI (2026-07-29) — 6 mục đã BIẾN MẤT khỏi đây.
+  // Câu hỏi cũ: "/auth/callback, /connect-telegram, /dashboard là luồng riêng
+  // tư — có nên cho Google lập chỉ mục không? Nếu KHÔNG thì đặt noindex, và mấy
+  // mục dưới đây biến mất luôn."
+  // Đo trên trang thật: `/onboarding-wizard`, `/affiliate/leaderboard`,
+  // `/affiliate/network`, `/checkout/premium`, `/reading/new`, `/settings` —
+  // **đều đã `noindex`, không nằm trong sitemap, và bị chặn ở robots.txt** từ
+  // lâu rồi. Chúng phải nằm đây chỉ vì luật `jsonld-missing` không phân biệt
+  // trang cho-index với trang noindex. Sửa luật (xem `checkJsonLd`) ⇒ cả 6 mục
+  // tự hết tác dụng ⇒ xoá. **Không còn mục nào ghi `owner: 'n/a'`.**
+  //
+  // ⚠️ `/dashboard` thì KHÔNG xoá — và đây là chỗ suýt sai: trên trang thật nó
+  // cũng `noindex, nofollow`, nhìn qua tưởng cùng nhóm. Nhưng guard đọc BẢN DỰNG
+  // TĨNH chứ không đọc trang thật, và ở đó luật vẫn bắt được nó. Tôi để CI chỉ
+  // đích danh 6 mục rồi mới xoá, thay vì suy từ trang thật — suy thì đã xoá nhầm
+  // `/dashboard` và âm thầm tắt luật cho nó.
 
   // ── Không có JSON-LD, và ĐÚNG là không cần ────────────────────────
   // Đo 2026-07-25: 85 trang không có JSON-LD, và 0 trong số đó là trang công
@@ -706,16 +733,11 @@ export const ALLOWLIST = {
     owner: 'Agent-1 (đúng thiết kế, không phải lỗi)',
     note: 'Các tháng ĐÃ HẾT chỉ được dựng để 308 về evergreen, không render nội dung nên không có JSON-LD. Danh sách này đổi theo từng tháng nên dùng tiền tố thay vì liệt kê tay. Tháng đang mở VẪN có đủ JSON-LD nên luật vẫn canh được chúng. `orphan-page`: chặng 308 thì đương nhiên không có link nội bộ và không nằm trong sitemap — đúng thiết kế. `max: 78` giữ nguyên vai trò chốt chặn: thêm tháng nào vượt số đó là có trang thật bị lọt vào đây.',
   },
-  '/affiliate/leaderboard': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư, không nằm trong sitemap' },
-  '/affiliate/network': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư, không nằm trong sitemap' },
-  '/checkout/premium': { rules: ['jsonld-missing'], owner: 'n/a', note: 'luồng thanh toán, không index' },
   '/dashboard': {
     rules: ['jsonld-missing', 'h1-missing', 'orphan-page'],
     owner: 'agent SEO sweep (app/layout.tsx)',
     note: 'dùng tiêu đề mặc định; đã chặn ở robots.txt. `orphan-page`: đây là chặng 308 CỐ Ý giữ cho bookmark/link cũ (xem chú thích trong app/dashboard/page.tsx) — mọi nơi trong site đã trỏ thẳng /account, nên KHÔNG có link nội bộ là đúng thiết kế, không phải thiếu sót.',
   },
-  '/reading/new': { rules: ['jsonld-missing'], owner: 'n/a', note: 'luồng nhập liệu riêng tư' },
-  '/settings': { rules: ['jsonld-missing'], owner: 'n/a', note: 'trang riêng tư' },
 };
 
 // ── CLI ─────────────────────────────────────────────────────────────
@@ -793,7 +815,7 @@ function main() {
       violations.push({ url, ...v });
     }
     const jsonld = parseJsonLd(html);
-    for (const v of checkJsonLd(jsonld)) violations.push({ url, ...v });
+    for (const v of checkJsonLd(jsonld, noindex)) violations.push({ url, ...v });
     for (const v of checkNodeUrls(url, jsonld.nodes, noindex)) violations.push({ url, ...v });
     for (const v of checkDates(url, jsonld.nodes)) violations.push(v);
     canonPages.push({ url, canonical, noindex });

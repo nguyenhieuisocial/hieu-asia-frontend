@@ -456,10 +456,24 @@ describe('extractMeta', () => {
 
 describe('ALLOWLIST', () => {
   it('mọi mục đều phải ghi CHỦ và LÝ DO — nếu không thì nó là chỗ giấu lỗi', () => {
+    // Trước đây chỉ kiểm "khác rỗng", nên `owner: 'n/a'` vẫn qua — mà 'n/a' thì
+    // đúng bằng không ghi gì: lỗi hỏng sau này không ai thấy tên mình mà quay
+    // lại sửa. Siết được lúc này vì 5 mục 'n/a' cũ đã BIẾN MẤT (luật
+    // `jsonld-missing` nay bỏ qua trang noindex nên chúng hết lý do tồn tại),
+    // nên siết không làm đỏ việc của ai — chỉ chặn nợ MỚI lẻn vào.
+    const RONG = ['n/a', 'na', 'tbd', 'none', 'không', '-', '?'];
     for (const [url, entry] of Object.entries(ALLOWLIST)) {
       expect(entry.rules.length, `${url} thiếu rules`).toBeGreaterThan(0);
       expect(entry.owner, `${url} thiếu owner`).toBeTruthy();
       expect(entry.note, `${url} thiếu note`).toBeTruthy();
+      expect(
+        RONG.includes(String(entry.owner).trim().toLowerCase()),
+        `${url}: owner "${entry.owner}" là chỗ trống trá hình — ghi TÊN agent/người lo, hoặc lý do cụ thể vì sao không ai cần lo`,
+      ).toBe(false);
+      expect(
+        String(entry.note).trim().length,
+        `${url}: note quá ngắn, phải nói được VÌ SAO miễn trừ`,
+      ).toBeGreaterThan(15);
     }
   });
 
@@ -475,7 +489,21 @@ describe('ALLOWLIST', () => {
     const keys = [...body.matchAll(/^\s{2}'([^']+)':/gm)].map((m) => m[1]);
     const dupes = keys.filter((k, i) => keys.indexOf(k) !== i);
     expect(dupes, `key khai trùng: ${dupes.join(', ')}`).toEqual([]);
-    expect(keys.length).toBeGreaterThan(5); // chốt: regex phải thật sự bắt được key
+
+    // Chốt: regex phải THẬT SỰ bắt được key, kẻo đổi cách viết là nó trả mảng
+    // rỗng và bài này xanh suông.
+    //
+    // ⚠️ Chốt theo Ý NGHĨA, KHÔNG theo SỐ LƯỢNG. Bản trước đặt `> 5` theo danh
+    // sách lúc đó có 8 mục; #1001 xoá 6 mục hết tác dụng còn 2, thế là bài này
+    // ĐỎ VÌ SAI LÝ DO — không phải có key trùng, mà chỉ vì danh sách ngắn đi
+    // đúng như mong muốn. `seo-guard-trigger.guard.test.ts` đã dính y hệt và
+    // rút ra đúng bài học này; giờ áp cả ở đây.
+    expect(keys, 'regex không bắt được key nào — cách viết ALLOWLIST đã đổi?').not.toEqual([]);
+    expect(
+      keys.every((k) => k.startsWith('/')),
+      `key không phải đường dẫn: ${keys.filter((k) => !k.startsWith('/')).join(', ')}`,
+    ).toBe(true);
+    expect(keys, 'đọc hụt key có thật').toContain('/dashboard');
   });
 });
 
@@ -501,6 +529,36 @@ describe('JSON-LD — dữ liệu có cấu trúc', () => {
   it('bắt khối JSON hỏng cú pháp', () => {
     const html = '<script type="application/ld+json">{ hỏng }</script>';
     expect(checkJsonLd(parseJsonLd(html)).map((v: { rule: string }) => v.rule)).toContain(
+      'jsonld-invalid',
+    );
+  });
+
+  // Dữ liệu có cấu trúc chỉ có tác dụng khi Google lập chỉ mục trang. Trang đã
+  // `noindex` thì nó không đọc tới ⇒ bắt trang đó phải có JSON-LD là luật vô
+  // nghĩa, và 5 mục `ALLOWLIST` tồn tại CHỈ để im cái luật vô nghĩa đó.
+  it('trang cho-index thiếu JSON-LD thì vẫn bắt', () => {
+    expect(checkJsonLd(parseJsonLd('<html></html>'), false).map((v: { rule: string }) => v.rule)).toContain(
+      'jsonld-missing',
+    );
+  });
+
+  it('trang noindex thiếu JSON-LD thì BỎ QUA, không bắt', () => {
+    expect(checkJsonLd(parseJsonLd('<html></html>'), true)).toEqual([]);
+  });
+
+  it('mặc định (không truyền) vẫn coi là trang cho-index — không nới lỏng ngầm', () => {
+    // Nếu mặc định thành `true` thì mọi lời gọi cũ hoá ra tắt luật mà không ai
+    // biết. Chốt lại để một lần đổi mặc định là test đỏ.
+    expect(checkJsonLd(parseJsonLd('<html></html>')).map((v: { rule: string }) => v.rule)).toContain(
+      'jsonld-missing',
+    );
+  });
+
+  it('JSON-LD HỎNG CÚ PHÁP thì vẫn bắt kể cả trang noindex', () => {
+    // Cố ý khác `jsonld-missing`: cú pháp hỏng là lỗi code, và trang noindex
+    // hôm nay có thể thành cho-index ngày mai.
+    const html = '<script type="application/ld+json">{ hỏng }</script>';
+    expect(checkJsonLd(parseJsonLd(html), true).map((v: { rule: string }) => v.rule)).toContain(
       'jsonld-invalid',
     );
   });
