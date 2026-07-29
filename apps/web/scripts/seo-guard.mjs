@@ -511,12 +511,36 @@ export function applyAllowlist(violations, allowlist) {
     }
   }
 
-  // Mục miễn trừ nào không còn vi phạm nữa = đã có người sửa → nên xoá, kẻo nó
-  // âm thầm tắt kiểm tra cho trang đó và lần hỏng sau không ai bắt được.
+  // Mục miễn trừ nào không còn vi phạm nữa = đã có người sửa → phải xoá, kẻo nó
+  // âm thầm tắt kiểm tra cho trang đó và lần hỏng sau không ai bắt được. Cùng
+  // đúng một họ với `guard-sitemap-unreadable`: luật tắt mà CI vẫn xanh.
+  //
+  // Trước đây chỉ IN RA nhắc, không chặn — mà nhắc suông thì không ai xoá.
+  //
+  // ⚠️ CHỈ CHẶN mục khoá ĐÚNG MỘT URL. Mục theo cụm (`/*`, hoặc có `max`) giữ
+  // nguyên mức nhắc, CÓ CHỦ Ý: tập trang chúng che THAY ĐỔI THEO THỜI GIAN —
+  // `/tu-vi-thang/*` tự ghi trong `note` là "danh sách này đổi theo từng tháng".
+  // Chặn cứng loại đó = tự cài bom hẹn giờ, sang tháng CI đỏ cho người không
+  // liên quan, đúng loại lỗi repo này đã dính (mục 4o + 4q note 172). Chúng đã
+  // có `max` làm chốt riêng, đó mới là cơ chế đúng cho mẫu theo cụm.
+  //
+  // Mục khoá một URL thì ngược lại: chỉ hết vi phạm khi CÓ NGƯỜI sửa/xoá trang
+  // đó — tức luôn có người đang làm, và việc dọn là xoá đúng một dòng.
   const stale = [];
   for (const [pattern, entry] of Object.entries(allowlist)) {
+    const theoCum = pattern.endsWith('/*') || typeof entry.max === 'number';
     for (const rule of entry.rules) {
-      if (!count.has(`${pattern}::${rule}`)) stale.push({ url: pattern, rule });
+      if (count.has(`${pattern}::${rule}`)) continue;
+      stale.push({ url: pattern, rule, theoCum });
+      if (theoCum) continue;
+      blocking.push({
+        url: pattern,
+        rule: 'allowlist-stale',
+        detail:
+          `mục miễn trừ này KHÔNG còn che vi phạm nào cho luật "${rule}" — trang đã được sửa. ` +
+          `Để lại thì nó âm thầm tắt luật đó cho trang này, lần hỏng sau không ai bắt được. ` +
+          `Cách sửa: xoá luật "${rule}" khỏi mục "${pattern}" trong ALLOWLIST (chủ: ${entry.owner})`,
+      });
     }
   }
   return { blocking, allowed, stale };
@@ -815,11 +839,17 @@ function main() {
   );
   console.log(`  vi phạm mới: ${blocking.length} · miễn trừ (có chủ): ${allowed.length}`);
 
-  if (stale.length) {
+  // Mục khoá MỘT URL đã hết vi phạm giờ nằm trong `blocking` (luật
+  // `allowlist-stale`) nên được in ở phần vi phạm bên dưới — không in lại ở đây
+  // kẻo tưởng có hai chuyện khác nhau. Chỗ này chỉ còn nhắc mục THEO CỤM, loại
+  // cố ý không chặn vì tập trang chúng che đổi theo thời gian.
+  const staleTheoCum = stale.filter((s) => s.theoCum);
+  if (staleTheoCum.length) {
     console.log('');
-    console.log(`⚠️  ${stale.length} mục miễn trừ ĐÃ HẾT vi phạm — xoá khỏi ALLOWLIST:`);
-    for (const s of stale) console.log(`     ${s.url}  [${s.rule}]`);
-    console.log('     (để lại thì trang đó không còn được kiểm, lần hỏng sau không ai bắt)');
+    console.log(`⚠️  ${staleTheoCum.length} mục miễn trừ THEO CỤM đã hết vi phạm — nên xoá khỏi ALLOWLIST:`);
+    for (const s of staleTheoCum) console.log(`     ${s.url}  [${s.rule}]`);
+    console.log('     (chỉ nhắc, KHÔNG chặn: tập trang mẫu này che đổi theo thời gian —');
+    console.log('      chặn cứng sẽ thành bom hẹn giờ. Chốt chặn của chúng là `max`.)');
   }
 
   if (!blocking.length) {
