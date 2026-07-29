@@ -505,6 +505,36 @@ describe('JSON-LD — dữ liệu có cấu trúc', () => {
     );
   });
 
+  // Dữ liệu có cấu trúc chỉ có tác dụng khi Google lập chỉ mục trang. Trang đã
+  // `noindex` thì nó không đọc tới ⇒ bắt trang đó phải có JSON-LD là luật vô
+  // nghĩa, và 5 mục `ALLOWLIST` tồn tại CHỈ để im cái luật vô nghĩa đó.
+  it('trang cho-index thiếu JSON-LD thì vẫn bắt', () => {
+    expect(checkJsonLd(parseJsonLd('<html></html>'), false).map((v: { rule: string }) => v.rule)).toContain(
+      'jsonld-missing',
+    );
+  });
+
+  it('trang noindex thiếu JSON-LD thì BỎ QUA, không bắt', () => {
+    expect(checkJsonLd(parseJsonLd('<html></html>'), true)).toEqual([]);
+  });
+
+  it('mặc định (không truyền) vẫn coi là trang cho-index — không nới lỏng ngầm', () => {
+    // Nếu mặc định thành `true` thì mọi lời gọi cũ hoá ra tắt luật mà không ai
+    // biết. Chốt lại để một lần đổi mặc định là test đỏ.
+    expect(checkJsonLd(parseJsonLd('<html></html>')).map((v: { rule: string }) => v.rule)).toContain(
+      'jsonld-missing',
+    );
+  });
+
+  it('JSON-LD HỎNG CÚ PHÁP thì vẫn bắt kể cả trang noindex', () => {
+    // Cố ý khác `jsonld-missing`: cú pháp hỏng là lỗi code, và trang noindex
+    // hôm nay có thể thành cho-index ngày mai.
+    const html = '<script type="application/ld+json">{ hỏng }</script>';
+    expect(checkJsonLd(parseJsonLd(html), true).map((v: { rule: string }) => v.rule)).toContain(
+      'jsonld-invalid',
+    );
+  });
+
   it('bắt khai TRÙNG loại — đúng lỗi #936 phải sửa ở trang chủ', () => {
     const v = checkJsonLd(parseJsonLd(ld(crumb) + ld(crumb)));
     expect(v.map((x: { rule: string }) => x.rule)).toContain('jsonld-duplicate-type');

@@ -594,15 +594,34 @@ export function parseJsonLd(html) {
 
 /**
  * Kiểm dữ liệu có cấu trúc của một trang.
+ *
+ * `noindex` ⇒ BỎ luật `jsonld-missing`. Dữ liệu có cấu trúc chỉ có tác dụng khi
+ * Google lập chỉ mục trang; trang đã `noindex` thì nó không đọc tới, nên bắt
+ * trang đó phải có JSON-LD là **luật vô nghĩa**. Cùng lối nghĩ với luật `h1`
+ * (chỉ soi trang cho-index) — nay áp nhất quán cho cả JSON-LD.
+ *
+ * Đây là **sửa tận gốc cho 5 mục miễn trừ `owner: 'n/a'`** (nợ ⑥ ở 172 §15).
+ * Đo 2026-07-29 trên trang thật: `/affiliate/leaderboard`, `/affiliate/network`,
+ * `/checkout/premium`, `/reading/new`, `/settings` — **cả 5 đã `noindex`, KHÔNG
+ * nằm trong sitemap, VÀ bị chặn ở robots.txt**, tức đã xử lý đúng từ lâu. Chúng
+ * phải nằm trong ALLOWLIST chỉ vì luật này không biết phân biệt. Sửa luật thì 5
+ * mục đó tự biến mất — không cần đi gán chủ cho những dòng lẽ ra không tồn tại.
+ *
+ * `jsonld-invalid` thì VẪN kiểm cả trang noindex, cố ý: JSON-LD hỏng cú pháp là
+ * lỗi code, và trang noindex hôm nay có thể thành cho-index ngày mai.
+ *
  * @param {{nodes: any[], invalid: number, blockCount: number}} ld
+ * @param {boolean} noindex trang có thẻ robots `noindex` hay không
  */
-export function checkJsonLd(ld) {
+export function checkJsonLd(ld, noindex = false) {
   const out = [];
   if (ld.invalid > 0) {
     out.push({ rule: 'jsonld-invalid', detail: `${ld.invalid} khối JSON-LD không parse được` });
   }
   if (ld.blockCount === 0) {
-    out.push({ rule: 'jsonld-missing', detail: 'trang không có khối JSON-LD nào' });
+    if (!noindex) {
+      out.push({ rule: 'jsonld-missing', detail: 'trang không có khối JSON-LD nào' });
+    }
     return out;
   }
 
@@ -793,7 +812,7 @@ function main() {
       violations.push({ url, ...v });
     }
     const jsonld = parseJsonLd(html);
-    for (const v of checkJsonLd(jsonld)) violations.push({ url, ...v });
+    for (const v of checkJsonLd(jsonld, noindex)) violations.push({ url, ...v });
     for (const v of checkNodeUrls(url, jsonld.nodes, noindex)) violations.push({ url, ...v });
     for (const v of checkDates(url, jsonld.nodes)) violations.push(v);
     canonPages.push({ url, canonical, noindex });
