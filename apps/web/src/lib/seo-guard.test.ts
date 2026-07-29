@@ -367,13 +367,45 @@ describe('applyAllowlist', () => {
       [{ url: '/cum/abc', rule: 'description-clamped', detail: '' }],
       list,
     );
-    expect(blocking).toHaveLength(0);
+    // Bỏ `allowlist-stale` ra: ca này không dùng tới `/owned` nên mục đó hoá
+    // thừa, chuyện đó có bộ test riêng ngay dưới. Ở đây chỉ hỏi một điều —
+    // mẫu `/*` có miễn đúng vi phạm của trang trong cụm không.
+    expect(blocking.filter((v) => v.rule !== 'allowlist-stale')).toHaveLength(0);
   });
 
   it('báo mục miễn trừ đã hết vi phạm để còn xoá đi', () => {
     // Nếu không báo, mục thừa sẽ âm thầm tắt kiểm tra cho trang đó mãi mãi.
     const { stale } = applyAllowlist([], list);
     expect(stale).toHaveLength(2);
+  });
+
+  // Nhắc suông thì không ai xoá. Mục miễn trừ hết tác dụng mà nằm lại = luật bị
+  // tắt cho trang đó, y hệt họ lỗi `guard-sitemap-unreadable`: CI vẫn xanh.
+  it('mục khoá MỘT URL đã hết vi phạm thì CHẶN, không chỉ nhắc', () => {
+    const { blocking } = applyAllowlist([], list);
+    const v = blocking.filter((x) => x.rule === 'allowlist-stale');
+    expect(v).toHaveLength(1);
+    expect(v[0]?.url).toBe('/owned');
+    // Người gặp CI đỏ phải biết NGAY xoá cái gì và hỏi ai.
+    expect(v[0]?.detail).toContain('title-too-long');
+    expect(v[0]?.detail).toContain('ai đó');
+  });
+
+  // Tập trang mà mẫu `/*` che ĐỔI THEO THỜI GIAN (`/tu-vi-thang/*` tự ghi vậy
+  // trong note). Chặn cứng loại đó = sang tháng CI đỏ cho người không liên
+  // quan — đúng loại bom hẹn giờ repo này đã dính (mục 4o, 4q). Chốt chặn đúng
+  // cho chúng là `max`, không phải `stale`.
+  it('mục theo CỤM đã hết vi phạm thì chỉ nhắc, KHÔNG chặn', () => {
+    const { blocking, stale } = applyAllowlist([], list);
+    expect(stale.some((s) => s.url === '/cum/*' && s.theoCum === true)).toBe(true);
+    expect(blocking.some((v) => v.rule === 'allowlist-stale' && v.url === '/cum/*')).toBe(false);
+  });
+
+  it('mục có `max` cũng được coi là theo cụm, dù khoá đúng một URL', () => {
+    // `max` chỉ có nghĩa khi số trang bị che thay đổi được ⇒ cùng loại rủi ro.
+    const coMax = { '/thang': { rules: ['jsonld-missing'], max: 3, owner: 'ai đó', note: '' } };
+    const { blocking } = applyAllowlist([], coMax);
+    expect(blocking.filter((v) => v.rule === 'allowlist-stale')).toHaveLength(0);
   });
 
   // Mẫu `/*` miễn trừ theo CỤM nên nó che luôn những trang trong cụm lẽ ra phải
