@@ -1,0 +1,106 @@
+# audit-guard — chặn lỗ hổng phụ thuộc MỚI, tha những cái đã xét và ghi lý do.
+#
+# VÌ SAO CÓ, DÙ ĐÃ CÓ DEPENDABOT:
+# Dependabot có bắn cảnh báo nhưng KHÔNG có check nào đỏ, và `dependabot.yml`
+# khai `dependency-type: "direct"` nên nó không mở PR cho lỗ hổng nằm sâu trong
+# cây phụ thuộc — thứ đó chỉ hiện trên trang GitHub, chờ có người tình cờ mở ra.
+# Ngày 2026-07-26 đúng một lỗ hổng mức CAO (`svgo`) đã nằm im như vậy nhiều
+# tuần, và bị xếp nhầm là "không sửa được".
+#
+# Quan trọng hơn: `pnpm.overrides` có ~49 mục, phần lớn là bản vá bảo mật chỉ
+# tồn tại ở ĐÚNG MỘT DÒNG. Xoá một dòng ⇒ bản dính quay lại ⇒ không gì đỏ. Cổng
+# này là bản TỔNG QUÁT của `lockfile-svgo.guard.test.ts` (vốn chỉ canh 1 gói).
+#
+# ⚠️ VÌ SAO CHẠY THEO LỊCH, KHÔNG GÁC PR:
+# Advisory mới công bố hằng ngày và KHÔNG liên quan gì tới PR đang mở. Gác PR
+# thì một advisory công bố lúc 3h sáng làm đỏ mọi PR hôm đó — cổng kiểu ấy bị
+# tắt trong vòng một tuần. Chạy theo lịch + báo Telegram giữ được tín hiệu mà
+# không chặn nhầm ai. (Cùng lý lẽ với `seo-live.yml`.)
+#
+# ⚠️ GITHUB TỰ TẮT WORKFLOW CHẠY THEO LỊCH sau 60 ngày repo không có commit.
+# Sau mỗi kỳ nghỉ dài phải mở tab Actions kiểm lại.
+#
+# ⛔ **TUYỆT ĐỐI KHÔNG ĐẶT LÀM REQUIRED CHECK.** Workflow này KHÔNG có trigger
+# `pull_request` (cố ý — xem lý do ở trên). GitHub coi một required check không
+# bao giờ báo là "Expected — waiting for status", nên đặt nó required sẽ làm
+# MỌI PR treo vĩnh viễn, không cách nào merge. Hai workflow bên cạnh
+# (`seo-guard`, `ui-guard`) thì ngược lại — chúng CÓ chạy trên `pull_request`
+# nên promote lên required là an toàn. Đừng copy nhầm cách làm giữa hai loại.
+name: audit-guard
+
+on:
+  schedule:
+    # 01:20 UTC = 08:20 giờ VN, lệch 20 phút so với `seo-live` để hai job không
+    # cùng lúc tranh runner.
+    - cron: '20 1 * * *'
+  workflow_dispatch: {}
+  # Chạy cả trên `push: main` KHI VÀ CHỈ KHI lockfile/overrides đổi — đó là lúc
+  # một bản vá có thể bị gỡ mà không ai nhận ra. Không gác PR (xem lý do trên),
+  # nhưng bắt được ngay sau khi gộp.
+  push:
+    branches: [main]
+    paths:
+      - 'pnpm-lock.yaml'
+      - 'package.json'
+      - 'scripts/audit-guard.mjs'
+      - '.github/workflows/audit-guard.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audit-guard
+  cancel-in-progress: false
+
+jobs:
+  audit-guard:
+    name: audit-guard (lỗ hổng phụ thuộc)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      # `pnpm audit` đọc lockfile, KHÔNG cần `node_modules` — bỏ bước cài giúp
+      # job xong trong ~30 giây, đủ rẻ để chạy hằng ngày.
+      - name: Quét lỗ hổng
+        id: quet
+        run: |
+          set +e
+          node scripts/audit-guard.mjs | tee /tmp/audit.log
+          MA=${PIPESTATUS[0]}
+          set -e
+          echo "ma=$MA" >> "$GITHUB_OUTPUT"
+          echo "tomtat=$(grep -m1 '^audit-guard:' /tmp/audit.log | tail -c 300)" >> "$GITHUB_OUTPUT"
+          exit $MA
+
+      - name: Báo Telegram khi đỏ
+        if: failure()
+        env:
+          TOKEN: ${{ secrets.ADMIN_BOT_TOKEN }}
+          REPO: ${{ github.repository }}
+          MA: ${{ steps.quet.outputs.ma }}
+          TOMTAT: ${{ steps.quet.outputs.tomtat }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$TOKEN" ]; then echo "ADMIN_BOT_TOKEN thiếu — bỏ qua"; exit 0; fi
+          case "$MA" in
+            1) LY_DO='CÓ LỖ HỔNG MỚI chưa ai xét. Mở log xem gói nào, mức nào.' ;;
+            2) LY_DO='KHÔNG QUÉT ĐƯỢC (pnpm audit lỗi hoặc đổi định dạng) — chưa kết luận được gì.' ;;
+            3) LY_DO='Danh sách đã-xét bị mục: có mục không còn đúng nữa, hoặc thiếu lý do. Cần dọn.' ;;
+            *) LY_DO='Job hỏng TRƯỚC khi quét.' ;;
+          esac
+          TEXT=$(printf '🛡️ audit-guard ĐỎ — %s\n%s\n%s\n%s' "$REPO" "$LY_DO" "${TOMTAT:-(không có tóm tắt)}" "$RUN_URL")
+          curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            -d chat_id=-1003982280451 \
+            -d message_thread_id=2 \
+            --data-urlencode text="$TEXT" >/dev/null || true

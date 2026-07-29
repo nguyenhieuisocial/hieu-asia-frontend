@@ -12,6 +12,7 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "types:check": "turbo run types:check",
+    "audit-guard": "node scripts/audit-guard.mjs",
     "types:gen": "tsx scripts/gen-types.ts",
     "clean": "turbo run clean && rm -rf node_modules"
   },
