@@ -456,10 +456,24 @@ describe('extractMeta', () => {
 
 describe('ALLOWLIST', () => {
   it('mọi mục đều phải ghi CHỦ và LÝ DO — nếu không thì nó là chỗ giấu lỗi', () => {
+    // Trước đây chỉ kiểm "khác rỗng", nên `owner: 'n/a'` vẫn qua — mà 'n/a' thì
+    // đúng bằng không ghi gì: lỗi hỏng sau này không ai thấy tên mình mà quay
+    // lại sửa. Siết được lúc này vì 5 mục 'n/a' cũ đã BIẾN MẤT (luật
+    // `jsonld-missing` nay bỏ qua trang noindex nên chúng hết lý do tồn tại),
+    // nên siết không làm đỏ việc của ai — chỉ chặn nợ MỚI lẻn vào.
+    const RONG = ['n/a', 'na', 'tbd', 'none', 'không', '-', '?'];
     for (const [url, entry] of Object.entries(ALLOWLIST)) {
       expect(entry.rules.length, `${url} thiếu rules`).toBeGreaterThan(0);
       expect(entry.owner, `${url} thiếu owner`).toBeTruthy();
       expect(entry.note, `${url} thiếu note`).toBeTruthy();
+      expect(
+        RONG.includes(String(entry.owner).trim().toLowerCase()),
+        `${url}: owner "${entry.owner}" là chỗ trống trá hình — ghi TÊN agent/người lo, hoặc lý do cụ thể vì sao không ai cần lo`,
+      ).toBe(false);
+      expect(
+        String(entry.note).trim().length,
+        `${url}: note quá ngắn, phải nói được VÌ SAO miễn trừ`,
+      ).toBeGreaterThan(15);
     }
   });
 
