@@ -13,6 +13,9 @@
 // `export`, không test nào chạm tới, mà header file này lại khẳng định "đã
 // khoá cả 4". Nay `gopSitemap`, `kiemSanSitemap`, `phanLoaiPhanHoi` đều đã
 // export và đều nằm trên đường chạy thật.
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { describe, it, expect } from 'vitest';
 
 import {
@@ -20,12 +23,14 @@ import {
   MIN_TRANG,
   NGUNG_SOM_SAU,
   NGUONG_CUM_LON,
+  NGUONG_HA_TANG,
   SONG_SONG,
   bocLoc,
   bocSitemap,
   boSvg,
   canhBaoCumMoi,
   chiaLuong,
+  docChiuLoi,
   docMoTa,
   docTieuDe,
   doHongDongLoat,
@@ -33,9 +38,13 @@ import {
   giaiMa,
   gomCum,
   gopSitemap,
+  kiemBoQua,
   kiemMotTrang,
   kiemSanSitemap,
+  kiemThamSo,
+  mauKhongKhop,
   phanLoaiPhanHoi,
+  tachBoQua,
   trangThaiMoi,
   veGoc,
 } from '../../scripts/seo-live.mjs';
@@ -218,6 +227,157 @@ describe('ghiLoiHaTang — ngưng sớm phải đếm LIÊN TIẾP', () => {
     for (let i = 0; i < NGUNG_SOM_SAU - 1; i++)
       ghiLoiHaTang(so, { duong: `/t${i}`, luat: 'không tải được', chiTiet: '' });
     expect(so.dungSom).toBe(false);
+  });
+});
+
+describe('tachBoQua — bỏ tải một số cụm khi đo trên bản dựng CI', () => {
+  const urls = [
+    'https://hieu.asia/',
+    'https://hieu.asia/cam-nang',
+    'https://hieu.asia/cam-nang/tu-vi',
+    'https://hieu.asia/tu-vi-hom-nay/ty',
+    'https://hieu.asia/timeline',
+  ];
+
+  it('KHÔNG có `/*` thì chỉ bỏ ĐÚNG một đường dẫn, không ăn cả nhánh', () => {
+    // Ca thật đã sập: viết `/hop-tuoi` định loại 3 trang động thì nó ăn 83 URL,
+    // kéo 80 trang TĨNH đang đo tốt ra khỏi lưới mà không ai báo.
+    const r = tachBoQua(urls, ['/cam-nang']);
+    expect(r.boQua).toEqual(['https://hieu.asia/cam-nang']);
+    expect(r.do).toHaveLength(urls.length - 1);
+  });
+
+  it('có `/*` thì ăn cả nhánh, gồm cả trang gốc', () => {
+    const r = tachBoQua(urls, ['/cam-nang/*', '/tu-vi-hom-nay/*']);
+    expect(r.boQua).toHaveLength(3);
+    expect(r.do).toEqual(['https://hieu.asia/', 'https://hieu.asia/timeline']);
+  });
+
+  it('KHÔNG bỏ nhầm cụm có tên bắt đầu giống', () => {
+    // `/cam-nang-khac` phải ở lại với cả hai kiểu mẫu.
+    const kh = ['https://hieu.asia/cam-nang-khac'];
+    expect(tachBoQua(kh, ['/cam-nang']).boQua).toEqual([]);
+    expect(tachBoQua(kh, ['/cam-nang/*']).boQua).toEqual([]);
+  });
+
+  it('không truyền gì thì KHÔNG bỏ gì — mặc định phải là đo hết', () => {
+    expect(tachBoQua(urls, []).do).toHaveLength(urls.length);
+    expect(tachBoQua(urls, undefined).do).toHaveLength(urls.length);
+  });
+
+  it('danh sách bỏ qua phình quá ngưỡng phải ĐỎ, không âm thầm thu hẹp phạm vi', () => {
+    expect(kiemBoQua(96, 978)).toContain('96/978');
+    expect(kiemBoQua(16, 978)).toBeNull();
+    expect(kiemBoQua(0, 0)).toBeNull();
+  });
+});
+
+describe('kiemThamSo — lỗi gõ phải nói ra, không được chẩn đoán ngược', () => {
+  it('quên URL, để cờ ở vị trí đầu → báo rõ thay vì "site không phản hồi"', () => {
+    expect(kiemThamSo('--bo-qua=/cam-nang', [])).toContain('không phải URL hợp lệ');
+  });
+
+  it('dùng dấu cách thay `=` → báo rõ thay vì lặng lẽ bỏ qua 0 URL', () => {
+    expect(kiemThamSo('https://hieu.asia', ['--bo-qua', '/cam-nang'])).toContain('không nhận ra');
+  });
+
+  it('tham số hợp lệ thì không kêu', () => {
+    expect(kiemThamSo('https://hieu.asia', ['--bo-qua=/x', '--chiu-loi=2'])).toBeNull();
+    expect(kiemThamSo('http://127.0.0.1:3000', [])).toBeNull();
+    expect(kiemThamSo('https://hieu.asia', ['--chiu-loi=2.5'])).toBeNull();
+  });
+
+  it('giá trị --chiu-loi sai định dạng phải BÁO, không âm thầm về 0', () => {
+    // `--chiu-loi=2%` khớp tiền tố nên bản trước cho qua rồi `docChiuLoi` trả 0.
+    // Mức chịu 0 ở seo-guard.yml nghĩa là MỘT URL rớt lẻ cũng ra mã 2 ⇒ cảnh
+    // báo ⇒ toàn bộ phép đo live thành advisory. Một dấu `%` thừa tháo cả cổng.
+    for (const xau of ['--chiu-loi=2%', '--chiu-loi=abc', '--chiu-loi=', '--chiu-loi=-1'])
+      expect(kiemThamSo('https://hieu.asia', [xau]), xau).toContain('sai định dạng');
+  });
+
+  it('--bo-qua= rỗng phải báo thay vì lặng lẽ không bỏ qua gì', () => {
+    expect(kiemThamSo('https://hieu.asia', ['--bo-qua='])).toContain('rỗng');
+  });
+
+  it('mẫu bỏ qua không khớp URL nào phải bị nêu tên', () => {
+    const urls = ['https://hieu.asia/a', 'https://hieu.asia/cam-nang/x'];
+    expect(mauKhongKhop(urls, ['/cam-nang/*', '/khong-ton-tai'])).toEqual(['/khong-ton-tai']);
+    expect(mauKhongKhop(urls, ['/cam-nang/*'])).toEqual([]);
+  });
+});
+
+describe('docChiuLoi — nghiêm mặc định, chỉ nơi gọi tự khai mới được nới', () => {
+  it('không truyền gì ⇒ 0: một URL hỏng cũng phải báo', () => {
+    // Lượt chạy theo lịch dựa vào điều này: ở đó mã 2 bắn Telegram nên nghiêm
+    // là đúng. Nới toàn cục sẽ làm 19 URL production chết mà không ai được báo.
+    expect(docChiuLoi(undefined)).toBe(0);
+    expect(docChiuLoi('')).toBe(0);
+    expect(docChiuLoi('--chiu-loi=')).toBe(0);
+  });
+
+  it('nới được nhưng bị chặn trần bởi NGUONG_HA_TANG', () => {
+    expect(docChiuLoi('--chiu-loi=2')).toBeCloseTo(0.02);
+    expect(docChiuLoi('--chiu-loi=1')).toBeCloseTo(0.01);
+    expect(docChiuLoi('--chiu-loi=90')).toBe(NGUONG_HA_TANG);
+  });
+});
+
+describe('ngưỡng lỗi hạ tầng', () => {
+  it('NGUONG_HA_TANG phải dương và nhỏ — 0 là bẫy tự-tắt-lớp-bảo-vệ', () => {
+    // Bản trước dùng `if (loiHaTang.length) exit(2)`, tức ngưỡng 0: CHỈ MỘT
+    // request rớt trong 978 là cả lượt quét thành "không kết luận được", mà ở
+    // CI mã 2 chỉ cảnh báo ⇒ lớp bảo vệ tắt lặng, check vẫn xanh.
+    expect(NGUONG_HA_TANG).toBeGreaterThan(0);
+    expect(NGUONG_HA_TANG).toBeLessThan(0.1);
+  });
+
+  it('ngưỡng đủ rộng cho vài lỗi lẻ, đủ chặt để không bỏ qua site hỏng', () => {
+    const tong = 978;
+    expect(Math.floor(tong * NGUONG_HA_TANG)).toBeGreaterThanOrEqual(5);
+    expect(Math.floor(tong * NGUONG_HA_TANG)).toBeLessThanOrEqual(50);
+  });
+});
+
+describe('workflow gọi seo-live phải khai đúng thứ nó cần', () => {
+  const docWorkflow = (ten: string) =>
+    readFileSync(join(process.cwd(), '..', '..', '.github', 'workflows', ten), 'utf8');
+
+  it('seo-guard.yml phải coi seo-live.mjs là file ẢNH HƯỞNG', () => {
+    // Thiếu dòng này thì một PR chỉ sửa `seo-live.mjs` — nới ngưỡng, thêm mẫu
+    // bỏ qua, đổi `tachBoQua` — sẽ KHÔNG chạy bước đo nào và xanh trong vài
+    // giây. Chính workflow gọi nó mà không canh nó.
+    expect(docWorkflow('seo-guard.yml')).toContain('apps/web/scripts/seo-live.mjs');
+  });
+
+  it('seo-guard.yml phải CHẶN mã 3 (lỗi của PR), chỉ tha mã 2 (hạ tầng)', () => {
+    const y = docWorkflow('seo-guard.yml');
+    // Chỉ mã 2 được map sang exit 0. Nếu ai thêm mã 3 vào đó thì "sitemap teo"
+    // và "bỏ qua quá rộng" lại thành advisory — đúng lỗ vừa vá.
+    expect(y).toMatch(/if \[ "\$MA" = "2" \]/);
+    expect(y).not.toMatch(/\$MA" = "3"/);
+  });
+
+  it('job có timeout riêng vì nó khởi động server', () => {
+    expect(docWorkflow('seo-guard.yml')).toMatch(/timeout-minutes:\s*\d+/);
+  });
+
+  it('mọi mẫu bỏ qua trong workflow phải khớp CHÍNH XÁC ý định, không phình', () => {
+    // Ghim để danh sách không trôi âm thầm: `kiemBoQua` chỉ kêu khi vượt 5%
+    // (48/978), tức còn dư địa lớn để phình mà không gì đỏ.
+    const m = docWorkflow('seo-guard.yml').match(/--bo-qua=([^'\s\\]+)/);
+    expect(m, 'không tìm thấy cờ --bo-qua trong seo-guard.yml').not.toBeNull();
+    const mau = m![1]!.split(',');
+    expect(mau).toEqual([
+      '/cam-nang/*',
+      '/tu-vi-hom-nay/*',
+      '/hop-tuoi/business',
+      '/hop-tuoi/birth-child',
+      '/hop-tuoi/xong-dat',
+    ]);
+    // Và chúng phải là loại "gọi mạng lúc render" — 3 mẫu con của /hop-tuoi là
+    // đường dẫn CHÍNH XÁC, không có `/*`, để 80 trang tĩnh cùng cụm vẫn được đo.
+    const hopTuoi = mau.filter((x: string) => x.startsWith('/hop-tuoi'));
+    expect(hopTuoi.every((x: string) => !x.endsWith('/*'))).toBe(true);
   });
 });
 

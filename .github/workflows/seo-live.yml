@@ -79,13 +79,21 @@ jobs:
           GOC: ${{ inputs.goc || 'https://hieu.asia' }}
         run: |
           set +e
-          node apps/web/scripts/seo-live.mjs "$GOC" | tee /tmp/seo-live.log
+          # `2>&1` BẮT BUỘC: mọi đường ra mã 3 (sitemap teo, danh sách bỏ qua
+          # sai) chỉ in ra stderr và `return` TRƯỚC dòng tổng kết ở stdout. Thiếu
+          # nó thì tin nhắn Telegram cho mã 3 luôn là "(không có dòng tổng kết)"
+          # — người trực nhận đúng một câu chung, không tên cụm, không con số,
+          # trong khi log đã có sẵn "⚠ cụm /learn chỉ còn 40 URL, dưới sàn 46".
+          node apps/web/scripts/seo-live.mjs "$GOC" 2>&1 | tee /tmp/seo-live.log
           MA=${PIPESTATUS[0]}
           set -e
           echo "ma=$MA" >> "$GITHUB_OUTPUT"
           # Dòng tổng kết có đủ "đạt X · Y trang sai · lỗi hạ tầng Z" — gửi kèm
           # để người trực thấy SỐ THẬT thay vì phải đoán từ một câu chữ.
-          echo "tomtat=$(grep -m1 '^seo-live:' /tmp/seo-live.log | tail -c 300)" >> "$GITHUB_OUTPUT"
+          # Ưu tiên dòng tổng kết; nếu không có (mã 3 thoát sớm) thì lấy dòng
+          # ⚠ đầu tiên — đó mới là chỗ ghi cụm nào thiếu bao nhiêu URL.
+          TT=$(grep -m1 '^seo-live: http' /tmp/seo-live.log || grep -m1 '⚠' /tmp/seo-live.log || true)
+          echo "tomtat=$(printf '%s' "$TT" | tail -c 300)" >> "$GITHUB_OUTPUT"
           exit $MA
 
       - name: Báo Telegram khi đỏ
@@ -103,12 +111,15 @@ jobs:
           if [ -z "$TOKEN" ]; then echo "ADMIN_BOT_TOKEN thiếu — bỏ qua"; exit 0; fi
           case "$MA" in
             1) LY_DO='Meta SEO trên site thật đang SAI (tiêu đề/mô tả vượt ngưỡng, hoặc URL trong sitemap trả lỗi).' ;;
-            # ⚠️ KHÔNG được viết "đây không phải lỗi nội dung". `seo-live.mjs`
-            # trả 2 ngay khi CÓ lỗi hạ tầng, TRƯỚC khi xét vi phạm nội dung —
-            # nên một URL rớt mạng lẻ + 40 tiêu đề vượt ngưỡng thật vẫn ra mã 2.
-            # Câu chữ phủ định dứt khoát ở đó là nói sai. Dòng tóm tắt kèm theo
+            # ⚠️ KHÔNG được viết "đây không phải lỗi nội dung": khi ra mã 2 thì
+            # phần chưa đo được vẫn có thể chứa vi phạm. Dòng tóm tắt kèm theo
             # có số thật để tự phán đoán.
-            2) LY_DO='KHÔNG ĐO ĐƯỢC ĐẦY ĐỦ — site không phản hồi, sitemap teo dưới sàn, hoặc hàng loạt URL cùng một lỗi (đang bảo trì?). VẪN CÓ THỂ còn vi phạm nội dung — xem số ở dòng dưới.' ;;
+            # (Lượt chạy theo lịch KHÔNG truyền `--chiu-loi` nên mức chịu là 0:
+            # chỉ cần MỘT URL production không tải được là ra mã 2 và có báo.
+            # Cố ý — ở đây mã 2 bắn Telegram nên nó "loud"; còn ở `seo-guard.yml`
+            # mã 2 chỉ là cảnh báo câm nên bên đó mới cần nới lên 2%.)
+            2) LY_DO='KHÔNG ĐO ĐƯỢC ĐẦY ĐỦ — site không phản hồi, hoặc hàng loạt URL cùng một lỗi (đang bảo trì?). VẪN CÓ THỂ còn vi phạm nội dung — xem số ở dòng dưới.' ;;
+            3) LY_DO='SITEMAP ĐANG THIẾU TRANG (teo dưới sàn tổng hoặc sàn từng cụm). Đây là lỗi NỘI DUNG, không phải mạng — nhiều khả năng một cụm vừa biến mất khỏi sitemap.' ;;
             *) LY_DO='Job hỏng TRƯỚC khi đo (checkout/setup-node?). Chưa kết luận được gì về SEO.' ;;
           esac
           TEXT=$(printf '🔴 seo-live ĐỎ — %s\n%s\n%s\n%s' "$REPO" "$LY_DO" "${TOMTAT:-(không có dòng tổng kết)}" "$RUN_URL")
