@@ -489,7 +489,21 @@ describe('ALLOWLIST', () => {
     const keys = [...body.matchAll(/^\s{2}'([^']+)':/gm)].map((m) => m[1]);
     const dupes = keys.filter((k, i) => keys.indexOf(k) !== i);
     expect(dupes, `key khai trùng: ${dupes.join(', ')}`).toEqual([]);
-    expect(keys.length).toBeGreaterThan(5); // chốt: regex phải thật sự bắt được key
+
+    // Chốt: regex phải THẬT SỰ bắt được key, kẻo đổi cách viết là nó trả mảng
+    // rỗng và bài này xanh suông.
+    //
+    // ⚠️ Chốt theo Ý NGHĨA, KHÔNG theo SỐ LƯỢNG. Bản trước đặt `> 5` theo danh
+    // sách lúc đó có 8 mục; #1001 xoá 6 mục hết tác dụng còn 2, thế là bài này
+    // ĐỎ VÌ SAI LÝ DO — không phải có key trùng, mà chỉ vì danh sách ngắn đi
+    // đúng như mong muốn. `seo-guard-trigger.guard.test.ts` đã dính y hệt và
+    // rút ra đúng bài học này; giờ áp cả ở đây.
+    expect(keys, 'regex không bắt được key nào — cách viết ALLOWLIST đã đổi?').not.toEqual([]);
+    expect(
+      keys.every((k) => k.startsWith('/')),
+      `key không phải đường dẫn: ${keys.filter((k) => !k.startsWith('/')).join(', ')}`,
+    ).toBe(true);
+    expect(keys, 'đọc hụt key có thật').toContain('/dashboard');
   });
 });
 
