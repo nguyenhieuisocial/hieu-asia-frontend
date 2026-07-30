@@ -635,7 +635,7 @@ export default function LearnDatTenNguHanhPage() {
               <div className="mt-6">
                 <RelatedTools
                   links={[
-                    { href: '/bat-tu', label: 'Lập lá số Bát Tự' },
+                    { href: '/la-so-bat-tu', label: 'Lập lá số Bát Tự' },
                     { href: '/than-so-hoc', label: 'Thần Số Học' },
                   ]}
                 />

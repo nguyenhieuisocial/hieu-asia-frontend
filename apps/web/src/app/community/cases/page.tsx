@@ -151,7 +151,7 @@ export default function CaseStudiesIndexPage() {
                 links={[
                   { href: '/community', label: 'Cộng đồng' },
                   { href: '/hoi-dap', label: 'Hỏi đáp' },
-                  { href: '/tu-vi', label: 'Lập lá số Tử Vi' },
+                  { href: '/la-so-tu-vi', label: 'Lập lá số Tử Vi' },
                 ]}
               />
             </div>

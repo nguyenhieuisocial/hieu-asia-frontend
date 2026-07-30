@@ -1644,10 +1644,19 @@ export const TOOL_REGISTRY: ToolEntry[] = [
 ];
 
 /** Drawer/footer display order (QUICK_LOOKUP). */
+// LƯU Ý: mọi entry có surface "drawer" PHẢI có mặt ở đây — guard S12 ép điều
+// đó. Rà 31/07: 4 tool (/tu-vi-thang, /ban-do, /that-tich-2026, /valentine-2027)
+// khai drawer+quick từ đợt hợp nhất #843 nhưng chưa từng được thêm vào manifest
+// → rớt khỏi menu một cách âm thầm suốt từ đó (git -L xác nhận: không phải xoay
+// mùa, chỉ là sót khi gộp 4 list cũ).
 export const QUICK_ORDER: string[] = [
   "/tu-vi-2027",
   "/tu-vi-2026",
+  "/tu-vi-thang",
   "/tu-vi-hom-nay",
+  "/that-tich-2026",
+  "/valentine-2027",
+  "/ban-do",
   "/hop-tuoi",
   "/can-xuong",
   "/lich-van-nien",

@@ -56,6 +56,15 @@ const ACTION_WORDS = /(lập lá số|mở khoá|mở khóa|bắt đầu|dùng t
 const LINK_RE =
   /<(?:Link|a)\b[^>]*?href=(?:\{?['"`])(\/[^'"`\s{}]*)(?:['"`]\}?)[^>]*>([\s\S]{0,160}?)<\/(?:Link|a)>/g;
 
+// Nhãn + href truyền qua object literal (tryCta={{...}}, mảng NavLink/FooterLink,
+// registry entry...). Chính lớp này từng lọt lưới: tryCta của 3 trang learn hứa
+// "công cụ tức thì" nhưng href trỏ wizard — guard bản đầu chỉ quét thẻ <Link>
+// nên không thấy. Bắt cả hai thứ tự khoá trong cùng một object (không lồng {}).
+const OBJ_HREF_LABEL_RE =
+  /href:\s*['"`](\/[^'"`\s{}]*)['"`]\s*,[^{}]{0,160}?label:\s*['"`]([^'"`]{4,60})['"`]/g;
+const OBJ_LABEL_HREF_RE =
+  /label:\s*['"`]([^'"`]{4,60})['"`]\s*,[^{}]{0,160}?href:\s*['"`](\/[^'"`\s{}]*)['"`]/g;
+
 interface Use { href: string; where: string }
 
 function collect(): Map<string, Use[]> {
@@ -63,21 +72,24 @@ function collect(): Map<string, Use[]> {
   for (const file of tsxFiles(SRC)) {
     const rel = relative(SRC, file).split(sep).join('/');
     const text = readFileSync(file, 'utf8');
-    let m: RegExpExecArray | null;
-    LINK_RE.lastIndex = 0;
-    while ((m = LINK_RE.exec(text)) !== null) {
-      const rawHref = m[1];
-      const rawLabel = m[2];
-      if (!rawHref || !rawLabel) continue;
+    const record = (rawHref: string | undefined, rawLabel: string | undefined, index: number) => {
+      if (!rawHref || !rawLabel) return;
       const label = normalizeLabel(rawLabel);
-      if (label.length < 4 || label.length > 60) continue;
-      if (!ACTION_WORDS.test(label)) continue;
+      if (label.length < 4 || label.length > 60) return;
+      if (!ACTION_WORDS.test(label)) return;
       const href = canonical(rawHref.split('#')[0]!.split('?')[0]!.replace(/(.)\/$/, '$1'));
-      const line = text.slice(0, m.index).split('\n').length;
+      const line = text.slice(0, index).split('\n').length;
       const list = byLabel.get(label) ?? [];
       list.push({ href, where: `${rel}:${line}` });
       byLabel.set(label, list);
-    }
+    };
+    let m: RegExpExecArray | null;
+    LINK_RE.lastIndex = 0;
+    while ((m = LINK_RE.exec(text)) !== null) record(m[1], m[2], m.index);
+    OBJ_HREF_LABEL_RE.lastIndex = 0;
+    while ((m = OBJ_HREF_LABEL_RE.exec(text)) !== null) record(m[1], m[2], m.index);
+    OBJ_LABEL_HREF_RE.lastIndex = 0;
+    while ((m = OBJ_LABEL_HREF_RE.exec(text)) !== null) record(m[2], m[1], m.index);
   }
   return byLabel;
 }

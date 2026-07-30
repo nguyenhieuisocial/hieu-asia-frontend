@@ -69,6 +69,20 @@ describe('site-registry guard (S12) — integrity', () => {
     expect(bad).toEqual([]);
   });
 
+  // Chiều ngược lại của test trên. Thiếu nó, một entry khai surface nhưng vắng
+  // mặt trong manifest sẽ RỚT KHỎI MENU một cách âm thầm — đúng vụ 31/07: 4 tool
+  // khai drawer+quick từ đợt hợp nhất #843 nhưng chưa từng vào QUICK_ORDER.
+  it('every entry declaring a surface appears in that surface\'s order manifest', () => {
+    const inQuick = new Set(QUICK_ORDER);
+    const inHome = new Set(HOME_GROUPS_ORDER.flatMap((g) => g.hrefs));
+    const dropped: string[] = [];
+    for (const e of TOOL_REGISTRY) {
+      if (e.quick && !inQuick.has(e.href)) dropped.push(`drawer nhưng vắng QUICK_ORDER: ${e.href}`);
+      if (e.home && !inHome.has(e.href)) dropped.push(`home nhưng vắng HOME_GROUPS_ORDER: ${e.href}`);
+    }
+    expect(dropped).toEqual([]);
+  });
+
   it('derived selectors do not throw', () => {
     expect(() => {
       toQuickLookup();
