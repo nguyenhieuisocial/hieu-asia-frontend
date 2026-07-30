@@ -497,7 +497,7 @@ export function FeaturePaywall({
             <div className="space-y-2">
               <Link
                 href={signInHref}
-                className="inline-flex items-center justify-center rounded-md bg-gold px-5 py-2.5 text-sm font-medium text-black transition hover:bg-gold/90"
+                className="inline-flex items-center justify-center rounded-md bg-gold px-5 py-2.5 text-sm font-medium text-ink transition hover:bg-gold/90"
               >
                 Đăng nhập để mở khoá {toolLabel} →
               </Link>
@@ -510,7 +510,7 @@ export function FeaturePaywall({
           ) : (
             <Button
               onClick={() => setAttempt(1)}
-              className="bg-gold text-black hover:bg-gold/90"
+              className="bg-gold text-ink hover:bg-gold/90"
             >
               {appliedFree
                 ? 'Mở khoá miễn phí 🎁'
