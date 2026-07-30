@@ -2,7 +2,7 @@
  * /signup — soft-redirect to /signin (Wave 60.95.m P0).
  *
  * hieu.asia uses passwordless auth (Supabase magic-link + OAuth: Google /
- * Facebook / Apple) — first-time signup and returning sign-in share the
+ * Facebook) — first-time signup and returning sign-in share the
  * same /signin page (magic-link auto-creates accounts on first send).
  *
  * Marketing / ad creative may reference /signup (industry convention).
@@ -19,7 +19,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Đăng ký',
-  description: 'Tạo tài khoản miễn phí qua email hoặc OAuth (Google / Facebook / Apple).',
+  description: 'Tạo tài khoản miễn phí qua email hoặc OAuth (Google / Facebook).',
   robots: { index: false, follow: true },
 };
 
