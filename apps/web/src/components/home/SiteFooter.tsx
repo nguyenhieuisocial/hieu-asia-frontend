@@ -44,14 +44,18 @@ const COL_DOCS: readonly FooterLink[] = [
   { href: '/about', label: 'Về chúng tôi' },
   { href: '/methodology', label: 'Phương pháp' },
   { href: '/cam-nang', label: 'Cẩm nang' },
-  { href: '/learn', label: 'Learn' },
+  // Nhãn tiếng Việt cho khớp nav ("Học") và breadcrumb của chính trang đó
+  // ("Học huyền học"). Bản dài phân biệt với "Cẩm nang" ngay bên trên.
+  { href: '/learn', label: 'Học huyền học' },
   { href: '/changelog', label: 'Changelog' },
 ];
 
 const COL_LEGAL: readonly FooterLink[] = [
   { href: '/legal', label: 'Tổng quan pháp lý' },
-  { href: '/privacy', label: 'Privacy' },
-  { href: '/terms', label: 'Terms' },
+  // Dùng đúng tên tiếng Việt của chính 2 trang đó (title/h1), cũng là tên mà
+  // form đồng ý ở /onboarding/birth đang dùng khi link tới chúng.
+  { href: '/privacy', label: 'Chính sách bảo mật' },
+  { href: '/terms', label: 'Điều khoản dịch vụ' },
   { href: '/privacy#nd-13-2023', label: 'Dữ liệu cá nhân' },
   { href: 'mailto:hi@hieu.asia', label: 'Liên hệ' },
 ];

@@ -121,7 +121,11 @@ export async function assertFreeQuota(userId: string): Promise<QuotaResult> {
           // UI can render two buttons without another fetch.
           options: [
             { tier: 'premium', vnd: 99_000, label: '1 reading sâu (99.000đ)', href: '/pricing#premium' },
-            { tier: 'monthly', vnd: 199_000, label: 'Unlimited tháng (199.000đ)', href: '/pricing#monthly' },
+            // Neo phải là `#mentor`: /pricing gom về đúng 3 anchor
+            // (free/premium/mentor) và gói 199.000đ/tháng chính là Mentor.
+            // `#monthly` không tồn tại → người dùng hết lượt bấm vào bị thả
+            // xuống đầu trang giá thay vì đúng gói đang được chào.
+            { tier: 'monthly', vnd: 199_000, label: 'Unlimited tháng (199.000đ)', href: '/pricing#mentor' },
           ],
         },
         {
