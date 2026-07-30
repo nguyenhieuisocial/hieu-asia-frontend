@@ -80,13 +80,19 @@ const PRIMARY_LINKS: readonly NavLink[] = [
   // "Lá số" trỏ thẳng công cụ lá số THẬT (client-side, không form-wall) —
   // Phase 1 front-door. Mentor trỏ về storefront /mentor (S7b) — trang bán
   // gói Mentor AI; luồng đối thoại /onboarding vẫn dùng cho CTA intent khác.
-  { href: '/la-so-bat-tu', label: 'Lá số' },
+  // "Lá số" không kèm định ngữ, trong tiếng Việt mặc định hiểu là lá số TỬ VI
+  // — nên phải trỏ /la-so-tu-vi. Trước đây trỏ /la-so-bat-tu: sai kỳ vọng, và
+  // bỏ quên đúng cửa ngõ miễn phí của thứ duy nhất đang bán (tu-vi 99k), trong
+  // khi /la-so-tu-vi vắng mặt ở cả nav lẫn footer lẫn trang chủ.
+  // Bát Tự không mất lối vào: hero trang chủ CHÍNH LÀ lá số Bát Tự tức thì
+  // (bề mặt nổi nhất site), cộng /cong-cu và footer.
+  { href: '/la-so-tu-vi', label: 'Lá số' },
   { href: '/mentor', label: 'Mentor' },
   { href: '/cong-cu', label: 'Công cụ' },
   { href: '/methodology', label: 'Phương pháp' },
   { href: '/pricing', label: 'Giá' },
   // §EE/quyết #9: ô "Về chúng tôi" intent thấp (đã có ở footer) → thay bằng
-  // "Học" (/learn, 19 bài + cẩm nang) — giữ chân + SEO.
+  // "Học" (/learn, 18 bài + cẩm nang) — giữ chân + SEO.
   { href: '/learn', label: 'Học' },
 ];
 
@@ -105,7 +111,11 @@ const MOBILE_TOOL_SECTIONS: readonly { label: string; links: readonly NavLink[] 
   }),
 ).filter((s) => s.links.length > 0);
 
-// Bài học — đủ 18 chủ đề /learn, xếp theo 3 trụ (founder: "bổ sung + sắp xếp").
+// Bài học — ĐỦ CẢ 18 chủ đề trong app/learn/*, xếp theo 3 trụ
+// (founder: "bổ sung + sắp xếp"). Trước đây comment ghi "đủ 18" nhưng danh sách
+// chỉ có 15 — thiếu can-xuong / dat-ten-ngu-hanh / trach-cat.
+// Thêm bài mới vào app/learn/ thì thêm vào đây luôn, nếu không nó sẽ vắng mặt
+// trong menu điện thoại (desktop dùng mega-footer nên không lộ ra ngay).
 const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn', label: 'Tất cả bài học' },
   // Cổ học Á Đông
@@ -118,6 +128,9 @@ const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn/hop-tuoi', label: 'Hợp tuổi' },
   { href: '/learn/con-giap', label: '12 Con Giáp' },
   { href: '/learn/sao-han', label: 'Sao Hạn' },
+  { href: '/learn/trach-cat', label: 'Trạch cát (chọn ngày)' },
+  { href: '/learn/can-xuong', label: 'Cân Xương Đoán Số' },
+  { href: '/learn/dat-ten-ngu-hanh', label: 'Đặt tên ngũ hành' },
   // Tâm lý hiện đại
   { href: '/learn/mbti', label: 'MBTI' },
   { href: '/learn/big-five', label: 'Big Five' },
@@ -128,14 +141,19 @@ const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn/tarot', label: 'Tarot' },
 ];
 
-// Khám phá / cộng đồng — mirror SiteFooter "Khám phá" + 2 mặt-tiền sản phẩm,
-// để menu mobile đầy đủ ngang footer (founder: "menu mobile chưa đầy đủ").
+// Khám phá / cộng đồng — mirror COL_COMMUNITY của SiteFooter + 2 mặt-tiền sản
+// phẩm, để menu mobile đầy đủ ngang footer (founder: "menu mobile chưa đầy đủ").
+// Trước đây vẫn thiếu /tai-lieu và link Telegram dù cả hai có trong footer —
+// người dùng điện thoại mất lối vào. Thêm mục mới vào COL_COMMUNITY thì soi lại
+// danh sách này.
 const MOBILE_DISCOVER: readonly NavLink[] = [
   { href: '/lo-trinh', label: 'Lộ trình cá nhân' },
   { href: '/sample-report', label: 'Báo cáo mẫu' },
+  { href: '/tai-lieu', label: 'Tài liệu tặng' },
   { href: '/qua', label: 'Quà & mời bạn' },
   { href: '/community', label: 'Cộng đồng' },
   { href: '/hoi-dap', label: 'Trợ giúp & Hỏi đáp' },
+  { href: 'https://t.me/hieuasiabot', label: 'Mở trên Telegram' },
 ];
 
 /**
