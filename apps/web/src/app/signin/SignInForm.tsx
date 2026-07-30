@@ -11,7 +11,7 @@
  * moved up to the server page.
  *
  * Auth logic preserved 100% from Wave 60.56 P3.4:
- * - OAuth providers (Google, Facebook, Apple)
+ * - OAuth providers (Google, Facebook)
  * - Magic-link form
  * - `?next=` roundtrip (Wave 44.4 #251)
  * - Redirect-if-authed guard (Wave 36)
@@ -22,7 +22,7 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Facebook, Apple, ShieldCheck } from 'lucide-react';
+import { Facebook, ShieldCheck } from 'lucide-react';
 import { Button, Input, Label } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
@@ -32,12 +32,11 @@ import { safeNextPath } from '@/lib/safe-next';
 import { useAuth } from '@/hooks/use-auth';
 import { track } from '@/lib/analytics';
 
-type OAuthProvider = 'google' | 'facebook' | 'apple';
+type OAuthProvider = 'google' | 'facebook';
 
 const PROVIDER_LABEL: Record<OAuthProvider, string> = {
   google: 'Tiếp tục với Google',
   facebook: 'Tiếp tục với Facebook',
-  apple: 'Tiếp tục với Apple',
 };
 
 /** Multi-color Google "G" logo (inline SVG, brand-safe). */
@@ -262,7 +261,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
             </p>
           )}
 
-          {/* OAuth providers — priority order: Google, Facebook, Apple */}
+          {/* OAuth providers — Google, Facebook (Apple removed: provider disabled in Supabase) */}
           <div className="space-y-3">
             <Button
               type="button"
@@ -298,24 +297,6 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
               </span>
             </Button>
 
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOAuthClick('apple')}
-              disabled={anyLoading || !captchaToken}
-              className="h-12 w-full justify-start gap-3 rounded-pill border-border bg-card text-foreground hover:border-primary hover:bg-muted"
-            >
-              <Apple
-                className="h-5 w-5 shrink-0 text-foreground"
-                aria-hidden="true"
-                fill="currentColor"
-              />
-              <span className="flex-1 text-left text-sm">
-                {oauthLoading === 'apple'
-                  ? 'Đang chuyển hướng…'
-                  : PROVIDER_LABEL.apple}
-              </span>
-            </Button>
           </div>
 
           {/* Divider */}
