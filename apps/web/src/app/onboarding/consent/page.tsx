@@ -176,8 +176,7 @@ export default function OnboardingConsentPage() {
       <SiteNav />
       <main className="min-h-screen">
         <section className="mx-auto max-w-3xl px-6 pt-24 pb-20">
-          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">Bước 3 / 4</p>
-          <h1 className="mt-3 font-heading text-3xl font-bold leading-tight sm:text-4xl">
+          <h1 className="font-heading text-3xl font-bold leading-tight sm:text-4xl">
             Bạn cho phép xử lý gì?
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-foreground/75 sm:text-base">
@@ -200,16 +199,13 @@ export default function OnboardingConsentPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-start gap-3">
-                <Checkbox id="consent-birth" checked disabled aria-label="Đồng ý xử lý ngày giờ sinh" />
-                <div className="flex-1">
-                  <Label htmlFor="consent-birth" className="text-sm text-foreground">
-                    Đồng ý xử lý ngày giờ sinh để lập lá số (bắt buộc)
-                  </Label>
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                    Đây là dữ liệu duy nhất bắt buộc để tạo lá số. Bạn có thể xoá tài khoản + dữ liệu bất kỳ lúc nào.
-                  </p>
-                </div>
+              <div className="space-y-1">
+                <p className="text-sm text-foreground">
+                  Xử lý ngày giờ sinh để lập lá số
+                </p>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  Đây là dữ liệu duy nhất bắt buộc để tạo lá số. Bạn có thể xoá tài khoản + dữ liệu bất kỳ lúc nào.
+                </p>
               </div>
             </CardContent>
           </Card>
