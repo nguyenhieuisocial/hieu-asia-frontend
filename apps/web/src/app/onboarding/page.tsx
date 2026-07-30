@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SiteNav } from '@/components/home/SiteNav';
-import { OnboardingRecap, OnboardingStepBadge } from '@/components/onboarding-recap';
+import { OnboardingRecap } from '@/components/onboarding-recap';
 import { OnboardingIntentTracker } from '@/components/onboarding-intent-tracker';
 
 export const metadata: Metadata = {
@@ -121,7 +121,9 @@ export default async function OnboardingPage({
               <span className="mx-1.5">/</span>
               <span className="text-muted-foreground">Mở khóa lá số</span>
             </span>
-            <OnboardingStepBadge />
+            {/* No step badge here: this is the entry screen, and the badge read
+                the saved pre-step to render "Bước 4 / 4" — contradicting the CTA
+                below it ("Bắt đầu — Bước 1 / 4"). The CTA carries the step. */}
           </nav>
 
           <p className="font-mono text-[13px] font-medium uppercase tracking-[0.12em] text-gold/80">
