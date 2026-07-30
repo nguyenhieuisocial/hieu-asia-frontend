@@ -8,6 +8,8 @@
  */
 
 import * as React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { QRDisplay, type PaymentIntent } from '@/components/payment/QRDisplay';
 import { safeJson } from '@/lib/safe-json';
@@ -45,6 +47,17 @@ type IntentOrFree = PaymentIntent | { freeUnlock: true };
 
 /** Error carrying the worker's code_invalid flag so the UI can recover the code state. */
 class CouponInvalidError extends Error {}
+
+/**
+ * Error for "the worker refused because there is no real account".
+ *
+ * A feature unlock is a perpetual entitlement keyed by the verified Supabase
+ * uid (`feature-unlocked:<uid>:<slug>`), so the worker refuses `anon-*` buyers
+ * up front rather than taking money for an entitlement nothing could ever
+ * redeem. That is correct — but the UI must offer sign-in, not a "Thử lại"
+ * button that can only fail again.
+ */
+class NeedsAuthError extends Error {}
 
 interface ValidateCodeEnvelope {
   ok: boolean;
@@ -114,6 +127,9 @@ async function createFeatureIntent(
   }
   if (!res.ok || !body.ok || !body.intent) {
     const message = body.error ?? `Tạo giao dịch thất bại (${res.status})`;
+    // 401 = worker requires a real account for feature_unlock. Distinguish it
+    // so the UI offers sign-in; retrying without a session can only fail again.
+    if (res.status === 401) throw new NeedsAuthError(message);
     // A code can expire/exhaust between "Áp dụng" and "Mở khoá" (race on a
     // max_uses promo). Surface it distinctly so the caller can drop the code
     // and recover instead of looping on the same dead code.
@@ -205,6 +221,26 @@ export function FeaturePaywall({
   const [codeErr, setCodeErr] = React.useState<string | null>(null);
   const [validating, setValidating] = React.useState(false);
 
+  // `null` = still resolving the session. Render the price CTA optimistically
+  // in that window rather than flashing "Đăng nhập" at a signed-in buyer.
+  const [signedIn, setSignedIn] = React.useState<boolean | null>(null);
+  // Set when the worker rejected an unlock for lack of an account, so the price
+  // card can explain why it is now asking for sign-in.
+  const [needsAuth, setNeedsAuth] = React.useState(false);
+  React.useEffect(() => {
+    let cancelled = false;
+    void getToken().then((t) => {
+      if (!cancelled) setSignedIn(t !== null);
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Bounce back to this exact tool/report after sign-in instead of dropping the
+  // buyer on the homepage, which would cost them the whole test they just took.
+  // Same round-trip contract as SubscriptionCheckout's signed-out gate.
+  const pathname = usePathname();
+  const signInHref = `/signin?next=${encodeURIComponent(pathname || '/')}`;
+
   // The intent-creation effect deps are [slug, attempt] only, so read the
   // applied code through a ref to avoid re-running the effect on every code
   // change. Kept in sync below.
@@ -249,6 +285,14 @@ export function FeaturePaywall({
           setAppliedDiscountPct(null);
           appliedCodeRef.current = null;
           setCodeErr(err.message || 'Mã không còn hợp lệ — vui lòng thử lại');
+          setAttempt(0);
+          return;
+        }
+        if (err instanceof NeedsAuthError) {
+          // Session expired (or was never there) between render and click.
+          // Flip to the sign-in CTA instead of the generic error card.
+          setSignedIn(false);
+          setNeedsAuth(true);
           setAttempt(0);
           return;
         }
@@ -446,14 +490,33 @@ export function FeaturePaywall({
             )}
           </div>
 
-          <Button
-            onClick={() => setAttempt(1)}
-            className="bg-gold text-black hover:bg-gold/90"
-          >
-            {appliedFree
-              ? 'Mở khoá miễn phí 🎁'
-              : `Mở khoá ${toolLabel} — ${effectivePrice.toLocaleString('vi-VN')}đ`}
-          </Button>
+          {signedIn === false ? (
+            // An unlock is a per-account entitlement, so a guest can never
+            // complete this purchase. Send them to sign-in instead of a buy
+            // button that dead-ends on the worker's 401.
+            <div className="space-y-2">
+              <Link
+                href={signInHref}
+                className="inline-flex items-center justify-center rounded-md bg-gold px-5 py-2.5 text-sm font-medium text-black transition hover:bg-gold/90"
+              >
+                Đăng nhập để mở khoá {toolLabel} →
+              </Link>
+              <p className="text-xs text-muted-foreground">
+                {needsAuth
+                  ? 'Phiên đăng nhập đã hết hạn — đăng nhập lại để tiếp tục.'
+                  : 'Mở khoá gắn với tài khoản để bạn xem lại bất cứ lúc nào.'}
+              </p>
+            </div>
+          ) : (
+            <Button
+              onClick={() => setAttempt(1)}
+              className="bg-gold text-black hover:bg-gold/90"
+            >
+              {appliedFree
+                ? 'Mở khoá miễn phí 🎁'
+                : `Mở khoá ${toolLabel} — ${effectivePrice.toLocaleString('vi-VN')}đ`}
+            </Button>
+          )}
         </CardContent>
       </Card>
     );
@@ -476,7 +539,19 @@ export function FeaturePaywall({
         <CardContent className="space-y-4 p-8 text-center">
           <p className="font-heading text-foreground">Không thể tạo giao dịch</p>
           <p className="text-sm text-muted-foreground">{error}</p>
-          <Button onClick={handleRetry}>Thử lại</Button>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Button onClick={handleRetry}>Thử lại</Button>
+            {/* Safety net: if a retry keeps failing because the session lapsed,
+                "Thử lại" alone is a loop with no exit. */}
+            {signedIn === false && (
+              <Link
+                href={signInHref}
+                className="inline-flex items-center justify-center rounded-md border border-gold/30 px-4 py-2 text-sm text-foreground transition hover:bg-gold/10"
+              >
+                Đăng nhập
+              </Link>
+            )}
+          </div>
         </CardContent>
       </Card>
     );
