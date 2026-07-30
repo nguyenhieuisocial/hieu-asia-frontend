@@ -555,7 +555,7 @@ export default function BatTuMethodologyPage() {
           <div className="mt-6">
             <RelatedTools
               links={[
-                { href: '/tu-vi', label: 'Lập lá số Tử Vi' },
+                { href: '/la-so-tu-vi', label: 'Lập lá số Tử Vi' },
                 { href: '/methodology/tu-vi', label: 'Phương pháp Tử Vi' },
                 { href: '/methodology', label: 'Tổng quan phương pháp' },
               ]}

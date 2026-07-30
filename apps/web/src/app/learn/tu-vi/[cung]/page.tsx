@@ -92,7 +92,10 @@ export default async function LearnPalacePage({
       tryCta={{
         heading: `Xem cung ${data.name} của bạn`,
         blurb: `Bài này là phần kiến thức nền. Để xem cung ${data.name} CỦA BẠN có sao nào, đại vận hiện tại ra sao — lập lá số mất khoảng 30 giây, không cần đăng ký.`,
-        href: '/reading/new?method=tu-vi',
+        // "Không cần đăng ký" = công cụ lá số tức thì /la-so-tu-vi. Href cũ
+        // /reading/new?method= đi 307 vào wizard /onboarding/birth (có consent
+        // + chờ server) — trái hẳn lời hứa trong blurb.
+        href: '/la-so-tu-vi',
         label: 'Lập lá số Tử Vi',
       }}
       sections={[

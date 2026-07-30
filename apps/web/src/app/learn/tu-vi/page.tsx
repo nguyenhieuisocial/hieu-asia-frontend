@@ -259,7 +259,11 @@ export default function LearnTuViPage() {
         heading: 'Trải nghiệm ngay',
         blurb:
           'Nhập ngày giờ sinh, hệ thống dựng lá số Tử Vi 12 cung trong khoảng 30 giây. Bạn xem lá số đầy đủ trước khi quyết định mở khóa luận giải sâu.',
-        href: '/reading/new?method=tu-vi',
+        // Blurb hứa "30 giây, xem đầy đủ trước khi mở khoá" = công cụ lá số
+        // tức thì, KHÔNG phải wizard tạo báo cáo. Href cũ /reading/new?method=
+        // đi qua 307 (tham số bị bỏ — route đó tự ghi chú vậy) rồi thả vào
+        // /onboarding/birth: chờ server 30–60s, cuối đường là paywall.
+        href: '/la-so-tu-vi',
         label: 'Lập lá số Tử Vi của bạn',
       }}
       sections={[

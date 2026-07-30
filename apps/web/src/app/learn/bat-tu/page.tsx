@@ -291,7 +291,9 @@ export default function LearnBatTuPage() {
         heading: 'Trải nghiệm ngay',
         blurb:
           'Nhập ngày giờ sinh, hệ thống lập 4 trụ Năm, Tháng, Ngày, Giờ và phân tích cân bằng Ngũ Hành. Bạn xem Bát Tự đầy đủ trước khi đọc luận giải chi tiết.',
-        href: '/reading/new?method=bat-tu',
+        // Blurb mô tả công cụ Bát Tự tức thì — trỏ thẳng nó, khỏi qua 307
+        // /reading/new (route back-compat, tự bỏ tham số ?method=).
+        href: '/la-so-bat-tu',
         label: 'Xem Bát Tự của bạn',
       }}
       sections={[

@@ -1109,7 +1109,7 @@ export default function MethodologyTuViPage() {
           <div className="mt-8">
             <RelatedTools
               links={[
-                { href: '/tu-vi', label: 'Lập lá số Tử Vi' },
+                { href: '/la-so-tu-vi', label: 'Lập lá số Tử Vi' },
                 { href: '/learn/tu-vi', label: 'Tìm hiểu Tử Vi' },
                 { href: '/methodology/bat-tu', label: 'Phương pháp Bát Tự' },
                 { href: '/methodology', label: 'Tổng quan phương pháp' },
