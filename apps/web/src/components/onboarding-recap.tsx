@@ -112,17 +112,3 @@ export function OnboardingRecap() {
     </div>
   );
 }
-
-export function OnboardingStepBadge() {
-  const [hasPreStep, setHasPreStep] = useState(false);
-
-  useEffect(() => {
-    setHasPreStep(readStored() !== null);
-  }, []);
-
-  return (
-    <span className="font-mono font-medium tracking-[0.12em] text-gold-700">
-      {hasPreStep ? 'Bước 4 / 4 · Lập lá số' : 'Bước 1 / 4'}
-    </span>
-  );
-}

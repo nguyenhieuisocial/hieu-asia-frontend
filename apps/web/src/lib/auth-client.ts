@@ -233,17 +233,20 @@ export async function sendMagicLink(
 }
 
 /**
- * Sign in with a third-party OAuth provider. Supported in Wave 14:
+ * Sign in with a third-party OAuth provider. Currently enabled:
  *  - google
  *  - facebook
- *  - apple
+ *
+ * `apple` was dropped: the provider is disabled in Supabase, so calling it
+ * redirected the user to a raw Supabase JSON 400 page. Do not re-add it to
+ * this union until Auth → Providers → Apple is configured.
  *
  * Provider must be enabled + credentials set in Supabase dashboard
  * (Auth → Providers). Returns immediately after triggering the redirect —
  * the user will land back on `/auth/callback` post-OAuth.
  */
 export async function signInWithOAuth(
-  provider: 'google' | 'facebook' | 'apple',
+  provider: 'google' | 'facebook',
   next?: string | null,
   captchaToken?: string | null,
 ): Promise<{ ok: true } | { ok: false; error: string }> {

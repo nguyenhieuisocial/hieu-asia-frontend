@@ -24,7 +24,7 @@ import { SignInForm } from './SignInForm';
 export const metadata: Metadata = {
   title: 'Đăng nhập',
   description:
-    'Đăng nhập để xem lá số Tử Vi của bạn. Magic link hoặc OAuth (Google / Facebook / Apple).',
+    'Đăng nhập để xem lá số Tử Vi của bạn. Magic link hoặc OAuth (Google / Facebook).',
 };
 
 interface SignInPageProps {

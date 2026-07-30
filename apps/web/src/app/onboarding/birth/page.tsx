@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { BirthDataForm } from '@/components/birth-data-form';
 import { SiteNav } from '@/components/home/SiteNav';
-import { OnboardingStepBadge } from '@/components/onboarding-recap';
 import { WizardFooter } from '@/components/onboarding/WizardFooter';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
@@ -35,7 +34,9 @@ export default function OnboardingBirthPage() {
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Thông tin sinh</span>
           </nav>
-          <OnboardingStepBadge />
+          {/* Step counter lives in WizardFooter ("BƯỚC 4/4") — a badge here
+              rendered a second counter on the same screen. OnboardingStepBadge
+              stays in use on /onboarding, which has no WizardFooter. */}
         </header>
 
         <section className="container mx-auto max-w-2xl px-6 pb-20 pt-2">
