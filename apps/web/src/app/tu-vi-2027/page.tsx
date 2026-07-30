@@ -234,8 +234,12 @@ export default function TuVi2027HubPage() {
               Xuất hành đầu năm 2027
             </Link>
             {', '}
-            <Link href="/la-so-bat-tu" className="text-gold hover:underline">
-              Lập lá số miễn phí
+            {/* Trang Tử Vi → phải trỏ công cụ lá số TỬ VI. Trước đây trỏ
+                /la-so-bat-tu dưới nhãn chung chung "Lập lá số miễn phí" — nhãn
+                đó ở 17 chỗ khác nghĩa là vào /onboarding, nên vừa sai chủ đề
+                vừa sai kỳ vọng. */}
+            <Link href="/la-so-tu-vi" className="text-gold hover:underline">
+              Lập lá số Tử Vi miễn phí
             </Link>
           </nav>
         </section>

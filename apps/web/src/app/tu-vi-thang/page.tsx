@@ -197,7 +197,9 @@ export default function TuViThangHubPage() {
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <Button asChild size="lg">
-                <Link href="/la-so-tu-vi">Lập lá số miễn phí</Link>
+                {/* Đích đúng rồi, nhưng nhãn chung chung: "Lập lá số miễn phí"
+                    ở 17 chỗ khác nghĩa là vào /onboarding. Nói rõ Tử Vi. */}
+                <Link href="/la-so-tu-vi">Lập lá số Tử Vi miễn phí</Link>
               </Button>
               <Link
                 href="/hop-tuoi"

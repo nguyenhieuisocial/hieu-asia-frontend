@@ -198,8 +198,10 @@ export default function LearnTuViPage() {
           Lá số Tử Vi chia đời người thành 12 lĩnh vực (gọi là "cung"), mỗi cung chứa các sao
           ảnh hưởng đến một mặt cụ thể của cuộc sống, từ sức khỏe, tài chính, tình cảm đến
           sự nghiệp.{' '}
+          {/* Nhãn hứa "lập lá số" thì phải ra CÔNG CỤ lá số (/la-so-tu-vi),
+              không phải trang tổng quan /tu-vi. */}
           <Link
-            href="/tu-vi"
+            href="/la-so-tu-vi"
             className="text-gold-700 underline-offset-4 hover:underline"
           >
             lập lá số Tử Vi miễn phí
@@ -234,24 +236,17 @@ export default function LearnTuViPage() {
             <li>· Thấy mỗi kết luận dẫn từ cung và sao nào, không phán bừa</li>
             <li>· Lập lá số miễn phí trong 30 giây, không cần thẻ</li>
           </ul>
+          {/* Nối trang học ↔ công cụ lá số free. Trước đây nút này trỏ /tu-vi
+              (trang tổng quan) dù nhãn hứa "lập lá số", nên người đọc học xong
+              lý thuyết là hết đường đi — ai đó đã vá bằng cách thêm một đoạn
+              text link riêng xuống dưới, thành ra một trang có 2 nút nghe giống
+              nhau đi 2 nơi. Nay nút chính trỏ thẳng công cụ, bỏ đoạn vá. */}
           <Link
-            href="/tu-vi"
+            href="/la-so-tu-vi"
             className="mt-4 inline-flex items-center rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-sm font-medium text-gold-700 transition hover:border-gold/60 hover:bg-gold/15"
           >
             Lập lá số Tử Vi miễn phí →
           </Link>
-          {/* Nối trang học ↔ công cụ lá số free: trước đây trang học không có
-              lối nào sang /la-so-tu-vi (12 cung + 121 sao) nên người đọc học
-              xong lý thuyết là hết đường đi. */}
-          <p className="mt-3 text-sm text-muted-foreground">
-            Muốn xem trực tiếp 12 cung và 121 sao trên lá số của mình?{' '}
-            <Link
-              href="/la-so-tu-vi"
-              className="text-gold-700 underline-offset-4 hover:underline"
-            >
-              Xem lá số Tử Vi chi tiết →
-            </Link>
-          </p>
         </aside>
       }
       breadcrumb={[
