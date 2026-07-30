@@ -86,7 +86,7 @@ const PRIMARY_LINKS: readonly NavLink[] = [
   { href: '/methodology', label: 'Phương pháp' },
   { href: '/pricing', label: 'Giá' },
   // §EE/quyết #9: ô "Về chúng tôi" intent thấp (đã có ở footer) → thay bằng
-  // "Học" (/learn, 19 bài + cẩm nang) — giữ chân + SEO.
+  // "Học" (/learn, 18 bài + cẩm nang) — giữ chân + SEO.
   { href: '/learn', label: 'Học' },
 ];
 
@@ -105,7 +105,11 @@ const MOBILE_TOOL_SECTIONS: readonly { label: string; links: readonly NavLink[] 
   }),
 ).filter((s) => s.links.length > 0);
 
-// Bài học — đủ 18 chủ đề /learn, xếp theo 3 trụ (founder: "bổ sung + sắp xếp").
+// Bài học — ĐỦ CẢ 18 chủ đề trong app/learn/*, xếp theo 3 trụ
+// (founder: "bổ sung + sắp xếp"). Trước đây comment ghi "đủ 18" nhưng danh sách
+// chỉ có 15 — thiếu can-xuong / dat-ten-ngu-hanh / trach-cat.
+// Thêm bài mới vào app/learn/ thì thêm vào đây luôn, nếu không nó sẽ vắng mặt
+// trong menu điện thoại (desktop dùng mega-footer nên không lộ ra ngay).
 const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn', label: 'Tất cả bài học' },
   // Cổ học Á Đông
@@ -118,6 +122,9 @@ const MOBILE_LEARN: readonly NavLink[] = [
   { href: '/learn/hop-tuoi', label: 'Hợp tuổi' },
   { href: '/learn/con-giap', label: '12 Con Giáp' },
   { href: '/learn/sao-han', label: 'Sao Hạn' },
+  { href: '/learn/trach-cat', label: 'Trạch cát (chọn ngày)' },
+  { href: '/learn/can-xuong', label: 'Cân Xương Đoán Số' },
+  { href: '/learn/dat-ten-ngu-hanh', label: 'Đặt tên ngũ hành' },
   // Tâm lý hiện đại
   { href: '/learn/mbti', label: 'MBTI' },
   { href: '/learn/big-five', label: 'Big Five' },
