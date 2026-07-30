@@ -84,6 +84,10 @@ async function createFeatureIntent(
   couponCode?: string,
 ): Promise<IntentOrFree> {
   const token = await getToken();
+  // Wave 53 P1 (#272) — IDOR fix mirror from PaymentClient.tsx.
+  // Anonymous callers must supply user_id; worker derives it from the JWT when
+  // a Bearer token is present and ignores the body field in that case.
+  const anonId = sessionId ? `anon-${sessionId}` : `anon-${slug}`;
   const res = await fetch('/api/payment/intent', {
     method: 'POST',
     headers: {
@@ -93,6 +97,7 @@ async function createFeatureIntent(
     body: JSON.stringify({
       tier: 'feature_unlock',
       tool_slug: slug,
+      user_id: anonId,
       ...(sessionId ? { session_id: sessionId } : {}),
       ...(couponCode ? { coupon_code: couponCode } : {}),
     }),
