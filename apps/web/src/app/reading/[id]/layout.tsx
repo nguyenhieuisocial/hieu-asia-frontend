@@ -5,7 +5,8 @@ import { redirect } from 'next/navigation';
 // noindex stays (per-user data). Metadata is GENERIC by design — no PII
 // lookup in generateMetadata (don't leak names/birthdates into og:title).
 // canonical: null because per-user reading pages shouldn't canonicalize.
-const TITLE = 'Báo cáo Tử Vi của bạn · hieu.asia';
+const TITLE = 'Báo cáo Tử Vi của bạn';
+const OG_TITLE = 'Báo cáo Tử Vi của bạn · hieu.asia';
 const DESCRIPTION =
   'Báo cáo Tử Vi cá nhân hoá do AI hieu.asia phân tích — luận giải, định hướng và lời khuyên dựa trên lá số của bạn.';
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
   alternates: { canonical: null },
   openGraph: {
-    title: TITLE,
+    title: OG_TITLE,
     description: DESCRIPTION,
     type: 'article',
     images: [
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: TITLE,
+    title: OG_TITLE,
     description: DESCRIPTION,
     images: [
       {

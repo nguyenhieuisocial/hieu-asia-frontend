@@ -240,13 +240,14 @@ function ReportContent() {
       {!isLocked && <ReadingProgress />}
       <header className="mb-6 flex items-center justify-between">
         <Link
-          href="/account"
+          href="/reading"
           className="text-sm text-muted-foreground hover:text-gold"
         >
-          ← Tài khoản
+          ← Lá số
         </Link>
         <span className="font-heading text-lg text-gold">hieu.asia</span>
       </header>
+      <h1 className="sr-only">Lá số của bạn</h1>
 
       <div className="space-y-6">
         {/* Wave 52.1 — per-report disclaimer at top of report (BUG-018). */}

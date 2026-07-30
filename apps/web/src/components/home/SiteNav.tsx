@@ -164,7 +164,7 @@ export function SiteNav() {
         </Link>
 
         <nav
-          className="hidden items-center gap-6 md:flex"
+          className="hidden items-center gap-6 lg:flex"
           aria-label="Điều hướng chính"
         >
           {PRIMARY_LINKS.map((l) => {
@@ -393,7 +393,7 @@ function MobileDrawer({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
-        className="relative inline-flex h-11 w-11 items-center justify-center rounded-md text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:hidden"
+        className="relative inline-flex h-11 w-11 items-center justify-center rounded-md text-foreground/85 transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary lg:hidden"
         aria-label={needsCheckin ? 'Mở menu — chưa điểm danh hôm nay' : 'Mở menu'}
       >
         <Menu className="h-5 w-5" />
@@ -460,7 +460,7 @@ function MobileDrawer({
               )}
             </>
           )}
-          {PRIMARY_LINKS.map((l) => (
+          {PRIMARY_LINKS.filter((l) => l.href !== '/learn').map((l) => (
             <Link
               key={l.label}
               href={l.href}

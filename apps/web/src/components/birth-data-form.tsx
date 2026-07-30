@@ -395,7 +395,7 @@ export function BirthDataForm() {
         <Field
           id="birth_time"
           label="Giờ sinh"
-          hint="Càng chính xác càng tốt — quan trọng cho luận giải vận hạn."
+          hint="Càng chính xác càng tốt. Nếu không nhớ, chọn ô bên dưới."
           error={errors.birth_time?.message}
         >
           {(ariaProps) => (
