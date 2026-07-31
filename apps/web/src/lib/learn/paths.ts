@@ -92,6 +92,16 @@ export const LEARN_PATHS: readonly LearnPath[] = [
       'Bộ máy đánh số thời gian của cổ học Á Đông: 10 can, 12 chi, vì sao ra đúng 60 — và mệnh ngũ hành thật ra lấy từ đâu.',
     slugs: ['can-chi', 'nap-am', 'tam-hop-luc-xung'],
   },
+  // Đợt 5. Lộ trình "mở nắp máy": không dạy luận, chỉ dạy KẾT QUẢ RA TỪ ĐÂU.
+  // Thứ tự sư phạm: Mệnh & Cục (thứ thiếu thì không an được sao) → lập lá số Tử
+  // Vi → tiết khí (thứ thiếu thì sai trụ tháng) → lập tứ trụ.
+  {
+    id: 'lap-la-so-tu-tru',
+    name: 'Lập lá số & tứ trụ',
+    tagline:
+      'Mở nắp máy: từ ngày giờ sinh ra lá số và tứ trụ bằng những bước nào — để bạn đọc kết quả mà không phải tin vào một hộp đen.',
+    slugs: ['menh-cuc', 'lap-la-so', 'tiet-khi', 'lap-bat-tu'],
+  },
 ];
 
 export interface TopicPathPosition {

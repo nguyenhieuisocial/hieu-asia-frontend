@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 38 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 42 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -233,6 +233,38 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Tam hợp – Lục xung',
         subtitle: 'Nền tảng · Vòng 12 chi',
         blurb: 'Hình học của vòng 12 con giáp: tam hợp là tam giác đều, lục xung là đối đỉnh.',
+      },
+    ],
+  },
+  {
+    id: 'lap-la-so-tu-tru',
+    heading: 'Lập lá số & tứ trụ',
+    positioning:
+      'Mở nắp máy: từ ngày giờ sinh, kết quả được dựng lên bằng những bước nào. Đọc cụm này rồi thì bạn không còn phải tin vào một hộp đen — bạn kiểm được từng bước.',
+    topics: [
+      {
+        href: '/learn/menh-cuc',
+        title: 'Mệnh và Cục',
+        subtitle: 'Tử Vi · Nền lá số',
+        blurb: 'Cục là gì, con số 2–6 nghĩa gì, và vì sao thiếu Cục thì không an được sao.',
+      },
+      {
+        href: '/learn/lap-la-so',
+        title: 'Lập lá số Tử Vi',
+        subtitle: 'Tử Vi · An sao',
+        blurb: 'An 12 cung, tìm cung Mệnh và cung Thân, an chính tinh, độ sáng miếu – vượng – đắc – hãm.',
+      },
+      {
+        href: '/learn/tiet-khi',
+        title: '24 tiết khí',
+        subtitle: 'Lịch pháp · Mặt Trời',
+        blurb: 'Tiết khí thuộc lịch dương chứ không phải lịch âm — và đó là lúc trụ tháng đổi.',
+      },
+      {
+        href: '/learn/lap-bat-tu',
+        title: 'Lập tứ trụ Bát Tự',
+        subtitle: 'Bát Tự · 4 trụ',
+        blurb: 'Trụ năm đổi ở Lập Xuân chứ không ở Tết; trụ giờ suy từ can ngày bằng Ngũ Thử Độn.',
       },
     ],
   },

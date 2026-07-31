@@ -60,6 +60,11 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'khai-truong', eyebrow: 'MỞ HÀNG', name: 'Tuổi khai trương', href: '/learn/khai-truong' },
   { slug: 'xong-dat', eyebrow: 'TỤC TẾT', name: 'Xông đất', href: '/learn/xong-dat' },
   { slug: 'thien-van', eyebrow: 'NHẬT NGUYỆT THỰC', name: 'Lịch thiên văn', href: '/learn/thien-van' },
+  // Đợt 5 — cách máy tính ra kết quả: lập lá số, lập tứ trụ, và hai thứ làm nền.
+  { slug: 'menh-cuc', eyebrow: 'MỆNH & CỤC', name: 'Mệnh và Cục', href: '/learn/menh-cuc' },
+  { slug: 'lap-la-so', eyebrow: 'AN SAO', name: 'Lập lá số Tử Vi', href: '/learn/lap-la-so' },
+  { slug: 'tiet-khi', eyebrow: '24 TIẾT KHÍ', name: '24 tiết khí', href: '/learn/tiet-khi' },
+  { slug: 'lap-bat-tu', eyebrow: 'TỨ TRỤ', name: 'Lập tứ trụ Bát Tự', href: '/learn/lap-bat-tu' },
 ];
 
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
@@ -113,7 +118,11 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   // cấu hình "trùng chi năm / Thái Tuế", nên phải đọc được sang nhau để người
   // đọc thấy đó là khác biệt có chủ ý giữa hai tục, không phải site tự mâu thuẫn.
   'xong-dat': ['tam-hop-luc-xung', 'khai-truong', 'nap-am', 'hop-tuoi'],
-  'thien-van': ['lich-am-duong', 'sao-han', 'chiem-tinh', 'trach-cat'],
+  'thien-van': ['lich-am-duong', 'sao-han', 'chiem-tinh', 'tiet-khi'],
+  'menh-cuc': ['lap-la-so', 'nap-am', 'tu-vi', 'can-chi'],
+  'lap-la-so': ['menh-cuc', 'tu-vi', 'lap-bat-tu', 'can-chi'],
+  'lap-bat-tu': ['tiet-khi', 'bat-tu', 'can-chi', 'lap-la-so'],
+  'tiet-khi': ['lich-am-duong', 'lap-bat-tu', 'thien-van', 'trach-cat'],
   'cung-hoang-dao': ['chiem-tinh', 'tarot', 'than-so-hoc', 'con-giap'],
   'lich-am-duong': ['trach-cat', 'gio-hoang-dao', 'ngay-kieng-ky', 'sao-han'],
   'gio-hoang-dao': ['trach-cat', 'lich-am-duong', 'ngay-kieng-ky', 'phong-thuy'],

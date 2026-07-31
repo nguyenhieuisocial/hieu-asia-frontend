@@ -117,7 +117,28 @@ tả ≤160 trên HTML build · sitemap 38 bài Học · hub đủ 4 thẻ.
    và "Kim Lâu 4 năm trong mỗi 9" — đúng và mang tính định nghĩa của tục lệ, nhưng `page.tsx`
    cùng bài đã suy `MIN_HOP`/`MAX_HOP`/`OVERLAP_CHIS` từ engine. Nên suy nốt cho nhất quán.
 
-## Còn lại — 23 bài, lõi riêng từng bài
+## Lập lá số & tứ trụ — XONG (01/08/2026)
+
+4 bài: `menh-cuc` (Cục là gì, con số 2–6, vì sao thiếu Cục thì không an được sao),
+`lap-la-so` (quy trình an cung – an Mệnh/Thân – an chính tinh – độ sáng),
+`tiet-khi` (24 tiết khí thuộc lịch DƯƠNG, và đó là lúc trụ tháng đổi),
+`lap-bat-tu` (trụ năm đổi ở Lập Xuân chứ không ở Tết; Ngũ Thử Độn cho trụ giờ).
+Lộ trình mới `lap-la-so-tu-tru`; hub thêm cụm cùng tên (42 chủ đề).
+
+Verify: tsc sạch · vitest 902/902 · build exit 0 · 4/4 bài đạt tiêu đề ≤60 và mô
+tả ≤160 trên HTML build · sitemap 42 bài Học · hub đủ 4 thẻ.
+
+**Hai guard bắt lỗi trong đợt này (giữ lại làm kinh nghiệm):**
+- `cta-consistency.guard` — nhãn link "lập lá số" bị dùng cho HAI đích (bài Học mới
+  và `/onboarding`). Đặt tên link trong bài mới phải tránh trùng nhãn hành động đã
+  có. Đã đổi thành "quy trình lập lá số".
+- `tool-coverage` bắt đúng một slug bị quên xoá khỏi `PENDING`.
+
+**Việc phát sinh cần kiểm riêng:** repo ghi MÂU THUẪN số lượng sao Tử Vi — chỗ 114,
+chỗ 121 (mô tả catalog `/la-so-tu-vi` ghi "121 sao"). Agent viết `lap-la-so` đã cố ý
+KHÔNG nêu con số nào vì không biết bên nào đúng. Cần rà và thống nhất một con số.
+
+## Còn lại — 19 bài, lõi riêng từng bài
 
 Cột "lõi riêng" là ranh giới chống lấn: viết đúng phần đó, phần còn lại chỉ link.
 

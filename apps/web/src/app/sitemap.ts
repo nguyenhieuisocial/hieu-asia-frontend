@@ -94,6 +94,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   publishAll('2026-08-01T00:00:00Z', ['can-chi', 'nap-am', 'tam-hop-luc-xung', 'xuat-hanh']);
   // đợt 4 — việc lớn theo tuổi + thiên văn
   publishAll('2026-08-01T00:00:00Z', ['cuoi-hoi', 'khai-truong', 'xong-dat', 'thien-van']);
+  // đợt 5 — lập lá số & tứ trụ
+  publishAll('2026-08-01T00:00:00Z', ['menh-cuc', 'lap-la-so', 'tiet-khi', 'lap-bat-tu']);
 
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
     url: `${BASE_URL}/tu-vi/${p.slug}`,

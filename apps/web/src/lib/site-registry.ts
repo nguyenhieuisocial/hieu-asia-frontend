@@ -99,7 +99,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi",
       "/tinh-menh-cuc",
       "/bang-chung",
-      "/reading"
+      "/reading",
+      "/learn/lap-la-so"
     ]
   },
   {
@@ -118,7 +119,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/la-so-tu-vi",
       "/bat-tu",
       "/ban-menh",
-      "/tinh-menh-cuc"
+      "/tinh-menh-cuc",
+      "/learn/lap-bat-tu"
     ]
   },
   {
@@ -143,7 +145,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi",
       "/bat-tu",
       "/than-so-hoc",
-      "/bang-chung"
+      "/bang-chung",
+      "/learn/menh-cuc"
     ]
   },
   {
@@ -506,7 +509,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi-2026",
       "/xem-ngay",
       "/lich-van-nien",
-      "/hop-tuoi"
+      "/hop-tuoi",
+      "/learn/tiet-khi"
     ]
   },
   {
@@ -1782,6 +1786,27 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/thien-van",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu nhật thực – nguyệt thực"
+  },
+  // Đợt 5 — lập lá số & tứ trụ.
+  {
+    "href": "/learn/menh-cuc",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Mệnh và Cục"
+  },
+  {
+    "href": "/learn/lap-la-so",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu cách lập lá số"
+  },
+  {
+    "href": "/learn/lap-bat-tu",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu cách lập tứ trụ"
+  },
+  {
+    "href": "/learn/tiet-khi",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu 24 tiết khí"
   }
 ];
 
