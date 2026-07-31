@@ -111,7 +111,7 @@ function copyForVariant(variant: Variant, quotaExhausted: boolean): CopyBlock | 
     case 'lifetime-discount':
       return {
         headline: `Trọn đời ${formatVND(PRICING.lifetime.vnd)} — trả một lần, dùng mãi mãi`,
-        subtext: 'Không bao giờ phải gia hạn. 7 sản phẩm + Mentor không giới hạn + ưu tiên đề xuất tính năng. Quà tặng bản thân hoặc người thân.',
+        subtext: 'Không bao giờ phải gia hạn. 7 sản phẩm + Mentor 30 câu/ngày + ưu tiên đề xuất tính năng. Quà tặng bản thân hoặc người thân.',
         ctaLabel: `Xem Lifetime — ${formatVND(PRICING.lifetime.vnd)}`,
         ctaHref: '/pricing#lifetime',
         targetTier: 'lifetime',
