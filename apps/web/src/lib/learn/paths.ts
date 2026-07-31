@@ -63,14 +63,14 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     name: 'Ngày giờ tốt xấu',
     tagline:
       'Hiểu cuốn lịch trước đã: lịch âm dương chạy thế nào, rồi mới tới giờ đẹp và ngày kiêng.',
-    slugs: ['lich-am-duong', 'gio-hoang-dao', 'ngay-kieng-ky', 'xuat-hanh'],
+    slugs: ['lich-am-duong', 'gio-hoang-dao', 'ngay-kieng-ky', 'xuat-hanh', 'thien-van'],
   },
   {
     id: 'xem-tuoi-viec-lon',
     name: 'Xem tuổi việc lớn',
     tagline:
       'Ba hạn tuổi hay bị hỏi nhất khi cưới hỏi và làm nhà — biết cách tính để bớt sợ, không phải để sợ thêm.',
-    slugs: ['kim-lau', 'tam-tai', 'hoang-oc'],
+    slugs: ['kim-lau', 'tam-tai', 'hoang-oc', 'cuoi-hoi', 'khai-truong', 'xong-dat'],
   },
   // Đợt 2. `bat-trach` chuyển từ "Ứng dụng đời sống" sang đây: khi đã có đủ 5 bài
   // chuyên sâu thì Bát Trạch là bài MỞ ĐẦU đúng nghĩa của cụm (phải biết cung phi

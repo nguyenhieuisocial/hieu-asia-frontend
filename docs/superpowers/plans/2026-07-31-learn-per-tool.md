@@ -95,7 +95,19 @@ hub thêm cụm "Nền tảng can chi" (34 chủ đề).
 Verify: tsc sạch · vitest 902/902 · build exit 0 · 4/4 bài đạt tiêu đề ≤60 và mô
 tả ≤160 trên HTML build · sitemap 34 bài Học · hub hiển thị đủ 4 thẻ.
 
-## Còn lại — 27 bài, lõi riêng từng bài
+## Việc lớn theo tuổi + thiên văn — XONG (01/08/2026)
+
+4 bài: `cuoi-hoi` (nhiều hạn gộp thành một kết luận + xác suất năm "sạch" tính từ
+engine), `khai-truong` (Thái Tuế, xung Thái Tuế, năm tuổi), `xong-dat` (tục chọn
+người xông đất: tiêu chí lá số vs tiêu chí con người), `thien-van` (nhật/nguyệt
+thực, phân–chí, và cây cầu La Hầu – Kế Đô = giao điểm quỹ đạo).
+`/thien-van` cuối cùng đã rời khỏi `/learn/trach-cat` — đây là ánh xạ sai rõ nhất
+của tình trạng cũ (bấm Học từ lịch thiên văn lại ra bài chọn ngày cưới).
+
+Verify: tsc sạch · vitest 902/902 · build exit 0 · 4/4 bài đạt tiêu đề ≤60 và mô
+tả ≤160 trên HTML build · sitemap 38 bài Học · hub đủ 4 thẻ.
+
+## Còn lại — 23 bài, lõi riêng từng bài
 
 Cột "lõi riêng" là ranh giới chống lấn: viết đúng phần đó, phần còn lại chỉ link.
 

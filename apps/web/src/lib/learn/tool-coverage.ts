@@ -117,11 +117,7 @@ export const EXEMPT_TOOLS: readonly string[] = ['/reading', '/hoi-dap'];
  * trình "mỗi công cụ một bài Học riêng".
  */
 export const PENDING: readonly string[] = [
-  '/learn/cuoi-hoi',
-  '/learn/khai-truong',
-  '/learn/xong-dat',
   '/learn/doc-mot-tuoi',
-  '/learn/thien-van',
   '/learn/menh-cuc',
   '/learn/lap-la-so',
   '/learn/lap-bat-tu',

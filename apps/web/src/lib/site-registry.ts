@@ -981,7 +981,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     },
     "home": {
       "n": "Lịch thiên văn",
-      "learn": "/learn/trach-cat",
+      "learn": "/learn/thien-van",
       "group": "Cổ học Á Đông"
     },
     "catalog": {
@@ -999,7 +999,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/lich-van-nien",
       "/gio-hoang-dao",
       "/xem-ngay",
-      "/ban-do-sao"
+      "/ban-do-sao",
+      "/learn/thien-van"
     ]
   },
   {
@@ -1025,7 +1026,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tam-tai",
       "/hop-tuoi",
       "/xem-ngay",
-      "/xem-tuoi-lam-nha"
+      "/xem-tuoi-lam-nha",
+      "/learn/cuoi-hoi"
     ]
   },
   {
@@ -1078,7 +1080,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/xem-ngay",
       "/xem-tuoi-cuoi",
       "/hop-tuoi",
-      "/sao-han"
+      "/sao-han",
+      "/learn/khai-truong"
     ]
   },
   {
@@ -1137,7 +1140,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/hop-tuoi",
       "/xem-tuoi-cuoi",
       "/tu-vi-2027",
-      "/xem-ngay"
+      "/xem-ngay",
+      "/learn/xong-dat"
     ]
   },
   {
@@ -1757,6 +1761,27 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/xuat-hanh",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu hướng xuất hành"
+  },
+  // Đợt 4 — việc lớn theo tuổi + thiên văn.
+  {
+    "href": "/learn/cuoi-hoi",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu tục xem tuổi cưới"
+  },
+  {
+    "href": "/learn/khai-truong",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Thái Tuế & tuổi khai trương"
+  },
+  {
+    "href": "/learn/xong-dat",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu tục xông đất"
+  },
+  {
+    "href": "/learn/thien-van",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu nhật thực – nguyệt thực"
   }
 ];
 

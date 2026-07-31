@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 34 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 38 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -202,6 +202,12 @@ const CLUSTERS: readonly LearnCluster[] = [
         subtitle: 'Dân gian · Hỷ Thần',
         blurb: 'Hỷ Thần, Tài Thần đổi theo can của NGÀY — khác hẳn hướng nhà tính theo tuổi.',
       },
+      {
+        href: '/learn/thien-van',
+        title: 'Lịch thiên văn',
+        subtitle: 'Khoa học · Nhật nguyệt thực',
+        blurb: 'Nhật thực, nguyệt thực, phân – chí: hiện tượng tính trước được hàng nghìn năm.',
+      },
     ],
   },
   {
@@ -291,6 +297,24 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Hoang Ốc & mượn tuổi',
         subtitle: 'Làm nhà · 6 cung',
         blurb: 'Sáu cung Hoang Ốc tra theo tuổi mụ, và cơ chế "mượn tuổi" khi xây nhà.',
+      },
+      {
+        href: '/learn/cuoi-hoi',
+        title: 'Xem tuổi cưới',
+        subtitle: 'Cưới hỏi · Gộp điều kiện',
+        blurb: 'Nhiều hạn gộp lại thành một kết luận ra sao — và còn bao nhiêu phần trăm số năm "sạch".',
+      },
+      {
+        href: '/learn/khai-truong',
+        title: 'Tuổi khai trương',
+        subtitle: 'Kinh doanh · Thái Tuế',
+        blurb: 'Thái Tuế, xung Thái Tuế và năm tuổi — cách chọn năm, ngày, giờ mở hàng.',
+      },
+      {
+        href: '/learn/xong-dat',
+        title: 'Xông đất đầu năm',
+        subtitle: 'Tục Tết · Chọn người',
+        blurb: 'Chọn người bước vào nhà sáng mùng Một: tiêu chí lá số và tiêu chí con người.',
       },
     ],
   },
