@@ -234,7 +234,7 @@ export function PostReadingUpsell({ upsellVariant, runId, graphKind, sessionId }
               Cảm ơn bạn đã đồng hành 💛
             </h3>
             <p className="mt-1 text-sm text-amber-800/90 dark:text-amber-200/80">
-              Mời bạn bè khám phá hieu.asia — bạn nhận 30% hoa hồng cho mỗi giao dịch của họ.
+              Mời bạn bè khám phá hieu.asia — bạn nhận 30% hoa hồng đơn đầu + 10% mỗi lần họ gia hạn.
             </p>
             <Link
               href="/affiliate/dashboard"

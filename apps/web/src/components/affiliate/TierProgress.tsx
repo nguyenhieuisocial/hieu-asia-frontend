@@ -2,8 +2,8 @@
  * TierProgress — bronze/silver/gold/platinum recognition progress bar.
  * Consumed by /affiliate/dashboard.
  *
- * Note: hoa hồng là một mức cố định cho mọi cấp (30% tháng đầu / 10% các
- * tháng sau). Cấp chỉ là ghi nhận cột mốc số lượt giới thiệu, KHÔNG đổi tỉ
+ * Note: hoa hồng là một mức cố định cho mọi cấp (30% đơn đầu / 10% mỗi lần
+ * gia hạn). Cấp chỉ là ghi nhận cột mốc số lượt giới thiệu, KHÔNG đổi tỉ
  * lệ hoa hồng. Vì vậy widget chỉ hiển thị tiến độ cột mốc, không hiển thị
  * tỉ lệ theo cấp.
  */
@@ -55,8 +55,8 @@ export function TierProgress({ tier, tiers }: Props) {
         <div>
           <div className="mb-1 flex justify-between text-xs text-muted-foreground">
             <span>
-              Hoa hồng: <b className="text-gold">30%</b> tháng đầu ·{' '}
-              <b className="text-gold">10%</b> các tháng sau (một mức cho mọi cấp)
+              Hoa hồng: <b className="text-gold">30%</b> đơn đầu ·{' '}
+              <b className="text-gold">10%</b> mỗi lần gia hạn (một mức cho mọi cấp)
             </span>
             {tier.next && (
               <span>
