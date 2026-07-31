@@ -37,14 +37,19 @@ const SUPABASE_URL =
   process.env.SUPABASE_URL ??
   process.env.NEXT_PUBLIC_SUPABASE_URL ??
   'https://fvftbqairezsybasqsek.supabase.co';
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// 31/07/2026 — gui READING_PROXY_TOKEN thay vi service-role key: Supabase
+// migrate he API key lam bien SUPABASE_SERVICE_ROLE_KEY inject trong EF runtime
+// doi gia tri (sb_secret moi) trong khi Vercel giu JWT legacy -> ctEq phia EF
+// fail 401 am tham. Custom secret (cung mau reading-get, da chay tot) moi
+// deterministic. EF da doi gate cung dot nay (backend PR fix/ef-gate-proxy-token).
+const READING_PROXY_TOKEN = process.env.READING_PROXY_TOKEN;
 
 // Bound the metadata blob so a hostile client can't push arbitrarily large rows.
 const MAX_ACTION_LEN = 128;
 const MAX_METADATA_BYTES = 8 * 1024;
 
 export async function POST(req: NextRequest) {
-  if (!SUPABASE_SERVICE_ROLE_KEY) {
+  if (!READING_PROXY_TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'service_unavailable' },
       { status: 503 },
@@ -113,7 +118,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-service-token': SUPABASE_SERVICE_ROLE_KEY,
+        'x-service-token': READING_PROXY_TOKEN,
       },
       body: JSON.stringify(forwardBody),
       cache: 'no-store',
