@@ -6,16 +6,37 @@ import { getUserInfo } from 'zmp-sdk/apis';
 import { ZaloHeader } from '../components/zalo-header';
 import { ZaloBottomCta } from '../components/zalo-bottom-cta';
 
-// NĐ 13/2023 audit endpoint — same Supabase Edge Function as miniapp-telegram.
-// Failures are non-blocking: consent UX continues regardless.
+// NĐ 356/2025 audit endpoint.
+//
+// ⛔ ĐANG HỎNG CÓ CHỦ ĐÍCH — CHƯA CÓ ĐƯỜNG NÀO KHẢ THI (rà 31/07/2026):
+// Edge Function `audit-log` gate bằng `x-service-token` (khoá SERVER) từ Wave
+// 64, nên gọi thẳng từ trình duyệt bằng anon key LUÔN trả 401. Điều này đúng
+// từ Wave 64 chứ không phải lỗi mới — chỉ là trước đây nó im lặng nên không ai
+// biết. Comment trong `audit-log/index.ts` đã ghi: *"route it through the
+// Worker before re-enabling that path"*.
+//
+// miniapp-telegram đã sửa xong (31/07) bằng cách dựng API route server-side
+// giữ khoá. Zalo KHÔNG làm được như vậy: ZMP là app thuần client, không có
+// server. Hai đường khả thi, đều cần founder quyết vì đụng bảo mật:
+//   (a) thêm endpoint ghi công khai trên Worker (api.hieu.asia) có chống lạm
+//       dụng — Worker đã giữ sẵn khoá;
+//   (b) mở CORS cho `hieu.asia/api/audit/log` — nhưng đó là endpoint GHI công
+//       khai, mở CORS phải cân nhắc chống spam trước.
+// Trước khi chọn xong, KHÔNG giả vờ là nó chạy.
+//
+// Failures are non-blocking: consent UX continues regardless — nhưng KHÔNG còn
+// im lặng (xem console.error dưới). Chính sự im lặng đã giấu sự cố nhiều tuần.
 async function logConsentAudit(payload: {
   user_id: string;
   audit_metadata: Record<string, unknown>;
 }): Promise<void> {
   const url = (import.meta.env.VITE_EDGE_FN_URL as string | undefined)?.replace(/\/$/, '');
   const anon = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
-  if (!url || !anon) return; // env not wired in this build — skip silently
-  await fetch(`${url}/audit-log`, {
+  if (!url || !anon) {
+    console.error('[consent] audit chua duoc noi: thieu VITE_EDGE_FN_URL/ANON_KEY');
+    return;
+  }
+  const res = await fetch(`${url}/audit-log`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -28,6 +49,14 @@ async function logConsentAudit(payload: {
       audit_metadata: payload.audit_metadata,
     }),
   });
+  // Dự kiến 401 cho tới khi có đường server (xem khối chú thích đầu hàm).
+  // Ghi to để lần sau không ai tưởng nhật ký đồng ý đang được ghi.
+  if (!res.ok) {
+    console.error(
+      `[consent] GHI NHAT KY DONG Y THAT BAI (HTTP ${res.status}) — nghia vu NĐ 356/2025 ` +
+        `chua duoc dap ung tren Zalo mini-app. Can dung duong server, xem chu thich dau ham.`,
+    );
+  }
 }
 
 // Wave 16 standard: 1 mandatory (birth_data) + 1 optional (improve_optin).

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, ConsentCheckboxList, type ConsentItem } from '@hieu-asia/ui';
 import { TgMainButton } from '@/components/tg-main-button';
 import { TgBackButton } from '@/components/tg-back-button';
-import { getOrCreateAnonUserId, logAudit } from '@hieu-asia/supabase';
+import { getRawInitData } from '@/lib/telegram-auth';
 
 const REQUIRED_ITEMS: ConsentItem[] = [
   {
@@ -42,15 +42,26 @@ export default function ConsentPage() {
         JSON.stringify({ accepted: true, accepted_at: acceptedAt, version: 'v2.0', purposes }),
       );
     }
-    const userId = getOrCreateAnonUserId();
+    // 31/07/2026: gọi qua /api/audit/log (server giữ khoá) thay vì logAudit()
+    // gọi thẳng Edge Function từ trình duyệt — đường cũ dùng anon key nên bị
+    // gate x-service-token chặn 401 ÂM THẦM từ Wave 64, nhật ký đồng ý của
+    // mini-app chưa từng được ghi. Server tự suy actor từ initData đã ký HMAC.
     try {
-      await logAudit({
-        user_id: userId,
-        action: 'consent_accepted',
-        audit_metadata: { version: 'v2.0', purposes, accepted_at: acceptedAt, surface: 'miniapp-telegram' },
+      const initData = await getRawInitData();
+      const res = await fetch('/api/audit/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          init_data: initData,
+          action: 'consent_accepted',
+          audit_metadata: { version: 'v2.0', purposes, accepted_at: acceptedAt },
+        }),
       });
+      // Nhật ký đồng ý là nghĩa vụ NĐ 356/2025 — im lặng nuốt lỗi chính là thứ
+      // đã giấu sự cố này nhiều tuần. Ghi rõ mã lỗi để còn lần ra.
+      if (!res.ok) console.error('audit log HTTP', res.status);
     } catch (e) {
-      console.warn('audit log failed:', e);
+      console.error('audit log failed:', e);
     }
     router.push('/reading/new');
   };
