@@ -4,10 +4,12 @@
  * ReadingProgress — thanh tiến độ đọc mảnh, gắn đầu trang báo cáo
  * (/reading/[id]/report). Cho biết người đọc đã cuộn qua bao nhiêu % nội dung.
  *
- * KHÔNG nhầm với `@/components/reading/reading-progress.tsx` (cùng tên export
- * `ReadingProgress` nhưng khác hẳn mục đích: file đó là live agent-run progress
- * cho trang /processing, subscribe `useAgentRun`). Component NÀY thuần frontend,
- * không fetch gì — chỉ phản ánh vị trí cuộn của tài liệu.
+ * Component NÀY thuần frontend, không fetch gì — chỉ phản ánh vị trí cuộn của
+ * tài liệu.
+ *
+ * (Trước đây có cảnh báo trùng tên với `@/components/reading/reading-progress.tsx`
+ * — live agent-run progress của hệ suy luận LangGraph. File đó đã xoá cùng cả
+ * nhánh LangGraph chưa từng bật; nay chỉ còn MỘT `ReadingProgress`.)
  *
  * Chiến lược (ưu tiên CSS thuần, JS chỉ khi cần):
  *  1) CSS scroll-driven animation — `animation-timeline: scroll(root block)`
