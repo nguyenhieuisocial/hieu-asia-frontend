@@ -108,12 +108,22 @@ export const FLAGS = {
    * Variants for the PostReadingUpsell banner headline (Wave 58):
    *  - `control`            → banner hidden (baseline conversion)
    *  - `mentor-focus`       → "Mở khoá Mentor chat — Hỏi sâu bất kỳ lúc nào"
-   *  - `unlimited-focus`    → "Đọc không giới hạn — 199.000đ/tháng"
-   *  - `lifetime-discount`  → "Trọn đời 4.990.000đ — Tiết kiệm 60% so với 2 năm"
+   *  - `unlimited-focus`    → "Đọc không giới hạn — chỉ 199.000đ/tháng"
+   *  - `lifetime-discount`  → "Trọn đời {lifetime} — trả một lần, dùng mãi mãi"
    *
-   * Defaults to `control` so the banner stays hidden until the flag is
-   * configured in PostHog. Founder decision: aggressive upsell after every
-   * reading. Each variant tracks `upsell_clicked` and `upsell_dismissed`.
+   * The code fallback is `control`, but do NOT read that as "the banner is
+   * off". This flag has been LIVE in PostHog since 2026-05-24: release
+   * rollout 100%, variants split 25/25/25/25. So ~75% of eligible viewers
+   * get an upsell variant and 25% are the control group.
+   *
+   * (The banner still rendered nowhere until Wave 62 mounted the component on
+   * the report page — the flag was configured years-of-waves before it had a
+   * consumer. An earlier version of this comment said the banner "stays hidden
+   * until the flag is configured in PostHog"; that was already untrue and it
+   * caused a wrong production-state call. Check the dashboard, not this line.)
+   *
+   * Founder decision: aggressive upsell after every reading. Each variant
+   * tracks `upsell_view`, `upsell_clicked` and `upsell_dismissed`.
    */
   UPSELL_POST_READING_V1: "upsell_post_reading_v1",
 } as const;
