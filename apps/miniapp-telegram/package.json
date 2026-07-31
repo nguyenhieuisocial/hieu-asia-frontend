@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start --port 3002",
     "lint": "next lint",
-    "test": "echo 'miniapp-telegram: no tests yet'",
+    "test": "vitest run",
     "types:check": "tsc --noEmit",
     "clean": "rm -rf .next .turbo node_modules"
   },
@@ -42,6 +42,7 @@
     "eslint-config-next": "^15.0.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^4.0.0-beta.3",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vitest": "^4.1.8"
   }
 }
