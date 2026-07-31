@@ -486,7 +486,10 @@ describe('ALLOWLIST', () => {
       'utf8',
     );
     const body = src.slice(src.indexOf('export const ALLOWLIST'));
-    const keys = [...body.matchAll(/^\s{2}'([^']+)':/gm)].map((m) => m[1]);
+    // `m[1]!`: nhóm bắt `([^']+)` là bắt buộc nên khớp được là chắc chắn có —
+    // `noUncheckedIndexedAccess` vẫn kêu `string | undefined`, chốt luôn ở đây
+    // để các bài dưới đọc `keys` như mảng string thật.
+    const keys = [...body.matchAll(/^\s{2}'([^']+)':/gm)].map((m) => m[1]!);
     const dupes = keys.filter((k, i) => keys.indexOf(k) !== i);
     expect(dupes, `key khai trùng: ${dupes.join(', ')}`).toEqual([]);
 
