@@ -21,6 +21,7 @@ import {
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'AI Safety Policy',
@@ -255,10 +256,7 @@ export default function AiSafetyPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       <main id="main-content" className="relative pt-16 methodology-a11y">
         {/* Hero */}
         <section className="relative overflow-hidden">

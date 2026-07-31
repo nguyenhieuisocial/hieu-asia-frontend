@@ -21,6 +21,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Lộ trình theo nhu cầu',
@@ -107,10 +108,7 @@ export default function LoTrinhHubPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"

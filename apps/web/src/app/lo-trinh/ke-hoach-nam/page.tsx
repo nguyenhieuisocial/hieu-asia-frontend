@@ -19,6 +19,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 const SLUG = 'ke-hoach-nam';
 const TOPIC = 'general';
@@ -109,10 +110,7 @@ export default function KeHoachNamPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"
