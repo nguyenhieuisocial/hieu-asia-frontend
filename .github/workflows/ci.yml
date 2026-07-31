@@ -1,4 +1,4 @@
-# Lint + test + build affected packages for the pnpm/turbo monorepo.
+# Lint + test + build + types:check affected packages for the pnpm/turbo monorepo.
 # Secrets required: none.
 #
 # Wave 60.25 — quota trim. Free-plan private-repo Actions quota is 2,000
@@ -20,6 +20,19 @@
 #      toàn bộ. Không có nó, PR sửa cấu hình CI qua cổng mà chạy 0 việc — đo
 #      được ở PR #969: 46 giây, `Tasks: 0 successful, 0 total`, check vẫn xanh.
 #      Chi tiết ở bước "Detect non-docs changes".
+# Và MỘT việc bổ sung cố ý (Wave 60.x — thêm cổng kiểu):
+#   4. Chạy luôn `types:check`. Trước đây CI chỉ lint/test/build, mà vitest
+#      STRIP kiểu nên lỗi TypeScript đi lọt hoàn toàn: `pnpm types:check` ở gốc
+#      repo ĐỎ suốt (TS18048 trong apps/web/src/lib/seo-guard.test.ts) trong khi
+#      876 test của web vẫn xanh và CI vẫn xanh. Cổng không bắt được thứ nó phải
+#      bắt thì không phải là cổng. Thêm vào CÙNG một lệnh turbo nên gần như
+#      không tốn thêm quota: chạy song song, có cache, `tsc --noEmit` không
+#      xuất file.
+#      ⚠️ KHÔNG đổi `name:` của job bên dưới. Chuỗi "turbo lint + test + build"
+#      là TÊN status check bắt buộc trong branch protection; đổi tên thì check cũ
+#      không bao giờ được báo nữa và MỌI PR kẹt vĩnh viễn ở trạng thái "expected".
+#      Tên job cố tình lệch với việc nó làm — đó là cái giá rẻ hơn nhiều so với
+#      việc phải sửa branch protection đồng thời với lúc merge.
 name: ci
 
 on:
@@ -39,6 +52,8 @@ concurrency:
 
 jobs:
   ci:
+    # ⚠️ ĐỪNG đổi chuỗi này — là tên status check bắt buộc (xem ghi chú 4 ở đầu
+    # file). Job này giờ chạy cả `types:check`, tên cố tình giữ nguyên.
     name: turbo lint + test + build
     runs-on: ubuntu-latest
     steps:
@@ -126,18 +141,21 @@ jobs:
           restore-keys: |
             turbo-${{ runner.os }}-
 
-      - name: Turbo lint/test/build (affected)
+      - name: Turbo lint/test/build/types:check (affected)
         if: steps.detect.outputs.code == 'true'
         # Exclude `@hieu-asia/miniapp-zalo` — `zmp build` requires `zmp login`
         # (Zalo developer portal auth) which CI cannot perform. Local devs
         # build it manually after `zmp login`.
+        # Hệ quả đã biết: bộ lọc này gạt zalo khỏi CẢ lint/test/types:check chứ
+        # không riêng build, nên package đó hiện không có cổng CI nào. Lỗ hổng
+        # có từ trước, không phải do thêm types:check; tách ra xử lý riêng.
         run: |
           FILTER='--filter=!@hieu-asia/miniapp-zalo'
           # PR thường: chỉ chạy package bị ảnh hưởng (tiết kiệm quota).
           # PR đụng `.github/**`: bỏ lọc, chạy hết — xem lý do dài ở bước detect.
           if [ "${{ github.event_name }}" = "pull_request" ] \
             && [ "${{ steps.detect.outputs.infra }}" != "true" ]; then
-            pnpm turbo lint test build "$FILTER" --filter='[origin/main]'
+            pnpm turbo lint test build types:check "$FILTER" --filter='[origin/main]'
           else
-            pnpm turbo lint test build "$FILTER"
+            pnpm turbo lint test build types:check "$FILTER"
           fi
