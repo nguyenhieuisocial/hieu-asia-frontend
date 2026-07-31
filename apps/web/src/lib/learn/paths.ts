@@ -1,6 +1,6 @@
 // Lộ trình học gợi ý cho khu /learn.
 //
-// 5 lộ trình phủ ĐÚNG 18 chủ đề, mỗi chủ đề thuộc đúng MỘT lộ trình — nhờ vậy
+// Các lộ trình phủ ĐÚNG tập LEARN_TOPICS, mỗi chủ đề thuộc đúng MỘT lộ trình — nhờ vậy
 // "bài trước / bài tiếp theo" của một chủ đề là đơn trị (không phải đoán người
 // học đang đi lộ trình nào). Ràng buộc này có test canh (paths.test.ts); thêm
 // chủ đề mới thì phải xếp nó vào một lộ trình, test đỏ nếu quên.
@@ -39,20 +39,38 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     id: 'ung-dung-doi-song',
     name: 'Ứng dụng đời sống',
     tagline: 'Phần "dùng được ngay" của ngũ hành: xem hướng, chọn ngày, đặt tên.',
-    slugs: ['phong-thuy', 'trach-cat', 'dat-ten-ngu-hanh'],
+    slugs: ['phong-thuy', 'bat-trach', 'trach-cat', 'dat-ten-ngu-hanh'],
   },
   {
     id: 'soi-chieu-phan-tu',
     name: 'Soi chiếu & phản tư',
     tagline:
       'Công cụ đặt câu hỏi cho chính mình — đọc để phản tư, không phải để tiên tri.',
-    slugs: ['than-so-hoc', 'chiem-tinh', 'tarot', 'kinh-dich'],
+    slugs: ['than-so-hoc', 'cung-hoang-dao', 'chiem-tinh', 'tarot', 'kinh-dich'],
   },
   {
     id: 'tuong-hoc-dan-gian',
     name: 'Tướng học dân gian',
     tagline: 'Chỉ tay và cân xương — đọc như tập tục quan sát lâu đời, biết rõ giới hạn.',
     slugs: ['palm', 'can-xuong'],
+  },
+  // Hai lộ trình dưới ra đời cùng đợt 1 của chương trình "mỗi công cụ một bài
+  // Học riêng": trước đó cả cụm ngày–giờ và cụm xem tuổi việc lớn đều không có
+  // bài nào của riêng mình, người đọc bấm "Học" từ 5 công cụ khác nhau đều rơi
+  // vào cùng một bài Trạch Cát.
+  {
+    id: 'ngay-gio-tot-xau',
+    name: 'Ngày giờ tốt xấu',
+    tagline:
+      'Hiểu cuốn lịch trước đã: lịch âm dương chạy thế nào, rồi mới tới giờ đẹp và ngày kiêng.',
+    slugs: ['lich-am-duong', 'gio-hoang-dao', 'ngay-kieng-ky'],
+  },
+  {
+    id: 'xem-tuoi-viec-lon',
+    name: 'Xem tuổi việc lớn',
+    tagline:
+      'Ba hạn tuổi hay bị hỏi nhất khi cưới hỏi và làm nhà — biết cách tính để bớt sợ, không phải để sợ thêm.',
+    slugs: ['kim-lau', 'tam-tai', 'hoang-oc'],
   },
 ];
 
