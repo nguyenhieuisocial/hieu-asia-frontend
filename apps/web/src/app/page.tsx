@@ -550,7 +550,10 @@ export default function LandingPage() {
             task-center/rewards của Bitget; mời bạn → voucher giảm giá có thật).
             Đặt trước Giá: làm xong các bước free rồi mới tới gói trả phí. */}
         <Suspense fallback={null}>
-          <RevealOnScroll><StartupPath /></RevealOnScroll>
+          {/* Wave 65.02 — bỏ RevealOnScroll bọc ngoài: StartupPath TỰ bọc
+              RevealOnScroll bên trong (double-wrap = 2 lần observer + 2 lần
+              delay animation — finding P3 vòng 7). /qua dùng bare là đúng. */}
+          <StartupPath />
         </Suspense>
 
         {/* Lời mời "lập lá số thật" giờ là HERO (InstantChartHero, trên cùng) —
