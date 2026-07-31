@@ -44,6 +44,7 @@ import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { ScrollProgress } from '@/components/fx/ScrollProgress';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { faqPage, lensServices } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -101,158 +102,52 @@ export const metadata: Metadata = {
 // duplicated the entity with drifted data (short sameAs, off-brand description),
 // so Google saw two conflicting Organizations. Removed; the homepage-specific
 // nodes below (HowTo / Services / FAQ / SoftwareApplication) stay.
+// Wave 65.01 — viết lại HowTo khớp trang HIỆN TẠI: bản cũ mô tả flow onboarding
+// 3 bước đã gỡ khỏi trang và bước 2 trỏ anchor #how không tồn tại (finding P2
+// vòng 5 + vòng 7). Ba bước mới = đúng những gì khách làm được trên trang chủ:
+// nhập ngày sinh ở hero → lá số hiện ngay → hỏi Mentor.
 const HOWTO_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
   name: 'Bắt đầu trong 3 phút với hieu.asia',
   description:
-    'Ba bước để có góc nhìn huyền học cá nhân hóa: nhập thông tin, để AI phân tích, trò chuyện với AI Mentor.',
+    'Ba bước để hiểu mình bằng lá số thật: nhập ngày giờ sinh, xem lá số Bát Tự tính ngay, trò chuyện với AI Mentor.',
   inLanguage: 'vi-VN',
   totalTime: 'PT3M',
   step: [
     {
       '@type': 'HowToStep',
       position: 1,
-      name: 'Nhập thông tin cơ bản',
-      text: 'Cung cấp ngày giờ sinh và giới tính. Khoảng 1 phút, có thể chỉnh sửa sau.',
-      url: 'https://hieu.asia/onboarding',
+      name: 'Nhập ngày giờ sinh ngay trên trang chủ',
+      text: 'Điền ngày, giờ sinh và giới tính vào form đầu trang. Khoảng 1 phút, không cần tài khoản.',
+      url: 'https://hieu.asia/',
     },
     {
       '@type': 'HowToStep',
       position: 2,
-      name: 'AI phân tích trong 30 giây',
-      text: 'Hệ thống tổng hợp Tử Vi, Bát Tự, MBTI, Big Five và Xem Tướng (cùng các công cụ như Thần Số Học) thành một bản tổng hợp rõ ràng.',
-      url: 'https://hieu.asia/#how',
+      name: 'Xem lá số Bát Tự tính ngay trên máy bạn',
+      text: 'Lá số hiện ngay bên dưới: Nhật Chủ, ngũ hành mạnh yếu, đại vận — tính trong trình duyệt, chưa đăng ký thì không lưu gì.',
+      url: 'https://hieu.asia/',
     },
     {
       '@type': 'HowToStep',
       position: 3,
       name: 'Trò chuyện với AI Mentor để hành động',
-      text: 'Đặt câu hỏi về quyết định bạn đang cân nhắc. Mentor gợi ý các bước tiếp theo.',
+      text: 'Đặt câu hỏi về quyết định bạn đang cân nhắc. Mentor đối thoại dựa trên lá số của bạn và gợi ý bước tiếp theo.',
       url: 'https://hieu.asia/onboarding',
     },
   ],
 };
 
-const SERVICES_JSONLD = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Service',
-      name: 'Tử Vi Đẩu Số',
-      serviceType: 'Tử Vi astrology reading',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/learn/tu-vi',
-      description:
-        'Lá số Tử Vi 12 cung với chính tinh và phụ tinh — bản đồ 12 lĩnh vực đời sống.',
-    },
-    {
-      '@type': 'Service',
-      name: 'Bát Tự Tứ Trụ',
-      serviceType: 'Bát Tự (BaZi) reading',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/learn/bat-tu',
-      description:
-        'Bát Tự 4 trụ Năm – Tháng – Ngày – Giờ theo Ngũ Hành — cân bằng năng lượng bẩm sinh.',
-    },
-    {
-      '@type': 'Service',
-      name: 'MBTI 16 loại tính cách',
-      serviceType: 'MBTI personality assessment',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/learn/mbti',
-      description:
-        'MBTI dựa trên 4 trục của Carl Jung — khung tự nhận thức về cách bạn vận hành tự nhiên.',
-    },
-    {
-      '@type': 'Service',
-      name: 'Big Five (OCEAN)',
-      serviceType: 'Big Five (OCEAN) personality assessment',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/big-five',
-      description:
-        'Trắc nghiệm Big Five (OCEAN) — 5 chiều tính cách có cơ sở khoa học vững nhất, kèm bản đọc sâu cá nhân hoá.',
-    },
-    {
-      '@type': 'Service',
-      name: 'Xem Tướng AI',
-      serviceType: 'Palmistry / chiromancy AI analysis',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/learn/palm',
-      description:
-        'AI phân tích 7 đường chính trên lòng bàn tay — tâm đạo, trí đạo, sinh đạo và các đường phụ.',
-    },
-  ],
-};
+// Wave 65.01 — SERVICES_JSONLD hand-code đã thay bằng lensServices() (lib/seo/
+// jsonld) sinh từ lib/catalog/lenses: bản cũ drift khỏi catalog (Xem Tướng trỏ
+// /learn/palm thay vì /xem-tuong, MBTI trỏ /learn/mbti thay vì /mbti, mô tả
+// lệch). Một nguồn sự thật — đổi lens trong catalog là JSON-LD tự khớp.
 
-// FAQPage JSON-LD — answers ≤200 chars each, mirror the visible FAQ semantics
-// but trimmed for crawlers (rich-result eligibility). Keep in sync with HOME_FAQ
-// below: if you change the visible Q&A, update this block too.
-const FAQ_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  inLanguage: 'vi-VN',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'hieu.asia có dự đoán tương lai không?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Không. Chúng tôi không dự đoán tương lai. Mục tiêu là giúp bạn nhìn rõ mẫu hình hành vi và động lực bẩm sinh để tự ra quyết định tốt hơn.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Có. Bạn vẫn dùng được MBTI, Big Five, Thần Số Học và Xem Tướng mà không cần giờ sinh. Có thể cập nhật lá số bất cứ lúc nào sau đó.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Dữ liệu cá nhân được bảo vệ thế nào?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: `Tier Standard miễn phí gồm các công cụ tra cứu cơ bản. Premium ${formatVND(PRICING.premium.vnd)} một lần, Mentor Monthly ${formatVND(PRICING.monthly.vnd)}/tháng hoặc Mentor Yearly ${formatVND(PRICING.yearly.vnd)}/năm, Lifetime ${formatVND(PRICING.lifetime.vnd)} một lần.`,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Tôi có thể huỷ gói subscription bất cứ lúc nào?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Có. Huỷ trong trang Tài khoản, gói dùng hết kỳ đã thanh toán, không tự gia hạn. Hoàn tiền 100% trong 24h nếu báo cáo chưa tạo.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'hieu.asia có khác gì với các app xem bói khác?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Tử Vi và Bát Tự tính theo Bắc phái với 121 sao (không tra bảng), Mentor AI đối thoại có ngữ cảnh, văn phong điềm tĩnh không định mệnh hoá.',
-      },
-    },
-  ],
-};
+// Wave 65.01 — FAQ_JSONLD không còn là khối chép tay tách rời: câu hỏi lấy
+// CHUNG từ HOME_FAQ bên dưới (hết drift q giữa markup và bản hiển thị), đáp án
+// crawler là field `aCrawler` nằm NGAY CẠNH JSX của từng item (≤200 ký tự cho
+// rich-result eligibility — giữ nguyên quy ước cũ). Khối build ở sau HOME_FAQ.
 
 // SoftwareApplication JSON-LD — offers sourced from PRICING (lib/pricing.ts).
 // No aggregateRating: we have no audited review data and refuse to fabricate.
@@ -294,9 +189,15 @@ const SOFTWARE_APP_JSONLD = {
   ],
 };
 
-const HOME_FAQ: readonly FaqItem[] = [
+// Wave 65.01 — mỗi item mang cả bản hiển thị (a: JSX) lẫn bản crawler
+// (aCrawler: plain text ≤200 ký tự). Sửa đáp án thì sửa cả hai NGAY tại đây.
+type HomeFaqEntry = FaqItem & { aCrawler: string };
+
+const HOME_FAQ: readonly HomeFaqEntry[] = [
   {
     q: 'hieu.asia có dự đoán tương lai không?',
+    aCrawler:
+      'Không. Chúng tôi không dự đoán tương lai. Mục tiêu là giúp bạn nhìn rõ mẫu hình hành vi và động lực bẩm sinh để tự ra quyết định tốt hơn.',
     a: (
       <p>
         Không. Chúng tôi không tuyên bố dự đoán tương lai. Mục tiêu của hieu.asia
@@ -307,6 +208,8 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
   {
     q: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
+    aCrawler:
+      'Có. Bạn vẫn dùng được MBTI, Big Five, Thần Số Học và Xem Tướng mà không cần giờ sinh. Có thể cập nhật lá số bất cứ lúc nào sau đó.',
     a: (
       <p>
         Có. Bạn vẫn có thể bắt đầu với MBTI, Big Five, Thần Số Học và Xem Tướng mà
@@ -317,6 +220,8 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
   {
     q: 'Dữ liệu cá nhân được bảo vệ thế nào?',
+    aCrawler:
+      'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
     a: (
       <>
         <p>
@@ -334,6 +239,7 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
   {
     q: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
+    aCrawler: `Gói Standard miễn phí gồm các công cụ tra cứu cơ bản. Premium ${formatVND(PRICING.premium.vnd)} một lần, Mentor Monthly ${formatVND(PRICING.monthly.vnd)}/tháng hoặc Mentor Yearly ${formatVND(PRICING.yearly.vnd)}/năm, Lifetime ${formatVND(PRICING.lifetime.vnd)} một lần.`,
     a: (
       <p>
         Tier <strong>Standard miễn phí</strong> gồm khảo sát đầu vào và các công
@@ -349,6 +255,8 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
   {
     q: 'Tôi có thể huỷ gói subscription bất cứ lúc nào?',
+    aCrawler:
+      'Có. Huỷ trong trang Tài khoản, gói dùng hết kỳ đã thanh toán, không tự gia hạn. Hoàn tiền 100% trong 24h nếu báo cáo chưa tạo.',
     a: (
       <p>
         Có. Bạn huỷ trong trang Tài khoản — gói vẫn dùng được đến hết kỳ đã
@@ -361,6 +269,8 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
   {
     q: 'hieu.asia có khác gì với các app xem bói khác?',
+    aCrawler:
+      'Tử Vi và Bát Tự tính theo Bắc phái với 121 sao (không tra bảng), Mentor AI đối thoại có ngữ cảnh, văn phong điềm tĩnh không định mệnh hoá.',
     a: (
       <>
         <p>
@@ -374,12 +284,18 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
 ];
 
+// Câu hỏi + đáp án crawler build từ đúng HOME_FAQ ở trên — một nguồn sự thật.
+const FAQ_JSONLD = {
+  ...faqPage(HOME_FAQ.map((e) => ({ q: e.q, a: e.aCrawler }))),
+  inLanguage: 'vi-VN',
+};
+
 export default function LandingPage() {
   return (
     <>
       <ScrollProgress />
       <JsonLd data={HOWTO_JSONLD} />
-      <JsonLd data={SERVICES_JSONLD} />
+      <JsonLd data={lensServices()} />
       <JsonLd data={FAQ_JSONLD} />
       <JsonLd data={SOFTWARE_APP_JSONLD} />
       <SiteNav />
