@@ -21,6 +21,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { castTuViChart, type TuViChart, type TuViPalace } from '@/lib/tuvi-client';
 import { describeApiError } from '@/lib/api-error';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 type Gender = 'male' | 'female';
 
@@ -134,10 +135,7 @@ export function DaiVanHienTaiForm() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-      />
+      <JsonLd data={FAQ_JSONLD} />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"

@@ -8,6 +8,7 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { safeJson } from '@/lib/safe-json';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -200,10 +201,7 @@ export default function CompatibilityPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       <ToolPageShell
         eyebrow="So sánh 2 người · Hợp đôi"
         relatedSlug="/compatibility"

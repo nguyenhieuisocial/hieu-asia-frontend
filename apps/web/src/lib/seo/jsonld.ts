@@ -25,6 +25,32 @@ import {
 
 export type JsonLdNode = Record<string, unknown>;
 
+/**
+ * Escape của JSON-LD trước khi nhúng vào `<script>`. MỘT nguồn duy nhất — mọi
+ * chỗ phát JSON-LD phải đi qua đây (thực thi bằng
+ * `src/lib/jsonld-escape.guard.test.ts`).
+ *
+ * VÌ SAO: `JSON.stringify` KHÔNG escape `<`, `/`, hay chuỗi `</script>`. Giá trị
+ * JSON-LD nào chứa `</script>` sẽ đóng sớm thẻ script và phần sau được trình
+ * duyệt đọc như HTML — mà `script-src` của site vẫn còn `'unsafe-inline'`
+ * (next.config.ts) nên script chèn vào CHẠY được. Không phải giả định: trang
+ * `/cam-nang/[slug]` và `/community/cases/[slug]` đưa nội dung lấy từ API/CMS
+ * từ xa vào JSON-LD.
+ *
+ * `<` v.v. là escape hợp lệ của JSON nên crawler vẫn parse ra đúng ký tự
+ * gốc; chỉ HTML parser là không còn nhìn thấy `</script>`. Thay MỘT LƯỢT
+ * (không nối `.replace()`) để không escape hai lần — đúng lỗi CodeQL
+ * `js/double-escaping` mà `scripts/seo-guard.mjs` đã dính một lần.
+ */
+const SCRIPT_UNSAFE = { '<': '\\u003c', '>': '\\u003e', '&': '\\u0026' } as const;
+
+export function serializeJsonLd(node: JsonLdNode): string {
+  return JSON.stringify(node).replace(
+    /[<>&]/g,
+    (c) => SCRIPT_UNSAFE[c as keyof typeof SCRIPT_UNSAFE],
+  );
+}
+
 /** Canonical Organization node (referenced elsewhere by `@id`). */
 export function organization(): JsonLdNode {
   return {

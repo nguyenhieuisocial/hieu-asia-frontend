@@ -21,6 +21,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 const BREADCRUMB_JSONLD = {
   '@context': 'https://schema.org',
@@ -110,10 +111,7 @@ export default function DecisionSimulatorPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
 
       <section className="mx-auto max-w-3xl px-6 pt-16 pb-20">
         <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">

@@ -36,6 +36,7 @@ import { Scrollyteller } from '@/components/marketing/Scrollyteller';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { ShimmerText } from '@/components/fx/ShimmerText';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Phương pháp luận — Engine tính gì, AI luận gì',
@@ -1285,18 +1286,9 @@ export default function MethodologyPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
+      <JsonLd data={ARTICLE_JSONLD} />
+      <JsonLd data={FAQ_JSONLD} />
       <main id="main-content" className="relative methodology-a11y">
         {/* ─────────────────────────────────────────────────────────────
            Wave 60.67 — Page hero (Option E typography pivot, vault 109 §4).

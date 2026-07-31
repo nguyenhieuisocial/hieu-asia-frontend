@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Xem chỉ tay & tướng mặt bằng AI',
@@ -54,9 +55,9 @@ const BREADCRUMB_JSONLD = {
 export default function XemTuongLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(TOOL_JSONLD) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }} />
+      <JsonLd data={WEBPAGE_JSONLD} />
+      <JsonLd data={TOOL_JSONLD} />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       {children}
     </>
   );
