@@ -107,6 +107,16 @@ của tình trạng cũ (bấm Học từ lịch thiên văn lại ra bài chọ
 Verify: tsc sạch · vitest 902/902 · build exit 0 · 4/4 bài đạt tiêu đề ≤60 và mô
 tả ≤160 trên HTML build · sitemap 38 bài Học · hub đủ 4 thẻ.
 
+### Hai việc còn treo, phải làm khi tới lượt (đừng quên)
+
+1. **Khi viết `/learn/thai-tue`** (thuộc `/tu-vi-2026`): `/learn/khai-truong` hiện đang trả lời
+   "Thái Tuế là gì" trong FAQPage của nó — có rào phạm vi ("trong cách tính của hieu.asia…")
+   nhưng vẫn phải rút gọn và trỏ sang bài Thái Tuế khi bài đó ra đời, kẻo hai trang cùng
+   trả lời một câu. Eyebrow của `khai-truong` đã đổi sang `MỞ HÀNG` để nhường chỗ.
+2. **`khai-truong/_active-learning.tsx`** còn gõ tay "3 năm Tam Tai / 1 năm xung trong mỗi 12"
+   và "Kim Lâu 4 năm trong mỗi 9" — đúng và mang tính định nghĩa của tục lệ, nhưng `page.tsx`
+   cùng bài đã suy `MIN_HOP`/`MAX_HOP`/`OVERLAP_CHIS` từ engine. Nên suy nốt cho nhất quán.
+
 ## Còn lại — 23 bài, lõi riêng từng bài
 
 Cột "lõi riêng" là ranh giới chống lấn: viết đúng phần đó, phần còn lại chỉ link.

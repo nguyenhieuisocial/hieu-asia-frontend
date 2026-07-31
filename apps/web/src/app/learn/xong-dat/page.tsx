@@ -81,6 +81,11 @@ const EXAMPLE_PAIRS: { guest: number; host: number }[] = [
   { guest: 1983, host: EXAMPLE_HOST },
   { guest: 1993, host: EXAMPLE_HOST },
   { guest: 1984, host: 1990 },
+  // Ca DUY NHẤT trong bốn ví dụ mà luật cắt thật sự đổi kết quả: tổng +1 (đáng lẽ
+  // rơi nhóm giữa) nhưng một lớp chạm −3 nên bị kéo xuống nhóm cuối. Ba ca trên
+  // đều đã ở đúng nhóm nhờ phép cộng, nên nếu chỉ có chúng thì đoạn nói về luật
+  // cắt không có gì minh hoạ — người đọc kiểm lại sẽ thấy lời văn không khớp bảng.
+  { guest: 1975, host: 1995 },
 ];
 
 /**
@@ -421,6 +426,21 @@ export default function LearnXongDatPage() {
                   bài tam hợp – lục xung
                 </Link>{' '}
                 giải thích bằng hình học, chỉ mất vài phút.
+              </p>
+              <p className="text-sm text-foreground/70">
+                Một lưu ý để bạn không thấy hai trang của hieu.asia “đá nhau”: trường hợp{' '}
+                <strong className="text-foreground">trùng chi năm</strong> (dân gian hay gọi là năm
+                tuổi, phạm Thái Tuế) được hai tục đối xử khác nhau. Tục xông đất trừ điểm và xếp vào
+                nhóm cần cân nhắc như bảng trên; còn tục{' '}
+                <Link
+                  href="/learn/khai-truong"
+                  className="text-gold-700 underline-offset-4 hover:underline"
+                >
+                  xem tuổi khai trương
+                </Link>{' '}
+                chỉ coi đó là lưu ý nhẹ, không đủ để kết luận “không được tuổi”. Khác nhau vì hai
+                việc khác nhau — xông đất kén một người trong một buổi sáng nên dễ khắt khe, còn mở
+                hàng là chuyện cả năm của chính gia chủ. Cả hai đều là lệ, không phải luật.
               </p>
 
               <AxisTable

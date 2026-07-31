@@ -435,7 +435,7 @@ export default function LearnCuoiHoiPage() {
                 </li>
               </ul>
               <p className="text-sm text-foreground/70">
-                Một chi tiết đẹp của phép gộp: với bốn nhóm tuổi{' '}
+                Một chi tiết đẹp của phép gộp: với {S.xungInsideTamTai.length} nhóm tuổi{' '}
                 <strong>{S.xungInsideTamTai.join(', ')}</strong>, năm lục xung lại nằm ngay trong ba
                 năm Tam Tai của chính nhóm đó — nên năm xung luôn bị Tam Tai “nuốt” trước và những
                 tuổi này <strong>không bao giờ nhận mức “{VERDICT_LABEL['can-nhac']}”</strong>. Đó
@@ -580,7 +580,9 @@ export default function LearnCuoiHoiPage() {
                 </table>
               </div>
               <p>
-                Đọc bảng từ trên xuống sẽ thấy một quy luật rất giản dị:{' '}
+                Hai dòng đầu là hai lựa chọn thay thế nhau — kiêng mỗi Kim Lâu, hoặc kiêng mỗi Tam
+                Tai — nên đừng so hai dòng ấy với nhau. Từ dòng thứ ba trở xuống mới là bậc thang
+                cộng dồn, và ở đó quy luật rất giản dị:{' '}
                 <strong>mỗi điều kiện thêm vào chỉ có thể làm cửa hẹp lại</strong>. Cổng HOẶC đi một
                 chiều — không có hạn nào “mở thêm” năm cho bạn. Vì thế nếu cộng đủ mọi thứ mà một
                 gia đình có thể kiêng, kết cục gần như luôn là “năm nào cũng phạm gì đó”. Đó là số
@@ -596,7 +598,9 @@ export default function LearnCuoiHoiPage() {
                   {S.phamMin === S.phamMax
                     ? `đúng ${S.phamMin}/${S.fullCycle} năm với cả ${S.gridBirths} nhóm tuổi`
                     : `dao động ${S.phamMin}–${S.phamMax} trên ${S.fullCycle} năm`}
-                  . Không có tuổi nào “đen” hơn tuổi nào cả.
+                  . Nói cách khác, xét riêng nhãn “phạm” thì không có tuổi nào “đen” hơn tuổi nào —
+                  còn số năm được gắn nhãn thuận thì vẫn chênh nhau đôi chút giữa các nhóm, như gạch
+                  đầu dòng dưới đây.
                 </li>
                 <li>
                   Nhưng {S.phamFromOnePct}% số năm bị gắn nhãn phạm{' '}

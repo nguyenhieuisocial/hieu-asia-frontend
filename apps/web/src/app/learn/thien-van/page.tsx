@@ -116,7 +116,7 @@ function eclipseNote(e: SkyEvent): string {
 const FAQS = [
   {
     q: 'Vì sao không phải tháng nào cũng có nhật thực và nguyệt thực?',
-    a: 'Vì mặt phẳng quỹ đạo Mặt Trăng nghiêng khoảng 5,1 độ so với mặt phẳng quỹ đạo Trái Đất quanh Mặt Trời. Mỗi tuần trăng khoảng 29,53 ngày đều có một lần trăng non và một lần trăng tròn, nhưng phần lớn các lần đó Mặt Trăng đi trượt hơi cao hơn hoặc hơi thấp hơn cái bóng. Hai mặt phẳng nghiêng nhau chỉ cắt nhau tại hai điểm, gọi là giao điểm; thực chỉ xảy ra khi trăng non hoặc trăng tròn rơi đủ gần một giao điểm, tức là vài lần mỗi năm chứ không phải mỗi tháng.',
+    a: 'Vì mặt phẳng quỹ đạo Mặt Trăng nghiêng khoảng 5,1 độ so với mặt phẳng quỹ đạo Trái Đất quanh Mặt Trời. Mỗi tuần trăng khoảng 29,53 ngày đều có một lần trăng non và một lần trăng tròn, nhưng phần lớn các lần đó Mặt Trăng đi trượt hơi cao hơn hoặc hơi thấp hơn cái bóng. Hai mặt phẳng nghiêng nhau thì cắt nhau theo một đường, và đường đó gặp quỹ đạo Mặt Trăng ở đúng hai điểm — gọi là giao điểm. Thực chỉ xảy ra khi trăng non hoặc trăng tròn rơi đủ gần một trong hai giao điểm, tức là vài lần mỗi năm chứ không phải mỗi tháng.',
   },
   {
     q: 'Nhật thực và nguyệt thực khác nhau ở chỗ nào?',
@@ -144,7 +144,7 @@ const FAQS = [
   },
   {
     q: 'La Hầu và Kế Đô trong sao hạn có liên quan gì đến nhật thực, nguyệt thực?',
-    a: 'Có, và đây là mối liên hệ trực tiếp. La Hầu và Kế Đô không phải thiên thể mà chính là hai giao điểm nơi quỹ đạo Mặt Trăng cắt hoàng đạo, tức đúng hai vùng trời xảy ra nhật thực và nguyệt thực. Người xưa quan sát rất chính xác rằng mọi lần Mặt Trời hay Mặt Trăng bị nuốt đều xảy ra ở đó, nhưng chưa có mô hình để giải thích nên đã dựng nên thần thoại quanh hai điểm này. Cần tách hai tầng: hiện tượng là có thật và tính trước được, còn cách diễn giải thành điềm báo là một lớp văn hoá về sau.',
+    a: 'Có, và đây là mối liên hệ trực tiếp: La Hầu và Kế Đô không phải thiên thể mà chính là hai giao điểm nơi quỹ đạo Mặt Trăng cắt hoàng đạo — đúng hai vùng trời xảy ra nhật thực và nguyệt thực. Cần tách hai tầng: hiện tượng là có thật và tính trước được, còn cách đọc nó thành điềm báo là một lớp văn hoá. Ý nghĩa của hai sao này trong tục xem sao hạn được nói đầy đủ ở bài Sao Hạn (Cửu Diệu).',
   },
   {
     q: 'Xem nhật thực thế nào cho an toàn?',

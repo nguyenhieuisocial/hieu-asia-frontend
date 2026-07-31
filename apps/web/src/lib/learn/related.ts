@@ -55,7 +55,9 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'xuat-hanh', eyebrow: 'HỶ THẦN', name: 'Hướng xuất hành', href: '/learn/xuat-hanh' },
   // Đợt 4 — việc lớn theo tuổi + thiên văn.
   { slug: 'cuoi-hoi', eyebrow: 'CƯỚI HỎI', name: 'Xem tuổi cưới', href: '/learn/cuoi-hoi' },
-  { slug: 'khai-truong', eyebrow: 'THÁI TUẾ', name: 'Tuổi khai trương', href: '/learn/khai-truong' },
+  // eyebrow KHÔNG để 'THÁI TUẾ': /learn/thai-tue là bài riêng còn trong PENDING
+  // (thuộc /tu-vi-2026). Bài này chỉ dùng Thái Tuế ở phần cần cho việc mở hàng.
+  { slug: 'khai-truong', eyebrow: 'MỞ HÀNG', name: 'Tuổi khai trương', href: '/learn/khai-truong' },
   { slug: 'xong-dat', eyebrow: 'TỤC TẾT', name: 'Xông đất', href: '/learn/xong-dat' },
   { slug: 'thien-van', eyebrow: 'NHẬT NGUYỆT THỰC', name: 'Lịch thiên văn', href: '/learn/thien-van' },
 ];
@@ -87,7 +89,9 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'than-so-hoc': ['chiem-tinh', 'tarot', 'dat-ten-ngu-hanh', 'mbti'],
   'hop-tuoi': ['con-giap', 'tu-vi', 'bat-tu', 'trach-cat'],
   'con-giap': ['hop-tuoi', 'sao-han', 'tu-vi', 'trach-cat'],
-  'sao-han': ['tu-vi', 'con-giap', 'trach-cat', 'hop-tuoi'],
+  // thien-van đứng đầu: nó giải thích La Hầu / Kế Đô thực chất là hai giao điểm
+  // quỹ đạo. Thiếu chiều này thì liên kết giữa hai bài chỉ có một chiều.
+  'sao-han': ['thien-van', 'tu-vi', 'con-giap', 'trach-cat'],
   'trach-cat': ['gio-hoang-dao', 'ngay-kieng-ky', 'lich-am-duong', 'phong-thuy'],
   // Đợt 1 — mỗi bài mới trỏ về 4 bài gần nghĩa, và các bài cũ ở trên đã được
   // chỉnh để trỏ NGƯỢC lại, tránh chủ đề mới thành ngõ cụt trong liên kết nội bộ.
@@ -105,7 +109,10 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'xuat-hanh': ['gio-hoang-dao', 'trach-cat', 'lich-am-duong', 'bat-trach'],
   'cuoi-hoi': ['kim-lau', 'tam-tai', 'hop-tuoi', 'trach-cat'],
   'khai-truong': ['tam-tai', 'trach-cat', 'tam-hop-luc-xung', 'gio-hoang-dao'],
-  'xong-dat': ['tam-hop-luc-xung', 'nap-am', 'hop-tuoi', 'trach-cat'],
+  // xong-dat ↔ khai-truong phải trỏ nhau: hai bài đối xử KHÁC NHAU với cùng một
+  // cấu hình "trùng chi năm / Thái Tuế", nên phải đọc được sang nhau để người
+  // đọc thấy đó là khác biệt có chủ ý giữa hai tục, không phải site tự mâu thuẫn.
+  'xong-dat': ['tam-hop-luc-xung', 'khai-truong', 'nap-am', 'hop-tuoi'],
   'thien-van': ['lich-am-duong', 'sao-han', 'chiem-tinh', 'trach-cat'],
   'cung-hoang-dao': ['chiem-tinh', 'tarot', 'than-so-hoc', 'con-giap'],
   'lich-am-duong': ['trach-cat', 'gio-hoang-dao', 'ngay-kieng-ky', 'sao-han'],
