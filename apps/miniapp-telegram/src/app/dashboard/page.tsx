@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu
 import { TgBackButton } from '@/components/tg-back-button';
 import { TgMainButton } from '@/components/tg-main-button';
 import { getTelegramUser, type TelegramUser } from '@/lib/telegram-auth';
-import { getOrCreateAnonUserId, listReadings } from '@hieu-asia/supabase';
+import { getRawInitData } from '@/lib/telegram-auth';
+import type { ReadingSessionRow } from '@hieu-asia/supabase';
 
 interface DashReport {
   id: string;
@@ -37,14 +38,33 @@ export default function MiniAppDashboardPage() {
     void getTelegramUser().then(setUser);
   }, []);
 
+  // 31/07/2026: gọi qua /api/reading/list (server xác minh initData rồi tự suy
+  // danh tính) thay vì listReadings() gọi thẳng Edge Function bằng anon key —
+  // đường cũ bị gate chặn 401 ÂM THẦM từ Wave 64 nên bảng này LUÔN trống.
+  // Không truyền user_id từ client: route này trả toàn bộ lịch sử một người,
+  // nhận id do client khai là mở lỗ IDOR.
   React.useEffect(() => {
-    const userId = getOrCreateAnonUserId();
-    if (!userId) {
-      setLoading(false);
-      return;
-    }
-    listReadings(userId)
+    void (async () => {
+      const initData = await getRawInitData();
+      if (!initData) {
+        setLoading(false);
+        return;
+      }
+      const res = await fetch('/api/reading/list', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ init_data: initData }),
+      });
+      if (!res.ok) {
+        console.error('reading list HTTP', res.status);
+        setLoading(false);
+        return;
+      }
+      const data = (await res.json()) as { sessions?: ReadingSessionRow[] };
+      return data.sessions ?? [];
+    })()
       .then((rows) => {
+        if (!rows) return;
         setReports(
           rows.map((r) => ({
             id: r.session_id,
