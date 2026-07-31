@@ -30,7 +30,14 @@ interface UserMeResponse {
   ok: true;
   user_id: string | null;
   email: string | null;
-  membership_tier: 'free' | 'standard' | 'premium' | 'lifetime';
+  /** Mirrors the worker's `MembershipTier`. ('standard' was never emitted.) */
+  membership_tier: 'free' | 'premium' | 'lifetime';
+  /**
+   * Recurring subscriber (monthly/yearly) or lifetime holder. Distinguishes
+   * those from the one-shot `premium` unlock, which `membership_tier` cannot.
+   * Omitted when the upstream worker predates the field — callers fall back.
+   */
+  is_subscriber?: boolean;
 }
 
 const SAFE_DEFAULT: UserMeResponse = {
@@ -38,6 +45,7 @@ const SAFE_DEFAULT: UserMeResponse = {
   user_id: null,
   email: null,
   membership_tier: 'free',
+  is_subscriber: false,
 };
 
 const API_BASE =
@@ -73,11 +81,20 @@ export async function GET(
     }
     const data = (await res.json()) as Partial<UserMeResponse>;
     // Preserve the UserMeResponse contract regardless of upstream wording.
+    //
+    // `is_subscriber` is passed through ONLY when the worker actually sent a
+    // boolean. Do NOT collapse a missing field to `false`: during the window
+    // where this route is deployed but the worker is not, `false` would assert
+    // "definitely not a subscriber" and get real subscribers pitched the plan
+    // they already pay for. Leaving it undefined (JSON drops the key) keeps the
+    // state honestly "unknown" so callers apply their own fallback.
     return NextResponse.json({
       ok: true,
       user_id: data.user_id ?? null,
       email: data.email ?? null,
       membership_tier: data.membership_tier ?? 'free',
+      is_subscriber:
+        typeof data.is_subscriber === 'boolean' ? data.is_subscriber : undefined,
     });
   } catch {
     return NextResponse.json(SAFE_DEFAULT);

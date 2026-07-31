@@ -153,19 +153,21 @@ const SESSION_DISMISS_KEY = 'hieu:upsell-post-reading:dismissed';
  * rather than flash the wrong banner (a free-tier upsell at a subscriber, or
  * vice versa) for one paint.
  *
- * KNOWN NARROWING — `premium` is ambiguous. `/api/user/me` exposes
- * `membership_tier`, and the api-gateway's `planToTier()` collapses
- * `subscription_monthly`, `subscription_yearly` AND the 99k one-shot `premium`
- * into a single `'premium'` value. That is precisely the distinction
- * `planToUpsellVariant()` (lib/reasoning/free-quota.ts) makes server-side, and
- * it is unrecoverable from this side of the wire.
+ * Reads `is_subscriber` from `/api/user/me`. That field exists precisely
+ * because `membership_tier` collapses `subscription_monthly`,
+ * `subscription_yearly` AND the one-shot `premium` unlock into a single
+ * `'premium'` value — losing the distinction this hook needs. A one-shot
+ * Premium buyer has proven willingness to pay and SHOULD still be upsold; a
+ * recurring subscriber must never be pitched the plan they already hold.
  *
- * We resolve the ambiguity toward `subscriber`, because the two failure modes
- * are not symmetric: thanking a paying customer and offering them a referral
- * link is never false, whereas pitching "Nâng cấp Mentor Monthly" to somebody
- * already paying for Mentor Monthly is. The cost is a forgone upsell to
- * one-shot Premium buyers; recovering it needs `/account/profile` to emit the
- * uncollapsed plan (backend change, tracked separately).
+ * DEPLOY-SKEW FALLBACK — `is_subscriber` is absent while the api-gateway
+ * predates the field, so `undefined` must not be read as `false`. In that
+ * window we fall back to the old conservative rule (`premium` → subscriber),
+ * because the two failure modes are not symmetric: thanking a paying customer
+ * and offering a referral link is never false, whereas pitching "Nâng cấp
+ * Mentor Monthly" at somebody already paying for it is. Once the worker ships,
+ * the real signal takes over automatically and one-shot buyers start
+ * converting — no frontend redeploy needed.
  *
  * `free_quota_exhausted` is never produced here — it is a generation-time state
  * (the reasoning route's 402) and cannot be observed from a rendered report.
@@ -180,7 +182,12 @@ export function useUpsellAudience(): Props['upsellVariant'] | null {
     void fetchUserMe().then((me) => {
       if (!alive) return;
       const tier = me?.membership_tier;
-      setAudience(tier === 'lifetime' || tier === 'premium' ? 'subscriber' : 'free');
+      // `??` (not `||`) so an explicit `false` — a one-shot Premium buyer —
+      // survives and resolves to 'free'. Only a genuinely absent field falls
+      // back to the pre-`is_subscriber` rule.
+      const isSubscriber =
+        me?.is_subscriber ?? (tier === 'lifetime' || tier === 'premium');
+      setAudience(isSubscriber ? 'subscriber' : 'free');
     });
     return () => {
       alive = false;
