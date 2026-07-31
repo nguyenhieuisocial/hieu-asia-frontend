@@ -180,6 +180,32 @@ Quyết định cần chốt: (1) heading grammar duy nhất = `font-editorial-d
 | Rageclick OracleBrain /30d | 31 | ~0 |
 | First Load JS shared | ~1.3MB unc. | −110–120KB gzip |
 
+## Execution log — 2026-08-01 (65.01 + 65.02 SHIPPED)
+
+Nhánh `feat/wave-65-homepage-quickwins` (worktree `_wt-wave65`, base origin/main 6052b87a). 10/10 task của 2 đợt đầu đã code + types:check + lint pass, commit riêng từng task:
+
+| Task | Commit | Ghi chú thực tế so với plan |
+|---|---|---|
+| T1 font preload | `18242070` | 4 URL woff2 lấy từ @font-face bản live (content-hash; 404 vô hại nếu font đổi version — có comment hướng dẫn cập nhật) |
+| T2 MultiHero dark | `8c8476e6` | + fix tận gốc cùng lớp: `.dark .fx-shimmer` night-gold trong globals.css |
+| T3 H1/H2 keyword | `257b63f2` | H1: "Nhập ngày sinh, xem lá số Bát Tự — hiểu mình rõ hơn trong một phút."; H2 chọn EngineProof (tự nhiên hơn Methodology) |
+| T4 JSON-LD | `b8715739` | `lensServices()` mới trong lib/seo/jsonld; FAQ một nguồn (aCrawler cạnh JSX); −62 dòng |
+| T5 hreflang+link | `030dc0d9` | |
+| T6 copy sweep | `5dca4f17` | `Cho {bestFor}` → `Hợp nếu {bestFor}` sửa Ở TEMPLATE PricingTierV2 (ảnh hưởng cả /pricing — chủ đích); GitNexus cảnh báo critical vì SiteNav render mọi trang — chỉ đổi chuỗi nhãn, đã soát |
+| T7 focus ring | `3908c60b` | ⚠️ finding `--hanh-moc` là BÁO ĐỘNG NHẦM — override `.astro-ticker` đã tồn tại (globals.css:495). Không sửa. |
+| T8 OracleBrain | `135da1ab` | LỆCH PLAN CÓ CHỦ ĐÍCH: chỉ prefill + đổi label, KHÔNG auto-reveal (tránh tự chạy tính toán nặng lúc cuộn). Rageclick fix = bỏ toggle-close cùng nhóm + `:active` scale dot + gạch chân nhãn đang chọn |
+| T9 fixed-bottom | `631cdc25` | Sticky ẩn theo BIRTH_PROFILE_EVENT (chỉ phiên trang, không ghi sessionStorage); BackToTop + footer phối hợp qua `:has()` (fallback về hành vi cũ) |
+| T10 micro-fix | `a61f3901` | StartupPath đọc CẢ 2 store + event; AstroTicker min-h 230px mobile (ước lượng — ĐỐI CHIẾU LIVE SAU DEPLOY); CTA Premium GIỮ NGUYÊN — đã kiểm tra anchor /pricing#premium hoạt động đúng (tier có id + scroll-mt-24), đổi funnel thuộc 65.03 |
+
+Việc theo dõi sau deploy (F4/PostHog):
+- [ ] Đo lại LCP/PageSpeed sau deploy (kỳ vọng −0.4–0.9s từ T1)
+- [ ] AstroTicker mobile: đối chiếu chiều cao thật vs min-h 230px
+- [ ] Rageclick OracleBrain 2 tuần tới (kỳ vọng ~0)
+- [ ] sticky_cta_clicked CTR sau khi ẩn theo ngữ cảnh
+- [ ] Search Console: theo dõi thứ hạng "lá số bát tự"/"tử vi" sau đổi H1/H2
+
+65.03 (cắt section) + 65.04 (design system) trở đi: CHƯA làm — 65.03 danh sách (a)–(f) và 2 quyết định 65.04 founder đã trao toàn quyền, sẽ thi công ở phiên tiếp theo.
+
 ## Những gì review XÁC NHẬN LÀM ĐÚNG — không được phá
 
 1. InstantChartHero "value before ask" (form completion 78%) — giữ bằng mọi giá.
