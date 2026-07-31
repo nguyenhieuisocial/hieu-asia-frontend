@@ -28,7 +28,7 @@ const MENTOR_PRICE = `${formatVND(PRICING.monthly.vnd)}/tháng`;
 const MENTOR_PRICE_SHORT = `${PRICING.monthly.vnd / 1000}k/tháng`;
 
 const PAGE_DESCRIPTION =
-  `Mentor AI trả lời từ chính lá số Tử Vi / Bát Tự bạn đã lập, nhớ mục tiêu và quyết định của bạn, tới 30 câu hỏi mỗi ngày — ${MENTOR_PRICE}. Lập lá số miễn phí trước.`;
+  `Mentor AI trả lời từ chính lá số Tử Vi / Bát Tự bạn đã lập, nhớ mục tiêu và quyết định của bạn, 30 câu mỗi ngày — ${MENTOR_PRICE}. Lập lá số miễn phí trước.`;
 
 export const metadata: Metadata = {
   // SEO-FIX: 63 ký tự → bị Google cắt. Bỏ "của bạn" (đã có trong og:title bên
