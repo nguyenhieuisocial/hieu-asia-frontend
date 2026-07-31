@@ -319,6 +319,12 @@ html {
   .fx-shimmer { animation: fxShimmer 4.5s linear 3 forwards; }
 }
 @keyframes fxShimmer { 0% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
+/* Wave 65.01 — dark mode: gradient shimmer đổi sang night gold (#E0AE62, đồng bộ
+ * .dark --primary) thay vì giữ ochre ban ngày trên nền charcoal. Chỉ override
+ * background-image; background-size 250% + clip-text kế thừa từ base ở trên. */
+.dark .fx-shimmer {
+  background-image: linear-gradient(100deg, #E0AE62 0%, #E0AE62 38%, #F7E7C3 50%, #E0AE62 62%, #E0AE62 100%);
+}
 
 /* ===== Hero entrance — "màn chào" 1 lần khi tải (KHÔNG áp cho <h1> LCP) =====
  * Chỉ áp cho eyebrow/subcopy/form quanh tiêu đề → cảm giác "settle in" sang

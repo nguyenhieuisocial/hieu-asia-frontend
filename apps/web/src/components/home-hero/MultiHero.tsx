@@ -17,10 +17,15 @@ import { LENSES } from '@/lib/catalog/lenses';
 // 2026-06-22: chuyển 3 màu CẤU TRÚC sang biến theme để hero render đúng cả
 // light lẫn dark. Light KHÔNG đổi: token light = đúng các hex cũ
 // (--foreground=Ink #171411, --background=Paper #F3ECDD, --muted-foreground≈#6A6258).
-// Dark: tự đổi sang Charcoal/Bone. OCHRE/OCHRE_DEEP (gold brand) giữ nguyên.
+// Dark: tự đổi sang Charcoal/Bone.
+// Wave 65.01 — OCHRE/OCHRE_DEEP hết hard-code hex: trước đây dark mode giữ
+// nguyên ochre ban ngày trên nền charcoal (~2.7:1, fail AA rõ ở .mh-gift và
+// .mh-soi-n). Giờ trỏ biến --mh-* khai trong CSS bên dưới: light = đúng hex cũ
+// (không đổi một pixel), dark = night gold #E0AE62 / gold-soft #D4B373 (đồng bộ
+// .dark --primary + quy ước small-gold của globals.css).
 const INK = 'hsl(var(--foreground))';
-const OCHRE = '#A47532';
-const OCHRE_DEEP = '#7A5420'; // AA-dark ochre for SMALL labels on PAPER (≥5:1); OCHRE stays for the large h1 line (passes large-text 3:1)
+const OCHRE = 'var(--mh-ochre)';
+const OCHRE_DEEP = 'var(--mh-ochre-deep)'; // AA-dark ochre for SMALL labels on PAPER (≥5:1); OCHRE stays for the large h1 line (passes large-text 3:1)
 const PAPER = 'hsl(var(--background))';
 const SOFT = 'hsl(var(--muted-foreground))';
 
@@ -130,6 +135,11 @@ const NOISE =
 
 const CSS = `
 .mh { font-family: var(--font-newsreader), Georgia, serif; overflow-x: hidden; }
+/* Wave 65.01 — cặp giá trị theme cho gold brand của hero (light giữ NGUYÊN hex
+ * cũ; dark = night gold, xem chú thích cạnh const OCHRE phía trên).
+ * --mh-gold-rgb nuôi các border/glow rgba; --mh-cta-rgb nuôi nền CTA primary. */
+.mh { --mh-ochre: #A47532; --mh-ochre-deep: #7A5420; --mh-gold-rgb: 164,117,50; --mh-cta-rgb: 138,97,40; }
+.dark .mh { --mh-ochre: #E0AE62; --mh-ochre-deep: #D4B373; --mh-gold-rgb: 224,174,98; --mh-cta-rgb: 224,174,98; }
 .mh-grain { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .05; mix-blend-mode: multiply; background-image: ${NOISE}; }
 
 /* ===== BASE = MOBILE ===== */
@@ -158,9 +168,9 @@ const CSS = `
 .mh-cta-row { display: flex; flex-direction: column; gap: 10px; }
 .mh-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; padding: 15px 22px; font-size: 1.02rem; text-decoration: none; }
 .mh-cta::before { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, hsl(var(--foreground) / .4), hsl(var(--foreground) / 0) 70%); transform: translate(-50%,-50%) scale(0); transition: transform .55s cubic-bezier(.2,.7,.2,1); }
-.mh-cta-primary { background: rgba(138,97,40,.10); color: ${INK}; border: 1px solid rgba(164,117,50,.45); box-shadow: 0 6px 20px -6px rgba(164,117,50,.45), 0 0 0 1px rgba(164,117,50,.30); }
-.mh-cta-ghost { border: 1px solid rgba(164,117,50,.35); color: ${INK}; }
-.mh-cta-ghost::before { background: radial-gradient(circle, rgba(164,117,50,.5), rgba(164,117,50,0) 70%); }
+.mh-cta-primary { background: rgba(var(--mh-cta-rgb),.10); color: ${INK}; border: 1px solid rgba(var(--mh-gold-rgb),.45); box-shadow: 0 6px 20px -6px rgba(var(--mh-gold-rgb),.45), 0 0 0 1px rgba(var(--mh-gold-rgb),.30); }
+.mh-cta-ghost { border: 1px solid rgba(var(--mh-gold-rgb),.35); color: ${INK}; }
+.mh-cta-ghost::before { background: radial-gradient(circle, rgba(var(--mh-gold-rgb),.5), rgba(var(--mh-gold-rgb),0) 70%); }
 .mh-cta > * { position: relative; z-index: 1; }
 .mh-cta-num { font-family: var(--font-be-vietnam), system-ui, sans-serif; margin-right: .6em; opacity: .85; }
 .mh-cta-sub { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 12px; opacity: .68; margin-left: .5em; } /* T-TAP — was 11px */
