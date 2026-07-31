@@ -118,8 +118,12 @@ export function InstantChartHero(): React.JSX.Element {
         >
           Lá số Bát Tự thật · tính ngay · miễn phí
         </p>
+        {/* Wave 65.01 SEO — H1 mang từ khoá "lá số Bát Tự" (trước đây title tag
+            nhắm "Tử Vi & Bát Tự AI" nhưng H1 + toàn bộ H2 không chứa từ khoá nào
+            — finding P1 vòng 5). Shimmer GIỮ trên lời hứa cảm xúc, không đổi
+            cấu trúc LCP (guardrail §5). */}
         <h1 className="mt-3 text-balance font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
-          Nhập ngày sinh,{' '}
+          Nhập ngày sinh, xem lá số Bát Tự —{' '}
           <ShimmerText>hiểu mình rõ hơn</ShimmerText>{' '}
           trong một phút.
         </h1>
