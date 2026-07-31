@@ -85,7 +85,14 @@ jobs:
           # (pass max_samples=0 on a manual dispatch for a deep run).
           MAXSAMPLES_ARG="--max-samples ${{ inputs.max_samples || '6' }}"
           pnpm dlx tsx tests/eval/runner.ts $PERSONA_ARG $JUDGE_ARG $MAXSAMPLES_ARG
-        continue-on-error: true
+        # ⛔ KHONG `continue-on-error` o day (co y, sua 2026-07-31).
+        # Truoc day buoc nay co `continue-on-error: true`, nen runner thoat 1
+        # (avg < 9.0) ma job van ket luan SUCCESS — dong thoi buoc duoi tao
+        # phieu loi "eval gate failed". Da lap >= 10 lan: issue #652, #993 mo ra
+        # trong khi lan chay tuong ung deo dau tich XANH. Cong chat luong ma
+        # khong bao gio do thi khong phai cong.
+        # Buoc "Upload eval results" van chay nho `if: always()`, va buoc
+        # "Alert on regression" van chay nho `if: failure() && ...`.
 
       - name: Upload eval results
         if: always()
@@ -96,7 +103,10 @@ jobs:
           retention-days: 90
 
       - name: Alert on regression
-        if: steps.run.outcome == 'failure'
+        # `failure()` is required now that "Run eval" is no longer
+        # continue-on-error: without it the job aborts at the failed step and
+        # this alert never fires.
+        if: failure() && steps.run.outcome == 'failure'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           script: |
