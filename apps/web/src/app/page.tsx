@@ -341,7 +341,7 @@ const HOME_FAQ: readonly FaqItem[] = [
         (1 lá số đầy đủ + PDF + 3 câu hỏi Mentor).{' '}
         <strong>Mentor Monthly {formatVND(PRICING.monthly.vnd)}/tháng</strong> hoặc{' '}
         <strong>Mentor Yearly {formatVND(PRICING.yearly.vnd)}/năm</strong> (Mentor
-        không giới hạn + đại vận/lưu niên).{' '}
+        30 câu/ngày + đại vận/lưu niên).{' '}
         <strong>Lifetime {formatVND(PRICING.lifetime.vnd)} một lần</strong>. Xem
         chi tiết tại trang Pricing.
       </p>
@@ -693,9 +693,9 @@ export default function LandingPage() {
             },
             {
               id: 'mentor',
-              name: 'MENTOR · KHÔNG GIỚI HẠN',
+              name: 'MENTOR · 30 CÂU/NGÀY',
               nameDisplay: 'Đồng hành',
-              description: 'Mentor AI không giới hạn, đại vận và lưu niên hàng năm.',
+              description: 'Mentor AI 30 câu mỗi ngày, đại vận và lưu niên hàng năm.',
               // Wave 62.05 — yearly toggle removed on homepage. Yearly +
               // Lifetime live in the /pricing "Tuỳ chọn nâng cao" expandable;
               // the homepage anchor stays on the 199.000₫/tháng entry price
@@ -705,12 +705,12 @@ export default function LandingPage() {
               bestFor:
                 'bạn thường xuyên hỏi về quyết định, công việc, quan hệ, kế hoạch năm.',
               features: [
-                'Mentor AI không giới hạn câu hỏi',
+                'Mentor AI — 30 câu hỏi mỗi ngày',
                 'Đại vận và lưu niên hàng năm',
                 'Tất cả 5 ống kính sâu',
                 'Huỷ bất cứ lúc nào',
               ],
-              ctaLabel: 'Dùng Mentor không giới hạn',
+              ctaLabel: 'Bắt đầu với Mentor',
               ctaHref: '/pricing#mentor',
               refundDays: 14,
             },

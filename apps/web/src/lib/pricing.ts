@@ -1,13 +1,17 @@
 /**
- * Canonical pricing — single source of truth across pages.
+ * Canonical pricing — single source of truth across pages (display only).
  *
- * Mirrors the SQL seed in `hieu_asia.products` / `hieu_asia.subscription_plans`.
- * If you change a number here, update the DB seed in the same PR and reseed.
+ * Số tiền THẬT được worker quyết định server-side: `TIER_PRICES_VND` trong
+ * `backend/infra/cloudflare/workers/api-gateway/src/payment/sepay.ts` (+ giá
+ * per-feature ở KV `admin:feature-prices`). Đổi số ở đây thì PHẢI đổi
+ * TIER_PRICES_VND cùng đợt, không thì giá hiển thị lệch giá thu.
+ * (Ghi chú cũ nói "SQL seed hieu_asia.products/subscription_plans" — các bảng
+ * đó không tồn tại trong DB; đã kiểm 31/07/2026.)
  *
  * Tiers:
  * - Standard:        Free tier (signup, surveys, free tools).
  * - Premium:         99.000đ one-time → one full reading.
- * - Mentor Monthly:  199.000đ / month → unlimited mentor.
+ * - Mentor Monthly:  199.000đ / month → mentor 30 câu/ngày.
  * - Mentor Yearly:   1.990.000đ / year (~165.833đ/tháng, saves ~17%).
  * - Lifetime:        4.990.000đ one-time → forever access.
  *
