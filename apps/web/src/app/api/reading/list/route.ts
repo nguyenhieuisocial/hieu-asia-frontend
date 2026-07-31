@@ -36,10 +36,15 @@ const SUPABASE_URL =
 // The `reading-list` EF compares `x-service-token` against its own
 // SUPABASE_SERVICE_ROLE_KEY, so this MUST be the service-role key (server-only,
 // never shipped to the browser).
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// 31/07/2026 — gui READING_PROXY_TOKEN thay vi service-role key: Supabase
+// migrate he API key lam bien SUPABASE_SERVICE_ROLE_KEY inject trong EF runtime
+// doi gia tri (sb_secret moi) trong khi Vercel giu JWT legacy -> ctEq phia EF
+// fail 401 am tham. Custom secret (cung mau reading-get, da chay tot) moi
+// deterministic. EF da doi gate cung dot nay (backend PR fix/ef-gate-proxy-token).
+const READING_PROXY_TOKEN = process.env.READING_PROXY_TOKEN;
 
 export async function GET(req: NextRequest) {
-  if (!SUPABASE_SERVICE_ROLE_KEY) {
+  if (!READING_PROXY_TOKEN) {
     return NextResponse.json(
       { ok: false, error: 'service_unavailable' },
       { status: 503 },
@@ -67,7 +72,7 @@ export async function GET(req: NextRequest) {
     const res = await fetch(url, {
       method: 'GET',
       headers: {
-        'x-service-token': SUPABASE_SERVICE_ROLE_KEY,
+        'x-service-token': READING_PROXY_TOKEN,
       },
       cache: 'no-store',
     });
