@@ -20,6 +20,19 @@
  * always-on for free users once any variant rolls out. No "X to dismiss
  * forever" — only "X for this session" via sessionStorage. Next reading the
  * banner returns.
+ *
+ * ─── Mount history (read before moving this) ────────────────────────────────
+ * Wave 58 Phase B shipped this component, its flag, and the `upsell_variant`
+ * field on the three `/api/reasoning/*` responses in ONE commit (ee67437d) but
+ * never added the import — it rendered nowhere for its entire life. That was
+ * incomplete wiring, not a later regression: no commit has ever removed an
+ * import of it.
+ *
+ * It is now mounted on the Tử Vi report page (`/reading/[id]/report`), which is
+ * where a completed reading is actually read. The original plan was to feed
+ * `upsellVariant` straight from the reasoning-route response, but that path is
+ * inert — nothing in the repo calls `/api/reasoning/*` (see `useUpsellAudience`
+ * below for how the audience is resolved instead).
  */
 
 'use client';
@@ -30,6 +43,7 @@ import { useFeatureFlag, FLAGS } from '@/lib/feature-flags';
 import { track } from '@/lib/analytics';
 import { formatVND, PRICING } from '@/lib/pricing';
 import { trackPixelViewContent } from '@/lib/marketing-pixels';
+import { fetchUserMe } from '@/lib/user-me';
 
 interface Props {
   /**
@@ -130,6 +144,51 @@ function resolveCtaHref(
 }
 
 const SESSION_DISMISS_KEY = 'hieu:upsell-post-reading:dismissed';
+
+/**
+ * Resolve which audience the current viewer belongs to, for mount sites that
+ * have no reasoning-route response to read `upsell_variant` from.
+ *
+ * Returns `null` until the lookup settles so the caller can render nothing
+ * rather than flash the wrong banner (a free-tier upsell at a subscriber, or
+ * vice versa) for one paint.
+ *
+ * KNOWN NARROWING — `premium` is ambiguous. `/api/user/me` exposes
+ * `membership_tier`, and the api-gateway's `planToTier()` collapses
+ * `subscription_monthly`, `subscription_yearly` AND the 99k one-shot `premium`
+ * into a single `'premium'` value. That is precisely the distinction
+ * `planToUpsellVariant()` (lib/reasoning/free-quota.ts) makes server-side, and
+ * it is unrecoverable from this side of the wire.
+ *
+ * We resolve the ambiguity toward `subscriber`, because the two failure modes
+ * are not symmetric: thanking a paying customer and offering them a referral
+ * link is never false, whereas pitching "Nâng cấp Mentor Monthly" to somebody
+ * already paying for Mentor Monthly is. The cost is a forgone upsell to
+ * one-shot Premium buyers; recovering it needs `/account/profile` to emit the
+ * uncollapsed plan (backend change, tracked separately).
+ *
+ * `free_quota_exhausted` is never produced here — it is a generation-time state
+ * (the reasoning route's 402) and cannot be observed from a rendered report.
+ * The component still handles it for mount sites that can supply it.
+ */
+export function useUpsellAudience(): Props['upsellVariant'] | null {
+  const [audience, setAudience] = React.useState<Props['upsellVariant'] | null>(null);
+
+  React.useEffect(() => {
+    let alive = true;
+    // fetchUserMe() resolves null on any failure — never rejects.
+    void fetchUserMe().then((me) => {
+      if (!alive) return;
+      const tier = me?.membership_tier;
+      setAudience(tier === 'lifetime' || tier === 'premium' ? 'subscriber' : 'free');
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  return audience;
+}
 
 export function PostReadingUpsell({ upsellVariant, runId, graphKind, sessionId }: Props) {
   const isSubscriber = upsellVariant === 'subscriber';

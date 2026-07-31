@@ -33,6 +33,10 @@ import { ReportTOC } from '@/components/report/ReportTOC';
 import { MasterReportButton } from '@/components/report/MasterReportButton';
 import { ReadingProgress } from '@/components/report/ReadingProgress';
 import { PostReadingSurvey } from '@/components/feedback/PostReadingSurvey';
+import {
+  PostReadingUpsell,
+  useUpsellAudience,
+} from '@/components/reading/post-reading-upsell';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { track } from '@/lib/analytics';
 
@@ -199,6 +203,10 @@ function ReportContent() {
     ? extractCautionBullets(cautionSection.body)
     : [];
 
+  // Post-reading upsell audience. Must resolve above the early returns below —
+  // hooks cannot run conditionally. `null` until /api/user/me settles.
+  const upsellAudience = useUpsellAudience();
+
   if (query.isLoading) return <ReportSkeleton />;
 
   // Not ready yet (e.g. still pending) or fetch error — and NOT a locked preview.
@@ -293,6 +301,26 @@ function ReportContent() {
             <ReportSections sections={reportSections} />
             <MasterReportButton readingId={readingId} />
             <ReportFooter readingId={readingId} />
+            {/*
+              Wave 58 Phase B upsell, finally mounted (it shipped orphaned —
+              see the header comment in post-reading-upsell.tsx).
+
+              Unlocked branch only: when the report is locked, LockedReportGate
+              above is already the paywall, and stacking a second "nâng cấp"
+              banner under it just competes with the actual buy button.
+
+              Renders nothing until the audience resolves, and nothing at all on
+              the `control` flag variant — so this is inert in production until
+              UPSELL_POST_READING_V1 is configured in PostHog.
+            */}
+            {upsellAudience && (
+              <PostReadingUpsell
+                upsellVariant={upsellAudience}
+                runId={readingId}
+                graphKind="tu-vi"
+                sessionId={readingId}
+              />
+            )}
           </>
         )}
       </div>
