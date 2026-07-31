@@ -23,6 +23,7 @@ import {
 } from '@/components/reading/ModeContent';
 import { LoTrinhChart } from '@/components/lo-trinh/LoTrinhChart';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 const SLUG = 'hieu-ban-than';
 const TOPIC = 'self';
@@ -135,10 +136,7 @@ export default function HieuBanThanPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"

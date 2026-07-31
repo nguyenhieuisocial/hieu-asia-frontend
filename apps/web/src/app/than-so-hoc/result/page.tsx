@@ -690,7 +690,7 @@ function PremiumCta() {
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Kết hợp Tử Vi · Bát Tự · MBTI và phân tích chỉ tay — báo cáo dài 15-20 trang,
-            đi kèm chat với AI Mentor không giới hạn.
+            đi kèm chat với AI Mentor hằng ngày.
           </p>
         </div>
         <Button asChild size="lg"><Link href="/pricing?from=than-so-hoc" onClick={onClick} className="shrink-0">

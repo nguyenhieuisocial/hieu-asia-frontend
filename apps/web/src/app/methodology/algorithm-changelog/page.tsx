@@ -13,6 +13,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { article } from '@/lib/seo/jsonld';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Algorithm changelog',
@@ -195,14 +196,8 @@ export default function AlgorithmChangelogPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
+      <JsonLd data={ARTICLE_JSONLD} />
       <main id="main-content" className="relative overflow-hidden pt-16 methodology-a11y">
         <div
           aria-hidden="true"

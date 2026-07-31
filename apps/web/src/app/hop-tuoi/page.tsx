@@ -130,10 +130,7 @@ const FAQS = [
 export default function HopTuoiLandingPage() {
   return (
     <>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(HOP_TUOI_JSONLD) }}
-    />
+    <JsonLd data={HOP_TUOI_JSONLD} />
     {/* SEO-FIX: trang có breadcrumb HIỂN THỊ (prop breadcrumb bên dưới) nhưng
         không phát BreadcrumbList → Google không hiện đường dẫn phân cấp trong
         kết quả tìm kiếm. Nhãn khớp đúng breadcrumb đang hiện. */}

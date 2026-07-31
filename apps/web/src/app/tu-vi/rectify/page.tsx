@@ -1,4 +1,5 @@
 import { RectifyClient, type BtrQuestion } from './rectify-client';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -38,10 +39,7 @@ export default async function RectifyPage() {
   const questions = await fetchQuestions();
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       <RectifyClient initialQuestions={questions} apiBase={API_BASE} />
     </>
   );

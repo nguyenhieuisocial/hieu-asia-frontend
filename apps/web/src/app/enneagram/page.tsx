@@ -17,6 +17,7 @@ import { getSupabaseAuth } from '@/lib/auth-client';
 import { FeaturePaywall } from '@/components/payment/FeaturePaywall';
 import { savePersonalityResult, buildEnneagramSummary } from '@/lib/personality-store';
 import { submitSelfIdentifiedPersonality } from '@/lib/scoring/submit-personality';
+import { JsonLd } from '@/components/seo/JsonLd';
 import {
   ENNEAGRAM_PAGES,
   ENNEAGRAM_TYPE_ORDER,
@@ -157,10 +158,7 @@ export default function EnneagramPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-      />
+      <JsonLd data={FAQ_JSONLD} />
       <ToolPageShell
         eyebrow="Trắc nghiệm tính cách · Enneagram"
         relatedSlug="/enneagram"

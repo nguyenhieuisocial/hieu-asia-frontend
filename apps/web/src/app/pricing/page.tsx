@@ -64,8 +64,8 @@ const PRICING_FAQ: readonly FaqItem[] = [
         <b>Premium 99.000đ một lần</b> cho bạn một lá số Tử Vi đầy đủ, PDF báo
         cáo và 3 câu hỏi với AI Mentor — phù hợp khi bạn cần báo cáo trọn vẹn
         một lần. <b>Mentor 199.000đ/tháng</b> (hoặc 1.990.000đ/năm) mở khóa AI
-        Mentor không giới hạn, đại vận và lưu niên hàng năm — phù hợp khi bạn
-        muốn đồng hành dài hạn.
+        Mentor tới 30 câu hỏi mỗi ngày, đại vận và lưu niên hàng năm — phù hợp
+        khi bạn muốn đồng hành dài hạn.
       </p>
     ),
   },
@@ -117,7 +117,7 @@ const PRICING_FAQ_SCHEMA: { q: string; a: string }[] = [
   },
   {
     q: 'Mentor có gì khác so với Premium?',
-    a: 'Premium 99.000đ một lần cho bạn một lá số Tử Vi đầy đủ, PDF báo cáo và 3 câu hỏi với AI Mentor — phù hợp khi bạn cần báo cáo trọn vẹn một lần. Mentor 199.000đ/tháng (hoặc 1.990.000đ/năm) mở khóa AI Mentor không giới hạn, đại vận và lưu niên hàng năm — phù hợp khi bạn muốn đồng hành dài hạn.',
+    a: 'Premium 99.000đ một lần cho bạn một lá số Tử Vi đầy đủ, PDF báo cáo và 3 câu hỏi với AI Mentor — phù hợp khi bạn cần báo cáo trọn vẹn một lần. Mentor 199.000đ/tháng (hoặc 1.990.000đ/năm) mở khóa AI Mentor tới 30 câu hỏi mỗi ngày, đại vận và lưu niên hàng năm — phù hợp khi bạn muốn đồng hành dài hạn.',
   },
   {
     q: 'Có thể chuyển gói không?',
@@ -208,7 +208,7 @@ function AdvancedOptions() {
                 Đồng hành cả năm
               </h3>
               <p className="mt-2 font-sans text-sm text-muted-foreground">
-                Mentor không giới hạn — thanh toán một năm, tiết kiệm ~{yearlyDiscount()}% so với theo tháng.
+                Mentor 30 câu mỗi ngày — thanh toán một năm, tiết kiệm ~{yearlyDiscount()}% so với theo tháng.
               </p>
               <p className="mt-6 font-editorial-display text-price-amount text-foreground">
                 {formatVND(PRICING.yearly.vnd)}{' '}
@@ -241,7 +241,9 @@ function AdvancedOptions() {
                 <span className="text-muted-foreground/80">/ một lần</span>
               </p>
               <p className="mt-1 font-sans text-xs text-muted-foreground/70">
-                Tương đương ~25 tháng Mentor
+                Tương đương ~
+                {Math.round(ADVANCED_PRICING.lifetime.vnd / PRICING.monthly.vnd)}{' '}
+                tháng Mentor
               </p>
               <a
                 href="/checkout/lifetime"
@@ -341,10 +343,10 @@ export default function PricingPage() {
             },
             {
               id: 'mentor',
-              name: 'MENTOR · KHÔNG GIỚI HẠN',
+              name: 'MENTOR · 30 CÂU/NGÀY',
               nameDisplay: 'Đồng hành',
               description:
-                'Mentor AI không giới hạn, đại vận và lưu niên hàng năm.',
+                'Mentor AI 30 câu mỗi ngày, đại vận và lưu niên hàng năm.',
               // Wave 62.05 — yearly toggle stripped from the primary card.
               // Yearly + Lifetime live below the grid in <AdvancedOptions/>;
               // putting them back in the card brings the decision-paralysis
@@ -353,12 +355,12 @@ export default function PricingPage() {
               bestFor:
                 'bạn thường xuyên hỏi về quyết định, công việc, quan hệ, kế hoạch năm.',
               features: [
-                'Mentor AI không giới hạn câu hỏi',
+                'Mentor AI — 30 câu hỏi mỗi ngày',
                 'Đại vận và lưu niên hàng năm',
                 'Tất cả 5 ống kính sâu',
                 'Huỷ bất cứ lúc nào',
               ],
-              ctaLabel: 'Dùng Mentor không giới hạn',
+              ctaLabel: 'Bắt đầu với Mentor',
               ctaHref: '/checkout/mentor',
               refundDays: 14,
             },
@@ -372,7 +374,7 @@ export default function PricingPage() {
         <AdvancedOptions />
 
         {/* 1:1 founder session — a SEPARATE product from the AI Mentor
-            subscription above (human 60-min consult vs unlimited AI). Surfaced
+            subscription above (human 60-min consult vs AI mentor hằng ngày). Surfaced
             discreetly so it's discoverable without competing with the 3
             self-serve tiers. Lives at /checkout/founder-1on1. */}
         <div className="mx-auto mt-6 max-w-marketing px-6 text-center">

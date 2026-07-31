@@ -6,6 +6,7 @@ import { DayCard, type VanNienDayDTO } from '@/components/lich-van-nien/DayCard'
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 // Trang này có HAI đồng hồ và trước đây chúng chạy lệch nhau: thẻ ngày lấy từ
 // API (`revalidate` 1 giờ) nên tự nhảy năm, còn tiêu đề/H1 gõ chết "2026" nên
@@ -158,10 +159,7 @@ export default async function LichVanNienPage() {
         </div>
       }
     >
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-      />
+      <JsonLd data={FAQ_JSONLD} />
 
       {today && (
         <section className="mt-4">
