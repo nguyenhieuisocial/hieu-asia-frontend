@@ -192,9 +192,13 @@
     color: hsl(var(--foreground));
   }
 
-  /* High-contrast focus ring for keyboard users (WCAG 2.4.7) */
+  /* High-contrast focus ring for keyboard users (WCAG 2.4.7).
+   * Wave 65.01 — hết hard-code #b8923d: gold legacy chỉ đạt ~2.8:1 trên nền
+   * Paper (dưới ngưỡng 3:1 của WCAG 1.4.11 cho non-text). Token --ring đã
+   * sync --primary từng theme (light #89612A 4.7:1 · dark night-gold) nên
+   * ring giờ đạt chuẩn cả hai chế độ. */
   :focus-visible {
-    outline: 2px solid #b8923d;
+    outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
   }
 }
