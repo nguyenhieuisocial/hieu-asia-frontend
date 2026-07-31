@@ -63,7 +63,12 @@ export const metadata: Metadata = {
   // tư"). Ngưỡng 160 là chốt chung của mọi agent (seo-guard).
   description:
     'Lá số Tử Vi, Bát Tự tính thật từ ngày giờ sinh — không bói chung chung, không hù dọa, không bán giải hạn. Có căn cứ cung và sao. Lá số của bạn là riêng tư.',
-  alternates: { canonical: 'https://hieu.asia/' },
+  // Wave 65.01 — languages chuyển từ root layout về đây: chỉ trang chủ mang
+  // hreflang vi-VN tự trỏ mình (layout cũ làm MỌI trang con hreflang về '/').
+  alternates: {
+    canonical: 'https://hieu.asia/',
+    languages: { 'vi-VN': 'https://hieu.asia/' },
+  },
   openGraph: {
     title: 'hieu.asia — Hiểu mình. Quyết định mình.',
     description:

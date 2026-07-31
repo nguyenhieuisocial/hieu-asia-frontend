@@ -111,7 +111,11 @@ export function MultiHero(): React.JSX.Element {
           {/* Khung "quà" — reciprocity THẬT: lá số đầy đủ (114 sao, tính thật) là
               quà giữ được, KHÔNG phải teaser. Cố ý KHÔNG hứa "luận giải sâu miễn
               phí" (phần đó trả phí) → trung thực, không over-claim. */}
-          <p className="mh-gift"><span className="mh-gift-mk" aria-hidden="true">✦</span> Quà mở đầu: <strong>lá số Tử Vi 12 cung, 14 chính tinh</strong>, miễn phí, của bạn để giữ.</p>
+          {/* Wave 65.01 SEO — "lá số Tử Vi 12 cung" thành link body đầu tiên tới
+              /la-so-tu-vi (trang bán chính trước đây chỉ được link từ nav/footer,
+              body homepage 0 link — finding P2 vòng 5). Anchor text = đúng cụm
+              từ khoá tự nhiên. */}
+          <p className="mh-gift"><span className="mh-gift-mk" aria-hidden="true">✦</span> Quà mở đầu: <Link className="mh-gift-link" href="/la-so-tu-vi"><strong>lá số Tử Vi 12 cung, 14 chính tinh</strong></Link>, miễn phí, của bạn để giữ.</p>
           <div className="mh-cta-row">
             <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Lập lá số miễn phí</a>
             <Link className="mh-cta mh-cta-ghost" href="/tu-vi-2026"><span className="mh-cta-num">②</span>Xem Tử Vi 2026<span className="mh-cta-sub">&amp; hợp tuổi của tôi</span></Link>
@@ -177,6 +181,8 @@ const CSS = `
 .mh-micro { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 12px; letter-spacing: .14em; color: ${SOFT}; margin: 0; text-align: center; } /* T-TAP — was 11px */
 .mh-gift { font-family: var(--font-newsreader), Georgia, serif; font-size: .94rem; line-height: 1.4; color: ${OCHRE_DEEP}; margin: 0; text-align: center; font-style: italic; }
 .mh-gift strong { font-weight: 600; font-style: normal; }
+.mh-gift-link { color: inherit; text-decoration: underline; text-decoration-color: rgba(var(--mh-gold-rgb),.5); text-underline-offset: .2em; }
+.mh-gift-link:hover { text-decoration-color: rgba(var(--mh-gold-rgb),.9); }
 .mh-gift-mk { color: ${OCHRE}; font-style: normal; margin-right: .2em; }
 
 .mh-l1, .mh-l2 { opacity: 1; }

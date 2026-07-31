@@ -173,11 +173,11 @@ export const metadata: Metadata = {
   // page omits canonical, Next.js will not emit a canonical tag (self-canonical
   // by default, which is correct).
   // The homepage canonical is declared in `app/page.tsx`'s own metadata.
-  alternates: {
-    languages: {
-      'vi-VN': 'https://hieu.asia',
-    },
-  },
+  // Wave 65.01 SEO — BỎ alternates.languages ở root layout: URL cố định
+  // 'https://hieu.asia' bị MỌI trang con thừa kế → hreflang của /pricing,
+  // /learn/*, v.v. đều trỏ về trang chủ (sai; cùng lớp lỗi với og:url đã gỡ
+  // ở khối openGraph bên dưới). Trang chủ tự khai languages trong page.tsx;
+  // trang con một ngôn ngữ không cần hreflang.
   // SEO-FIX: removed root-level `url` from openGraph.
   // The root layout must NOT set `openGraph.url` because child pages that
   // inherit this block (without declaring their own `openGraph`) would get
