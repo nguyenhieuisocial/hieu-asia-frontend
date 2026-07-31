@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { JsonLdNode } from '@/lib/seo/jsonld';
+import { serializeJsonLd, type JsonLdNode } from '@/lib/seo/jsonld';
 
 /**
  * Server component that emits a single `<script type="application/ld+json">`.
@@ -19,8 +19,10 @@ export function JsonLd({ data }: { data: JsonLdNode | JsonLdNode[] }) {
         <script
           key={i}
           type="application/ld+json"
-          // JSON.stringify output is safe inside a ld+json script tag.
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(node) }}
+          // `serializeJsonLd` escape `<`/`>`/`&` — KHÔNG dùng thẳng
+          // `JSON.stringify` ở đây: nó không escape `</script>` nên một giá trị
+          // JSON-LD lấy từ API/CMS có thể thoát khỏi thẻ script.
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(node) }}
         />
       ))}
     </>

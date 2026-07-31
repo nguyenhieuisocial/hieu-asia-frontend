@@ -6,6 +6,7 @@ import { ChevronRight, Sun, Moon, Sparkles, AlertTriangle, ArrowRight } from 'lu
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 interface VanNienHour {
   name?: string;
@@ -131,10 +132,7 @@ export default async function ArchiveDayPage({
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      <JsonLd data={breadcrumbJsonLd} />
 
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div

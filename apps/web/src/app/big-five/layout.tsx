@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Trắc nghiệm Big Five (OCEAN) — 5 chiều tính cách',
@@ -51,9 +52,9 @@ const BREADCRUMB_JSONLD = {
 export default function BigFiveLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(TOOL_JSONLD) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }} />
+      <JsonLd data={WEBPAGE_JSONLD} />
+      <JsonLd data={TOOL_JSONLD} />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       {children}
     </>
   );

@@ -1,6 +1,7 @@
 // layout.tsx re-exports metadata from page.tsx so we don't have to move it,
 // and adds JSON-LD structured data that the server-component page.tsx can't
 // do inline (the metadata export is already there and works; this just adds LD).
+import { JsonLd } from '@/components/seo/JsonLd';
 
 const WEBPAGE_JSONLD = {
   '@context': 'https://schema.org',
@@ -38,9 +39,9 @@ const BREADCRUMB_JSONLD = {
 export default function TinhMenhCucLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(TOOL_JSONLD) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }} />
+      <JsonLd data={WEBPAGE_JSONLD} />
+      <JsonLd data={TOOL_JSONLD} />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       {children}
     </>
   );

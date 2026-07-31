@@ -9,6 +9,7 @@ import { ALL_STARS_CONTENT, starMetaDescription } from '@/lib/tuvi-content';
 import { getStar } from '@/lib/tuvi-content-source';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 import { clampDescription } from '@/lib/seo/description';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 /** CMS Tử Vi bước 3: nội dung đọc từ DB (dự phòng = bản trong code), làm mới sau
  *  5 phút → founder sửa trong admin `/tuvi-content` là web đổi, không cần deploy. */
@@ -70,10 +71,7 @@ export default async function StarPage({
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      <JsonLd data={breadcrumbJsonLd} />
 
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div

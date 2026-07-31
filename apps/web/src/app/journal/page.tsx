@@ -14,6 +14,7 @@ import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
+import { JsonLd } from '@/components/seo/JsonLd';
 import {
   readJournalEntries,
   type JournalEntry,
@@ -90,10 +91,7 @@ export default function JournalHubPage() {
     <main className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
 
       <section className="mx-auto max-w-5xl px-6 pt-16 pb-20">
         <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">

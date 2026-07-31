@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { SiteNav } from '@/components/home/SiteNav';
 import { OnboardingRecap } from '@/components/onboarding-recap';
 import { OnboardingIntentTracker } from '@/components/onboarding-intent-tracker';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Mở khóa lá số',
@@ -88,14 +89,8 @@ export default async function OnboardingPage({
     <div className="min-h-screen bg-background text-foreground">
       {intent && <OnboardingIntentTracker intent={intent} />}
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
+      <JsonLd data={WEBPAGE_JSONLD} />
       <main id="main-content" className="relative overflow-hidden bg-background pt-20 pb-20">
         <div
           aria-hidden="true"

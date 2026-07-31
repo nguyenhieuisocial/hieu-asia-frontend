@@ -43,6 +43,7 @@ import { PullQuote } from '@/components/marketing/PullQuote';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { ScrollProgress } from '@/components/fx/ScrollProgress';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -377,22 +378,10 @@ export default function LandingPage() {
   return (
     <>
       <ScrollProgress />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(HOWTO_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(SERVICES_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_APP_JSONLD) }}
-      />
+      <JsonLd data={HOWTO_JSONLD} />
+      <JsonLd data={SERVICES_JSONLD} />
+      <JsonLd data={FAQ_JSONLD} />
+      <JsonLd data={SOFTWARE_APP_JSONLD} />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
         {/* 1. Hero — Wave 60.66.P2 Option E (vault 109 §3 Phase 2)

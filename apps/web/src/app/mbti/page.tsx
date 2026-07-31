@@ -16,6 +16,7 @@ import { MbtiTool } from '@/components/tools/MbtiTool';
 import type { Metadata } from 'next';
 import { scoreFromShare } from '@/lib/scoring/mbti';
 import { buildType } from '@/lib/mbti-type-data';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 /**
  * Wave 60.95.u P1 (vault 130 P1) — /mbti audience landing.
@@ -186,18 +187,9 @@ export default function MbtiHubPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
+      <JsonLd data={WEBPAGE_JSONLD} />
+      <JsonLd data={FAQ_JSONLD} />
 
       <main id="main-content" className="relative">
         {/* Hero */}

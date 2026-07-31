@@ -32,6 +32,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { AffiliateSubNav } from '@/components/affiliate/AffiliateSubNav';
 import { getSupabaseAuth } from '@/lib/auth-client';
 import { safeJson } from '@/lib/safe-json';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 const MIN_PAYOUT_VND = 500_000;
@@ -246,10 +247,7 @@ export default function AffiliateCommissionsPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
       <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
         <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">Trang chủ</Link>

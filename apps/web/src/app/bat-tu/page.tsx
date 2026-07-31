@@ -6,6 +6,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { ItalicSpan } from '@/components/marketing/ItalicSpan';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { FaqAccordion, type FaqItem } from '@/components/home/FaqAccordion';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 /**
  * Wave 60.95.u P1 — /bat-tu audience landing page (vault 130 P1).
@@ -133,18 +134,9 @@ export default function BatTuLandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
+      <JsonLd data={WEBPAGE_JSONLD} />
+      <JsonLd data={FAQ_JSONLD} />
 
       <main id="main-content" className="relative pt-16">
         {/* Hero */}
