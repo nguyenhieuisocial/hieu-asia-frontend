@@ -132,8 +132,10 @@ export function TamHopDepth() {
                 <p>
                   Lục hợp và lục hại thì khác: chúng phụ thuộc {strong('tổng')} của hai số, tức là
                   các phép {strong('soi gương')} (phản chiếu) chứ không phải phép xoay. Đây là lý do
-                  hai họ quan hệ này hành xử khác nhau và không thể suy cái này ra cái kia bằng cách
-                  “cộng thêm mấy bước”.
+                  hai họ quan hệ này hành xử khác hẳn họ xoay (tam hợp, lục xung) — không thể suy lục
+                  hợp hay lục hại {strong('từ tam hợp hoặc lục xung')} bằng cách “cộng thêm mấy
+                  bước”. Còn giữa chính hai họ soi gương với nhau thì có: lục hại chính là chi xung
+                  với lục hợp.
                 </p>
               </>
             ),
@@ -417,7 +419,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       },
       {
         text: 'Lấy con giáp đứng liền kề mình trên vòng tròn',
-        note: 'Không — chi liền kề nói chung là bình hoà; riêng Tý–Sửu và Ngọ–Mùi liền kề lại là lục hợp.',
+        note: 'Không — trong 12 cặp liền kề có 8 cặp bình hoà, 2 cặp lục hợp (Tý–Sửu, Ngọ–Mùi) và 2 cặp lục hại (Mão–Thìn, Dậu–Tuất). Bốn ngoại lệ này nằm ngay hai trục gương, không phải vì “liền kề thì hại”.',
       },
     ],
   },

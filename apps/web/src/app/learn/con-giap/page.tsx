@@ -47,7 +47,7 @@ const FAQS: { value: string; q: string; a: string }[] = [
   {
     value: 'tu-hanh-xung',
     q: 'Tứ hành xung nghĩa là gì?',
-    a: 'Tứ hành xung là cách nói dân gian cho các cặp lục xung — hai con giáp đối xứng 180° trên vòng (Tý–Ngọ, Sửu–Mùi, Dần–Thân, Mão–Dậu, Thìn–Tuất, Tỵ–Hợi). “Xung” chỉ có nghĩa hai nếp sống khác nhịp, đôi khi dễ va quan điểm và cần dung hoà nhiều hơn — không phải điềm xấu. Rất nhiều cặp “xung” vẫn rất bền.',
+    a: '“Tứ” là bốn, nên tứ hành xung là một NHÓM BỐN con giáp cách đều nhau 3 bước trên vòng: Tý–Mão–Ngọ–Dậu, Sửu–Thìn–Mùi–Tuất, Dần–Tỵ–Thân–Hợi. Trong mỗi nhóm, hai đường chéo mới là cặp lục xung thật sự (đối nhau 180°), còn các cạnh kề thì tuỳ nhóm. “Xung” chỉ có nghĩa hai nếp sống khác nhịp, đôi khi dễ va quan điểm và cần dung hoà nhiều hơn — không phải điềm xấu. Rất nhiều cặp “xung” vẫn rất bền. Xem cấu trúc đầy đủ tại bài Tam hợp – Lục xung.',
   },
   {
     value: 'caution',
@@ -324,17 +324,29 @@ export default function LearnConGiapPage() {
               </div>
               <div className="rounded-card-editorial border border-amber-500/20 bg-amber-500/[0.04] p-5 sm:p-6">
                 <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-amber-300">
-                  Tứ hành xung — cặp khác nhịp
+                  Tứ hành xung — nhóm bốn khác nhịp
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
-                  Tứ hành xung là cách nói dân gian cho các{' '}
-                  <strong className="text-foreground">cặp lục xung</strong> — hai con giáp{' '}
-                  <strong className="text-foreground">đối xứng 180°</strong> trên vòng: Tý–Ngọ, Sửu–Mùi,
-                  Dần–Thân, Mão–Dậu, Thìn–Tuất, Tỵ–Hợi. “Xung” chỉ nghĩa là{' '}
+                  “Tứ” là bốn: tứ hành xung là một{' '}
+                  <strong className="text-foreground">nhóm bốn con giáp</strong> cách đều nhau 3 bước
+                  trên vòng — Tý–Mão–Ngọ–Dậu, Sửu–Thìn–Mùi–Tuất, Dần–Tỵ–Thân–Hợi. Trong mỗi nhóm,{' '}
+                  <strong className="text-foreground">hai đường chéo</strong> mới là cặp lục xung thật
+                  sự (đối nhau 180°). “Xung” chỉ nghĩa là{' '}
                   <strong className="text-foreground">hai nếp sống khác nhịp</strong>, đôi khi dễ va quan
                   điểm và cần dung hoà nhiều hơn — <strong className="text-foreground">không phải điềm
                   xấu</strong>. Rất nhiều cặp “xung” vẫn rất bền, khi khác biệt đúng cách trở thành bổ
                   sung.
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/70">
+                  Cấu trúc đầy đủ của vòng 12 chi — vì sao tam hợp là tam giác đều, lục xung là đối
+                  đỉnh, lục hại từ đâu ra —{' '}
+                  <Link
+                    href="/learn/tam-hop-luc-xung"
+                    className="text-gold underline underline-offset-4 hover:text-gold/80"
+                  >
+                    xem bài Tam hợp – Lục xung
+                  </Link>
+                  .
                 </p>
               </div>
               <p className="text-sm leading-relaxed text-foreground/85">

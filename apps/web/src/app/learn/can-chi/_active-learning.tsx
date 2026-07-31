@@ -129,8 +129,9 @@ export function CanChiDepth() {
                 <p>
                   Điều đáng nói: can chi là một hệ {strong('tuần hoàn, không tuyến tính')}. Lịch
                   dương đếm 2025 → 2026 → 2027 tăng mãi; can chi thì quay vòng, nên tên năm{' '}
-                  {strong('không cho biết đó là năm nào trong lịch sử')} nếu không biết thêm thế kỷ.
-                  Đây là đặc tính kỹ thuật, cũng là giới hạn thật của hệ này.
+                  {strong('không cho biết đó là năm nào trong lịch sử')} nếu không có một mốc ngoài
+                  hệ. Chu kỳ 60 ngắn hơn một thế kỷ nên biết thế kỷ vẫn chưa đủ — Giáp Tý có cả ở
+                  1924 lẫn 1984. Đây là đặc tính kỹ thuật, cũng là giới hạn thật của hệ này.
                 </p>
               </>
             ),
@@ -399,7 +400,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     answer: (
       <>
         Bước 1: {strong('2000 − 4 = 1996')}. Bước 2: 1996 chia 10 dư {strong('6')} → can thứ 7 trong
-        dãy (đếm từ 0) là {strong('Canh')}. Bước 3: 1996 chia 12 dư {strong('4')} → chi thứ 5 là{' '}
+        dãy là {strong('Canh')}. Bước 3: 1996 chia 12 dư {strong('4')} → chi thứ 5 là{' '}
         {strong('Thìn')}. Vậy năm 2000 là {strong('Canh Thìn')}. Kiểm nhanh: Canh ở vị trí lẻ thứ 7
         nên Dương, Thìn ở vị trí lẻ thứ 5 nên cũng Dương — hợp luật.
       </>

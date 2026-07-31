@@ -271,7 +271,7 @@ const FAQS = [
   },
   {
     q: 'Sinh tháng 1 hoặc đầu tháng 2 dương lịch thì lấy nạp âm của năm nào?',
-    a: 'Nạp âm tính theo NĂM ÂM LỊCH, mà năm âm chỉ đổi vào Tết. Người sinh tháng 1 hoặc đầu tháng 2 dương lịch, tức trước Tết, vẫn thuộc năm âm liền trước, nên nạp âm và hành bản mệnh là của năm cũ chứ không phải năm dương ghi trên giấy khai sinh. Nếu bạn sinh sát Tết, hãy kiểm ngày Tết của năm đó trước khi kết luận mình mệnh gì.',
+    a: 'Nạp âm tính theo NĂM ÂM LỊCH, mà năm âm chỉ đổi vào Tết. Người sinh tháng 1 hoặc đầu tháng 2 dương lịch thường rơi vào trước Tết, khi đó vẫn thuộc năm âm liền trước, nên nạp âm và hành bản mệnh là của năm cũ chứ không phải năm dương ghi trên giấy khai sinh. Nếu bạn sinh sát Tết, hãy kiểm ngày Tết của năm đó trước khi kết luận mình mệnh gì.',
   },
 ];
 
@@ -550,9 +550,10 @@ export default function LearnNapAmPage() {
               ))}
 
               <p className="text-sm text-foreground/70">
-                Cột “#” là thứ tự trong vòng 60, bắt đầu từ {NAP_AM_ROWS[0]!.canChiA}. Đọc dọc cột ấy
-                trong cả {NAP_AM_ROWS.length} dòng, bạn sẽ thấy các hành không đi theo một vòng đơn
-                giản nào — đó là lý do phải tra bảng chứ không nhẩm được.
+                Cột “#” là thứ tự của nạp âm trong dãy {NAP_AM_ROWS.length} nạp âm, đếm từ{' '}
+                {NAP_AM_ROWS[0]!.canChiA}. Bảng trên nhóm theo hành nên cột này nhảy số — và chính
+                chỗ nhảy đó cho thấy các hành không đi theo một vòng đơn giản nào. Đó là lý do phải
+                tra bảng chứ không nhẩm được.
               </p>
               <p className="text-sm text-foreground/70">
                 Muốn xem tên nạp âm nằm cạnh đúng năm sinh của mình,{' '}

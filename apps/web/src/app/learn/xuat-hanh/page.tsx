@@ -519,7 +519,7 @@ export default function LearnXuatHanhPage() {
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   Ngày <strong className="text-foreground">7/9/2026 (Giáp Thân)</strong> và ngày{' '}
                   <strong className="text-foreground">17/9/2026 (Giáp Ngọ)</strong> cách nhau đúng 10
-                  ngày. Chi đã đổi từ Thân sang Ngọ, mùa đã khác, thứ trong tuần đã khác — nhưng vì
+                  ngày. Chi đã đổi từ Thân sang Ngọ, thứ trong tuần đã khác — nhưng vì
                   can vẫn là Giáp nên hai hướng{' '}
                   <strong className="text-foreground">giống hệt nhau</strong>. Còn ngày{' '}
                   <strong className="text-foreground">9/9/2026 (Bính Tuất)</strong>, chỉ cách ví dụ 1

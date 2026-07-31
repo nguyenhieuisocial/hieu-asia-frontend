@@ -659,8 +659,10 @@ export default function LearnCanChiPage() {
               <ul className="list-disc space-y-2 pl-5">
                 <li>
                   <strong>Can chi tuần hoàn, không tuyến tính.</strong> Nghe một tên can chi, bạn{' '}
-                  <strong>không biết đó là năm nào</strong> nếu không biết thêm thế kỷ — đây là lý
-                  do sử liệu ghi năm can chi thường phải kèm niên hiệu.
+                  <strong>không biết đó là năm nào</strong> nếu không biết thêm một mốc ngoài hệ.
+                  Chu kỳ 60 ngắn hơn một thế kỷ nên biết thế kỷ vẫn chưa đủ: Giáp Tý rơi vào cả 1924
+                  lẫn 1984. Phải kèm niên hiệu hoặc khoảng 60 năm đang xét — đây là lý do sử liệu ghi
+                  năm can chi thường đi kèm niên hiệu.
                 </li>
                 <li>
                   <strong>Mốc đổi năm không thống nhất.</strong> Lịch âm dân dụng đổi năm vào Tết,

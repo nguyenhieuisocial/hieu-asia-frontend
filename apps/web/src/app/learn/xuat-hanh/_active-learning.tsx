@@ -38,6 +38,12 @@ const strong = (s: string) => <strong className="text-foreground">{s}</strong>;
 const hy = (can: string) => HY_THAN[can]!;
 const tai = (can: string) => TAI_THAN[can]!;
 
+// Số hướng KHÁC NHAU của mỗi bảng — đếm từ lib chứ không gõ tay. Bảng Hỷ Thần gom
+// 10 can thành các cặp cùng hướng, bảng Tài Thần chia mịn hơn; lib đổi thì con số
+// trong bài đổi theo, không lệch âm thầm.
+const HY_DIR_COUNT = new Set(Object.values(HY_THAN)).size;
+const TAI_DIR_COUNT = new Set(Object.values(TAI_THAN)).size;
+
 export function XuatHanhFrame() {
   return (
     <LearnFrame
@@ -223,8 +229,9 @@ export function XuatHanhDepth() {
                 </p>
                 <p>
                   Hai bảng gom 10 can theo hai kiểu khác nhau, nên số hướng cũng khác. Bảng Hỷ Thần
-                  ghép 10 can thành {strong('5 cặp')}, mỗi cặp một hướng. Bảng Tài Thần chia mịn hơn:
-                  có cặp dùng chung, có can đứng riêng, tổng cộng {strong('7 hướng')} và{' '}
+                  ghép 10 can thành {strong(`${HY_DIR_COUNT} cặp`)}, mỗi cặp một hướng. Bảng Tài Thần
+                  chia mịn hơn: có cặp dùng chung, có can đứng riêng, tổng cộng{' '}
+                  {strong(`${TAI_DIR_COUNT} hướng`)} và{' '}
                   {strong('không dùng Đông Bắc')}. Số hướng khác nhau không có nghĩa vị nào “mạnh”
                   hơn.
                 </p>
@@ -451,11 +458,12 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     prompt: 'Bảng tra hướng xuất hành KHÔNG chứa những gì? Kể ít nhất ba thứ.',
     answer: (
       <>
-        Nó không chứa {strong('quãng đường phải đi')}, {strong('thời gian phải đi')}, {strong('giờ xuất phát')}
-        , câu khấn, lễ vật hay bất kỳ nghi thức nào — và cũng không có cột nào cho tuổi người đi. Toàn
-        bộ dữ liệu chỉ là 10 dòng can ngày với hai cột hướng. Gặp một con số cụ thể kiểu “đi đủ bao
-        nhiêu mét mới tính”, hãy hiểu đó là tập tục địa phương hoặc ý người viết, không đến từ bảng
-        tra này. Riêng {strong('giờ')} xuất phát thì có lớp riêng — đọc ở bài Giờ Hoàng Đạo.
+        Bảng 10 dòng can ngày chỉ có hai cột hướng — nó không chứa{' '}
+        {strong('quãng đường phải đi')}, {strong('thời gian phải đi')}, câu khấn, lễ vật hay bất kỳ
+        nghi thức nào, và cũng không có cột nào cho tuổi người đi. Gặp một con số cụ thể kiểu “đi đủ
+        bao nhiêu mét mới tính”, hãy hiểu đó là tập tục địa phương hoặc ý người viết, không đến từ
+        bảng tra này. Riêng {strong('giờ')} xuất phát là một lớp riêng — công cụ có hiện kèm, còn cơ
+        chế thì đọc ở bài Giờ Hoàng Đạo.
       </>
     ),
   },

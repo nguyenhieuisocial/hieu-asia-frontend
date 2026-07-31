@@ -118,10 +118,10 @@ export function NapAmDepth() {
                   chẵn một lẻ) luôn cho cùng một chỉ số, nên luôn cùng một tên.
                 </p>
                 <p>
-                  Lưu ý một cạm bẫy: cặp được chia theo{' '}
-                  {strong('vị trí trong vòng, không phải theo “năm chẵn – năm lẻ”')}. Người sinh 1995
-                  ghép cặp với 1994 (Giáp Tuất · Ất Hợi, cùng Sơn Đầu Hỏa) chứ không ghép với 1996.
-                  Muốn biết mình đứng đầu hay cuối cặp, cứ tra một lượt hai năm liền kề.
+                  Điều dễ nhầm là {strong('chiều ghép')}: cặp luôn bắt đầu ở năm chẵn rồi mới tới năm
+                  lẻ liền sau. Người sinh 1995 ghép ngược lên 1994 (Giáp Tuất · Ất Hợi, cùng Sơn Đầu
+                  Hỏa) chứ không ghép xuống 1996. Nhớ được chiều này thì không cần tra bảng cũng biết
+                  mình đứng đầu hay cuối cặp.
                 </p>
               </>
             ),
