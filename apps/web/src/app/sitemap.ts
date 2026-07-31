@@ -28,6 +28,7 @@ import { DISC_SLUGS } from '@/lib/disc-type-data';
 import { BIG_FIVE_SLUGS } from '@/lib/big-five-trait-data';
 import { CON_GIAP_SLUGS } from '@/lib/con-giap-data';
 import { TAI_LIEU } from '@/lib/tai-lieu/registry';
+import { LEARN_TOPICS } from '@/lib/learn/related';
 import { liveMonths, monthSlug } from '@/lib/tu-vi-thang-data';
 
 const BASE_URL = 'https://hieu.asia';
@@ -61,6 +62,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Cụm nào đổi thì cụm đó mang mốc của mình.
   const STAR_CONTENT_DATE = new Date('2026-07-26T00:00:00Z');
 
+  // Mốc RIÊNG cho 8 chủ đề /learn viết mới ở đợt 1 chương trình "mỗi công cụ một
+  // bài Học riêng". Cùng lý do với STAR_CONTENT_DATE ở trên: 18 chủ đề cũ KHÔNG
+  // đổi nội dung, nên không được mang mốc mới — khai "đổi hôm nay" cho trang
+  // không đổi đúng là kiểu lastmod thiếu trung thực làm Google ngừng tin tín hiệu.
+  const LEARN_WAVE1_DATE = new Date('2026-07-31T00:00:00Z');
+  const LEARN_WAVE1 = new Set([
+    'kim-lau',
+    'tam-tai',
+    'hoang-oc',
+    'bat-trach',
+    'cung-hoang-dao',
+    'lich-am-duong',
+    'gio-hoang-dao',
+    'ngay-kieng-ky',
+  ]);
+
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
     url: `${BASE_URL}/tu-vi/${p.slug}`,
     lastModified: now,
@@ -92,24 +109,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/changelog`, lastModified: now, changeFrequency: 'weekly', priority: 0.5 },
     // /legal bỏ khỏi sitemap + đặt noindex (hub mỏng trùng cột Pháp lý footer).
     { url: `${BASE_URL}/learn`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${BASE_URL}/learn/tu-vi`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/bat-tu`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/than-so-hoc`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/mbti`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/big-five`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/disc`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/enneagram`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/palm`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/kinh-dich`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/tarot`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/phong-thuy`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/chiem-tinh`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/hop-tuoi`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/con-giap`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/sao-han`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/trach-cat`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/can-xuong`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE_URL}/learn/dat-ten-ngu-hanh`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    // Các chủ đề /learn SUY TỪ LEARN_TOPICS, không liệt kê tay nữa. Danh sách tay
+    // cũ đứng yên ở 18 chủ đề trong khi khu Học đang mở rộng theo chương trình
+    // "mỗi công cụ một bài Học riêng" (lib/learn/tool-coverage.ts) — bài mới viết
+    // xong mà quên thêm vào đây thì Google không bao giờ biết nó tồn tại. Một
+    // nguồn duy nhất thì không thể quên.
+    ...LEARN_TOPICS.map((t) => ({
+      url: `${BASE_URL}${t.href}`,
+      lastModified: LEARN_WAVE1.has(t.slug) ? LEARN_WAVE1_DATE : now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
     { url: `${BASE_URL}/tu-vi-hom-nay`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
     { url: `${BASE_URL}/lich-van-nien`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
     { url: `${BASE_URL}/than-so-hoc`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
