@@ -25,6 +25,7 @@ import {
 import { castTuViChart, type TuViChart } from '@/lib/tuvi-client';
 import { getNguHanhRemedy, type NguHanhRemedy } from '@/lib/ngu-hanh-remedy';
 import { describeApiError } from '@/lib/api-error';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 type Gender = 'male' | 'female';
 
@@ -99,10 +100,7 @@ export function TinhMenhCucForm() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-      />
+      <JsonLd data={FAQ_JSONLD} />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"

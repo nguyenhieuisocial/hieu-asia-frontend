@@ -10,6 +10,7 @@ import { MarketingCard } from '@/components/marketing/MarketingCard';
 import { PhilosophyBlock } from '@/components/marketing/PhilosophyBlock';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { ShimmerText } from '@/components/fx/ShimmerText';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Về chúng tôi',
@@ -94,10 +95,7 @@ const ABOUT_JSON_LD = {
 export default function AboutPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ABOUT_JSON_LD) }}
-      />
+      <JsonLd data={ABOUT_JSON_LD} />
       <SiteNav />
       <main id="main-content" className="min-h-screen bg-background text-foreground">
         {/* Section 1 — Hero + Founder face placeholder.

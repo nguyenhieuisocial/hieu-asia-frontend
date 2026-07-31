@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 18 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 26 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -64,8 +64,14 @@ const CLUSTERS: readonly LearnCluster[] = [
       {
         href: '/learn/phong-thuy',
         title: 'Phong Thủy ứng dụng',
-        subtitle: 'Đông phương · Bát Trạch',
-        blurb: 'Hướng hợp tuổi (Bát Trạch), ngũ hành, chọn ngày giờ, thước Lỗ Ban.',
+        subtitle: 'Đông phương · Tổng quan',
+        blurb: 'Bức tranh chung: ngũ hành, hướng, chọn ngày giờ, thước Lỗ Ban.',
+      },
+      {
+        href: '/learn/bat-trach',
+        title: 'Bát Trạch — cung phi & hướng',
+        subtitle: 'Đông phương · Cung phi',
+        blurb: 'Tính cung phi từ năm sinh, Đông tứ mệnh – Tây tứ mệnh, 4 hướng tốt – 4 hướng tránh.',
       },
       {
         href: '/learn/hop-tuoi',
@@ -84,12 +90,6 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Sao Hạn (Cửu Diệu)',
         subtitle: 'Đông phương · Cửu Diệu',
         blurb: '9 sao chiếu mệnh theo tuổi + giới tính; góc nhìn tham khảo, không mê tín.',
-      },
-      {
-        href: '/learn/trach-cat',
-        title: 'Trạch Cát — chọn ngày giờ',
-        subtitle: 'Đông phương · Chọn ngày',
-        blurb: 'Chọn ngày giờ tốt cho cưới hỏi, động thổ, khai trương: hoàng đạo, 12 trực, giờ đẹp — tham khảo.',
       },
       {
         href: '/learn/can-xuong',
@@ -112,10 +112,16 @@ const CLUSTERS: readonly LearnCluster[] = [
       'Chiêm tinh dựng bản đồ thiên thể, thần số học rút từ con số, Tarot đọc qua biểu tượng. Dùng để phản tư, không phải để tiên tri.',
     topics: [
       {
+        href: '/learn/cung-hoang-dao',
+        title: '12 cung hoàng đạo',
+        subtitle: 'Phương Tây · 12 cung',
+        blurb: 'Ngày của từng cung, 4 nguyên tố, 3 tam thái — và vì sao "cung bị đổi" là hiểu nhầm.',
+      },
+      {
         href: '/learn/chiem-tinh',
         title: 'Chiêm tinh phương Tây',
         subtitle: 'Phương Tây · Bản đồ sao',
-        blurb: '12 cung hoàng đạo, hành tinh, cung Mọc, 12 nhà và các góc hợp.',
+        blurb: 'Bản đồ sao cá nhân: hành tinh, cung Mọc, 12 nhà và các góc hợp.',
       },
       {
         href: '/learn/tarot',
@@ -160,6 +166,67 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Enneagram — 9 nhóm',
         subtitle: 'Tâm lý · 9 nhóm',
         blurb: '9 nhóm theo động lực sâu (điều bạn sợ & khao khát), chia 3 trung tâm.',
+      },
+    ],
+  },
+  // Hai cụm dưới tách ra trong đợt 1 của chương trình "mỗi công cụ một bài Học
+  // riêng". Trước đó cả 5 công cụ ngày–giờ lẫn 3 công cụ xem tuổi việc lớn đều
+  // không có bài của riêng mình.
+  {
+    id: 'ngay-gio',
+    heading: 'Ngày giờ & lịch',
+    positioning:
+      'Cuốn lịch là thiên văn và toán học — phần "ngày tốt xấu" gắn lên nó mới là phong tục. Hai lớp khác nhau, bài ở đây tách bạch rõ để bạn biết mình đang đọc lớp nào.',
+    topics: [
+      {
+        href: '/learn/lich-am-duong',
+        title: 'Lịch âm dương Việt Nam',
+        subtitle: 'Lịch pháp · Thiên văn',
+        blurb: 'Vì sao có tháng nhuận, vì sao Tết ta đôi khi lệch Tết Trung Quốc một ngày.',
+      },
+      {
+        href: '/learn/trach-cat',
+        title: 'Trạch Cát — chọn ngày',
+        subtitle: 'Đông phương · 12 trực',
+        blurb: 'Chọn ngày cho cưới hỏi, động thổ, khai trương: hoàng đạo, 12 trực — tham khảo.',
+      },
+      {
+        href: '/learn/gio-hoang-dao',
+        title: 'Giờ hoàng đạo',
+        subtitle: 'Đông phương · 12 giờ',
+        blurb: '12 giờ địa chi, 6 sao hoàng đạo – 6 sao hắc đạo, cách khởi giờ theo chi ngày.',
+      },
+      {
+        href: '/learn/ngay-kieng-ky',
+        title: 'Ngày kiêng kỵ',
+        subtitle: 'Dân gian · Kiêng kỵ',
+        blurb: 'Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật — gốc tích và cách nghĩ tỉnh táo.',
+      },
+    ],
+  },
+  {
+    id: 'xem-tuoi-viec-lon',
+    heading: 'Xem tuổi việc lớn',
+    positioning:
+      'Ba hạn tuổi bị hỏi nhiều nhất khi cưới hỏi và làm nhà. Đọc để hiểu cách người xưa tính, từ đó bớt sợ — không phải để sợ thêm, và tuyệt đối không phải để mua lễ giải hạn.',
+    topics: [
+      {
+        href: '/learn/kim-lau',
+        title: 'Kim Lâu',
+        subtitle: 'Cưới hỏi · Chia 9',
+        blurb: 'Tuổi mụ chia 9 ra bốn loại Kim Lâu; vì sao tục cưới chủ yếu xét tuổi cô dâu.',
+      },
+      {
+        href: '/learn/tam-tai',
+        title: 'Tam Tai',
+        subtitle: 'Tam hợp · 3 năm',
+        blurb: '12 con giáp chia 4 nhóm tam hợp, mỗi nhóm gánh ba năm Tam Tai liên tiếp.',
+      },
+      {
+        href: '/learn/hoang-oc',
+        title: 'Hoang Ốc & mượn tuổi',
+        subtitle: 'Làm nhà · 6 cung',
+        blurb: 'Sáu cung Hoang Ốc tra theo tuổi mụ, và cơ chế "mượn tuổi" khi xây nhà.',
       },
     ],
   },

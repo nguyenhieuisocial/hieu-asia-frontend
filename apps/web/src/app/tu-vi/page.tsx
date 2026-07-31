@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/home/SiteFooter';
 import { RelatedTools } from '@/components/tools/RelatedTools';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { AUX_STARS_CONTENT } from '@/lib/tuvi-content';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Tử Vi Đẩu Số — lập lá số, tra cung & sao',
@@ -121,14 +122,8 @@ export default function TuViHubPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBPAGE_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
+      <JsonLd data={WEBPAGE_JSONLD} />
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div
           aria-hidden="true"

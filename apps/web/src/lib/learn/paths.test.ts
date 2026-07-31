@@ -1,7 +1,7 @@
 /**
  * Kiểm thử registry lộ trình học /learn (paths.ts).
  *
- * Ràng buộc cốt lõi: 5 lộ trình phủ ĐÚNG tập 18 chủ đề trong LEARN_TOPICS,
+ * Ràng buộc cốt lõi: các lộ trình phủ ĐÚNG tập chủ đề trong LEARN_TOPICS,
  * mỗi chủ đề đúng MỘT lần (để "bài tiếp theo" đơn trị). Thêm/bớt chủ đề mà
  * quên cập nhật lộ trình → test này đỏ.
  */
@@ -10,7 +10,7 @@ import { LEARN_PATHS, pathForTopic } from './paths';
 import { LEARN_TOPICS } from './related';
 
 describe('LEARN_PATHS', () => {
-  it('phủ đúng tập 18 chủ đề của LEARN_TOPICS, mỗi chủ đề đúng 1 lần', () => {
+  it('phủ đúng tập chủ đề của LEARN_TOPICS, mỗi chủ đề đúng 1 lần', () => {
     const pathSlugs = LEARN_PATHS.flatMap((p) => [...p.slugs]);
     const topicSlugs = LEARN_TOPICS.map((t) => t.slug);
 

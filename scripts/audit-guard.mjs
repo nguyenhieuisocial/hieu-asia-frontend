@@ -33,6 +33,15 @@ import { execFileSync } from 'node:child_process';
  *
  * ⚠️ Đã kiểm lại toàn bộ ngày 2026-07-29: KHÔNG cái nào có bản vá dùng được.
  *
+ * ⚠️ ĐÍNH CHÍNH 2026-07-31 — chỉ cho brace-expansion: câu trên đã HẾT ĐÚNG với
+ * nó. Nhánh 1.x ĐÃ được backport bản vá ở `1.1.17` (ra 29/07, đúng ngày ghi chú
+ * trên nên lúc đó chưa nhìn thấy) và `1.1.18` (30/07). Kho nay ở 1.1.18, tức
+ * lỗ hổng đã hết ở MỨC MÃ NGUỒN. Mục vẫn phải nằm lại đây vì dải nguy hiểm
+ * `<= 5.0.7` là PHẲNG: `1.1.18 <= 5.0.7` theo semver ⇒ `pnpm audit` và
+ * Dependabot vẫn kêu. Bài học lặp lại lần hai với đúng gói này: "không có bản
+ * vá" là khẳng định có HẠN SỬ DỤNG — phải hỏi lại registry, không đọc lại ghi
+ * chú cũ.
+ *
  * ⚠️ ĐÍNH CHÍNH (bản nháp đầu của chính file này ghi SAI): tôi viết "người dùng
  * DUY NHẤT của cả 5 là `apps/miniapp-zalo`". Đếm thật thì đúng cho 4 advisory
  * react-router (1–2 đường mỗi cái, đều mini-app), nhưng SAI cho brace-expansion:
@@ -49,15 +58,22 @@ export const DA_XET = {
   'GHSA-mh99-v99m-4gvg': {
     goi: 'brace-expansion',
     lyDo:
-      'Kho có CẢ 5.0.8 (đã vá) LẪN 1.1.16. Dải nguy hiểm `<= 5.0.7` PHẲNG nên ' +
-      '1.1.16 vẫn nằm trong. Nhánh 1.x KHÔNG có bản vá: 1.1.16 ra 08/07, bản vá ' +
-      '5.0.8 ra 23/07, không có 1.x nào sau đó. ĐÃ ĐẾM 213 đường: apps/web 74, ' +
-      'apps/admin 64, miniapp-telegram 64, miniapp-zalo 10, packages/config 1. ' +
-      'MỌI cửa vào là devDependency (eslint, eslint-config-next, ' +
-      'eslint-plugin-storybook, @lhci/cli, @eslint/eslintrc) ⇒ không vào bundle. ' +
-      'Cửa vào runtime DUY NHẤT là zmp-sdk→@babel/cli của mini-app, và bundle ' +
-      'mini-app đã kiểm: 0 lần xuất hiện chuỗi "babel".',
-    xetNgay: '2026-07-29',
+      'Kho có 5.0.8 (đã vá) và 1.1.18 — ĐÃ VÁ Ở MỨC MÃ NGUỒN: nhánh 1.x được ' +
+      'backport CVE-2026-14257 ở 1.1.17 (29/07) và 1.1.18 (30/07), tức SAU khi ' +
+      'advisory chốt ngày 24/07 nên dải của nó chưa biết. Dải `<= 5.0.7` PHẲNG ' +
+      '⇒ 1.1.18 vẫn bị tính là dính, đó là lý do mục này còn ở đây. ' +
+      'KHÔNG gỡ được 1.x khỏi cây: cha DUY NHẤT của nó là minimatch@3, mà ép ' +
+      '`minimatch@3` lên ^10 làm LINT ĐỎ TOÀN KHO — ' +
+      '@eslint/eslintrc/lib/config-array/override-tester.js dùng ' +
+      '`import minimatch from "minimatch"` còn minimatch@10 không có default ' +
+      'export ("does not provide an export named \'default\'"); bản eslintrc ' +
+      'mới nhất 3.3.6 VẪN ghim minimatch ^3.1.5, eslint-plugin-import/react/' +
+      'jsx-a11y mới nhất vẫn ^3.1.2 ⇒ thượng nguồn chưa với tới được. ' +
+      'ĐÃ ĐẾM 237 đường: mọi cửa vào là devDependency (eslint, ' +
+      'eslint-config-next, eslint-plugin-storybook, @lhci/cli, @eslint/eslintrc) ' +
+      '⇒ không vào bundle. Cửa vào runtime DUY NHẤT là zmp-sdk→@babel/cli của ' +
+      'mini-app, và bundle mini-app đã kiểm: 0 lần xuất hiện chuỗi "babel".',
+    xetNgay: '2026-07-31',
   },
   'GHSA-qwww-vcr4-c8h2': {
     goi: 'react-router',

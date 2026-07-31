@@ -23,6 +23,7 @@ import { SiteNav } from '@/components/home/SiteNav';
 import { SiteFooter } from '@/components/home/SiteFooter';
 import { ResultDisclaimer } from '@/components/ResultDisclaimer';
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Mẫu báo cáo Tử Vi — xem trước Premium',
@@ -240,10 +241,7 @@ export default function SampleReportPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }}
-      />
+      <JsonLd data={BREADCRUMB_JSONLD} />
 
       <main id="main-content" className="relative overflow-hidden pt-16">
         <div

@@ -46,8 +46,8 @@ export default function CheckoutYearlyPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               {formatVND(PRICING.yearly.vnd)} / năm (≈{' '}
               {formatVND(monthlyEquivalent(PRICING.yearly.vnd))} / tháng) — tiết
-              kiệm ~{yearlyDiscount()}% so với theo tháng. Mentor AI không giới hạn,
-              đại vận & lưu niên cả năm.
+              kiệm ~{yearlyDiscount()}% so với theo tháng. Mentor AI 30 câu mỗi
+              ngày, đại vận & lưu niên cả năm.
             </p>
           </div>
 

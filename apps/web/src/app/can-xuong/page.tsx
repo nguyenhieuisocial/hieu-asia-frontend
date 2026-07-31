@@ -26,6 +26,7 @@ import {
   saveBirthDateTime,
 } from '@/lib/birth-profile';
 import { SavedBirthInfoHint } from '@/components/tools/SavedBirthInfoHint';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.hieu.asia';
 
@@ -174,10 +175,7 @@ export default function CanXuongPage() {
 
   return (
     <>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
-    />
+    <JsonLd data={FAQ_JSONLD} />
     <ToolPageShell
       eyebrow="Cổ truyền Việt Nam"
         relatedSlug="/can-xuong"
