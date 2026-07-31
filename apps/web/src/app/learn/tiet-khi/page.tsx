@@ -285,6 +285,17 @@ const SWITCH_DAYS = nums(MONTH_SWITCH.map((r) => r.switchDay));
 const LUNAR_DAYS = nums(MONTH_SWITCH.map((r) => r.lunarFirst));
 const SWITCH_MIN = Math.min(...SWITCH_DAYS);
 const SWITCH_MAX = Math.max(...SWITCH_DAYS);
+
+// CỬA SỔ RỦI RO cho lời khuyên "sinh vào khoảng ngày nào thì giờ sinh mới quan
+// trọng" phải suy từ chính NGÀY CHỨA MỐC TIẾT, không suy từ SWITCH_MIN/MAX ở trên.
+// Lý do: switchDay đo bằng monthPillarOf(), mà hàm đó chốt lúc 12h trưa VN — nó trả
+// lời "ngày đầu tiên mà đến trưa trụ đã đổi", lệch một bậc so với "ngày mốc rơi vào".
+// Ví dụ phản chứng thật: Lập Xuân 2025 rơi 03/02 lúc 21:08, sinh 11h ngày 3 ra năm
+// Giáp Thìn/tháng Đinh Sửu còn sinh 23h cùng ngày ra Ất Tỵ/Mậu Dần — ngày 3 nằm
+// NGOÀI khoảng switch (4–9) mà vẫn đổi cả trụ tháng lẫn trụ năm.
+const TERM_DAYS = SWEEP_YEARS.flatMap((y) => TIET_ROWS.map((t) => toVn(termJd(y, t.lon)).day));
+const RISK_MIN = Math.min(...TERM_DAYS);
+const RISK_MAX = Math.max(...TERM_DAYS);
 const LUNAR_MIN = Math.min(...LUNAR_DAYS);
 const LUNAR_MAX = Math.max(...LUNAR_DAYS);
 
@@ -720,9 +731,11 @@ export default function LearnTietKhiPage() {
                 </strong>
               </p>
               <p className="text-sm text-foreground/70">
-                Kết luận thực hành: sinh vào khoảng ngày {SWITCH_MIN}–{SWITCH_MAX} của một tháng
+                Kết luận thực hành: sinh vào khoảng ngày {RISK_MIN}–{RISK_MAX} của một tháng
                 dương lịch bất kỳ thì <strong>giờ sinh chính xác là bắt buộc</strong> để lập lá số
-                đúng; ngoài khoảng đó, lệch vài giờ không đổi được gì ở trụ tháng.
+                đúng; ngoài khoảng đó, lệch vài giờ hầu như không đổi trụ tháng. Khoảng này suy từ
+                chính ngày rơi của {TIET_ROWS.length} mốc Tiết trong {SWEEP_YEARS.length} năm được
+                quét, nên nó không phụ thuộc vào quy ước chốt giờ nào cả.
               </p>
             </div>
           ),

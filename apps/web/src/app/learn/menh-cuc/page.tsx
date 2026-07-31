@@ -591,9 +591,10 @@ export default function LearnMenhCucPage() {
               </p>
               <p>
                 Sau khi Tử Vi có chỗ đứng, 13 chính tinh còn lại mới an theo{' '}
-                <strong>bảng cố định quanh Tử Vi</strong> — Thiên Cơ ngay trước Tử Vi, Thái Dương
-                cách 2 cung, Vũ Khúc cách 3 cung, và cứ thế. Nghĩa là toàn bộ dàn chính tinh treo vào
-                một cái đinh duy nhất, mà cái đinh ấy chỉ đóng được khi đã có Cục.
+                <strong>bảng cố định quanh Tử Vi</strong>. Đếm nghịch chiều từ cung Tử Vi: Thiên Cơ
+                cách 1 cung, Thái Dương cách 3, Vũ Khúc cách 4, Thiên Đồng cách 5, Liêm Trinh cách 8.
+                Nghĩa là toàn bộ dàn chính tinh treo vào một cái đinh duy nhất, mà cái đinh ấy chỉ
+                đóng được khi đã có Cục.
               </p>
               <p>Xâu chuỗi lại thì thứ tự phụ thuộc rất rõ ràng:</p>
               <ol className="list-decimal space-y-2 pl-5">
