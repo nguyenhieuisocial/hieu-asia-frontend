@@ -1426,3 +1426,21 @@ body { overflow-wrap: break-word; }
      only the max-width tightening remains for ≤480px. */
   .ob-hub-label { max-width: 5rem; }
 }
+
+/* ────────────────────────────────────────────────────────────────────────
+ * Wave 65.02 — phối hợp cụm fixed-bottom mobile (finding P2 vòng 8):
+ * StickyMobileCta (z-40) trước đây (a) che CHẾT BackToTop (z-30) trên đúng
+ * trang dài nhất, (b) che vĩnh viễn ~70-90px cuối footer — dòng miễn trừ
+ * trách nhiệm + copyright không bao giờ đọc được. Thanh CTA phát
+ * [data-sticky-cta][data-visible]; hai rule :has() dưới đây phản ứng theo.
+ * Trình duyệt không hỗ trợ :has (rất hiếm 2026) rơi về hành vi cũ — không
+ * vỡ gì, chỉ mất hai tinh chỉnh này. Chỉ áp mobile (<768px) vì thanh CTA
+ * là md:hidden. */
+@media (max-width: 767px) {
+  body:has([data-sticky-cta][data-visible]) .back-to-top {
+    bottom: calc(max(1.5rem, env(safe-area-inset-bottom)) + 4.75rem);
+  }
+  body:has([data-sticky-cta][data-visible]) footer {
+    padding-bottom: 5.5rem;
+  }
+}
