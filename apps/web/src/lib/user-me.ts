@@ -28,7 +28,28 @@ export interface UserMeResponse {
   ok: true;
   user_id: string | null;
   email: string | null;
-  membership_tier: 'free' | 'standard' | 'premium' | 'lifetime';
+  /**
+   * Matches the worker's `MembershipTier` exactly. Previously this union also
+   * listed `'standard'`, which `/account/profile` has never emitted — the
+   * phantom value forced every consumer to handle a case that cannot occur.
+   * (`'standard'` still exists in `event-taxonomy.ts` as an ANALYTICS value;
+   * that is a separate domain with historical PostHog data — do not conflate.)
+   */
+  membership_tier: 'free' | 'premium' | 'lifetime';
+  /**
+   * True for recurring subscribers (monthly / yearly) and lifetime holders;
+   * false for the one-shot `premium` unlock and free accounts.
+   *
+   * Exists because `membership_tier` collapses subscriptions and the one-shot
+   * 99k purchase into a single `'premium'`, which loses the distinction the
+   * post-reading upsell needs. A boolean rather than the literal plan, so the
+   * response never advertises how much an account paid (Wave 58.1 P2-1).
+   *
+   * OPTIONAL ON PURPOSE: the frontend and the worker deploy independently, so
+   * this is `undefined` whenever the worker predates the field. Callers must
+   * fall back rather than treat `undefined` as `false` — see `useUpsellAudience`.
+   */
+  is_subscriber?: boolean;
 }
 
 import { getSupabaseAuth } from './auth-client';
