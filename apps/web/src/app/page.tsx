@@ -247,7 +247,7 @@ const HOME_FAQ: readonly HomeFaqEntry[] = [
     aCrawler: `Gói Standard miễn phí gồm các công cụ tra cứu cơ bản. Premium ${formatVND(PRICING.premium.vnd)} một lần, Mentor Monthly ${formatVND(PRICING.monthly.vnd)}/tháng hoặc Mentor Yearly ${formatVND(PRICING.yearly.vnd)}/năm, Lifetime ${formatVND(PRICING.lifetime.vnd)} một lần.`,
     a: (
       <p>
-        Tier <strong>Standard miễn phí</strong> gồm khảo sát đầu vào và các công
+        Gói <strong>Standard miễn phí</strong> gồm khảo sát đầu vào và các công
         cụ tra cứu cơ bản. <strong>Premium {formatVND(PRICING.premium.vnd)} một lần</strong>{' '}
         (1 lá số đầy đủ + PDF + 3 câu hỏi Mentor).{' '}
         <strong>Mentor Monthly {formatVND(PRICING.monthly.vnd)}/tháng</strong> hoặc{' '}
@@ -259,7 +259,7 @@ const HOME_FAQ: readonly HomeFaqEntry[] = [
     ),
   },
   {
-    q: 'Tôi có thể huỷ gói subscription bất cứ lúc nào?',
+    q: 'Tôi có thể huỷ gói bất cứ lúc nào?',
     aCrawler:
       'Có. Huỷ trong trang Tài khoản, gói dùng hết kỳ đã thanh toán, không tự gia hạn. Hoàn tiền 100% trong 24h nếu báo cáo chưa tạo.',
     a: (
@@ -425,7 +425,7 @@ export default function LandingPage() {
               <u className="underline decoration-primary decoration-2">
                 về điều gì
               </u>
-              <span className="text-primary">.</span>
+              <span className="text-primary">?</span>
             </>
           }
           items={[
@@ -628,7 +628,7 @@ export default function LandingPage() {
               features: [
                 'Mentor AI — 30 câu hỏi mỗi ngày',
                 'Đại vận và lưu niên hàng năm',
-                'Tất cả 5 ống kính sâu',
+                'Tất cả 5 lăng kính sâu',
                 'Huỷ bất cứ lúc nào',
               ],
               ctaLabel: 'Bắt đầu với Mentor',
@@ -651,7 +651,7 @@ export default function LandingPage() {
             Hoàn 100% trong 24h nếu chưa tạo báo cáo · bảo hành 14 ngày
           </p>
           <p className="text-editorial-caption text-muted-foreground">
-            Có gói Mentor theo năm (₫1.990.000) và Lifetime (₫4.990.000) —{' '}
+            Có gói Mentor theo năm ({formatVND(PRICING.yearly.vnd)}) và Lifetime ({formatVND(PRICING.lifetime.vnd)}) —{' '}
             <a
               href="/pricing"
               className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80"

@@ -131,8 +131,8 @@ export function InstantChartHero(): React.JSX.Element {
           className="hero-enter mt-4 max-w-xl text-sm leading-relaxed text-foreground/75 sm:text-base"
           style={{ animationDelay: '220ms' }}
         >
-          Từ ngày và giờ sinh, hệ thống dựng lá số Bát Tự của bạn: Nhật Chủ, ngũ hành mạnh yếu,
-          đại vận từng chặng. Con số tính bằng thuật toán theo tiết khí,{' '}
+          Từ ngày và giờ sinh, hệ thống dựng lá số Bát Tự của bạn: Nhật Chủ (đại diện chính
+          bạn), ngũ hành mạnh yếu, đại vận từng chặng 10 năm. Con số tính bằng thuật toán theo tiết khí,{' '}
           <strong className="text-foreground/90">không tra bảng sẵn</strong>. Phần luận giải giúp
           bạn hiểu mình và chọn thời điểm, không phán vận hạn.
         </p>
@@ -231,7 +231,7 @@ export function InstantChartHero(): React.JSX.Element {
               href="/tu-vi/rectify"
               className="text-gold underline underline-offset-4 hover:text-gold-400"
             >
-              Không biết giờ sinh? → Làm Hồi cứu giờ sinh (BTR)
+              Không biết giờ sinh? → Tìm lại giờ sinh từ sự kiện đời bạn
             </Link>
           </p>
 

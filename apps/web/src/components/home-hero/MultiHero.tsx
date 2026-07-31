@@ -89,7 +89,10 @@ export function MultiHero(): React.JSX.Element {
 
       <div className="mh-wrap">
         <div className="mh-copy">
-          <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />LÁ SỐ THẬT · KHÔNG BÓI MÙ</p>
+          {/* Wave 65.01 — "KHÔNG BÓI MÙ" lệch tông editorial (rủi ro đọc thành
+              miệt thị người xem bói) → "KHÔNG PHÁN MỆNH" giữ đúng lập trường
+              mà điềm tĩnh hơn (finding P2 vòng 1). */}
+          <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />LÁ SỐ THẬT · KHÔNG PHÁN MỆNH</p>
           <h2 className="mh-h1">
             <span className="mh-line mh-l1">Hiểu mình rõ hơn,</span>
             <span className="mh-line mh-l2">rồi quyết định cho{' '}

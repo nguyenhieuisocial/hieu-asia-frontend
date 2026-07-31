@@ -24,7 +24,7 @@ const COL_PRODUCT: readonly FooterLink[] = [
   // Trước đây nhãn ghi "Lá số tử vi" nhưng href là /onboarding — bấm vào không
   // ra lá số mà nhảy vào luồng đăng ký, dù trang tên đúng như vậy có tồn tại.
   // (Tham số ?intent= chỉ để đo phễu PostHog, không đổi hành vi → bỏ được.)
-  // Luồng mua vẫn có nút "Mở khóa lá số" thường trực trên nav mọi trang.
+  // Luồng bắt đầu vẫn có nút "Lập lá số miễn phí" thường trực trên nav mọi trang.
   { href: '/la-so-tu-vi', label: 'Lá số Tử Vi' },
   { href: '/la-so-bat-tu', label: 'Lá số Bát Tự' },
   { href: '/mentor', label: 'AI Mentor' },

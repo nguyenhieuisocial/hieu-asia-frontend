@@ -325,9 +325,14 @@ export function PricingTierV2({
                     founder spec ("Cho người đang phân vân một quyết định").
                     Drops the "Nên chọn nếu" eyebrow + bordered call-out box in
                     favor of a single italic editorial line. */}
+                {/* Wave 65.01 — "Cho {bestFor}" ghép với chuỗi bắt đầu bằng
+                    "bạn muốn…" sinh câu sai ngữ pháp ("Cho bạn muốn thử…") trên
+                    cả 6 thẻ giá (home + /pricing). "Hợp nếu {bestFor}" đọc đúng
+                    với mọi chuỗi hiện có — sửa MỘT chỗ ở template thay vì 6
+                    chuỗi (finding P2 vòng 1). */}
                 {tier.bestFor && (
                   <p className="mt-4 font-sans text-sm italic leading-relaxed text-foreground/70">
-                    Cho {tier.bestFor}
+                    Hợp nếu {tier.bestFor}
                   </p>
                 )}
 

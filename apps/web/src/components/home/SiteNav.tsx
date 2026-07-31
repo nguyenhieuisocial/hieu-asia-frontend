@@ -223,8 +223,12 @@ export function SiteNav() {
                   Đăng nhập
                 </Link>
               )}
+              {/* Wave 65.01 — "Mở khóa lá số" → "Lập lá số miễn phí": nhãn cũ
+                  gợi paywall, chọi thẳng thông điệp "miễn phí, không cần thẻ"
+                  của cả trang (finding P2 vòng 1). Đích /onboarding/topic giữ
+                  nguyên — vẫn là flow bắt đầu miễn phí. */}
               <Button asChild size="sm" className="hidden sm:inline-flex">
-                <Link href="/onboarding/topic">Mở khóa lá số</Link>
+                <Link href="/onboarding/topic">Lập lá số miễn phí</Link>
               </Button>
             </>
           )}
@@ -526,7 +530,7 @@ function MobileDrawer({
           )}
           <Button asChild className="mt-2 w-full">
             <Link href="/onboarding/topic" onClick={() => setOpen(false)}>
-              Mở khóa lá số
+              Lập lá số miễn phí
             </Link>
           </Button>
         </nav>
