@@ -28,20 +28,20 @@ const MENTOR_PRICE = `${formatVND(PRICING.monthly.vnd)}/tháng`;
 const MENTOR_PRICE_SHORT = `${PRICING.monthly.vnd / 1000}k/tháng`;
 
 const PAGE_DESCRIPTION =
-  `Mentor AI trả lời từ chính lá số Tử Vi / Bát Tự bạn đã lập, nhớ mục tiêu và quyết định của bạn, hỏi không giới hạn — ${MENTOR_PRICE}. Lập lá số miễn phí trước.`;
+  `Mentor AI trả lời từ chính lá số Tử Vi / Bát Tự bạn đã lập, nhớ mục tiêu và quyết định của bạn, tới 30 câu hỏi mỗi ngày — ${MENTOR_PRICE}. Lập lá số miễn phí trước.`;
 
 export const metadata: Metadata = {
   // SEO-FIX: 63 ký tự → bị Google cắt. Bỏ "của bạn" (đã có trong og:title bên
   // dưới, nơi được phép dài hơn) → 54. Sửa cùng lúc với việc đưa /mentor vào
   // sitemap: không có lý gì đẩy trang cho Google tìm mà tiêu đề vẫn bị cắt.
   title: {
-    absolute: 'Mentor AI — hỏi đáp không giới hạn từ lá số · hieu.asia',
+    absolute: 'Mentor AI — hỏi đáp hằng ngày từ lá số · hieu.asia',
   },
   description: PAGE_DESCRIPTION,
   alternates: { canonical: '/mentor' },
   openGraph: {
-    title: 'Mentor AI — hỏi đáp không giới hạn từ lá số của bạn',
-    description: `Trả lời bám lá số bạn đã lập, nhớ hành trình của bạn, hỏi không giới hạn — ${MENTOR_PRICE}.`,
+    title: 'Mentor AI — hỏi đáp hằng ngày từ lá số của bạn',
+    description: `Trả lời bám lá số bạn đã lập, nhớ hành trình của bạn, tới 30 câu hỏi mỗi ngày — ${MENTOR_PRICE}.`,
     url: 'https://hieu.asia/mentor',
     type: 'website',
     images: OG_DEFAULT_IMAGES,
@@ -59,15 +59,15 @@ const VALUE_BLOCKS = [
     body: 'Mục tiêu bạn đang theo, quyết định còn treo: lần sau hỏi tiếp, Mentor nhớ và nối mạch, không phải kể lại từ đầu.',
   },
   {
-    title: 'Không giới hạn',
-    body: `Chuyện việc, chuyện tiền, chuyện người: hỏi bất kỳ lúc nào, bao nhiêu câu tuỳ bạn — ${MENTOR_PRICE}.`,
+    title: '30 câu mỗi ngày',
+    body: `Chuyện việc, chuyện tiền, chuyện người: hỏi bất kỳ lúc nào, tới 30 câu mỗi ngày — ${MENTOR_PRICE}.`,
   },
 ] as const;
 
 export default function MentorPage() {
   const JSONLD = [
     webPage({
-      name: 'Mentor AI — hỏi đáp không giới hạn từ lá số của bạn',
+      name: 'Mentor AI — hỏi đáp hằng ngày từ lá số của bạn',
       description: PAGE_DESCRIPTION,
       url: '/mentor',
     }),

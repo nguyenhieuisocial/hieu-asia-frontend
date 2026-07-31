@@ -6,7 +6,7 @@ import { formatVND, PRICING } from '@/lib/pricing';
 
 export const metadata = {
   title: 'Checkout Mentor AI',
-  description: 'Hoàn tất đăng ký gói Mentor AI không giới hạn hieu.asia',
+  description: 'Hoàn tất đăng ký gói Mentor AI 30 câu mỗi ngày hieu.asia',
   robots: { index: false, follow: false },
 };
 
@@ -43,11 +43,12 @@ export default function CheckoutMentorPage() {
               CHECKOUT · MENTOR AI
             </p>
             <h1 className="mt-2 font-heading text-2xl text-foreground">
-              Mentor AI không giới hạn
+              Mentor AI — 30 câu mỗi ngày
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              {formatVND(PRICING.monthly.vnd)} / tháng — hỏi AI thoải mái về quyết
-              định của bạn, kèm đại vận và lưu niên hàng năm. Huỷ bất cứ lúc nào.
+              {formatVND(PRICING.monthly.vnd)} / tháng — hỏi AI tới 30 câu mỗi ngày
+              về quyết định của bạn, kèm đại vận và lưu niên hàng năm. Huỷ bất cứ
+              lúc nào.
             </p>
           </div>
 
