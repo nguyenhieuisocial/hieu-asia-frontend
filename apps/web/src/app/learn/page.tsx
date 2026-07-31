@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 30 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 34 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -195,6 +195,38 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Ngày kiêng kỵ',
         subtitle: 'Dân gian · Kiêng kỵ',
         blurb: 'Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật — gốc tích và cách nghĩ tỉnh táo.',
+      },
+      {
+        href: '/learn/xuat-hanh',
+        title: 'Hướng xuất hành',
+        subtitle: 'Dân gian · Hỷ Thần',
+        blurb: 'Hỷ Thần, Tài Thần đổi theo can của NGÀY — khác hẳn hướng nhà tính theo tuổi.',
+      },
+    ],
+  },
+  {
+    id: 'nen-tang-can-chi',
+    heading: 'Nền tảng can chi',
+    positioning:
+      'Bộ máy đánh số thời gian mà Bát Tự, Tử Vi, trạch cát và hợp tuổi đều đứng trên. Bản thân can chi chỉ là cách gọi tên năm tháng ngày giờ — mọi diễn giải vận mệnh là tầng gán thêm phía trên.',
+    topics: [
+      {
+        href: '/learn/can-chi',
+        title: 'Thiên can – Địa chi',
+        subtitle: 'Nền tảng · Chu kỳ 60',
+        blurb: '10 can, 12 chi, và vì sao ghép lại chỉ ra 60 cặp chứ không phải 120.',
+      },
+      {
+        href: '/learn/nap-am',
+        title: 'Nạp âm & mệnh ngũ hành',
+        subtitle: 'Nền tảng · 30 nạp âm',
+        blurb: 'Mệnh ngũ hành của bạn ra từ nạp âm, không phải từ can hay chi năm sinh.',
+      },
+      {
+        href: '/learn/tam-hop-luc-xung',
+        title: 'Tam hợp – Lục xung',
+        subtitle: 'Nền tảng · Vòng 12 chi',
+        blurb: 'Hình học của vòng 12 con giáp: tam hợp là tam giác đều, lục xung là đối đỉnh.',
       },
     ],
   },

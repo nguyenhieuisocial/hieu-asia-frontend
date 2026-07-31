@@ -48,6 +48,11 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'huyen-khong-phi-tinh', eyebrow: 'CỬU VẬN', name: 'Huyền Không Phi Tinh', href: '/learn/huyen-khong-phi-tinh' },
   { slug: 'thuoc-lo-ban', eyebrow: 'KÍCH THƯỚC', name: 'Thước Lỗ Ban', href: '/learn/thuoc-lo-ban' },
   { slug: 'ngu-hanh-mau-sac', eyebrow: 'SINH KHẮC', name: 'Ngũ hành & màu sắc', href: '/learn/ngu-hanh-mau-sac' },
+  // Đợt 3 — nền tảng can chi + hướng xuất hành.
+  { slug: 'can-chi', eyebrow: 'CHU KỲ 60', name: 'Thiên can – Địa chi', href: '/learn/can-chi' },
+  { slug: 'nap-am', eyebrow: 'BẢN MỆNH', name: 'Nạp âm', href: '/learn/nap-am' },
+  { slug: 'tam-hop-luc-xung', eyebrow: 'VÒNG 12 CHI', name: 'Tam hợp – Lục xung', href: '/learn/tam-hop-luc-xung' },
+  { slug: 'xuat-hanh', eyebrow: 'HỶ THẦN', name: 'Hướng xuất hành', href: '/learn/xuat-hanh' },
 ];
 
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
@@ -88,7 +93,11 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'du-nien': ['bat-trach', 'huyen-khong-phi-tinh', 'phong-thuy', 'thuoc-lo-ban'],
   'huyen-khong-phi-tinh': ['bat-trach', 'du-nien', 'phong-thuy', 'thuoc-lo-ban'],
   'thuoc-lo-ban': ['phong-thuy', 'bat-trach', 'ngu-hanh-mau-sac', 'hoang-oc'],
-  'ngu-hanh-mau-sac': ['dat-ten-ngu-hanh', 'phong-thuy', 'bat-tu', 'thuoc-lo-ban'],
+  'ngu-hanh-mau-sac': ['nap-am', 'dat-ten-ngu-hanh', 'phong-thuy', 'thuoc-lo-ban'],
+  'can-chi': ['nap-am', 'tam-hop-luc-xung', 'con-giap', 'bat-tu'],
+  'nap-am': ['can-chi', 'ngu-hanh-mau-sac', 'dat-ten-ngu-hanh', 'bat-tu'],
+  'tam-hop-luc-xung': ['con-giap', 'hop-tuoi', 'can-chi', 'sao-han'],
+  'xuat-hanh': ['gio-hoang-dao', 'trach-cat', 'lich-am-duong', 'bat-trach'],
   'cung-hoang-dao': ['chiem-tinh', 'tarot', 'than-so-hoc', 'con-giap'],
   'lich-am-duong': ['trach-cat', 'gio-hoang-dao', 'ngay-kieng-ky', 'sao-han'],
   'gio-hoang-dao': ['trach-cat', 'lich-am-duong', 'ngay-kieng-ky', 'phong-thuy'],

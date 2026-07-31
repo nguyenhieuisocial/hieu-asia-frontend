@@ -157,7 +157,13 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "surfaces": [
       "catalog"
     ],
-    "relatedLabel": "Ngũ hành bản mệnh"
+    "relatedLabel": "Ngũ hành bản mệnh",
+    "related": [
+      "/luc-thap-hoa-giap",
+      "/mau-xe-hop-menh",
+      "/dat-ten-ngu-hanh",
+      "/learn/nap-am"
+    ]
   },
   {
     "href": "/tra-cuu-tuoi",
@@ -183,7 +189,13 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "surfaces": [
       "catalog"
     ],
-    "relatedLabel": "Lục Thập Hoa Giáp (60 Can Chi)"
+    "relatedLabel": "Lục Thập Hoa Giáp (60 Can Chi)",
+    "related": [
+      "/ban-menh",
+      "/tra-cuu-tuoi",
+      "/la-so-bat-tu",
+      "/learn/can-chi"
+    ]
   },
   {
     "href": "/tuong-hop-12-con-giap",
@@ -196,7 +208,13 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "surfaces": [
       "catalog"
     ],
-    "relatedLabel": "Bản đồ tương hợp 12 con giáp"
+    "relatedLabel": "Bản đồ tương hợp 12 con giáp",
+    "related": [
+      "/hop-tuoi",
+      "/xem-hop-nhom",
+      "/compatibility",
+      "/learn/tam-hop-luc-xung"
+    ]
   },
   {
     "href": "/bang-chung",
@@ -918,7 +936,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/gio-hoang-dao",
       "/xem-ngay",
       "/ngay-kieng-ky",
-      "/lich-van-nien"
+      "/lich-van-nien",
+      "/learn/xuat-hanh"
     ]
   },
   {
@@ -1717,6 +1736,27 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/ngu-hanh-mau-sac",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu ngũ hành & màu sắc"
+  },
+  // Đợt 3 — nền tảng can chi + hướng xuất hành.
+  {
+    "href": "/learn/can-chi",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Thiên can – Địa chi"
+  },
+  {
+    "href": "/learn/nap-am",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu nạp âm & mệnh ngũ hành"
+  },
+  {
+    "href": "/learn/tam-hop-luc-xung",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu tam hợp – lục xung"
+  },
+  {
+    "href": "/learn/xuat-hanh",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu hướng xuất hành"
   }
 ];
 

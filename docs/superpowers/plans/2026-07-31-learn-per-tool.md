@@ -83,7 +83,19 @@ tiêu đề ≤60 và mô tả ≤160 đo trên HTML build · sitemap 30 bài H�
 3. **Chạy vitest từ `frontend/apps/web`** — test dùng `process.cwd()`; chạy từ gốc
    repo sẽ báo đỏ giả ở `jsonld-escape.guard.test.ts`.
 
-## Còn lại — 31 bài, lõi riêng từng bài
+## Nền tảng can chi + xuất hành — XONG (01/08/2026)
+
+4 bài: `can-chi` (10 can × 12 chi, vì sao ra 60 chứ không phải 120), `nap-am`
+(mệnh ngũ hành ra từ nạp âm chứ không từ can/chi năm sinh), `tam-hop-luc-xung`
+(hình học vòng 12 chi: tam hợp = tam giác đều, lục xung = đối đỉnh), `xuat-hanh`
+(Hỷ Thần / Tài Thần theo can NGÀY, khác hướng nhà theo tuổi).
+Lộ trình mới `nen-tang-can-chi`; `xuat-hanh` vào lộ trình `ngay-gio-tot-xau`;
+hub thêm cụm "Nền tảng can chi" (34 chủ đề).
+
+Verify: tsc sạch · vitest 902/902 · build exit 0 · 4/4 bài đạt tiêu đề ≤60 và mô
+tả ≤160 trên HTML build · sitemap 34 bài Học · hub hiển thị đủ 4 thẻ.
+
+## Còn lại — 27 bài, lõi riêng từng bài
 
 Cột "lõi riêng" là ranh giới chống lấn: viết đúng phần đó, phần còn lại chỉ link.
 

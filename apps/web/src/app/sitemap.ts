@@ -90,6 +90,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'thuoc-lo-ban',
     'ngu-hanh-mau-sac',
   ]);
+  // đợt 3 — nền tảng can chi + hướng xuất hành
+  publishAll('2026-08-01T00:00:00Z', ['can-chi', 'nap-am', 'tam-hop-luc-xung', 'xuat-hanh']);
 
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
     url: `${BASE_URL}/tu-vi/${p.slug}`,

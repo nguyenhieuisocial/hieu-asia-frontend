@@ -63,7 +63,7 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     name: 'Ngày giờ tốt xấu',
     tagline:
       'Hiểu cuốn lịch trước đã: lịch âm dương chạy thế nào, rồi mới tới giờ đẹp và ngày kiêng.',
-    slugs: ['lich-am-duong', 'gio-hoang-dao', 'ngay-kieng-ky'],
+    slugs: ['lich-am-duong', 'gio-hoang-dao', 'ngay-kieng-ky', 'xuat-hanh'],
   },
   {
     id: 'xem-tuoi-viec-lon',
@@ -81,6 +81,16 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     tagline:
       'Từ cung phi của bạn tới tinh bàn của ngôi nhà — bốn lớp phong thuỷ hay bị gộp làm một, tách ra cho rõ.',
     slugs: ['bat-trach', 'du-nien', 'huyen-khong-phi-tinh', 'thuoc-lo-ban', 'ngu-hanh-mau-sac'],
+  },
+  // Đợt 3. Đây là lộ trình NỀN: can chi là bộ đánh số thời gian mà Bát Tự, Tử Vi,
+  // trạch cát, hợp tuổi đều đứng trên. Đọc trước thì các bài kia bớt phải giải
+  // thích lại từ đầu.
+  {
+    id: 'nen-tang-can-chi',
+    name: 'Nền tảng can chi',
+    tagline:
+      'Bộ máy đánh số thời gian của cổ học Á Đông: 10 can, 12 chi, vì sao ra đúng 60 — và mệnh ngũ hành thật ra lấy từ đâu.',
+    slugs: ['can-chi', 'nap-am', 'tam-hop-luc-xung'],
   },
 ];
 
