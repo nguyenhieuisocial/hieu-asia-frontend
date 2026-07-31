@@ -42,6 +42,12 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'lich-am-duong', eyebrow: 'LỊCH PHÁP', name: 'Lịch âm dương', href: '/learn/lich-am-duong' },
   { slug: 'gio-hoang-dao', eyebrow: '12 GIỜ', name: 'Giờ hoàng đạo', href: '/learn/gio-hoang-dao' },
   { slug: 'ngay-kieng-ky', eyebrow: 'KIÊNG KỴ', name: 'Ngày kiêng kỵ', href: '/learn/ngay-kieng-ky' },
+  // Đợt 2 — cụm phong thuỷ chuyên sâu. Trước đó 3 công cụ (/thuoc-lo-ban,
+  // /phi-tinh, /huong-ban-lam-viec) cùng trỏ về bài ô /learn/phong-thuy.
+  { slug: 'du-nien', eyebrow: 'BÁT BIẾN', name: '8 du niên', href: '/learn/du-nien' },
+  { slug: 'huyen-khong-phi-tinh', eyebrow: 'CỬU VẬN', name: 'Huyền Không Phi Tinh', href: '/learn/huyen-khong-phi-tinh' },
+  { slug: 'thuoc-lo-ban', eyebrow: 'KÍCH THƯỚC', name: 'Thước Lỗ Ban', href: '/learn/thuoc-lo-ban' },
+  { slug: 'ngu-hanh-mau-sac', eyebrow: 'SINH KHẮC', name: 'Ngũ hành & màu sắc', href: '/learn/ngu-hanh-mau-sac' },
 ];
 
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
@@ -62,7 +68,11 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'bat-tu': ['tu-vi', 'hop-tuoi', 'dat-ten-ngu-hanh', 'phong-thuy'],
   'kinh-dich': ['tarot', 'phong-thuy', 'tu-vi', 'trach-cat'],
   'tarot': ['kinh-dich', 'chiem-tinh', 'than-so-hoc', 'mbti'],
-  'phong-thuy': ['bat-trach', 'trach-cat', 'dat-ten-ngu-hanh', 'bat-tu'],
+  // Bài ô trỏ XUỐNG 4 bài chuyên sâu của chính nó (ngu-hanh-mau-sac được link
+  // trong thân bài). Trước đây bài ô giảng lại đủ cả 4 chủ đề mà không có một
+  // link nào sang chúng — hai trang cùng chủ đề, cùng domain, không liên kết là
+  // đúng kịch bản Google tự chọn một bản và dìm bản kia.
+  'phong-thuy': ['bat-trach', 'du-nien', 'huyen-khong-phi-tinh', 'thuoc-lo-ban'],
   'chiem-tinh': ['cung-hoang-dao', 'tarot', 'than-so-hoc', 'big-five'],
   'than-so-hoc': ['chiem-tinh', 'tarot', 'dat-ten-ngu-hanh', 'mbti'],
   'hop-tuoi': ['con-giap', 'tu-vi', 'bat-tu', 'trach-cat'],
@@ -74,7 +84,11 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'kim-lau': ['tam-tai', 'hoang-oc', 'hop-tuoi', 'sao-han'],
   'tam-tai': ['kim-lau', 'hoang-oc', 'sao-han', 'con-giap'],
   'hoang-oc': ['kim-lau', 'tam-tai', 'bat-trach', 'phong-thuy'],
-  'bat-trach': ['phong-thuy', 'hoang-oc', 'trach-cat', 'dat-ten-ngu-hanh'],
+  'bat-trach': ['du-nien', 'huyen-khong-phi-tinh', 'phong-thuy', 'hoang-oc'],
+  'du-nien': ['bat-trach', 'huyen-khong-phi-tinh', 'phong-thuy', 'thuoc-lo-ban'],
+  'huyen-khong-phi-tinh': ['bat-trach', 'du-nien', 'phong-thuy', 'thuoc-lo-ban'],
+  'thuoc-lo-ban': ['phong-thuy', 'bat-trach', 'ngu-hanh-mau-sac', 'hoang-oc'],
+  'ngu-hanh-mau-sac': ['dat-ten-ngu-hanh', 'phong-thuy', 'bat-tu', 'thuoc-lo-ban'],
   'cung-hoang-dao': ['chiem-tinh', 'tarot', 'than-so-hoc', 'con-giap'],
   'lich-am-duong': ['trach-cat', 'gio-hoang-dao', 'ngay-kieng-ky', 'sao-han'],
   'gio-hoang-dao': ['trach-cat', 'lich-am-duong', 'ngay-kieng-ky', 'phong-thuy'],

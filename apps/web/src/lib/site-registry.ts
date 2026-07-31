@@ -1189,7 +1189,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     },
     "home": {
       "n": "Thước Lỗ Ban",
-      "learn": "/learn/phong-thuy",
+      "learn": "/learn/thuoc-lo-ban",
       "group": "Cổ học Á Đông"
     },
     "catalog": {
@@ -1207,7 +1207,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "related": [
       "/lich-van-nien",
       "/gio-hoang-dao",
-      "/xem-ngay"
+      "/xem-ngay",
+      "/learn/thuoc-lo-ban"
     ]
   },
   {
@@ -1227,7 +1228,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/thuoc-lo-ban",
       "/ban-menh",
       "/xem-tuoi-lam-nha",
-      "/learn/phong-thuy"
+      "/learn/huyen-khong-phi-tinh"
     ]
   },
   {
@@ -1246,7 +1247,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/ban-menh",
       "/huong-nha",
       "/huong-ban-lam-viec",
-      "/hop-tuoi"
+      "/hop-tuoi",
+      "/learn/ngu-hanh-mau-sac"
     ]
   },
   {
@@ -1266,7 +1268,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/ban-menh",
       "/mau-xe-hop-menh",
       "/thuoc-lo-ban",
-      "/learn/phong-thuy"
+      "/learn/du-nien"
     ]
   },
   {
@@ -1694,6 +1696,27 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/ngay-kieng-ky",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu ngày kiêng kỵ"
+  },
+  // Đợt 2 — cụm phong thuỷ chuyên sâu.
+  {
+    "href": "/learn/du-nien",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu 8 du niên"
+  },
+  {
+    "href": "/learn/huyen-khong-phi-tinh",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Huyền Không Phi Tinh"
+  },
+  {
+    "href": "/learn/thuoc-lo-ban",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu thước Lỗ Ban"
+  },
+  {
+    "href": "/learn/ngu-hanh-mau-sac",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu ngũ hành & màu sắc"
   }
 ];
 

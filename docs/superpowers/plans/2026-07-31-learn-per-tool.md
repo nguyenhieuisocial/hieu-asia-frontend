@@ -59,7 +59,31 @@ cd apps/web && pnpm types:check && pnpm test && pnpm lint && pnpm seo-guard && p
 `paths.ts` ("Ngày giờ tốt xấu", "Xem tuổi việc lớn") và sitemap chuyển từ danh
 sách gõ tay sang suy từ `LEARN_TOPICS`.
 
-## Còn lại — 35 bài, lõi riêng từng bài
+## Phong thuỷ chuyên sâu — XONG (01/08/2026)
+
+Tương ứng bảng "Đợt 4" bên dưới, đã làm sớm vì 3 công cụ (`/phi-tinh`,
+`/huong-ban-lam-viec`, `/thuoc-lo-ban`) đang dùng chung bài ô `/learn/phong-thuy`.
+4 bài: `huyen-khong-phi-tinh`, `du-nien`, `thuoc-lo-ban`, `ngu-hanh-mau-sac`.
+Kèm lộ trình mới `phong-thuy-chuyen-sau` (`bat-trach` chuyển từ `ung-dung-doi-song`
+sang làm bài mở đầu cụm) và cụm mới cùng tên trên hub. `app/sitemap.ts` đổi sang
+bảng `LEARN_PUBLISHED` (slug → ngày xuất bản) để các bài sau chỉ cần thêm một dòng.
+
+Verify: `tsc` sạch · `vitest` 881/881 · `npm run build` exit 0 · 12/12 bài mới có
+tiêu đề ≤60 và mô tả ≤160 đo trên HTML build · sitemap 30 bài Học.
+
+### Ba bài học rút ra (đừng lặp lại)
+
+1. **Commit + push sau MỖI đợt.** 01/08 một phiên Claude khác chạy song song trên
+   cùng repo đã `git checkout` sang nhánh của nó → toàn bộ file đợt 1 biến mất khỏi
+   cây làm việc. Lấy lại được vì đợt 1 đã commit lên `feat/learn-per-tool-wave1`.
+   Dấu hiệu: file "biến mất" nhưng `git reflog` vẫn còn commit.
+2. **Rà link tạm sau mỗi đợt.** Agent viết bài khi nhánh chưa có bài anh em sẽ trỏ
+   tạm sang bài khác (`thuoc-lo-ban` từng trỏ `/learn/phong-thuy` thay cho
+   `/learn/bat-trach`). Grep `TODO` + link tạm trong các bài mới trước khi commit.
+3. **Chạy vitest từ `frontend/apps/web`** — test dùng `process.cwd()`; chạy từ gốc
+   repo sẽ báo đỏ giả ở `jsonld-escape.guard.test.ts`.
+
+## Còn lại — 31 bài, lõi riêng từng bài
 
 Cột "lõi riêng" là ranh giới chống lấn: viết đúng phần đó, phần còn lại chỉ link.
 
@@ -80,14 +104,10 @@ Cột "lõi riêng" là ranh giới chống lấn: viết đúng phần đó, ph
 | `/xuat-hanh` | `/learn/xuat-hanh` | Hỷ Thần / Tài Thần: hướng xuất hành suy từ Can ngày, khác hẳn hướng nhà theo cung phi. |
 | `/thien-van` | `/learn/thien-van` | Thiên văn quan sát được: nhật/nguyệt thực, phân–chí — hiện tượng thật, tách bạch với tầng diễn giải phong tục. |
 
-### Đợt 4 — phong thuỷ chuyên sâu (4 bài)
+### Đợt 4 — phong thuỷ chuyên sâu — ĐÃ XONG 01/08/2026
 
-| Công cụ | Bài | Lõi riêng |
-|---|---|---|
-| `/huong-ban-lam-viec` | `/learn/du-nien` | 8 du niên (Sinh Khí, Thiên Y, Diên Niên…) và cách áp cho chỗ ngồi. Cung phi: link `/learn/bat-trach`. |
-| `/phi-tinh` | `/learn/huyen-khong-phi-tinh` | Huyền Không phi tinh: nguyên vận, sơn tinh/hướng tinh, Vượng sơn Vượng hướng — lý khí, khác Bát Trạch. |
-| `/thuoc-lo-ban` | `/learn/thuoc-lo-ban` | Thước Lỗ Ban: các dải cát/hung, vì sao có nhiều loại thước và đo cái gì. |
-| `/mau-xe-hop-menh` | `/learn/ngu-hanh-mau-sac` | Ngũ hành ↔ màu sắc: sinh/khắc áp vào chọn màu, và giới hạn của cách suy này. |
+4 bài này đã viết và verify, xem mục "Phong thuỷ chuyên sâu — XONG" ở trên.
+Bảng chi tiết đã gỡ khỏi đây để agent sau không viết lại lần nữa.
 
 ### Đợt 5 — nền tảng can chi & lập lá số (6 bài)
 

@@ -471,20 +471,21 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
   {
     id: 'q8',
     type: 'mcq',
-    prompt: 'Trên thước Lỗ Ban, đâu là nhóm bốn cung TỐT trong bộ 8 cung?',
+    prompt:
+      'Kích thước cửa bạn định làm rơi vào một cung xấu trên thước Lỗ Ban. Nên hiểu và làm thế nào?',
     choices: [
       {
-        text: 'Tài, Nghĩa, Quan, Bản',
+        text: 'Nhích sang kích thước tốt gần nhất — đây là quy ước của thợ để tham khảo',
         correct: true,
-        note: 'Đúng — bốn cung tốt xen kẽ với bốn cung xấu trong bộ 8 cung kinh điển.',
+        note: 'Đúng — rơi cung xấu không phải điềm chắc chắn, không cần đập đi làm lại.',
       },
       {
-        text: 'Bệnh, Ly, Kiếp, Hại',
-        note: 'Đây lại là bốn cung XẤU của thước Lỗ Ban.',
+        text: 'Phải làm lại từ đầu, nếu không sẽ gặp hạn',
+        note: 'Không — thước Lỗ Ban là quy ước truyền thống để tham khảo, không phán họa phúc.',
       },
       {
-        text: 'Sinh Khí, Thiên Y, Diên Niên, Phục Vị',
-        note: 'Đây là bốn du niên tinh cát của Bát Trạch, không phải cung trên thước Lỗ Ban.',
+        text: 'Kết quả nào cũng như nhau, vì mọi cây thước Lỗ Ban đều dùng chung một bộ cung',
+        note: 'Không — có bốn loại thước và mỗi loại mang một bộ cung riêng, cho mục đích đo khác nhau.',
       },
     ],
   },
@@ -517,8 +518,8 @@ const FACETS: UnderstandingFacet[] = [
   },
   {
     id: 'cung-phi',
-    facet: 'Tự tính Cung Phi',
-    can: 'Tự cộng dồn năm sinh về một số 1–9, tra bảng theo giới tính ra Cung Phi, và nêu được hai lưu ý (mốc năm âm/dương sát Tết; số 5 quy ước tùy phái).',
+    facet: 'Vai trò của Cung Phi',
+    can: 'Nói được Cung Phi là gì, vì sao phải có nó trước khi bàn tới hướng nhà, và nêu được hai chỗ các trường phái tính khác nhau (mốc năm âm/dương sát Tết; số 5 quy ước tùy phái).',
   },
   {
     id: 'phi-tinh',

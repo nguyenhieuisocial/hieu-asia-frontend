@@ -39,7 +39,7 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     id: 'ung-dung-doi-song',
     name: 'Ứng dụng đời sống',
     tagline: 'Phần "dùng được ngay" của ngũ hành: xem hướng, chọn ngày, đặt tên.',
-    slugs: ['phong-thuy', 'bat-trach', 'trach-cat', 'dat-ten-ngu-hanh'],
+    slugs: ['phong-thuy', 'trach-cat', 'dat-ten-ngu-hanh'],
   },
   {
     id: 'soi-chieu-phan-tu',
@@ -71,6 +71,16 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     tagline:
       'Ba hạn tuổi hay bị hỏi nhất khi cưới hỏi và làm nhà — biết cách tính để bớt sợ, không phải để sợ thêm.',
     slugs: ['kim-lau', 'tam-tai', 'hoang-oc'],
+  },
+  // Đợt 2. `bat-trach` chuyển từ "Ứng dụng đời sống" sang đây: khi đã có đủ 5 bài
+  // chuyên sâu thì Bát Trạch là bài MỞ ĐẦU đúng nghĩa của cụm (phải biết cung phi
+  // trước mới đọc được du niên), còn "Ứng dụng đời sống" quay về đúng vai giới thiệu.
+  {
+    id: 'phong-thuy-chuyen-sau',
+    name: 'Phong thuỷ chuyên sâu',
+    tagline:
+      'Từ cung phi của bạn tới tinh bàn của ngôi nhà — bốn lớp phong thuỷ hay bị gộp làm một, tách ra cho rõ.',
+    slugs: ['bat-trach', 'du-nien', 'huyen-khong-phi-tinh', 'thuoc-lo-ban', 'ngu-hanh-mau-sac'],
   },
 ];
 

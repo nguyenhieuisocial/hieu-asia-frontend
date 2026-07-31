@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 26 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 30 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -66,12 +66,6 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Phong Thủy ứng dụng',
         subtitle: 'Đông phương · Tổng quan',
         blurb: 'Bức tranh chung: ngũ hành, hướng, chọn ngày giờ, thước Lỗ Ban.',
-      },
-      {
-        href: '/learn/bat-trach',
-        title: 'Bát Trạch — cung phi & hướng',
-        subtitle: 'Đông phương · Cung phi',
-        blurb: 'Tính cung phi từ năm sinh, Đông tứ mệnh – Tây tứ mệnh, 4 hướng tốt – 4 hướng tránh.',
       },
       {
         href: '/learn/hop-tuoi',
@@ -205,6 +199,44 @@ const CLUSTERS: readonly LearnCluster[] = [
     ],
   },
   {
+    id: 'phong-thuy-chuyen-sau',
+    heading: 'Phong thuỷ chuyên sâu',
+    positioning:
+      'Bốn lớp phong thuỷ hay bị gộp làm một, ở đây tách hẳn ra: xét NGƯỜI (cung phi, du niên), xét NHÀ theo thời gian (phi tinh), và xét KÍCH THƯỚC (thước Lỗ Ban). Đều là hệ quy ước để tham khảo, chưa có bằng chứng khoa học.',
+    topics: [
+      {
+        href: '/learn/bat-trach',
+        title: 'Bát Trạch — cung phi',
+        subtitle: 'Phong thuỷ · Cung phi',
+        blurb: 'Tính cung phi từ năm sinh, Đông tứ mệnh – Tây tứ mệnh, 4 hướng tốt – 4 hướng tránh.',
+      },
+      {
+        href: '/learn/du-nien',
+        title: '8 du niên',
+        subtitle: 'Phong thuỷ · Bát biến',
+        blurb: 'Sinh Khí, Thiên Y, Diên Niên, Phục Vị và 4 hung tinh — hướng nào cho việc nào.',
+      },
+      {
+        href: '/learn/huyen-khong-phi-tinh',
+        title: 'Huyền Không Phi Tinh',
+        subtitle: 'Phong thuỷ · Cửu vận',
+        blurb: 'Phong thuỷ đổi theo thời gian: tam nguyên cửu vận, sơn tinh – hướng tinh, tinh bàn 9 cung.',
+      },
+      {
+        href: '/learn/thuoc-lo-ban',
+        title: 'Thước Lỗ Ban',
+        subtitle: 'Phong thuỷ · Kích thước',
+        blurb: 'Vì sao có nhiều loại thước, cung tốt – xấu, và cách đo cho đúng.',
+      },
+      {
+        href: '/learn/ngu-hanh-mau-sac',
+        title: 'Ngũ hành & màu sắc',
+        subtitle: 'Phong thuỷ · Sinh khắc',
+        blurb: 'Vòng tương sinh – tương khắc đọc bằng màu, và vì sao an toàn phải đứng trước hợp mệnh.',
+      },
+    ],
+  },
+  {
     id: 'xem-tuoi-viec-lon',
     heading: 'Xem tuổi việc lớn',
     positioning:
@@ -246,7 +278,7 @@ const CLUSTERS: readonly LearnCluster[] = [
   },
 ];
 
-// Phẳng hoá 18 chủ đề cho itemList JSON-LD (giữ đủ 18 để AI/Google đọc được
+// Phẳng hoá TOÀN BỘ chủ đề cho itemList JSON-LD (để AI/Google đọc được
 // cả danh mục, không rụng chủ đề nào khi chia nhóm hiển thị).
 const ALL_TOPICS: readonly LearnTopic[] = CLUSTERS.flatMap((c) => c.topics);
 
