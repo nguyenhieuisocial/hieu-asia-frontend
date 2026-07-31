@@ -66,24 +66,23 @@ jobs:
         working-directory: apps/web
         run: pnpm build-storybook
 
-      # Wave 60.51.b — gate Chromatic action behind token presence check so
-      # the workflow gracefully no-ops (warning only, exit 0) when the
-      # CHROMATIC_PROJECT_TOKEN secret hasn't been set yet. Previously the
-      # action crashed with "Missing project token" → red X on every PR.
-      - name: Check Chromatic token
-        id: token_check
-        env:
-          TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-        run: |
-          if [ -n "$TOKEN" ]; then
-            echo "has_token=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning::CHROMATIC_PROJECT_TOKEN secret not set — skipping visual regression upload. Founder one-time: chromatic.com signup → Settings → Secrets → Actions → add CHROMATIC_PROJECT_TOKEN."
-            echo "has_token=false" >> "$GITHUB_OUTPUT"
-          fi
-
+      # ⛔ CHƯA CẤU HÌNH = ĐỎ (cố ý, sửa 2026-07-31).
+      #
+      # Wave 60.51.b đã bọc bước dưới bằng một "Check Chromatic token" +
+      # `if: steps.token_check.outputs.has_token == 'true'`, để khi thiếu
+      # CHROMATIC_PROJECT_TOKEN thì workflow chỉ in warning rồi thoát XANH.
+      #
+      # Hậu quả thật (bắt tại trận 2026-07-31): secret chưa bao giờ được đặt,
+      # nên bước publish luôn ở trạng thái `skipped` — 96 XANH / 0 ĐỎ trong 100
+      # lần chạy gần nhất, mà KHÔNG một ảnh chụp giao diện nào từng được chụp
+      # hay so sánh. Cổng chống lỗi giao diện đã "bảo vệ" suốt nhiều tháng bằng
+      # cách không làm gì cả. Một bước bị `if:` bỏ qua vẫn được tính là pass →
+      # dấu tích xanh nói dối.
+      #
+      # Nay không còn cổng chặn: `chromaui/action` tự lỗi "Missing project
+      # token" khi thiếu secret. Đỏ = "hãy cấu hình tôi" (xem 5 bước ở đầu
+      # file), trung thực hơn hẳn một dấu tích xanh vô nghĩa.
       - name: Publish to Chromatic
-        if: steps.token_check.outputs.has_token == 'true'
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v17
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
