@@ -116,15 +116,6 @@ export const FLAGS = {
    * reading. Each variant tracks `upsell_clicked` and `upsell_dismissed`.
    */
   UPSELL_POST_READING_V1: "upsell_post_reading_v1",
-
-  /**
-   * `reading_engine_v2` — multivariate string.
-   *
-   * Wave 56 Phase 2.7 rollout of the LangGraph reasoning engine.
-   * Variants: `control` (worker-based legacy) | `v2` (Next.js LangGraph).
-   * Default control. Canary ramp: 10% → 50% → 100% over 4 days.
-   */
-  READING_ENGINE_V2: "reading_engine_v2",
 } as const;
 
 export type FlagKey = (typeof FLAGS)[keyof typeof FLAGS];

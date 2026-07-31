@@ -22,17 +22,19 @@
  * banner returns.
  *
  * ─── Mount history (read before moving this) ────────────────────────────────
- * Wave 58 Phase B shipped this component, its flag, and the `upsell_variant`
- * field on the three `/api/reasoning/*` responses in ONE commit (ee67437d) but
- * never added the import — it rendered nowhere for its entire life. That was
- * incomplete wiring, not a later regression: no commit has ever removed an
- * import of it.
+ * Wave 58 Phase B shipped this component, its flag, and an `upsell_variant`
+ * field on the (now-deleted) LangGraph reasoning routes in ONE commit
+ * (ee67437d) but never added the import — it rendered nowhere for its entire
+ * life. That was incomplete wiring, not a later regression: no commit has ever
+ * removed an import of it.
  *
  * It is now mounted on the Tử Vi report page (`/reading/[id]/report`), which is
  * where a completed reading is actually read. The original plan was to feed
- * `upsellVariant` straight from the reasoning-route response, but that path is
- * inert — nothing in the repo calls `/api/reasoning/*` (see `useUpsellAudience`
- * below for how the audience is resolved instead).
+ * `upsellVariant` straight from a reasoning-route response; that whole path was
+ * never switched on and has since been deleted (LangGraph is excluded by a
+ * locked architecture decision — vault `89 - Migration Decision Final`). The
+ * live reading flow is the Worker path, so the audience is resolved from
+ * `/api/user/me` instead — see `useUpsellAudience` below.
  */
 
 'use client';
