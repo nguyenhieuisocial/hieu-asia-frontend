@@ -61,6 +61,17 @@ export async function getTelegramUser(): Promise<TelegramUser | null> {
  * V1: if backend unavailable, store a mock JWT derived from telegram_id
  * so api-client has something to attach.
  */
+/**
+ * Chuỗi `initData` THÔ do Telegram ký — bằng chứng danh tính duy nhất mà server
+ * xác minh được (`src/lib/verify-init-data.ts`). Gửi kèm cho MỌI route trả về
+ * dữ liệu cá nhân; server tự suy `tg_<id>`, không bao giờ tin id client khai.
+ * KHÔNG dùng `initDataUnsafe.user.id` — giá trị đó giả mạo được.
+ */
+export async function getRawInitData(): Promise<string | null> {
+  const webApp = await getWebApp();
+  return webApp?.initData || null;
+}
+
 export async function exchangeInitDataForJwt(): Promise<string | null> {
   const webApp = await getWebApp();
   if (!webApp) return null;
