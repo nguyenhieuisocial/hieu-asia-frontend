@@ -46,7 +46,8 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: '12 cung hoàng đạo — ngày sinh, nguyên tố & tam thái',
+  // ≤48 ký tự: root layout nối thêm " · hieu.asia" (12) và seo-guard chặn ở 60.
+  title: '12 cung hoàng đạo — ngày sinh và nguyên tố',
   description:
     '12 cung hoàng đạo: khoảng ngày, 4 nguyên tố, 3 tam thái, hành tinh chủ quản — và vì sao chòm sao thật trên trời lệch với cung. Tham khảo, không phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/learn/cung-hoang-dao' },

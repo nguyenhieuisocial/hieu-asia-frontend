@@ -52,7 +52,8 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Bát Trạch — cung phi, Đông/Tây tứ mệnh & hướng nhà',
+  // ≤48 ký tự: root layout nối thêm " · hieu.asia" (12) và seo-guard chặn ở 60.
+  title: 'Bát Trạch — cung phi và hướng nhà hợp tuổi',
   // ≤160 ký tự: dài hơn thì Google cắt mất câu chốt.
   description:
     'Bát Trạch: tính cung phi từ năm sinh và giới tính, chia Đông tứ mệnh – Tây tứ mệnh, ghép 4 hướng tốt – 4 hướng tránh cho cửa, bếp, giường. Tham khảo.',

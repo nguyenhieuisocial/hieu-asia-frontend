@@ -44,7 +44,8 @@ import {
 } from './_active-learning';
 
 export const metadata: Metadata = {
-  title: 'Giờ Hoàng Đạo — 12 canh giờ và cách khởi giờ theo ngày',
+  // ≤48 ký tự: root layout nối thêm " · hieu.asia" (12) và seo-guard chặn ở 60.
+  title: 'Giờ Hoàng Đạo — 12 canh giờ và cách khởi giờ',
   description:
     'Giờ hoàng đạo: 12 canh giờ địa chi, 6 sao hoàng đạo và 6 sao hắc đạo, cách khởi giờ theo chi ngày. Vì sao giờ tốt đổi mỗi ngày — tham khảo phong tục.',
   alternates: { canonical: 'https://hieu.asia/learn/gio-hoang-dao' },
