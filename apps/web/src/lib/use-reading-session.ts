@@ -5,9 +5,18 @@
  *  1. Initial fetch via `/api/reading/[id]` (server-side proxy).
  *  2. Subscribe to Supabase Realtime on `hieu_asia.reading_sessions`
  *     filtered by `session_id=eq.${id}` for UPDATE events.
- *  3. If Realtime never connects (env missing, channel error, or no
- *     SUBSCRIBED status within a grace window), fall back to polling
- *     every 5s.
+ *  3. Polling every 5s chạy SONG SONG như lưới an toàn cho tới khi state
+ *     terminal — kể cả khi Realtime báo SUBSCRIBED.
+ *
+ * Vì sao không tin SUBSCRIBED (sự cố 31/07/2026): SUBSCRIBED chỉ nghĩa là
+ * kênh join thành công, KHÔNG nghĩa là sự kiện sẽ tới. Publication
+ * `supabase_realtime` không chứa `hieu_asia.reading_sessions` (verify bằng
+ * `pg_publication_tables`: chỉ có public.agent_runs) → không một UPDATE nào
+ * được phát. Bản cũ huỷ lưới polling ngay khi SUBSCRIBED → MỌI người dùng
+ * đứng vĩnh viễn ở trang processing dù server đã xong, chỉ thoát khi tự
+ * reload. Đừng "sửa" lại bằng cách huỷ polling khi SUBSCRIBED — nếu muốn bỏ
+ * polling thì trước hết phải publish bảng + thiết kế RLS cho Realtime (bảng
+ * chứa nguyên report JSONB, publish thiếu RLS là rò dữ liệu qua session_id).
  *
  * The hook exposes `state`, `reading`, `error` and a `retry` action.
  */
@@ -106,7 +115,9 @@ export function useReadingSession(
     const startPolling = () => {
       if (pollingActive || cancelled) return;
       pollingActive = true;
-      setTransport('polling');
+      // Đừng ghi đè 'realtime' → 'polling': hai đường chạy song song, nhãn
+      // transport giữ đường NHANH nhất đang hoạt động cho mục đích chẩn đoán.
+      setTransport((prev) => (prev === 'realtime' ? prev : 'polling'));
       const tick = async () => {
         const next = await fetchOnce();
         if (cancelled) return;
@@ -155,11 +166,9 @@ export function useReadingSession(
           .subscribe((status: string) => {
             if (cancelled) return;
             if (status === 'SUBSCRIBED') {
+              // CHỈ đổi nhãn chẩn đoán. KHÔNG huỷ graceTimer/polling —
+              // SUBSCRIBED không bảo đảm sự kiện sẽ tới (xem doc đầu file).
               setTransport('realtime');
-              if (graceTimer) {
-                window.clearTimeout(graceTimer);
-                graceTimer = undefined;
-              }
             } else if (
               status === 'CHANNEL_ERROR' ||
               status === 'TIMED_OUT' ||
@@ -169,7 +178,8 @@ export function useReadingSession(
             }
           });
 
-        // Grace window: if Realtime doesn't reach SUBSCRIBED, switch to polling.
+        // Watchdog: polling luôn khởi động sau grace window, bất kể Realtime
+        // có SUBSCRIBED hay không — đây là đường bảo đảm duy nhất.
         graceTimer = window.setTimeout(() => {
           if (cancelled) return;
           startPolling();

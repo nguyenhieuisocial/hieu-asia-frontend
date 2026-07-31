@@ -383,10 +383,13 @@ function LockedReportGate({
           </CardContent>
         </Card>
       ) : price > 0 ? (
+        /* FeaturePaywall tự nối "… đầy đủ cho lá số của bạn" sau label —
+           label kèm sẵn "đầy đủ" từng làm UI hiện "đầy đủ đầy đủ"
+           (thấy trên production 31/07). */
         <FeaturePaywall
           slug={TUVI_REPORT_SLUG}
           price={price}
-          label="Báo cáo Tử Vi đầy đủ"
+          label="Báo cáo Tử Vi"
           sessionId={readingId}
           onUnlocked={onUnlocked}
         />
