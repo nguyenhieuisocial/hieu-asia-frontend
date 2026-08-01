@@ -55,8 +55,8 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'xuat-hanh', eyebrow: 'HỶ THẦN', name: 'Hướng xuất hành', href: '/learn/xuat-hanh' },
   // Đợt 4 — việc lớn theo tuổi + thiên văn.
   { slug: 'cuoi-hoi', eyebrow: 'CƯỚI HỎI', name: 'Xem tuổi cưới', href: '/learn/cuoi-hoi' },
-  // eyebrow KHÔNG để 'THÁI TUẾ': /learn/thai-tue là bài riêng còn trong PENDING
-  // (thuộc /tu-vi-2026). Bài này chỉ dùng Thái Tuế ở phần cần cho việc mở hàng.
+  // eyebrow KHÔNG để 'THÁI TUẾ': đó là nhãn của bài /learn/thai-tue (nay đã có).
+  // Bài này chỉ dùng Thái Tuế ở lát cắt cần cho việc mở hàng.
   { slug: 'khai-truong', eyebrow: 'MỞ HÀNG', name: 'Tuổi khai trương', href: '/learn/khai-truong' },
   { slug: 'xong-dat', eyebrow: 'TỤC TẾT', name: 'Xông đất', href: '/learn/xong-dat' },
   { slug: 'thien-van', eyebrow: 'NHẬT NGUYỆT THỰC', name: 'Lịch thiên văn', href: '/learn/thien-van' },
@@ -116,7 +116,7 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'tam-hop-luc-xung': ['con-giap', 'hop-tuoi', 'can-chi', 'sao-han'],
   'xuat-hanh': ['gio-hoang-dao', 'trach-cat', 'lich-am-duong', 'bat-trach'],
   'cuoi-hoi': ['kim-lau', 'tam-tai', 'hop-tuoi', 'trach-cat'],
-  'khai-truong': ['tam-tai', 'trach-cat', 'tam-hop-luc-xung', 'xong-dat'],
+  'khai-truong': ['thai-tue', 'tam-tai', 'xong-dat', 'trach-cat'],
   // xong-dat ↔ khai-truong phải trỏ nhau: hai bài đối xử KHÁC NHAU với cùng một
   // cấu hình "trùng chi năm / Thái Tuế", nên phải đọc được sang nhau để người
   // đọc thấy đó là khác biệt có chủ ý giữa hai tục, không phải site tự mâu thuẫn.

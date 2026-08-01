@@ -196,6 +196,11 @@ const CASE_BINH_HOA = EXAMPLES[2];
  * lệch bên dưới đều tính từ nó.
  */
 const JUPITER_PERIOD_YEARS = 11.862;
+// NHÃN HIỂN THỊ phải dùng dấu PHẨY: trong tiếng Việt dấu chấm là phân cách nghìn,
+// nên in thẳng số JS ra sẽ thành "11.862 năm" và người đọc hiểu là mười một nghìn
+// — sai gấp 1000 lần, lại nằm trong FAQPage mà Google và trợ lý AI trích lại.
+// Cùng quy ước với /learn/lich-am-duong ("29,53 ngày", "365,2422 ngày").
+const JUPITER_LABEL = '11,862';
 
 /** Sau bao nhiêu năm thì Mộc tinh thật lệch trọn MỘT chi so với vòng 12 quy ước. */
 const DRIFT_ONE_BRANCH_YEARS = Math.round(
@@ -213,7 +218,7 @@ const FAQS = [
   },
   {
     q: 'Vậy vì sao cái tên lại gắn với Mộc tinh?',
-    a: `Vì gốc của nó đúng là thiên văn. Người xưa gọi Mộc tinh là Tuế Tinh, tức sao của năm, do Mộc tinh đi hết một vòng trong khoảng ${JUPITER_PERIOD_YEARS} năm nên mỗi năm nhích được chừng một phần ${CHI.length} bầu trời — rất tiện để đặt tên năm. Vấn đề là Mộc tinh chạy ngược chiều đếm 12 chi, nên người xưa dựng ra một điểm tưởng tượng chạy ngược lại và làm tròn đúng ${CHI.length} năm một vòng, gọi là Thái Tuế. Chu kỳ ${JUPITER_PERIOD_YEARS} năm là thiên văn; con số ${CHI.length} chẵn và chiều chạy là quy ước.`,
+    a: `Vì gốc của nó đúng là thiên văn. Người xưa gọi Mộc tinh là Tuế Tinh, tức sao của năm, do Mộc tinh đi hết một vòng trong khoảng ${JUPITER_LABEL} năm nên mỗi năm nhích được chừng một phần ${CHI.length} bầu trời — rất tiện để đặt tên năm. Vấn đề là Mộc tinh chạy ngược chiều đếm 12 chi, nên người xưa dựng ra một điểm tưởng tượng chạy ngược lại và làm tròn đúng ${CHI.length} năm một vòng, gọi là Thái Tuế. Chu kỳ ${JUPITER_LABEL} năm là thiên văn; con số ${CHI.length} chẵn và chiều chạy là quy ước.`,
   },
   {
     q: 'Trùng, xung, hình, hại — hieu.asia thật sự tính những quan hệ nào?',
@@ -229,7 +234,7 @@ const FAQS = [
   },
   {
     q: `Trong ${CHI.length} năm thì một người dính Thái Tuế mấy năm?`,
-    a: `Đúng ${HIT_YEARS} năm, và ${FREE_YEARS} năm còn lại không rơi vào quan hệ nào trong ba quan hệ được tính. Cách đếm rất gọn: chi năm chạy hết một vòng ${CHI.length} chi thì chi trùng chi tuổi bạn xuất hiện một lần, chi đối cũng một lần, chi ở thế lục hại một lần. Vì bốn quan hệ này thuộc các nhóm rời nhau nên chúng không bao giờ rơi vào cùng một năm — và vì lục xung là hai chi đối đỉnh nên năm tuổi với năm xung của cùng một người luôn cách nhau ${XUNG_STEPS ?? 0} năm.`,
+    a: `Đúng ${HIT_YEARS} năm, và ${FREE_YEARS} năm còn lại không rơi vào quan hệ nào trong ba quan hệ được tính. Cách đếm rất gọn: chi năm chạy hết một vòng ${CHI.length} chi thì chi trùng chi tuổi bạn xuất hiện một lần, chi đối cũng một lần, chi ở thế lục hại một lần. Vì ba quan hệ này thuộc các nhóm rời nhau nên chúng không bao giờ rơi vào cùng một năm — và vì lục xung là hai chi đối đỉnh nên năm tuổi với năm xung của cùng một người luôn cách nhau ${XUNG_STEPS ?? 0} năm.`,
   },
   {
     q: 'Có cần cúng giải hạn hay mua vật phẩm hoá giải Thái Tuế không?',
@@ -391,7 +396,7 @@ export default function LearnThaiTuePage() {
               <p>
                 Trước khi có lịch in, người ta cần một cái đồng hồ đủ chậm để đếm năm. Mộc tinh làm
                 được việc đó: nó đi hết một vòng quanh Mặt Trời trong khoảng{' '}
-                <strong>{JUPITER_PERIOD_YEARS} năm</strong>, tức mỗi năm nhích được xấp xỉ một phần{' '}
+                <strong>{JUPITER_LABEL} năm</strong>, tức mỗi năm nhích được xấp xỉ một phần{' '}
                 {CHI.length} bầu trời. Người xưa gọi nó là <strong>Tuế Tinh</strong> — sao của năm —
                 và dùng vị trí của nó để đặt tên cho từng năm.
               </p>
@@ -405,7 +410,7 @@ export default function LearnThaiTuePage() {
               <p>Từ đó tách được rành mạch hai lớp:</p>
               <ul className="list-disc space-y-2 pl-5">
                 <li>
-                  <strong>Phần thiên văn:</strong> chu kỳ {JUPITER_PERIOD_YEARS} năm của Mộc tinh là
+                  <strong>Phần thiên văn:</strong> chu kỳ {JUPITER_LABEL} năm của Mộc tinh là
                   một số đo thật, kiểm được bằng quan sát và ngày nay bằng cơ học thiên thể.
                 </li>
                 <li>
@@ -535,8 +540,12 @@ export default function LearnThaiTuePage() {
                 “Năm tuổi” là cách gọi dân gian của <strong>trùng Thái Tuế</strong>: chi của năm
                 trùng đúng chi năm sinh của bạn. Vì vòng địa chi có {CHI.length} ô và chi của năm
                 chạy hết vòng đó rồi lặp lại, nên năm tuổi đến{' '}
-                <strong>đúng {CHI.length} năm một lần</strong> — ở tuổi mụ thì rơi vào các mốc{' '}
-                {CHI.length}, {CHI.length * 2}, {CHI.length * 3}, {CHI.length * 4} và cứ thế.
+                <strong>đúng {CHI.length} năm một lần</strong> — tính theo tuổi mụ (năm đang xét trừ
+                năm sinh rồi cộng 1, đúng cách mà mọi công cụ của hieu.asia dùng) thì rơi vào các mốc{' '}
+                {CHI.length + 1}, {CHI.length * 2 + 1}, {CHI.length * 3 + 1}, {CHI.length * 4 + 1} và
+                cứ thế. Lấy chênh lệch năm sinh thay vì tuổi mụ thì các mốc lùi đi một, thành{' '}
+                {CHI.length}, {CHI.length * 2}, {CHI.length * 3} — cùng những năm ấy, chỉ khác cách
+                gọi tuổi.
               </p>
               <p>Tra tay chỉ ba bước:</p>
               <ol className="list-decimal space-y-2 pl-5">
