@@ -30,16 +30,13 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { MultiHero } from '@/components/home-hero/MultiHero';
 import { OracleBrain } from '@/components/home-hero/OracleBrain';
 import { InstantChartHero } from '@/components/home-hero/InstantChartHero';
-import { NotOraclesStrip } from '@/components/home-hero/NotOraclesStrip';
 import { Methodology } from '@/components/home-hero/Methodology';
-import { ToolkitSection } from '@/components/home-hero/ToolkitSection';
 import { MissionNote } from '@/components/home-hero/MissionNote';
 import { EngineProofShowcase } from '@/components/home-hero/EngineProofShowcase';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { MentorSampleLazy } from '@/components/marketing/MentorSampleLazy';
 import { ScanRow } from '@/components/marketing/ScanRow';
-import { PullQuote } from '@/components/marketing/PullQuote';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { ScrollProgress } from '@/components/fx/ScrollProgress';
@@ -371,8 +368,12 @@ export default function LandingPage() {
           <OracleBrain />
         </Suspense>
 
-        {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
-        <RevealOnScroll><NotOraclesStrip /></RevealOnScroll>
+        {/* Wave 65.03(a) — NotOraclesStrip ĐÃ GỠ: thông điệp "không bói toán ·
+            bạn tự quyết" đã nằm NGUYÊN VĂN trong MultiHero (eyebrow "LÁ SỐ THẬT
+            · KHÔNG PHÁN MỆNH" + deck "Không hù dọa, không bán giải hạn") ngay
+            phía trên — strip là lặp lại thuần tuý, tốn 1 màn cuộn. Component
+            còn trong repo nếu surface khác cần. Data: đa số khách chỉ xem
+            25–50% trang → mỗi section phải tự trả tiền thuê chỗ. */}
 
         {/* Thiên văn hôm nay — dải lịch can-chi & giờ hoàng đạo chạy động (dữ
             liệu THẬT, tính client-side; cho cảm giác "sống" + lý do quay lại
@@ -477,10 +478,12 @@ export default function LandingPage() {
         <Suspense fallback={null}>
           <RevealOnScroll><Methodology /></RevealOnScroll>
         </Suspense>
-        {/* Breadth — chống undersell (founder feedback): KHÔNG chỉ 4 lăng kính, có cả bộ 12 công cụ. */}
-        <Suspense fallback={null}>
-          <RevealOnScroll><ToolkitSection /></RevealOnScroll>
-        </Suspense>
+        {/* Wave 65.03(d) — ToolkitSection ĐÃ GỠ: trùng 100% nguồn dữ liệu
+            (TOOLKIT_GROUPS) với OracleBrain ở trên — cùng kể "độ phủ công cụ"
+            hai lần, thêm ~30 chip = bức tường link thoát giữa funnel (finding
+            P1 nhiều vòng + P2 ">50 link thoát trước khi thấy giá"). OracleBrain
+            giữ vai section độ phủ (tương tác, đã sửa rageclick 65.02) và tự có
+            link "Xem tất cả công cụ →" /cong-cu. Component còn trong repo. */}
 
         {/* Wave 64 (declutter) — 3 khối bỏ ở đây:
             • WhyTrust + HowToStart: niềm tin đã do TrustBand phủ SỚM (gồm Bằng
@@ -498,23 +501,15 @@ export default function LandingPage() {
             wrong-proof. 14-day refund promise lives on /pricing CTA and as
             MarketingHero trustLine, so the risk-reversal is not lost. */}
 
-        {/* Wave 60.95.ak — PhilosophyBlock removed per founder direction
-            (TRIẾT LÝ block "Bạn vẫn là người quyết định" + body "Tử Vi không
-            tiên tri..."). Philosophy stance now lives entirely in the PullQuote
-            below (same message, denser editorial format).
-            PhilosophyBlock component itself stays in `marketing/` and renders
-            on /about page (gitnexus impact confirmed LOW + isolated usage).
-            2026-06-23 — bỏ SectionDivider lotus (founder: ngôi sao ngắt trang
-            thừa, phí chiều cao); PullQuote tự đủ "khoảng thở" editorial. */}
-
-        {/* Wave 60.66.P5 — Editorial PullQuote between philosophy and pricing
-            (vault 109 §3 Phase 5 ENRICHED). Motion `whileInView` fade-in via
-            LazyMotion provider (Phase 2 root setup). One of 3 preserved
-            Instrument Serif decorative roles. */}
-        <PullQuote attribution="— Triết lý hieu.asia" bg="warm-dark-100">
-          Trí tuệ phương Đông không phải lời tiên tri.{' '}
-          Đó là <em className="text-primary/80">khoảng lặng</em> để bạn nghe rõ chính mình.
-        </PullQuote>
+        {/* Wave 60.95.ak — PhilosophyBlock removed per founder direction;
+            PhilosophyBlock component stays in `marketing/` and renders on
+            /about. (Chuỗi thay thế sau đó — PullQuote Triết lý — cũng đã gỡ
+            ở Wave 65.03(b) bên dưới.) */}
+        {/* Wave 65.03(b) — PullQuote "Triết lý" ĐÃ GỠ: triết lý "không tiên
+            tri, bạn tự quyết" đã có ở MultiHero (đầu trang) và MissionNote
+            (quote đầy đủ của đội ngũ, ngay trước FAQ). Ba khối cùng một thông
+            điệp trên một trang là hai khối thừa; giữ MissionNote vì giàu ngữ
+            cảnh nhất và đứng đúng vị trí trust trước FAQ. */}
 
         {/* Wave 64 — EngineProofShowcase: lá số Tử Vi + bảng Bát Tự MẪU (data
             tĩnh, có nhãn demo) ngay trước báo cáo mẫu — cho thấy "lá số được
@@ -677,6 +672,25 @@ export default function LandingPage() {
         {/* 7. FaqAccordion — existing 6 Q, warm-dark-100 */}
         <div className="bg-muted/40">
           <FaqAccordion items={HOME_FAQ} id="faq" />
+        </div>
+
+        {/* Wave 65.03(f) — CTA chốt sau FAQ: trước đây desktop kết thúc bằng
+            newsletter rồi footer, KHÔNG còn lời mời chuyển đổi nào sau khi FAQ
+            đã đóng hết objection (finding P2 vòng 3). Một dòng + một nút, đúng
+            hành động chính của trang. */}
+        <div className="mx-auto flex max-w-marketing-tight flex-col items-center gap-4 px-6 py-12 text-center sm:py-14">
+          <p className="font-editorial-display text-2xl leading-snug text-foreground sm:text-3xl">
+            Sẵn sàng? Lá số của bạn <em className="italic text-primary">tính xong trong 30 giây</em>.
+          </p>
+          <a
+            href="/onboarding"
+            className="inline-flex items-center justify-center rounded-[2px] bg-[hsl(var(--primary-cta))] px-8 py-3 font-editorial-display text-base font-medium text-primary-foreground transition-all duration-300 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            Lập lá số miễn phí →
+          </a>
+          <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
+            Không cần thẻ · lá số của bạn để giữ
+          </p>
         </div>
 
         {/* 8. NewsletterSignup — existing, warm-dark-50 */}

@@ -70,8 +70,14 @@ export function StickyMobileCta({
   // Wave 65.02 — khách submit form lá số ngay trên trang → tự ẩn (không ghi
   // sessionStorage: phiên điều hướng sau vẫn mời bình thường; chỉ tắt đúng
   // ngữ cảnh "lá số đang hiện trên màn hình").
+  // Review SF-2 — chỉ ẩn khi event mang ĐỦ NGÀY sinh (detail.day): các tool
+  // tra-theo-tuổi chỉ ghi year+gender, sync tài khoản và clearBirthProfile
+  // cũng bắn cùng event — những trường hợp đó KHÔNG được ẩn lời mời.
   React.useEffect(() => {
-    const onProfile = (): void => setDismissed(true);
+    const onProfile = (e: Event): void => {
+      const detail = (e as CustomEvent<{ day?: number }>).detail;
+      if (detail?.day) setDismissed(true);
+    };
     window.addEventListener(BIRTH_PROFILE_EVENT, onProfile);
     return () => window.removeEventListener(BIRTH_PROFILE_EVENT, onProfile);
   }, []);
@@ -139,10 +145,12 @@ export function StickyMobileCta({
           href={href}
           onClick={handleClick}
           data-track-id={`sticky-cta-${trackId}`}
+          // Wave 65.04 — về recipe CTA chuẩn (rounded-[2px] + --primary-cta +
+          // font-editorial-display), bỏ legacy bg-gold pill.
           className={cn(
-            'flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-pill bg-gold px-5 py-3',
-            'font-heading text-sm font-semibold text-ink shadow-md shadow-gold/20',
-            'transition duration-200 hover:bg-gold-soft active:scale-[0.98]',
+            'flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-[2px] bg-[hsl(var(--primary-cta))] px-5 py-3',
+            'font-editorial-display text-base font-medium text-primary-foreground shadow-md shadow-gold/20',
+            'transition duration-200 hover:brightness-110 active:scale-[0.98]',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           )}
         >

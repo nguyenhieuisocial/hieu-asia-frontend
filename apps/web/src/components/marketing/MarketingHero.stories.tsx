@@ -35,7 +35,7 @@ export const Default: Story = {
       </>
     ),
     subtitle:
-      'Bốn ống kính — Tử Vi, Bát Tự, Thần Số, MBTI — đọc lên trong một khoảng lặng. Không tiên tri. Không định mệnh hoá. Chỉ một ngôn ngữ để bạn đối thoại với chính mình.',
+      'Bốn lăng kính — Tử Vi, Bát Tự, Thần Số, MBTI — đọc lên trong một khoảng lặng. Không tiên tri. Không định mệnh hoá. Chỉ một ngôn ngữ để bạn đối thoại với chính mình.',
     primaryCta: { label: 'Bắt đầu luận giải', href: '/onboarding' },
     secondaryCta: { label: 'Xem phương pháp', href: '/methodology' },
     trustLine: '5 phút · miễn phí · không cần thẻ',

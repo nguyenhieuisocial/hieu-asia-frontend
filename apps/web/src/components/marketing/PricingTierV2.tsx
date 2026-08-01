@@ -181,7 +181,7 @@ export function PricingTierV2({
             </p>
           )}
           {title && (
-            <h2 className="mt-6 text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
+            <h2 className="mt-6 text-balance font-editorial-display text-section-display font-normal tracking-tight text-foreground">
               {title}
             </h2>
           )}

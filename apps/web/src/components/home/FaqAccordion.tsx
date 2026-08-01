@@ -55,7 +55,7 @@ export function FaqAccordion({
           </p>
           <h2
             id={`${id}-heading`}
-            className="mt-4 text-balance font-heading text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl"
+            className="mt-4 text-balance font-editorial-display text-3xl font-normal leading-tight tracking-tight text-foreground sm:text-4xl"
           >
             {title ?? (
               <>
