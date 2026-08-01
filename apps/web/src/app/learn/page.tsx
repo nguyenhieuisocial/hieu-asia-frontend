@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 42 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 44 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -265,6 +265,26 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Lập tứ trụ Bát Tự',
         subtitle: 'Bát Tự · 4 trụ',
         blurb: 'Trụ năm đổi ở Lập Xuân chứ không ở Tết; trụ giờ suy từ can ngày bằng Ngũ Thử Độn.',
+      },
+    ],
+  },
+  {
+    id: 'van-theo-thoi-gian',
+    heading: 'Vận theo thời gian',
+    positioning:
+      'Các lớp thời gian chồng lên lá số. Càng chia nhỏ thời gian thì độ chắc càng giảm chứ không tăng — đọc để thấy nhịp mà chủ động, không phải để ngồi chờ vận.',
+    topics: [
+      {
+        href: '/learn/dai-van',
+        title: 'Đại vận — chặng 10 năm',
+        subtitle: 'Vận trình · 10 năm',
+        blurb: 'Tử Vi và Bát Tự tính đại vận khác nhau, cho hai bộ mốc khác nhau — đừng trộn.',
+      },
+      {
+        href: '/learn/thai-tue',
+        title: 'Thái Tuế & năm tuổi',
+        subtitle: 'Vận trình · Theo năm',
+        blurb: 'Trùng, xung, hình, hại Thái Tuế — và cái nào công cụ thật sự tính, cái nào không.',
       },
     ],
   },

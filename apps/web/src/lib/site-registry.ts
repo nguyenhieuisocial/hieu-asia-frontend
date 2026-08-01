@@ -259,7 +259,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/timeline",
       "/tu-vi-hom-nay",
       "/sao-han",
-      "/tu-vi-2027"
+      "/tu-vi-2027",
+      "/learn/dai-van"
     ]
   },
   {
@@ -457,7 +458,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi-thang",
       "/sao-han",
       "/tu-vi-hom-nay",
-      "/bang-chung"
+      "/bang-chung",
+      "/learn/thai-tue"
     ]
   },
   {
@@ -1807,6 +1809,17 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/tiet-khi",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu 24 tiết khí"
+  },
+  // Đợt 6 — vận theo thời gian.
+  {
+    "href": "/learn/dai-van",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu đại vận 10 năm"
+  },
+  {
+    "href": "/learn/thai-tue",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Thái Tuế & năm tuổi"
   }
 ];
 

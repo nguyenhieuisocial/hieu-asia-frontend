@@ -137,7 +137,7 @@ const EX_TAM_TAI_GOOD_YEARS = goodOpeningYearsFrom(EX_TAM_TAI.birthYear, VD_YEAR
 const FAQS = [
   {
     q: 'Thái Tuế là gì trong cách xem tuổi khai trương?',
-    a: 'Trong cách tính của hieu.asia, Thái Tuế được đọc qua chi (con giáp) của năm đang xét. Mỗi năm âm lịch có một cặp can chi riêng, và phần chi chính là con giáp cầm cờ của năm đó. Công cụ lấy chi của năm định khai trương đặt cạnh chi của năm sinh chủ, rồi chỉ xét đúng hai quan hệ: chi năm trùng chi tuổi, gọi là "năm tuổi"; và chi năm đối chi tuổi theo bảng lục xung, gọi là "xung Thái Tuế". Sách vở dân gian còn nhiều biến thể khác quanh chữ Thái Tuế, nhưng công cụ không tính chúng nên trang này cũng không dạy chúng.',
+    a: 'Trong cách tính của hieu.asia, Thái Tuế được đọc qua chi (con giáp) của năm đang xét. Công cụ lấy chi của năm định khai trương đặt cạnh chi của năm sinh chủ, rồi chỉ xét đúng hai quan hệ: chi năm trùng chi tuổi, gọi là "năm tuổi"; và chi năm đối chi tuổi theo bảng lục xung, gọi là "xung Thái Tuế". Trang này chỉ nói phần Thái Tuế cần cho việc mở hàng — khái niệm đầy đủ, gồm cả những biến thể mà công cụ không tính, nằm ở bài Thái Tuế và năm tuổi.',
   },
   {
     q: 'Xung Thái Tuế và "năm tuổi" khác nhau chỗ nào?',

@@ -65,6 +65,9 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'lap-la-so', eyebrow: 'AN SAO', name: 'Lập lá số Tử Vi', href: '/learn/lap-la-so' },
   { slug: 'tiet-khi', eyebrow: '24 TIẾT KHÍ', name: '24 tiết khí', href: '/learn/tiet-khi' },
   { slug: 'lap-bat-tu', eyebrow: 'TỨ TRỤ', name: 'Lập tứ trụ Bát Tự', href: '/learn/lap-bat-tu' },
+  // Đợt 6 — vận theo thời gian.
+  { slug: 'dai-van', eyebrow: '10 NĂM', name: 'Đại vận', href: '/learn/dai-van' },
+  { slug: 'thai-tue', eyebrow: 'NĂM TUỔI', name: 'Thái Tuế', href: '/learn/thai-tue' },
 ];
 
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
@@ -123,6 +126,10 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'lap-la-so': ['menh-cuc', 'tu-vi', 'lap-bat-tu', 'can-chi'],
   'lap-bat-tu': ['tiet-khi', 'bat-tu', 'can-chi', 'lap-la-so'],
   'tiet-khi': ['lich-am-duong', 'lap-bat-tu', 'thien-van', 'trach-cat'],
+  'dai-van': ['menh-cuc', 'lap-bat-tu', 'thai-tue', 'tu-vi'],
+  // thai-tue ↔ khai-truong trỏ nhau: khai-truong dùng Thái Tuế ở lát cắt mở hàng,
+  // thai-tue giữ khái niệm tổng quát. Không trỏ nhau thì đọc như hai bài rời rạc.
+  'thai-tue': ['khai-truong', 'tam-hop-luc-xung', 'dai-van', 'can-chi'],
   'cung-hoang-dao': ['chiem-tinh', 'tarot', 'than-so-hoc', 'con-giap'],
   'lich-am-duong': ['trach-cat', 'gio-hoang-dao', 'ngay-kieng-ky', 'sao-han'],
   'gio-hoang-dao': ['trach-cat', 'lich-am-duong', 'ngay-kieng-ky', 'phong-thuy'],

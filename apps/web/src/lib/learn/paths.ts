@@ -102,6 +102,15 @@ export const LEARN_PATHS: readonly LearnPath[] = [
       'Mở nắp máy: từ ngày giờ sinh ra lá số và tứ trụ bằng những bước nào — để bạn đọc kết quả mà không phải tin vào một hộp đen.',
     slugs: ['menh-cuc', 'lap-la-so', 'tiet-khi', 'lap-bat-tu'],
   },
+  // Đợt 6. Lộ trình này sẽ dài thêm khi các bài còn lại của cụm vận (giao vận,
+  // lưu niên, nhật vận) ra đời — hiện đủ 2 bài nên đã hợp lệ.
+  {
+    id: 'van-theo-thoi-gian',
+    name: 'Vận theo thời gian',
+    tagline:
+      'Các lớp thời gian chồng lên lá số: chặng 10 năm và lớp từng năm — đọc để thấy nhịp, không phải để chờ vận.',
+    slugs: ['dai-van', 'thai-tue'],
+  },
 ];
 
 export interface TopicPathPosition {
