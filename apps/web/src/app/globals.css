@@ -192,9 +192,13 @@
     color: hsl(var(--foreground));
   }
 
-  /* High-contrast focus ring for keyboard users (WCAG 2.4.7) */
+  /* High-contrast focus ring for keyboard users (WCAG 2.4.7).
+   * Wave 65.01 — hết hard-code #b8923d: gold legacy chỉ đạt ~2.8:1 trên nền
+   * Paper (dưới ngưỡng 3:1 của WCAG 1.4.11 cho non-text). Token --ring đã
+   * sync --primary từng theme (light #89612A 4.7:1 · dark night-gold) nên
+   * ring giờ đạt chuẩn cả hai chế độ. */
   :focus-visible {
-    outline: 2px solid #b8923d;
+    outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
   }
 }
@@ -319,6 +323,12 @@ html {
   .fx-shimmer { animation: fxShimmer 4.5s linear 3 forwards; }
 }
 @keyframes fxShimmer { 0% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
+/* Wave 65.01 — dark mode: gradient shimmer đổi sang night gold (#E0AE62, đồng bộ
+ * .dark --primary) thay vì giữ ochre ban ngày trên nền charcoal. Chỉ override
+ * background-image; background-size 250% + clip-text kế thừa từ base ở trên. */
+.dark .fx-shimmer {
+  background-image: linear-gradient(100deg, #E0AE62 0%, #E0AE62 38%, #F7E7C3 50%, #E0AE62 62%, #E0AE62 100%);
+}
 
 /* ===== Hero entrance — "màn chào" 1 lần khi tải (KHÔNG áp cho <h1> LCP) =====
  * Chỉ áp cho eyebrow/subcopy/form quanh tiêu đề → cảm giác "settle in" sang
@@ -1177,6 +1187,13 @@ body { overflow-wrap: break-word; }
 .ob-graph[data-sel] .ob-line:not(.ob-line-on) { stroke: rgba(224, 174, 98, 0.07); }
 .ob-hub-sel .ob-hub-dot { transform: scale(1.75); box-shadow: 0 0 18px rgba(224, 174, 98, 1); }
 .ob-hub-sel .ob-hub-label { color: #f5f2ec; }
+/* Wave 65.02 — phản hồi TỨC THÌ ngay tại ngón tay khi chạm nhóm sao (mobile
+ * không có hover; trước đây tap chỉ thấy panel mở ở GIỮA chòm sao, xa điểm
+ * chạm → PostHog đo 31 rageclick/30 ngày trên đúng các nút này). Scale áp vào
+ * DOT, KHÔNG áp vào button (transform button sẽ đè translate định vị — xem
+ * chú thích ~dòng 783). Nhãn nhóm đang chọn thêm gạch chân gold cho rõ. */
+.ob-hub:active .ob-hub-dot { transform: scale(2.1); box-shadow: 0 0 22px rgba(224, 174, 98, 1); }
+.ob-hub-sel .ob-hub-label { text-decoration: underline; text-decoration-color: rgba(224, 174, 98, .8); text-underline-offset: .25em; }
 
 /* v3 — bảng chi tiết: liệt kê tên công cụ thật của nhóm đang chọn */
 .ob-detail-close {
@@ -1408,4 +1425,25 @@ body { overflow-wrap: break-word; }
   /* T-TAP — was font-size: 10px; keep the base 12px (legibility floor),
      only the max-width tightening remains for ≤480px. */
   .ob-hub-label { max-width: 5rem; }
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+ * Wave 65.02 — phối hợp cụm fixed-bottom mobile (finding P2 vòng 8):
+ * StickyMobileCta (z-40) trước đây (a) che CHẾT BackToTop (z-30) trên đúng
+ * trang dài nhất, (b) che vĩnh viễn ~70-90px cuối footer — dòng miễn trừ
+ * trách nhiệm + copyright không bao giờ đọc được. Thanh CTA phát
+ * [data-sticky-cta][data-visible]; hai rule :has() dưới đây phản ứng theo.
+ * Trình duyệt không hỗ trợ :has (rất hiếm 2026) rơi về hành vi cũ — không
+ * vỡ gì, chỉ mất hai tinh chỉnh này. Chỉ áp mobile (<768px) vì thanh CTA
+ * là md:hidden. */
+@media (max-width: 767px) {
+  body:has([data-sticky-cta][data-visible]) .back-to-top {
+    bottom: calc(max(1.5rem, env(safe-area-inset-bottom)) + 4.75rem);
+  }
+  /* Review SF-1 — scope vào .site-footer (SiteFooter), KHÔNG dùng `footer`
+   * trần: StickyMobileCta mount trên ~60 route, selector trần làm cả <footer>
+   * nội dung giữa trang (/bat-tu, /xem-hop-nhom) phình đáy nhầm. */
+  body:has([data-sticky-cta][data-visible]) .site-footer {
+    padding-bottom: 5.5rem;
+  }
 }

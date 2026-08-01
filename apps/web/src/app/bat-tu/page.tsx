@@ -237,7 +237,7 @@ export default function BatTuLandingPage() {
               — Cách hieu.asia đọc
             </p>
             <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
-              Một lá số, <ItalicSpan>năm ống kính</ItalicSpan>
+              Một lá số, <ItalicSpan>năm lăng kính</ItalicSpan>
             </h2>
 
             <div className="mt-8 grid gap-6 md:grid-cols-3">

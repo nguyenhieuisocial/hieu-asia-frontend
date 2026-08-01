@@ -69,7 +69,7 @@ const SIGN_OFF = (
       href="/onboarding"
       className="underline decoration-primary/40 underline-offset-4 hover:decoration-primary"
     >
-      → /onboarding
+      Lập lá số của tôi →
     </Link>
   </p>
 );
@@ -605,7 +605,7 @@ export function MentorSampleInteractive() {
           <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
             — THỬ MENTOR AI
           </p>
-          <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-foreground">
+          <h2 className="text-balance font-editorial-display text-section-display font-normal tracking-tight leading-tight text-foreground">
             Hỏi Mentor{' '}
             <em className="italic text-primary/80">bất cứ điều gì</em>
             <span className="text-primary">.</span>

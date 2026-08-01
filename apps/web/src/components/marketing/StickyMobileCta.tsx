@@ -29,6 +29,11 @@ import Link from 'next/link';
 import { ArrowRight, X } from 'lucide-react';
 import { cn } from '@hieu-asia/ui';
 import { track } from '@/lib/analytics';
+// Wave 65.02 — nghe sự kiện hồ sơ ngày sinh: khách vừa lập lá số ngay trên
+// trang (InstantChartHero) thì thanh CTA mời "Lập lá số" là mời làm lại việc
+// vừa xong → ẩn cho hết phiên trang. Data PostHog 30 ngày: shown 139 /
+// clicked 6 / dismissed 3 — CTR ~4% vì sai ngữ cảnh.
+import { BIRTH_PROFILE_EVENT } from '@/lib/birth-profile';
 
 const DISMISS_KEY = 'sticky-cta-dismissed';
 const SCROLL_THRESHOLD_VH = 0.5; // reveal after 50vh scroll
@@ -60,6 +65,21 @@ export function StickyMobileCta({
     } catch {
       /* noop */
     }
+  }, []);
+
+  // Wave 65.02 — khách submit form lá số ngay trên trang → tự ẩn (không ghi
+  // sessionStorage: phiên điều hướng sau vẫn mời bình thường; chỉ tắt đúng
+  // ngữ cảnh "lá số đang hiện trên màn hình").
+  // Review SF-2 — chỉ ẩn khi event mang ĐỦ NGÀY sinh (detail.day): các tool
+  // tra-theo-tuổi chỉ ghi year+gender, sync tài khoản và clearBirthProfile
+  // cũng bắn cùng event — những trường hợp đó KHÔNG được ẩn lời mời.
+  React.useEffect(() => {
+    const onProfile = (e: Event): void => {
+      const detail = (e as CustomEvent<{ day?: number }>).detail;
+      if (detail?.day) setDismissed(true);
+    };
+    window.addEventListener(BIRTH_PROFILE_EVENT, onProfile);
+    return () => window.removeEventListener(BIRTH_PROFILE_EVENT, onProfile);
   }, []);
 
   // Scroll listener — reveal after threshold, hide before.
@@ -97,6 +117,13 @@ export function StickyMobileCta({
 
   return (
     <div
+      // Wave 65.02 — (1) `inert` khi ẩn: thanh translate-y-full vẫn nằm trong
+      // tab order, control vô hình nhận focus (finding a11y vòng 6). (2) data
+      // attr cho globals.css `:has()` phối hợp: nâng BackToTop lên trên thanh
+      // + đệm đáy footer để dòng miễn trừ không bị che vĩnh viễn.
+      inert={visible ? undefined : true}
+      data-sticky-cta=""
+      data-visible={visible ? '' : undefined}
       className={cn(
         // Mobile-only — desktop hero CTA stays visible.
         'fixed inset-x-0 bottom-0 z-40 md:hidden',
@@ -118,10 +145,12 @@ export function StickyMobileCta({
           href={href}
           onClick={handleClick}
           data-track-id={`sticky-cta-${trackId}`}
+          // Wave 65.04 — về recipe CTA chuẩn (rounded-[2px] + --primary-cta +
+          // font-editorial-display), bỏ legacy bg-gold pill.
           className={cn(
-            'flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-pill bg-gold px-5 py-3',
-            'font-heading text-sm font-semibold text-ink shadow-md shadow-gold/20',
-            'transition duration-200 hover:bg-gold-soft active:scale-[0.98]',
+            'flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-[2px] bg-[hsl(var(--primary-cta))] px-5 py-3',
+            'font-editorial-display text-base font-medium text-primary-foreground shadow-md shadow-gold/20',
+            'transition duration-200 hover:brightness-110 active:scale-[0.98]',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           )}
         >
