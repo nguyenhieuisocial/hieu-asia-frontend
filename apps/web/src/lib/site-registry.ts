@@ -754,7 +754,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     },
     "home": {
       "n": "Cung hoàng đạo",
-      "learn": "/learn/chiem-tinh",
+      "learn": "/learn/cung-hoang-dao",
       "group": "Chiêm tinh phương Tây"
     },
     "catalog": {
@@ -768,7 +768,13 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "home",
       "catalog"
     ],
-    "relatedLabel": "Cung hoàng đạo"
+    "relatedLabel": "Cung hoàng đạo",
+    "related": [
+      "/ban-do-sao",
+      "/hop-tuoi",
+      "/tarot",
+      "/learn/cung-hoang-dao"
+    ]
   },
   {
     "href": "/tarot",
@@ -810,7 +816,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     },
     "home": {
       "n": "Lịch vạn niên",
-      "learn": "/learn/trach-cat",
+      "learn": "/learn/lich-am-duong",
       "group": "Cổ học Á Đông"
     },
     "catalog": {
@@ -829,7 +835,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/xem-ngay",
       "/gio-hoang-dao",
       "/ngay-kieng-ky",
-      "/sao-han"
+      "/sao-han",
+      "/learn/lich-am-duong"
     ]
   },
   {
@@ -872,7 +879,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     },
     "home": {
       "n": "Giờ hoàng đạo",
-      "learn": "/learn/trach-cat",
+      "learn": "/learn/gio-hoang-dao",
       "group": "Cổ học Á Đông"
     },
     "catalog": {
@@ -891,7 +898,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/xem-ngay",
       "/ngay-kieng-ky",
       "/xuat-hanh",
-      "/lich-van-nien"
+      "/lich-van-nien",
+      "/learn/gio-hoang-dao"
     ]
   },
   {
@@ -922,7 +930,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     },
     "home": {
       "n": "Ngày kiêng kỵ",
-      "learn": "/learn/trach-cat",
+      "learn": "/learn/ngay-kieng-ky",
       "group": "Cổ học Á Đông"
     },
     "catalog": {
@@ -941,7 +949,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/xem-ngay",
       "/gio-hoang-dao",
       "/lich-van-nien",
-      "/xuat-hanh"
+      "/xuat-hanh",
+      "/learn/ngay-kieng-ky"
     ]
   },
   {
@@ -1023,7 +1032,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/huong-nha",
       "/xem-ngay",
       "/thuoc-lo-ban",
-      "/xem-tuoi-cuoi"
+      "/xem-tuoi-cuoi",
+      "/learn/hoang-oc"
     ]
   },
   {
@@ -1068,7 +1078,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/xem-tuoi-cuoi",
       "/kim-lau",
       "/sao-han",
-      "/hop-tuoi"
+      "/hop-tuoi",
+      "/learn/tam-tai"
     ]
   },
   {
@@ -1087,7 +1098,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/xem-tuoi-cuoi",
       "/tam-tai",
       "/xem-ngay",
-      "/hop-tuoi"
+      "/hop-tuoi",
+      "/learn/kim-lau"
     ]
   },
   {
@@ -1164,7 +1176,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/thuoc-lo-ban",
       "/ban-menh",
       "/huong-ban-lam-viec",
-      "/xem-tuoi-lam-nha"
+      "/xem-tuoi-lam-nha",
+      "/learn/bat-trach"
     ]
   },
   {
@@ -1640,6 +1653,47 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/phong-thuy",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu Phong thuỷ"
+  },
+  // Đợt 1 chương trình "mỗi công cụ một bài Học riêng" (lib/learn/tool-coverage.ts).
+  {
+    "href": "/learn/kim-lau",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Kim Lâu"
+  },
+  {
+    "href": "/learn/tam-tai",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Tam Tai"
+  },
+  {
+    "href": "/learn/hoang-oc",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Hoang Ốc & mượn tuổi"
+  },
+  {
+    "href": "/learn/bat-trach",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Bát Trạch (cung phi)"
+  },
+  {
+    "href": "/learn/cung-hoang-dao",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu 12 cung hoàng đạo"
+  },
+  {
+    "href": "/learn/lich-am-duong",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu lịch âm dương"
+  },
+  {
+    "href": "/learn/gio-hoang-dao",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu giờ hoàng đạo"
+  },
+  {
+    "href": "/learn/ngay-kieng-ky",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu ngày kiêng kỵ"
   }
 ];
 

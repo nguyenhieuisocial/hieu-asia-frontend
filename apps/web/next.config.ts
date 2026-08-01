@@ -110,8 +110,28 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     // Content-Security-Policy — allows: self + Vercel/Supabase + Cloudflare API + PostHog + Sentry + fonts.
-    // `'unsafe-inline'` on script-src needed for Next.js inline bootstrap scripts (build IDs etc.).
     // `'unsafe-eval'` is required by Next.js dev mode (Fast Refresh) but MUST NOT ship to prod.
+    //
+    // ── `'unsafe-inline'` trên script-src: ĐÃ ĐO, KHÔNG GỠ ĐƯỢC ────────────────
+    // Đừng tốn thêm một đợt nữa để thử gỡ. Số đo trên bản build thật (2026-08):
+    // site có 1.113 trang prerender tĩnh; mỗi trang ~52 thẻ <script> inline (dữ
+    // liệu RSC flight, không phải "bootstrap build ID" như chú thích cũ nói).
+    // Riêng 300 trang đầu đã có 6.182 nội dung inline KHÁC NHAU, và chỉ 3 khối là
+    // giống nhau trên mọi trang.
+    //
+    //   · nonce: phải sinh mới mỗi request ⇒ chỉ dùng được với trang render động.
+    //     HTML ở đây cố định từ lúc build nên nonce trong header sẽ không khớp
+    //     HTML, trình duyệt chặn sạch script.
+    //   · hash: cần liệt kê hàng nghìn giá trị theo TỪNG trang, trong khi
+    //     `headers()` chỉ khai được theo mẫu đường dẫn.
+    //   · chuyển cả site sang render động để dùng nonce: đánh đổi quá đắt (mất
+    //     cache CDN, TTFB xấu, chi phí tăng) và làm `scripts/seo-guard.mjs` gãy —
+    //     guard đó đọc HTML tĩnh do `next build` sinh ra và có sàn MIN_PAGES 1000.
+    //
+    // Vì vậy tuyến phòng thủ nằm ở CHỖ NHÚNG, không ở CSP. Hai sink HTML thô duy
+    // nhất đều đã được khoá bằng test: `serializeJsonLd` (JSON-LD, #1024) và
+    // `renderMarkdown` cho nội dung CMS `/cam-nang/[slug]`
+    // (`src/lib/markdown/pillar-markdown.ts`). Thêm sink mới thì phải khoá tương tự.
     const isDev = process.env.NODE_ENV === 'development';
     // Wave 41.4 — pixel host allowlists. Marketing pixels are consent-gated
     // at runtime (only injected after CMP opt-in), but CSP must allow the
