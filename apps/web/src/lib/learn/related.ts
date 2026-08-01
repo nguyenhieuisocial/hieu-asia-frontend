@@ -31,6 +31,17 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'trach-cat', eyebrow: 'TRẠCH CÁT', name: 'Trạch Cát', href: '/learn/trach-cat' },
   { slug: 'can-xuong', eyebrow: 'CÂN XƯƠNG', name: 'Cân Xương', href: '/learn/can-xuong' },
   { slug: 'dat-ten-ngu-hanh', eyebrow: 'NGŨ HÀNH', name: 'Đặt tên ngũ hành', href: '/learn/dat-ten-ngu-hanh' },
+  // Đợt 1 của chương trình "mỗi công cụ một bài Học riêng" (xem
+  // lib/learn/tool-coverage.ts). Trước đây 5 công cụ ngày–giờ cùng trỏ về
+  // /learn/trach-cat và 36 công cụ không có bài Học nào.
+  { slug: 'kim-lau', eyebrow: 'TUỔI CƯỚI', name: 'Kim Lâu', href: '/learn/kim-lau' },
+  { slug: 'tam-tai', eyebrow: 'TAM HỢP', name: 'Tam Tai', href: '/learn/tam-tai' },
+  { slug: 'hoang-oc', eyebrow: 'LÀM NHÀ', name: 'Hoang Ốc', href: '/learn/hoang-oc' },
+  { slug: 'bat-trach', eyebrow: 'CUNG PHI', name: 'Bát Trạch', href: '/learn/bat-trach' },
+  { slug: 'cung-hoang-dao', eyebrow: '12 CUNG', name: 'Cung hoàng đạo', href: '/learn/cung-hoang-dao' },
+  { slug: 'lich-am-duong', eyebrow: 'LỊCH PHÁP', name: 'Lịch âm dương', href: '/learn/lich-am-duong' },
+  { slug: 'gio-hoang-dao', eyebrow: '12 GIỜ', name: 'Giờ hoàng đạo', href: '/learn/gio-hoang-dao' },
+  { slug: 'ngay-kieng-ky', eyebrow: 'KIÊNG KỴ', name: 'Ngày kiêng kỵ', href: '/learn/ngay-kieng-ky' },
 ];
 
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
@@ -51,13 +62,23 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'bat-tu': ['tu-vi', 'hop-tuoi', 'dat-ten-ngu-hanh', 'phong-thuy'],
   'kinh-dich': ['tarot', 'phong-thuy', 'tu-vi', 'trach-cat'],
   'tarot': ['kinh-dich', 'chiem-tinh', 'than-so-hoc', 'mbti'],
-  'phong-thuy': ['trach-cat', 'dat-ten-ngu-hanh', 'bat-tu', 'kinh-dich'],
-  'chiem-tinh': ['tarot', 'than-so-hoc', 'big-five', 'tu-vi'],
+  'phong-thuy': ['bat-trach', 'trach-cat', 'dat-ten-ngu-hanh', 'bat-tu'],
+  'chiem-tinh': ['cung-hoang-dao', 'tarot', 'than-so-hoc', 'big-five'],
   'than-so-hoc': ['chiem-tinh', 'tarot', 'dat-ten-ngu-hanh', 'mbti'],
   'hop-tuoi': ['con-giap', 'tu-vi', 'bat-tu', 'trach-cat'],
   'con-giap': ['hop-tuoi', 'sao-han', 'tu-vi', 'trach-cat'],
   'sao-han': ['tu-vi', 'con-giap', 'trach-cat', 'hop-tuoi'],
-  'trach-cat': ['phong-thuy', 'sao-han', 'hop-tuoi', 'con-giap'],
+  'trach-cat': ['gio-hoang-dao', 'ngay-kieng-ky', 'lich-am-duong', 'phong-thuy'],
+  // Đợt 1 — mỗi bài mới trỏ về 4 bài gần nghĩa, và các bài cũ ở trên đã được
+  // chỉnh để trỏ NGƯỢC lại, tránh chủ đề mới thành ngõ cụt trong liên kết nội bộ.
+  'kim-lau': ['tam-tai', 'hoang-oc', 'hop-tuoi', 'sao-han'],
+  'tam-tai': ['kim-lau', 'hoang-oc', 'sao-han', 'con-giap'],
+  'hoang-oc': ['kim-lau', 'tam-tai', 'bat-trach', 'phong-thuy'],
+  'bat-trach': ['phong-thuy', 'hoang-oc', 'trach-cat', 'dat-ten-ngu-hanh'],
+  'cung-hoang-dao': ['chiem-tinh', 'tarot', 'than-so-hoc', 'con-giap'],
+  'lich-am-duong': ['trach-cat', 'gio-hoang-dao', 'ngay-kieng-ky', 'sao-han'],
+  'gio-hoang-dao': ['trach-cat', 'lich-am-duong', 'ngay-kieng-ky', 'phong-thuy'],
+  'ngay-kieng-ky': ['trach-cat', 'gio-hoang-dao', 'lich-am-duong', 'tam-tai'],
   'dat-ten-ngu-hanh': ['phong-thuy', 'bat-tu', 'than-so-hoc', 'hop-tuoi'],
   'palm': ['can-xuong', 'mbti', 'tu-vi', 'tarot'],
   'can-xuong': ['palm', 'tu-vi', 'sao-han', 'bat-tu'],
