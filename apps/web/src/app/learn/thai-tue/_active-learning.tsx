@@ -89,6 +89,9 @@ const PREV_YEAR_CANCHI = canChiOfYear(TOOL_YEAR - 1);
  * độ lệch bên dưới đều tính từ nó.
  */
 const JUPITER_PERIOD_YEARS = 11.862;
+// Nhãn hiển thị dùng dấu PHẨY — xem chú thích cùng tên ở page.tsx: in thẳng số JS
+// ra tiếng Việt sẽ đọc thành "mười một nghìn tám trăm sáu mươi hai năm".
+const JUPITER_LABEL = '11,862';
 
 /** Sau bao nhiêu năm thì Mộc tinh thật lệch trọn MỘT chi so với vòng 12 quy ước. */
 const DRIFT_ONE_BRANCH_YEARS = Math.round(
@@ -221,7 +224,7 @@ export function ThaiTueDepth() {
                 <p>
                   Ngôi sao đó là {strong('Mộc tinh')} — người xưa gọi là Tuế Tinh, tức “sao của năm”.
                   Mộc tinh đi hết một vòng quanh Mặt Trời trong khoảng{' '}
-                  {JUPITER_PERIOD_YEARS} năm, tức mỗi năm nhích được khoảng một phần {CHI.length} bầu
+                  {JUPITER_LABEL} năm, tức mỗi năm nhích được khoảng một phần {CHI.length} bầu
                   trời. Rất tiện để đặt tên năm.
                 </p>
                 <p>
@@ -239,7 +242,7 @@ export function ThaiTueDepth() {
             content: (
               <>
                 <p>
-                  Chỗ cần tách bạch: {strong('chu kỳ ' + JUPITER_PERIOD_YEARS + ' năm là thiên văn')},
+                  Chỗ cần tách bạch: {strong('chu kỳ ' + JUPITER_LABEL + ' năm là thiên văn')},
                   còn con số {CHI.length} chẵn và chiều chạy là {strong('quy ước')}. Hai thứ đó không
                   bằng nhau, và lịch can chi từ lâu đã không hiệu chỉnh theo vị trí thật của Mộc tinh
                   nữa.
@@ -335,7 +338,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     prompt: 'Cái tên “Thái Tuế” liên quan thế nào tới Mộc tinh?',
     choices: [
       {
-        text: `Mộc tinh đi hết một vòng trong khoảng ${JUPITER_PERIOD_YEARS} năm nên được dùng để đếm năm; Thái Tuế là điểm tưởng tượng chạy ngược lại, làm tròn đúng ${CHI.length} năm một vòng`,
+        text: `Mộc tinh đi hết một vòng trong khoảng ${JUPITER_LABEL} năm nên được dùng để đếm năm; Thái Tuế là điểm tưởng tượng chạy ngược lại, làm tròn đúng ${CHI.length} năm một vòng`,
         correct: true,
         note: 'Đúng — chu kỳ là thiên văn, con số 12 chẵn và chiều chạy là quy ước cho dễ đếm.',
       },

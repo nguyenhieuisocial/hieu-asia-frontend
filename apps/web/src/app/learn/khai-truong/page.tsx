@@ -316,6 +316,18 @@ export default function LearnKhaiTruongPage() {
                 của năm. Trong cách tính của hieu.asia,{' '}
                 <strong>Thái Tuế được đọc qua chi của năm</strong> đang xét.
               </p>
+              <p className="text-sm text-foreground/70">
+                Trang này chỉ lấy phần Thái Tuế cần cho việc mở hàng. Khái niệm đầy đủ — tên gọi đến
+                từ chu kỳ Mộc tinh, bốn quan hệ trùng – xung – hình – hại, và quan hệ nào công cụ
+                thật sự tính —{' '}
+                <Link
+                  href="/learn/thai-tue"
+                  className="text-gold-700 underline-offset-4 hover:underline"
+                >
+                  đọc ở bài Thái Tuế và năm tuổi
+                </Link>
+                .
+              </p>
               <p>
                 Tuổi bạn cũng có một chi — chi của năm sinh. Toàn bộ phần “Thái Tuế” trong xem tuổi
                 khai trương vì thế thu về đúng <strong>hai câu hỏi</strong>:
