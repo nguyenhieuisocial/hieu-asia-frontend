@@ -6,7 +6,7 @@ import { OnboardingIntentTracker } from '@/components/onboarding-intent-tracker'
 import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Mở khóa lá số',
+  title: 'Lập lá số miễn phí',
   description:
     'Bắt đầu lá số cá nhân hoá trong 4 bước. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại đồng ý bất cứ lúc nào.',
   alternates: { canonical: 'https://hieu.asia/onboarding' },
