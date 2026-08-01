@@ -186,7 +186,7 @@ export function OverviewTab({ user, onNavigate }: OverviewTabProps) {
     { label: 'Lá số đã lập', value: data.chartCount, hint: 'Lá số đã lưu' },
     { label: 'Quyết định', value: data.decisionCount, hint: 'Brief đã tạo' },
     { label: 'Tuần đã nhìn lại', value: data.weeklyCount, hint: 'Số lần ôn lại tuần' },
-    { label: 'Tier hiện tại', value: TIER_LABEL[data.tier] ?? data.tier },
+    { label: 'Gói hiện tại', value: TIER_LABEL[data.tier] ?? data.tier },
   ];
 
   return (

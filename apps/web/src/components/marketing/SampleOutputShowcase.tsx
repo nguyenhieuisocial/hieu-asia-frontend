@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Sparkles, Calendar, MessageSquareQuote, ListChecks, ArrowRight } from 'lucide-react';
-import { ShimmerText } from '@/components/fx/ShimmerText';
 
 /**
  * Wave 60.95.c P1-6 — SampleOutputShowcase (vault 130 §III P1-6).
@@ -171,9 +170,12 @@ export function SampleOutputShowcase() {
           <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
             — RỒI BẠN NHẬN ĐƯỢC GÌ
           </p>
-          <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-foreground">
+          {/* Wave 65.04 — heading grammar thống nhất (serif editorial, giữ size
+              token) + bỏ ShimmerText: hiệu ứng chữ ký rút về 2 điểm (H1 hero +
+              OracleBrain) thay vì 6 — dùng 6 lần thì hết là chữ ký. */}
+          <h2 className="text-balance font-editorial-display text-section-display font-normal tracking-tight leading-tight text-foreground">
             Báo cáo{' '}
-            <em className="italic text-primary/80"><ShimmerText>cá nhân hoá</ShimmerText></em> theo từng
+            <em className="italic text-primary/80">cá nhân hoá</em> theo từng
             câu hỏi của bạn
             <span className="text-primary">.</span>
           </h2>
@@ -216,15 +218,17 @@ export function SampleOutputShowcase() {
           {/* Wave 63.4 — contextual CTA (founder review #2): after the sample
               report, "see MY own report" not the generic "Lập lá số miễn phí".
               text-ink → text-primary-foreground (AA on ochre). */}
+          {/* Wave 65.04 — về recipe CTA chuẩn (mẫu PricingTierV2): rounded-[2px]
+              + --primary-cta + font-editorial-display; secondary cùng radius. */}
           <Link
             href="/onboarding"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/20"
+            className="inline-flex items-center justify-center rounded-[2px] bg-[hsl(var(--primary-cta))] px-7 py-3 font-editorial-display text-base font-medium text-primary-foreground transition-all duration-300 hover:brightness-110 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Xem báo cáo của chính tôi
           </Link>
           <Link
             href="/sample-report"
-            className="inline-flex items-center justify-center gap-1.5 rounded-full border border-primary/40 px-6 py-3 font-sans text-sm font-medium text-foreground transition-colors duration-200 hover:border-primary hover:bg-primary/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
+            className="inline-flex items-center justify-center gap-1.5 rounded-[2px] border border-primary/40 px-7 py-3 font-editorial-display text-base font-medium text-foreground transition-colors duration-200 hover:border-primary hover:bg-primary/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-warm-dark-50"
           >
             Xem báo cáo mẫu đầy đủ
             <ArrowRight className="size-4" aria-hidden />

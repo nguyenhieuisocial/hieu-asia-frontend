@@ -227,9 +227,13 @@ export function InstantChartHero(): React.JSX.Element {
             </span>
           </label>
 
+          {/* Wave 65.04 — CTA về MỘT recipe chuẩn (mẫu = PricingTierV2, đúng spec
+              "Như giấy cũ"): rounded-[2px] paper corner + bg --primary-cta +
+              nhãn font-editorial-display + text-primary-foreground (AA cả 2
+              theme). Trước đây trang có 5 hình hài nút với 3 sắc gold. */}
           <button
             type="submit"
-            className="mt-3 inline-flex h-12 w-full items-center justify-center rounded-md bg-gold px-6 text-sm font-medium text-ink transition hover:bg-gold-400 hover:shadow-lg hover:shadow-gold/30 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:mt-4 sm:w-auto"
+            className="mt-3 inline-flex h-12 w-full items-center justify-center rounded-[2px] bg-[hsl(var(--primary-cta))] px-7 font-editorial-display text-base font-medium text-primary-foreground transition-all duration-300 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:mt-4 sm:w-auto"
           >
             ✦ Lập lá số Bát Tự của tôi →
           </button>

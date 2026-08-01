@@ -684,7 +684,7 @@ export default function LandingPage() {
           </p>
           <a
             href="/onboarding"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-3 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex items-center justify-center rounded-[2px] bg-[hsl(var(--primary-cta))] px-8 py-3 font-editorial-display text-base font-medium text-primary-foreground transition-all duration-300 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Lập lá số miễn phí →
           </a>

@@ -68,7 +68,7 @@ export const WithChildContent: Story = {
           <span className="text-gold-dot">.</span>
         </h1>
         <p className="mt-6 max-w-prose font-sans text-lg leading-relaxed text-cream-300">
-          Bốn ống kính — Tử Vi, Bát Tự, Thần Số, MBTI — đọc lên trong một
+          Bốn lăng kính — Tử Vi, Bát Tự, Thần Số, MBTI — đọc lên trong một
           khoảng lặng.
         </p>
       </div>

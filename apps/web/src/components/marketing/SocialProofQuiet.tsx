@@ -25,7 +25,6 @@
  * Renders identically across day/night via semantic CSS variables.
  */
 
-import { ShimmerText } from '@/components/fx/ShimmerText';
 
 type Quote = {
   /** Quote body — 30-60 words in founder voice, italic Newsreader. */
@@ -68,7 +67,7 @@ export function SocialProofQuiet() {
             {/* Wave 65.03(e) — "Không sao." đọc nhị nghĩa ("ổn mà") → "Không
                 ngôi sao." (finding P2 vòng 1). */}
             Không ngôi sao. Không ảnh. Không lời khen.{' '}
-            <em className="italic text-primary/80"><ShimmerText>Kiểu câu hỏi mọi người mang tới</ShimmerText></em>
+            <em className="italic text-primary/80">Kiểu câu hỏi mọi người mang tới</em>
             <span className="text-primary">.</span>
           </h2>
           <p className="rv-up mt-6 max-w-marketing-text font-sans text-editorial-lede text-muted-foreground" style={{ animationDelay: '160ms' }}>

@@ -53,7 +53,7 @@ export const Inline: Story = {
   render: (args) => (
     <div className="bg-warm-dark-50 p-12">
       <p className="max-w-prose font-sans text-lg leading-relaxed text-cream-300">
-        Bốn ống kính giúp bạn{' '}
+        Bốn lăng kính giúp bạn{' '}
         <ItalicSpan {...args}>soi</ItalicSpan> chính mình từ nhiều góc — không tiên
         tri, không nhãn dán, chỉ một ngôn ngữ để bạn đối thoại với nội tâm.
       </p>
