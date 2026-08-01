@@ -16,7 +16,11 @@ import { InfographicBatTu } from '@/components/learn/InfographicBatTu';
  */
 export function EngineProofShowcase(): React.JSX.Element {
   return (
-    <section aria-label="Ví dụ lá số được tính ra" className="bg-muted/20 py-12 sm:py-16">
+    // Wave 65.03(c) — mở đầu DẢI BẰNG CHỨNG chung với SampleOutputShowcase ngay
+    // dưới: nền đồng bộ bg-background, đáy thu hẹp (pb-4/6), disclaimer
+    // "Persona demo" gộp về MỘT dòng ở cuối SampleOutputShowcase — hai khối đọc
+    // như một section "lá số tính ra → báo cáo đọc được".
+    <section aria-label="Ví dụ lá số được tính ra" className="bg-background pt-12 pb-4 sm:pt-16 sm:pb-6">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
         <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           TÍNH THẬT, KHÔNG TRA BẢNG
@@ -48,9 +52,8 @@ export function EngineProofShowcase(): React.JSX.Element {
           </figure>
         </div>
 
-        <p className="mt-8 text-center font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground sm:mt-10">
-          Persona demo · không phải dữ liệu thật
-        </p>
+        {/* Wave 65.03(c) — dòng "Persona demo · không phải dữ liệu thật" gộp về
+            cuối SampleOutputShowcase (một disclaimer cho cả dải bằng chứng). */}
       </div>
     </section>
   );

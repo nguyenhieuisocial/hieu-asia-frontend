@@ -158,15 +158,18 @@ export function SampleOutputShowcase() {
   }, [inView]);
 
   return (
+    // Wave 65.03(c) — nửa sau của DẢI BẰNG CHỨNG (mở đầu = EngineProofShowcase
+    // "lá số được tính ra"): đỉnh thu hẹp pt-4/6 để hai khối đọc liền một mạch,
+    // disclaimer duy nhất của cả dải nằm ở cuối section này.
     <section
       aria-label="Báo cáo mẫu (minh hoạ)"
-      className="bg-background py-12 md:py-14"
+      className="bg-background pt-4 pb-12 md:pt-6 md:pb-14"
     >
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {/* Header */}
         <div className="mx-auto max-w-marketing-tight text-center">
           <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
-            — BẠN SẼ NHẬN ĐƯỢC GÌ
+            — RỒI BẠN NHẬN ĐƯỢC GÌ
           </p>
           <h2 className="text-balance font-sans text-section-display font-bold tracking-tight leading-tight text-foreground">
             Báo cáo{' '}
