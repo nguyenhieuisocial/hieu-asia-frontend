@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   // openGraph (Next.js merge semantics), so we must re-declare `images` here
   // or Zalo/Facebook/Telegram/Slack previews render blank. Same for `twitter`.
   openGraph: {
-    title: 'Mở khóa lá số',
+    title: 'Lập lá số miễn phí',
     description:
       'Bắt đầu hành trình hiểu chính mình — 4 bước. Đồng ý xử lý dữ liệu để tạo lá số.',
     url: 'https://hieu.asia/onboarding',
@@ -24,19 +24,19 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'hieu.asia — Mở khóa lá số Tử Vi cá nhân hoá trong 4 bước',
+        alt: 'hieu.asia — Lập lá số Tử Vi miễn phí trong 4 bước',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mở khóa lá số',
+    title: 'Lập lá số miễn phí',
     description:
       'Bắt đầu hành trình hiểu chính mình — 4 bước.',
     images: [
       {
         url: '/og-image.jpg',
-        alt: 'hieu.asia — Mở khóa lá số Tử Vi cá nhân hoá trong 4 bước',
+        alt: 'hieu.asia — Lập lá số Tử Vi miễn phí trong 4 bước',
       },
     ],
   },
@@ -53,14 +53,14 @@ const BREADCRUMB_JSONLD = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://hieu.asia/' },
-    { '@type': 'ListItem', position: 2, name: 'Mở khóa lá số', item: 'https://hieu.asia/onboarding' },
+    { '@type': 'ListItem', position: 2, name: 'Lập lá số miễn phí', item: 'https://hieu.asia/onboarding' },
   ],
 };
 
 const WEBPAGE_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  name: 'Mở khóa lá số — hieu.asia',
+  name: 'Lập lá số miễn phí — hieu.asia',
   description:
     'Bắt đầu lá số cá nhân hoá — 4 bước. Đồng ý xử lý dữ liệu theo Nghị định 356/2025/NĐ-CP (thay thế 13/2023).',
   url: 'https://hieu.asia/onboarding',
@@ -114,7 +114,7 @@ export default async function OnboardingPage({
                 Trang chủ
               </Link>
               <span className="mx-1.5">/</span>
-              <span className="text-muted-foreground">Mở khóa lá số</span>
+              <span className="text-muted-foreground">Lập lá số miễn phí</span>
             </span>
             {/* No step badge here: this is the entry screen, and the badge read
                 the saved pre-step to render "Bước 4 / 4" — contradicting the CTA
@@ -125,7 +125,7 @@ export default async function OnboardingPage({
             Hiểu mình. Quyết định mình.
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
-            Mở khóa <span className="bg-gold-gradient bg-clip-text text-transparent">lá số</span>
+            Lập lá số <span className="bg-gold-gradient bg-clip-text text-transparent">miễn phí</span>
           </h1>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/75">
             4 bước, khoảng 2 phút. Trước khi bắt đầu, vui lòng xem các mục dữ liệu hieu.asia sẽ xử lý.
