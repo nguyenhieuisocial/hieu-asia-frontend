@@ -501,19 +501,10 @@ export default function LandingPage() {
             wrong-proof. 14-day refund promise lives on /pricing CTA and as
             MarketingHero trustLine, so the risk-reversal is not lost. */}
 
-        {/* Wave 60.95.ak — PhilosophyBlock removed per founder direction
-            (TRIẾT LÝ block "Bạn vẫn là người quyết định" + body "Tử Vi không
-            tiên tri..."). Philosophy stance now lives entirely in the PullQuote
-            below (same message, denser editorial format).
-            PhilosophyBlock component itself stays in `marketing/` and renders
-            on /about page (gitnexus impact confirmed LOW + isolated usage).
-            2026-06-23 — bỏ SectionDivider lotus (founder: ngôi sao ngắt trang
-            thừa, phí chiều cao); PullQuote tự đủ "khoảng thở" editorial. */}
-
-        {/* Wave 60.66.P5 — Editorial PullQuote between philosophy and pricing
-            (vault 109 §3 Phase 5 ENRICHED). Motion `whileInView` fade-in via
-            LazyMotion provider (Phase 2 root setup). One of 3 preserved
-            Instrument Serif decorative roles. */}
+        {/* Wave 60.95.ak — PhilosophyBlock removed per founder direction;
+            PhilosophyBlock component stays in `marketing/` and renders on
+            /about. (Chuỗi thay thế sau đó — PullQuote Triết lý — cũng đã gỡ
+            ở Wave 65.03(b) bên dưới.) */}
         {/* Wave 65.03(b) — PullQuote "Triết lý" ĐÃ GỠ: triết lý "không tiên
             tri, bạn tự quyết" đã có ở MultiHero (đầu trang) và MissionNote
             (quote đầy đủ của đội ngũ, ngay trước FAQ). Ba khối cùng một thông

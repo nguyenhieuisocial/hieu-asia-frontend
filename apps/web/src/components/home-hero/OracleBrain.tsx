@@ -457,8 +457,10 @@ export function OracleBrain(): React.JSX.Element {
         {!reveal && (
           <form className="ob-soi" onSubmit={onSoi}>
             <label htmlFor="ob-dob" className="ob-soi-label">
+              {/* Review N-2 — copy trung tính: prefill có thể tới từ hồ sơ đã
+                  lưu phiên trước, không chỉ "vừa nhập ở đầu trang". */}
               {prefilled
-                ? 'Dùng ngày sinh bạn vừa nhập ở đầu trang — bấm Soi thử, hoặc thử ngày khác'
+                ? 'Dùng ngày sinh đã lưu của bạn — bấm Soi thử, hoặc thử ngày khác'
                 : 'Nhập ngày sinh (giờ sinh không bắt buộc) — để bộ não soi bạn qua nhiều lăng kính'}
             </label>
             <div className="ob-soi-row">

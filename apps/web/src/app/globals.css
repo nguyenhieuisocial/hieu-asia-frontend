@@ -1440,7 +1440,10 @@ body { overflow-wrap: break-word; }
   body:has([data-sticky-cta][data-visible]) .back-to-top {
     bottom: calc(max(1.5rem, env(safe-area-inset-bottom)) + 4.75rem);
   }
-  body:has([data-sticky-cta][data-visible]) footer {
+  /* Review SF-1 — scope vào .site-footer (SiteFooter), KHÔNG dùng `footer`
+   * trần: StickyMobileCta mount trên ~60 route, selector trần làm cả <footer>
+   * nội dung giữa trang (/bat-tu, /xem-hop-nhom) phình đáy nhầm. */
+  body:has([data-sticky-cta][data-visible]) .site-footer {
     padding-bottom: 5.5rem;
   }
 }
