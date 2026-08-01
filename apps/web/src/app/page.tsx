@@ -683,6 +683,25 @@ export default function LandingPage() {
           <FaqAccordion items={HOME_FAQ} id="faq" />
         </div>
 
+        {/* Wave 65.03(f) — CTA chốt sau FAQ: trước đây desktop kết thúc bằng
+            newsletter rồi footer, KHÔNG còn lời mời chuyển đổi nào sau khi FAQ
+            đã đóng hết objection (finding P2 vòng 3). Một dòng + một nút, đúng
+            hành động chính của trang. */}
+        <div className="mx-auto flex max-w-marketing-tight flex-col items-center gap-4 px-6 py-12 text-center sm:py-14">
+          <p className="font-editorial-display text-2xl leading-snug text-foreground sm:text-3xl">
+            Sẵn sàng? Lá số của bạn <em className="italic text-primary">tính xong trong 30 giây</em>.
+          </p>
+          <a
+            href="/onboarding"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-3 font-sans text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            Lập lá số miễn phí →
+          </a>
+          <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
+            Không cần thẻ · lá số của bạn để giữ
+          </p>
+        </div>
+
         {/* 8. NewsletterSignup — existing, warm-dark-50 */}
         <div className="bg-background">
           <RevealOnScroll>
