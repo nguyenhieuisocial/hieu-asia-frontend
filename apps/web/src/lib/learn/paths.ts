@@ -62,8 +62,8 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     id: 'ngay-gio-tot-xau',
     name: 'Ngày giờ tốt xấu',
     tagline:
-      'Hiểu cuốn lịch trước đã: lịch âm dương chạy thế nào, rồi mới tới giờ đẹp và ngày kiêng.',
-    slugs: ['lich-am-duong', 'gio-hoang-dao', 'ngay-kieng-ky'],
+      'Hiểu cuốn lịch trước đã: lịch âm dương chạy thế nào, tiết khí là gì, rồi mới tới giờ đẹp và ngày kiêng.',
+    slugs: ['lich-am-duong', 'tiet-khi', 'gio-hoang-dao', 'ngay-kieng-ky'],
   },
   {
     id: 'xem-tuoi-viec-lon',

@@ -202,6 +202,12 @@ const CLUSTERS: readonly LearnCluster[] = [
         subtitle: 'Dân gian · Kiêng kỵ',
         blurb: 'Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật — gốc tích và cách nghĩ tỉnh táo.',
       },
+      {
+        href: '/learn/tiet-khi',
+        title: '24 tiết khí',
+        subtitle: 'Lịch pháp · Mặt Trời',
+        blurb: '24 mốc cách nhau 15° hoàng kinh, vì sao chúng thuộc lịch dương và đổi trụ tháng Bát Tự.',
+      },
     ],
   },
   {
