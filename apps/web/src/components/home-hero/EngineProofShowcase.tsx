@@ -21,8 +21,10 @@ export function EngineProofShowcase(): React.JSX.Element {
         <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           TÍNH THẬT, KHÔNG TRA BẢNG
         </p>
+        {/* Wave 65.01 SEO — thêm "Tử Vi" vào H2 (heading duy nhất phù hợp để
+            mang từ khoá này một cách tự nhiên: section trưng đúng lá số Tử Vi). */}
         <h2 className="mt-3 font-editorial-display text-3xl leading-tight text-foreground sm:text-4xl">
-          Lá số được <em className="italic text-primary">tính ra</em>, không chép sẵn.
+          Lá số Tử Vi được <em className="italic text-primary">tính ra</em>, không chép sẵn.
         </h2>
         <p className="mt-3 max-w-[36em] leading-relaxed text-muted-foreground">
           Từ ngày–giờ sinh, thuật toán dựng lá số Tử Vi 12 cung và Tứ Trụ Bát Tự —{' '}

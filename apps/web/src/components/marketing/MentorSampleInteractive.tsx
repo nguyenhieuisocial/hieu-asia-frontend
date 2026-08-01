@@ -69,7 +69,7 @@ const SIGN_OFF = (
       href="/onboarding"
       className="underline decoration-primary/40 underline-offset-4 hover:decoration-primary"
     >
-      → /onboarding
+      Lập lá số của tôi →
     </Link>
   </p>
 );
