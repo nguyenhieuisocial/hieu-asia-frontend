@@ -18,6 +18,7 @@ import type { NextRequest } from 'next/server';
 import { checkBotId } from 'botid/server';
 import { isKillswitchActive } from '@/lib/edge-config';
 import { resolveReadingOwnerIds } from '@/lib/reasoning/session-auth';
+import { mentorQuotaIdentityHeaders } from '@/lib/mentor-quota-identity';
 import type {
   MentorMessage,
   MentorResponse,
@@ -206,7 +207,9 @@ export async function POST(req: NextRequest) {
     'X-Service-Token': HIEU_API_SERVICE_TOKEN,
   };
   if (sessionId) headers['X-Session-Id'] = sessionId;
-  if (userId) headers['X-User-Id'] = userId;
+  // Định danh cho quota Mentor theo ngày ở worker: user đăng nhập → chủ
+  // reading → x-anon-id, kèm X-Client-Ip (xem lib/mentor-quota-identity.ts).
+  Object.assign(headers, await mentorQuotaIdentityHeaders(req, userId));
   // Wave 42.2 — forward the PostHog mentor_model_variant assignment to the
   // worker. Worker enforces an allowlist (see MENTOR_VARIANT_ALLOWLIST in
   // api-gateway/src/index.ts). Header is preferred over body so the worker

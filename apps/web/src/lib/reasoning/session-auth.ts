@@ -53,6 +53,11 @@ function sanitizeLinkedAnonId(raw: unknown): string | null {
   return ANON_ID_RE.test(raw) ? raw : null;
 }
 
+/** Shape-check công khai cho anon id khách tự gửi (`anon_<uuid v4>`). */
+export function isValidAnonId(raw: unknown): raw is string {
+  return typeof raw === 'string' && ANON_ID_RE.test(raw);
+}
+
 let _anonClient: ReturnType<typeof createClient> | null = null;
 function getAnonClient() {
   if (_anonClient) return _anonClient;
