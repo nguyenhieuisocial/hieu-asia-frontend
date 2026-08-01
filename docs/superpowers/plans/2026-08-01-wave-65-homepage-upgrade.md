@@ -204,7 +204,20 @@ Việc theo dõi sau deploy (F4/PostHog):
 - [ ] sticky_cta_clicked CTR sau khi ẩn theo ngữ cảnh
 - [ ] Search Console: theo dõi thứ hạng "lá số bát tự"/"tử vi" sau đổi H1/H2
 
-65.03 (cắt section) + 65.04 (design system) trở đi: CHƯA làm — 65.03 danh sách (a)–(f) và 2 quyết định 65.04 founder đã trao toàn quyền, sẽ thi công ở phiên tiếp theo.
+### 65.03 SHIPPED (nhánh `feat/wave-65-03-homepage-declutter`, stack trên quickwins)
+
+| Mục | Commit | Ghi chú |
+|---|---|---|
+| (a) NotOraclesStrip | `33b13393` | GỠ HẲN thay vì fold: thông điệp đã nằm nguyên văn trong MultiHero eyebrow+deck — fold là chuyển chỗ lặp, gỡ mới đúng |
+| (b) PullQuote | `33b13393` | Gỡ; giữ MissionNote làm khối triết lý duy nhất (trước FAQ) |
+| (d) ToolkitSection | `33b13393` | Gỡ; OracleBrain giữ vai độ phủ, tự có link /cong-cu:818 |
+| (c) EngineProof+SampleOutput | `6db7dbd5` | Gộp thành 1 dải bằng chứng: nền đồng bộ, đệm thu hẹp, 1 disclaimer chung |
+| (e) SocialProofQuiet | `e00259f9` | 4→2 quote + sửa heading nhị nghĩa + bớt boilerplate "minh hoạ" 5→3 chỗ |
+| (f) CTA chốt sau FAQ | `82b57230` | Inline trong page.tsx, không component mới |
+
+Kết quả: 20 khối → **~14 khối** (đạt mục tiêu ≤13-14). Component gỡ vẫn trong repo. 2 quyết định 65.04 đã chốt theo spec "Như giấy cũ" (heading Newsreader + radius 2px) — thi công 65.04 ở phiên tiếp.
+
+65.04–65.07: CHƯA làm.
 
 ## Những gì review XÁC NHẬN LÀM ĐÚNG — không được phá
 

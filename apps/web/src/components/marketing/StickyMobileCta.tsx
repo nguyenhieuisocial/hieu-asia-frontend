@@ -70,8 +70,14 @@ export function StickyMobileCta({
   // Wave 65.02 — khách submit form lá số ngay trên trang → tự ẩn (không ghi
   // sessionStorage: phiên điều hướng sau vẫn mời bình thường; chỉ tắt đúng
   // ngữ cảnh "lá số đang hiện trên màn hình").
+  // Review SF-2 — chỉ ẩn khi event mang ĐỦ NGÀY sinh (detail.day): các tool
+  // tra-theo-tuổi chỉ ghi year+gender, sync tài khoản và clearBirthProfile
+  // cũng bắn cùng event — những trường hợp đó KHÔNG được ẩn lời mời.
   React.useEffect(() => {
-    const onProfile = (): void => setDismissed(true);
+    const onProfile = (e: Event): void => {
+      const detail = (e as CustomEvent<{ day?: number }>).detail;
+      if (detail?.day) setDismissed(true);
+    };
     window.addEventListener(BIRTH_PROFILE_EVENT, onProfile);
     return () => window.removeEventListener(BIRTH_PROFILE_EVENT, onProfile);
   }, []);
