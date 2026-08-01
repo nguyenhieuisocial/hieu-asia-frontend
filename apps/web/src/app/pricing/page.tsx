@@ -155,7 +155,7 @@ const PRICING_FAQ_SCHEMA: { q: string; a: string }[] = [
 const PRICING_PRODUCT = {
   name: 'hieu.asia — Gói thành viên & Lá số AI',
   description:
-    'Lá số Tử Vi/Bát Tự đầy đủ, AI Mentor và các ống kính tự-hiểu-mình. Bắt đầu miễn phí, nâng cấp khi sẵn sàng — mọi gói trả phí đều bảo đảm hoàn tiền 14 ngày.',
+    'Lá số Tử Vi/Bát Tự đầy đủ, AI Mentor và các lăng kính tự-hiểu-mình. Bắt đầu miễn phí, nâng cấp khi sẵn sàng — mọi gói trả phí đều bảo đảm hoàn tiền 14 ngày.',
   url: '/pricing',
   offers: [
     { name: 'Premium — 1 lá số đầy đủ', priceVnd: PRICING.premium.vnd, url: '/onboarding' },
@@ -357,7 +357,7 @@ export default function PricingPage() {
               features: [
                 'Mentor AI — 30 câu hỏi mỗi ngày',
                 'Đại vận và lưu niên hàng năm',
-                'Tất cả 5 ống kính sâu',
+                'Tất cả 5 lăng kính sâu',
                 'Huỷ bất cứ lúc nào',
               ],
               ctaLabel: 'Bắt đầu với Mentor',

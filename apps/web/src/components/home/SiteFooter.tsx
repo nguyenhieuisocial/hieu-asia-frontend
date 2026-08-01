@@ -67,8 +67,11 @@ const COL_LEGAL: readonly FooterLink[] = [
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
+  // Wave 65.03 review SF-1 — class hook `site-footer` cho rule :has() trong
+  // globals.css (đệm đáy khi sticky CTA hiện). Selector cũ `footer` trần
+  // match nhầm cả <footer> nội dung giữa trang ở /bat-tu, /xem-hop-nhom.
   return (
-    <footer className="relative border-t border-primary/15 bg-background">
+    <footer className="site-footer relative border-t border-primary/15 bg-background">
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
         {/* Final wayfinding CTA — vault 130 §14 terminus */}
         <div className="mb-14 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.06] to-transparent px-6 py-10 text-center sm:px-10 sm:py-12">

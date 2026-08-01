@@ -173,7 +173,8 @@ const CSS = `
 
 .mh-act { display: flex; flex-direction: column; gap: 14px; }
 .mh-cta-row { display: flex; flex-direction: column; gap: 10px; }
-.mh-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; padding: 15px 22px; font-size: 1.02rem; text-decoration: none; }
+/* Wave 65.04 — radius 3px → 2px: đồng bộ "paper corner" chữ ký với recipe CTA chuẩn. */
+.mh-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; border-radius: 2px; padding: 15px 22px; font-size: 1.02rem; text-decoration: none; }
 .mh-cta::before { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, hsl(var(--foreground) / .4), hsl(var(--foreground) / 0) 70%); transform: translate(-50%,-50%) scale(0); transition: transform .55s cubic-bezier(.2,.7,.2,1); }
 .mh-cta-primary { background: rgba(var(--mh-cta-rgb),.10); color: ${INK}; border: 1px solid rgba(var(--mh-gold-rgb),.45); box-shadow: 0 6px 20px -6px rgba(var(--mh-gold-rgb),.45), 0 0 0 1px rgba(var(--mh-gold-rgb),.30); }
 .mh-cta-ghost { border: 1px solid rgba(var(--mh-gold-rgb),.35); color: ${INK}; }

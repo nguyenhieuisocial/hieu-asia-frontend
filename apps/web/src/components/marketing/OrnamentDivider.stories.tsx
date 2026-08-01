@@ -56,7 +56,7 @@ export const ContextualBetweenSections: Story = {
           — PHƯƠNG PHÁP
         </p>
         <h2 className="mt-6 text-balance font-sans text-section-display font-bold tracking-tight text-cream-50">
-          Bốn ống kính, một <em className="italic text-gold-soft">câu chuyện</em>.
+          Bốn lăng kính, một <em className="italic text-gold-soft">câu chuyện</em>.
         </h2>
         <p className="mt-6 max-w-prose font-sans text-lg leading-relaxed text-cream-300">
           Tử Vi cung mệnh, Bát Tự ngũ hành, Thần Số đường đời, MBTI thiên hướng.
