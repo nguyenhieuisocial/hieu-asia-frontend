@@ -279,7 +279,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/dai-van-hien-tai",
       "/tu-vi-2027",
       "/sao-han",
-      "/tu-vi-hom-nay"
+      "/tu-vi-hom-nay",
+      "/learn/giao-van"
     ]
   },
   {
@@ -485,7 +486,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/sao-han",
       "/tu-vi-hom-nay",
       "/tu-vi-2026",
-      "/lich-van-nien"
+      "/lich-van-nien",
+      "/learn/luu-nien"
     ]
   },
   {
@@ -1820,6 +1822,17 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/thai-tue",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu Thái Tuế & năm tuổi"
+  },
+  // Đợt 7 — khép cụm vận theo thời gian.
+  {
+    "href": "/learn/giao-van",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu giao vận"
+  },
+  {
+    "href": "/learn/luu-nien",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu lưu niên"
   }
 ];
 

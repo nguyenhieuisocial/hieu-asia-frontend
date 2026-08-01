@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 44 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 46 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -281,10 +281,22 @@ const CLUSTERS: readonly LearnCluster[] = [
         blurb: 'Tử Vi và Bát Tự tính đại vận khác nhau, cho hai bộ mốc khác nhau — đừng trộn.',
       },
       {
+        href: '/learn/giao-van',
+        title: 'Giao vận — mốc chuyển',
+        subtitle: 'Vận trình · Giáp ranh',
+        blurb: 'Vì sao vùng giáp ranh khó đọc, và bẫy hồi cứu "đúng lúc giao vận có biến".',
+      },
+      {
         href: '/learn/thai-tue',
         title: 'Thái Tuế & năm tuổi',
         subtitle: 'Vận trình · Theo năm',
         blurb: 'Trùng, xung, hình, hại Thái Tuế — và cái nào công cụ thật sự tính, cái nào không.',
+      },
+      {
+        href: '/learn/luu-nien',
+        title: 'Lưu niên — chồng lớp',
+        subtitle: 'Vận trình · 1 năm',
+        blurb: 'Lá số gốc, đại vận, lưu niên xếp chồng ra sao — lớp hẹp không xoá lớp rộng.',
       },
     ],
   },

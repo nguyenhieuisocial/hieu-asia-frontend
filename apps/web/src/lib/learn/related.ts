@@ -68,6 +68,9 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   // Đợt 6 — vận theo thời gian.
   { slug: 'dai-van', eyebrow: '10 NĂM', name: 'Đại vận', href: '/learn/dai-van' },
   { slug: 'thai-tue', eyebrow: 'NĂM TUỔI', name: 'Thái Tuế', href: '/learn/thai-tue' },
+  // Đợt 7 — khép cụm vận theo thời gian.
+  { slug: 'giao-van', eyebrow: 'CHUYỂN VẬN', name: 'Giao vận', href: '/learn/giao-van' },
+  { slug: 'luu-nien', eyebrow: 'CHỒNG LỚP', name: 'Lưu niên', href: '/learn/luu-nien' },
 ];
 
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
@@ -126,7 +129,9 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'lap-la-so': ['menh-cuc', 'tu-vi', 'lap-bat-tu', 'can-chi'],
   'lap-bat-tu': ['tiet-khi', 'bat-tu', 'can-chi', 'lap-la-so'],
   'tiet-khi': ['lich-am-duong', 'lap-bat-tu', 'thien-van', 'trach-cat'],
-  'dai-van': ['menh-cuc', 'lap-bat-tu', 'thai-tue', 'tu-vi'],
+  'dai-van': ['giao-van', 'luu-nien', 'menh-cuc', 'thai-tue'],
+  'giao-van': ['dai-van', 'luu-nien', 'tiet-khi', 'menh-cuc'],
+  'luu-nien': ['dai-van', 'thai-tue', 'giao-van', 'sao-han'],
   // thai-tue ↔ khai-truong trỏ nhau: khai-truong dùng Thái Tuế ở lát cắt mở hàng,
   // thai-tue giữ khái niệm tổng quát. Không trỏ nhau thì đọc như hai bài rời rạc.
   'thai-tue': ['khai-truong', 'tam-hop-luc-xung', 'dai-van', 'can-chi'],

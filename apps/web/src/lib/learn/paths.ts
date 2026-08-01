@@ -109,7 +109,7 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     name: 'Vận theo thời gian',
     tagline:
       'Các lớp thời gian chồng lên lá số: chặng 10 năm và lớp từng năm — đọc để thấy nhịp, không phải để chờ vận.',
-    slugs: ['dai-van', 'thai-tue'],
+    slugs: ['dai-van', 'giao-van', 'thai-tue', 'luu-nien'],
   },
 ];
 

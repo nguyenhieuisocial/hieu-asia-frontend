@@ -98,6 +98,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   publishAll('2026-08-01T00:00:00Z', ['menh-cuc', 'lap-la-so', 'tiet-khi', 'lap-bat-tu']);
   // đợt 6 — vận theo thời gian
   publishAll('2026-08-01T00:00:00Z', ['dai-van', 'thai-tue']);
+  // đợt 7 — khép cụm vận theo thời gian
+  publishAll('2026-08-01T00:00:00Z', ['giao-van', 'luu-nien']);
 
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
     url: `${BASE_URL}/tu-vi/${p.slug}`,
