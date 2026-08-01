@@ -31,7 +31,7 @@ export const Default: Story = {
     ),
     body: [
       'Tử Vi không tiên tri. MBTI không nhãn dán. Bát Tự không định mệnh.',
-      'Đây chỉ là bốn ngôn ngữ — bốn ống kính — giúp bạn nhìn rõ hơn về chính mình. Quyết định cuối cùng luôn là của bạn.',
+      'Đây chỉ là bốn ngôn ngữ — bốn lăng kính — giúp bạn nhìn rõ hơn về chính mình. Quyết định cuối cùng luôn là của bạn.',
     ],
     citation: 'hieu.asia — 2026',
   },
@@ -46,7 +46,7 @@ export const ShortStance: Story = {
         <em className="italic text-gold-soft">đủ</em> để thay bạn sống.
       </>
     ),
-    body: 'Chúng tôi chỉ đứng cạnh bạn — như một ống kính đa hướng — để soi rõ cái bạn vốn đã có sẵn bên trong.',
+    body: 'Chúng tôi chỉ đứng cạnh bạn — như một lăng kính đa hướng — để soi rõ cái bạn vốn đã có sẵn bên trong.',
   },
 };
 
