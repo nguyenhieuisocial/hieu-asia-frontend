@@ -30,16 +30,13 @@ import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 import { MultiHero } from '@/components/home-hero/MultiHero';
 import { OracleBrain } from '@/components/home-hero/OracleBrain';
 import { InstantChartHero } from '@/components/home-hero/InstantChartHero';
-import { NotOraclesStrip } from '@/components/home-hero/NotOraclesStrip';
 import { Methodology } from '@/components/home-hero/Methodology';
-import { ToolkitSection } from '@/components/home-hero/ToolkitSection';
 import { MissionNote } from '@/components/home-hero/MissionNote';
 import { EngineProofShowcase } from '@/components/home-hero/EngineProofShowcase';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { MentorSampleLazy } from '@/components/marketing/MentorSampleLazy';
 import { ScanRow } from '@/components/marketing/ScanRow';
-import { PullQuote } from '@/components/marketing/PullQuote';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { ScrollProgress } from '@/components/fx/ScrollProgress';
@@ -371,8 +368,12 @@ export default function LandingPage() {
           <OracleBrain />
         </Suspense>
 
-        {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
-        <RevealOnScroll><NotOraclesStrip /></RevealOnScroll>
+        {/* Wave 65.03(a) — NotOraclesStrip ĐÃ GỠ: thông điệp "không bói toán ·
+            bạn tự quyết" đã nằm NGUYÊN VĂN trong MultiHero (eyebrow "LÁ SỐ THẬT
+            · KHÔNG PHÁN MỆNH" + deck "Không hù dọa, không bán giải hạn") ngay
+            phía trên — strip là lặp lại thuần tuý, tốn 1 màn cuộn. Component
+            còn trong repo nếu surface khác cần. Data: đa số khách chỉ xem
+            25–50% trang → mỗi section phải tự trả tiền thuê chỗ. */}
 
         {/* Thiên văn hôm nay — dải lịch can-chi & giờ hoàng đạo chạy động (dữ
             liệu THẬT, tính client-side; cho cảm giác "sống" + lý do quay lại
@@ -477,10 +478,12 @@ export default function LandingPage() {
         <Suspense fallback={null}>
           <RevealOnScroll><Methodology /></RevealOnScroll>
         </Suspense>
-        {/* Breadth — chống undersell (founder feedback): KHÔNG chỉ 4 lăng kính, có cả bộ 12 công cụ. */}
-        <Suspense fallback={null}>
-          <RevealOnScroll><ToolkitSection /></RevealOnScroll>
-        </Suspense>
+        {/* Wave 65.03(d) — ToolkitSection ĐÃ GỠ: trùng 100% nguồn dữ liệu
+            (TOOLKIT_GROUPS) với OracleBrain ở trên — cùng kể "độ phủ công cụ"
+            hai lần, thêm ~30 chip = bức tường link thoát giữa funnel (finding
+            P1 nhiều vòng + P2 ">50 link thoát trước khi thấy giá"). OracleBrain
+            giữ vai section độ phủ (tương tác, đã sửa rageclick 65.02) và tự có
+            link "Xem tất cả công cụ →" /cong-cu. Component còn trong repo. */}
 
         {/* Wave 64 (declutter) — 3 khối bỏ ở đây:
             • WhyTrust + HowToStart: niềm tin đã do TrustBand phủ SỚM (gồm Bằng
@@ -511,10 +514,11 @@ export default function LandingPage() {
             (vault 109 §3 Phase 5 ENRICHED). Motion `whileInView` fade-in via
             LazyMotion provider (Phase 2 root setup). One of 3 preserved
             Instrument Serif decorative roles. */}
-        <PullQuote attribution="— Triết lý hieu.asia" bg="warm-dark-100">
-          Trí tuệ phương Đông không phải lời tiên tri.{' '}
-          Đó là <em className="text-primary/80">khoảng lặng</em> để bạn nghe rõ chính mình.
-        </PullQuote>
+        {/* Wave 65.03(b) — PullQuote "Triết lý" ĐÃ GỠ: triết lý "không tiên
+            tri, bạn tự quyết" đã có ở MultiHero (đầu trang) và MissionNote
+            (quote đầy đủ của đội ngũ, ngay trước FAQ). Ba khối cùng một thông
+            điệp trên một trang là hai khối thừa; giữ MissionNote vì giàu ngữ
+            cảnh nhất và đứng đúng vị trí trust trước FAQ. */}
 
         {/* Wave 64 — EngineProofShowcase: lá số Tử Vi + bảng Bát Tự MẪU (data
             tĩnh, có nhãn demo) ngay trước báo cáo mẫu — cho thấy "lá số được
