@@ -113,7 +113,7 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'tam-hop-luc-xung': ['con-giap', 'hop-tuoi', 'can-chi', 'sao-han'],
   'xuat-hanh': ['gio-hoang-dao', 'trach-cat', 'lich-am-duong', 'bat-trach'],
   'cuoi-hoi': ['kim-lau', 'tam-tai', 'hop-tuoi', 'trach-cat'],
-  'khai-truong': ['tam-tai', 'trach-cat', 'tam-hop-luc-xung', 'gio-hoang-dao'],
+  'khai-truong': ['tam-tai', 'trach-cat', 'tam-hop-luc-xung', 'xong-dat'],
   // xong-dat ↔ khai-truong phải trỏ nhau: hai bài đối xử KHÁC NHAU với cùng một
   // cấu hình "trùng chi năm / Thái Tuế", nên phải đọc được sang nhau để người
   // đọc thấy đó là khác biệt có chủ ý giữa hai tục, không phải site tự mâu thuẫn.
