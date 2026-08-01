@@ -601,10 +601,10 @@ export default function MethodologyTuViPage() {
               </p>
               <p>
                 Sau khi xác định Tử Vi, <strong>13 chính tinh còn lại</strong> an theo bảng
-                cố định quanh Tử Vi: Thiên Cơ ngay trước Tử Vi, Thái Dương cách 2 cung,
-                Vũ Khúc cách 3 cung, Thiên Đồng cách 4 cung, Liêm Trinh cách 5 cung; Thiên
-                Phủ đối xứng với Tử Vi qua trục Dần-Thân, kéo theo Thái Âm, Tham Lang, Cự
-                Môn, Thiên Tướng, Thiên Lương, Thất Sát, Phá Quân.
+                cố định quanh Tử Vi. Đếm <strong>nghịch chiều</strong> từ cung Tử Vi: Thiên Cơ
+                cách 1 cung, Thái Dương cách 3, Vũ Khúc cách 4, Thiên Đồng cách 5, Liêm Trinh
+                cách 8; Thiên Phủ đối xứng với Tử Vi qua trục Dần-Thân, kéo theo Thái Âm,
+                Tham Lang, Cự Môn, Thiên Tướng, Thiên Lương, Thất Sát, Phá Quân.
               </p>
               <p className="rounded-lg border border-gold/20 bg-gold/5 p-3 text-foreground/85">
                 <strong className="text-gold-700">Caveat.</strong> Khi bạn nhập ngày ÂM, hệ

@@ -521,7 +521,7 @@ export default function LearnTietKhiPage() {
               <p className="text-sm text-foreground/70">
                 Hai bài kề đã nhận phần việc của mình nên ở đây không giảng lại: cơ chế{' '}
                 <A href="/learn/lich-am-duong">tháng nhuận và chu kỳ Meton</A>, và ý nghĩa thiên văn
-                của bốn điểm phân – chí.
+                của <A href="/learn/thien-van">bốn điểm phân – chí</A>.
               </p>
             </div>
           ),
@@ -645,7 +645,8 @@ export default function LearnTietKhiPage() {
               <p className="text-sm text-foreground/70">
                 Bốn điểm phân – chí quen thuộc (Xuân Phân, Hạ Chí, Thu Phân, Đông Chí) đều nằm ở cột
                 phải — tức cả bốn đều là <strong>Trung khí</strong>, không phải Tiết, nên không mốc
-                nào trong bốn mốc ấy đổi trụ tháng.
+                nào trong bốn mốc ấy đổi trụ tháng. Ý nghĩa thiên văn của chúng nằm ở bài{' '}
+                <A href="/learn/thien-van">Lịch thiên văn</A>.
               </p>
             </div>
           ),
@@ -832,7 +833,8 @@ export default function LearnTietKhiPage() {
               <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
                 Tiết khí là khung thời gian, không phải lời khuyên. Muốn biết một tháng cụ thể có
                 nghĩa gì với tuổi của bạn theo can chi, dùng <A href="/tu-vi-thang">Tử vi tháng</A>;
-                muốn xem trọn bốn trụ của riêng mình thì lập <A href="/la-so-bat-tu">lá số Bát Tự</A>.
+                muốn xem trọn bốn trụ của riêng mình thì lập <A href="/la-so-bat-tu">lá số Bát Tự</A>
+                . Nền tảng can chi nằm ở bài <A href="/learn/can-chi">Thiên can – Địa chi</A>.
               </p>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 Muốn biết tháng này mang trụ can chi gì và ngày nào hợp tuổi bạn?{' '}

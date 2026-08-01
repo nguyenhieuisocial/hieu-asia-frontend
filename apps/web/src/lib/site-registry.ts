@@ -99,7 +99,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi",
       "/tinh-menh-cuc",
       "/bang-chung",
-      "/reading"
+      "/reading",
+      "/learn/lap-la-so"
     ]
   },
   {
@@ -118,7 +119,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/la-so-tu-vi",
       "/bat-tu",
       "/ban-menh",
-      "/tinh-menh-cuc"
+      "/tinh-menh-cuc",
+      "/learn/lap-bat-tu"
     ]
   },
   {
@@ -143,7 +145,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi",
       "/bat-tu",
       "/than-so-hoc",
-      "/bang-chung"
+      "/bang-chung",
+      "/learn/menh-cuc"
     ]
   },
   {
@@ -157,7 +160,13 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "surfaces": [
       "catalog"
     ],
-    "relatedLabel": "Ngũ hành bản mệnh"
+    "relatedLabel": "Ngũ hành bản mệnh",
+    "related": [
+      "/luc-thap-hoa-giap",
+      "/mau-xe-hop-menh",
+      "/dat-ten-ngu-hanh",
+      "/learn/nap-am"
+    ]
   },
   {
     "href": "/tra-cuu-tuoi",
@@ -183,7 +192,13 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "surfaces": [
       "catalog"
     ],
-    "relatedLabel": "Lục Thập Hoa Giáp (60 Can Chi)"
+    "relatedLabel": "Lục Thập Hoa Giáp (60 Can Chi)",
+    "related": [
+      "/ban-menh",
+      "/tra-cuu-tuoi",
+      "/la-so-bat-tu",
+      "/learn/can-chi"
+    ]
   },
   {
     "href": "/tuong-hop-12-con-giap",
@@ -196,7 +211,13 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "surfaces": [
       "catalog"
     ],
-    "relatedLabel": "Bản đồ tương hợp 12 con giáp"
+    "relatedLabel": "Bản đồ tương hợp 12 con giáp",
+    "related": [
+      "/hop-tuoi",
+      "/xem-hop-nhom",
+      "/compatibility",
+      "/learn/tam-hop-luc-xung"
+    ]
   },
   {
     "href": "/bang-chung",
@@ -238,7 +259,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/timeline",
       "/tu-vi-hom-nay",
       "/sao-han",
-      "/tu-vi-2027"
+      "/tu-vi-2027",
+      "/learn/dai-van"
     ]
   },
   {
@@ -436,7 +458,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi-thang",
       "/sao-han",
       "/tu-vi-hom-nay",
-      "/bang-chung"
+      "/bang-chung",
+      "/learn/thai-tue"
     ]
   },
   {
@@ -488,7 +511,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi-2026",
       "/xem-ngay",
       "/lich-van-nien",
-      "/hop-tuoi"
+      "/hop-tuoi",
+      "/learn/tiet-khi"
     ]
   },
   {
@@ -918,7 +942,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/gio-hoang-dao",
       "/xem-ngay",
       "/ngay-kieng-ky",
-      "/lich-van-nien"
+      "/lich-van-nien",
+      "/learn/xuat-hanh"
     ]
   },
   {
@@ -962,7 +987,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     },
     "home": {
       "n": "Lịch thiên văn",
-      "learn": "/learn/trach-cat",
+      "learn": "/learn/thien-van",
       "group": "Cổ học Á Đông"
     },
     "catalog": {
@@ -980,7 +1005,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/lich-van-nien",
       "/gio-hoang-dao",
       "/xem-ngay",
-      "/ban-do-sao"
+      "/ban-do-sao",
+      "/learn/thien-van"
     ]
   },
   {
@@ -1006,7 +1032,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tam-tai",
       "/hop-tuoi",
       "/xem-ngay",
-      "/xem-tuoi-lam-nha"
+      "/xem-tuoi-lam-nha",
+      "/learn/cuoi-hoi"
     ]
   },
   {
@@ -1059,7 +1086,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/xem-ngay",
       "/xem-tuoi-cuoi",
       "/hop-tuoi",
-      "/sao-han"
+      "/sao-han",
+      "/learn/khai-truong"
     ]
   },
   {
@@ -1118,7 +1146,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/hop-tuoi",
       "/xem-tuoi-cuoi",
       "/tu-vi-2027",
-      "/xem-ngay"
+      "/xem-ngay",
+      "/learn/xong-dat"
     ]
   },
   {
@@ -1189,7 +1218,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     },
     "home": {
       "n": "Thước Lỗ Ban",
-      "learn": "/learn/phong-thuy",
+      "learn": "/learn/thuoc-lo-ban",
       "group": "Cổ học Á Đông"
     },
     "catalog": {
@@ -1207,7 +1236,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "related": [
       "/lich-van-nien",
       "/gio-hoang-dao",
-      "/xem-ngay"
+      "/xem-ngay",
+      "/learn/thuoc-lo-ban"
     ]
   },
   {
@@ -1227,7 +1257,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/thuoc-lo-ban",
       "/ban-menh",
       "/xem-tuoi-lam-nha",
-      "/learn/phong-thuy"
+      "/learn/huyen-khong-phi-tinh"
     ]
   },
   {
@@ -1246,7 +1276,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/ban-menh",
       "/huong-nha",
       "/huong-ban-lam-viec",
-      "/hop-tuoi"
+      "/hop-tuoi",
+      "/learn/ngu-hanh-mau-sac"
     ]
   },
   {
@@ -1266,7 +1297,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/ban-menh",
       "/mau-xe-hop-menh",
       "/thuoc-lo-ban",
-      "/learn/phong-thuy"
+      "/learn/du-nien"
     ]
   },
   {
@@ -1694,6 +1725,101 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/ngay-kieng-ky",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu ngày kiêng kỵ"
+  },
+  // Đợt 2 — cụm phong thuỷ chuyên sâu.
+  {
+    "href": "/learn/du-nien",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu 8 du niên"
+  },
+  {
+    "href": "/learn/huyen-khong-phi-tinh",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Huyền Không Phi Tinh"
+  },
+  {
+    "href": "/learn/thuoc-lo-ban",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu thước Lỗ Ban"
+  },
+  {
+    "href": "/learn/ngu-hanh-mau-sac",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu ngũ hành & màu sắc"
+  },
+  // Đợt 3 — nền tảng can chi + hướng xuất hành.
+  {
+    "href": "/learn/can-chi",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Thiên can – Địa chi"
+  },
+  {
+    "href": "/learn/nap-am",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu nạp âm & mệnh ngũ hành"
+  },
+  {
+    "href": "/learn/tam-hop-luc-xung",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu tam hợp – lục xung"
+  },
+  {
+    "href": "/learn/xuat-hanh",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu hướng xuất hành"
+  },
+  // Đợt 4 — việc lớn theo tuổi + thiên văn.
+  {
+    "href": "/learn/cuoi-hoi",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu tục xem tuổi cưới"
+  },
+  {
+    "href": "/learn/khai-truong",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Thái Tuế & tuổi khai trương"
+  },
+  {
+    "href": "/learn/xong-dat",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu tục xông đất"
+  },
+  {
+    "href": "/learn/thien-van",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu nhật thực – nguyệt thực"
+  },
+  // Đợt 5 — lập lá số & tứ trụ.
+  {
+    "href": "/learn/menh-cuc",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Mệnh và Cục"
+  },
+  {
+    "href": "/learn/lap-la-so",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu cách lập lá số"
+  },
+  {
+    "href": "/learn/lap-bat-tu",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu cách lập tứ trụ"
+  },
+  {
+    "href": "/learn/tiet-khi",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu 24 tiết khí"
+  },
+  // Đợt 6 — vận theo thời gian.
+  {
+    "href": "/learn/dai-van",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu đại vận 10 năm"
+  },
+  {
+    "href": "/learn/thai-tue",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Thái Tuế & năm tuổi"
   }
 ];
 

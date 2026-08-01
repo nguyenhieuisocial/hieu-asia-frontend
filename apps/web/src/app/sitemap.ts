@@ -62,12 +62,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Cụm nào đổi thì cụm đó mang mốc của mình.
   const STAR_CONTENT_DATE = new Date('2026-07-26T00:00:00Z');
 
-  // Mốc RIÊNG cho 8 chủ đề /learn viết mới ở đợt 1 chương trình "mỗi công cụ một
-  // bài Học riêng". Cùng lý do với STAR_CONTENT_DATE ở trên: 18 chủ đề cũ KHÔNG
-  // đổi nội dung, nên không được mang mốc mới — khai "đổi hôm nay" cho trang
-  // không đổi đúng là kiểu lastmod thiếu trung thực làm Google ngừng tin tín hiệu.
-  const LEARN_WAVE1_DATE = new Date('2026-07-31T00:00:00Z');
-  const LEARN_WAVE1 = new Set([
+  // NGÀY XUẤT BẢN RIÊNG của từng chủ đề /learn viết mới trong chương trình "mỗi
+  // công cụ một bài Học riêng" (lib/learn/tool-coverage.ts). Cùng lý do với
+  // STAR_CONTENT_DATE ở trên: các chủ đề cũ KHÔNG đổi nội dung nên không được mang
+  // mốc mới — khai "đổi hôm nay" cho trang không đổi đúng là kiểu lastmod thiếu
+  // trung thực làm Google ngừng tin tín hiệu này.
+  // Viết xong bài nào thì thêm slug + ngày vào đây; slug vắng mặt dùng `now`.
+  const LEARN_PUBLISHED: Record<string, Date> = {};
+  const publishAll = (iso: string, slugs: string[]) => {
+    for (const s of slugs) LEARN_PUBLISHED[s] = new Date(iso);
+  };
+  // đợt 1 — xem tuổi việc lớn + ngày giờ + cung hoàng đạo
+  publishAll('2026-07-31T00:00:00Z', [
     'kim-lau',
     'tam-tai',
     'hoang-oc',
@@ -77,6 +83,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'gio-hoang-dao',
     'ngay-kieng-ky',
   ]);
+  // đợt 2 — phong thuỷ chuyên sâu
+  publishAll('2026-08-01T00:00:00Z', [
+    'du-nien',
+    'huyen-khong-phi-tinh',
+    'thuoc-lo-ban',
+    'ngu-hanh-mau-sac',
+  ]);
+  // đợt 3 — nền tảng can chi + hướng xuất hành
+  publishAll('2026-08-01T00:00:00Z', ['can-chi', 'nap-am', 'tam-hop-luc-xung', 'xuat-hanh']);
+  // đợt 4 — việc lớn theo tuổi + thiên văn
+  publishAll('2026-08-01T00:00:00Z', ['cuoi-hoi', 'khai-truong', 'xong-dat', 'thien-van']);
+  // đợt 5 — lập lá số & tứ trụ
+  publishAll('2026-08-01T00:00:00Z', ['menh-cuc', 'lap-la-so', 'tiet-khi', 'lap-bat-tu']);
+  // đợt 6 — vận theo thời gian
+  publishAll('2026-08-01T00:00:00Z', ['dai-van', 'thai-tue']);
 
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
     url: `${BASE_URL}/tu-vi/${p.slug}`,
@@ -116,7 +137,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // nguồn duy nhất thì không thể quên.
     ...LEARN_TOPICS.map((t) => ({
       url: `${BASE_URL}${t.href}`,
-      lastModified: LEARN_WAVE1.has(t.slug) ? LEARN_WAVE1_DATE : now,
+      lastModified: LEARN_PUBLISHED[t.slug] ?? now,
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     })),

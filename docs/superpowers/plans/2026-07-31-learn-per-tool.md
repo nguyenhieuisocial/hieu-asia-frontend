@@ -59,7 +59,86 @@ cd apps/web && pnpm types:check && pnpm test && pnpm lint && pnpm seo-guard && p
 `paths.ts` ("Ngày giờ tốt xấu", "Xem tuổi việc lớn") và sitemap chuyển từ danh
 sách gõ tay sang suy từ `LEARN_TOPICS`.
 
-## Còn lại — 35 bài, lõi riêng từng bài
+## Phong thuỷ chuyên sâu — XONG (01/08/2026)
+
+Tương ứng bảng "Đợt 4" bên dưới, đã làm sớm vì 3 công cụ (`/phi-tinh`,
+`/huong-ban-lam-viec`, `/thuoc-lo-ban`) đang dùng chung bài ô `/learn/phong-thuy`.
+4 bài: `huyen-khong-phi-tinh`, `du-nien`, `thuoc-lo-ban`, `ngu-hanh-mau-sac`.
+Kèm lộ trình mới `phong-thuy-chuyen-sau` (`bat-trach` chuyển từ `ung-dung-doi-song`
+sang làm bài mở đầu cụm) và cụm mới cùng tên trên hub. `app/sitemap.ts` đổi sang
+bảng `LEARN_PUBLISHED` (slug → ngày xuất bản) để các bài sau chỉ cần thêm một dòng.
+
+Verify: `tsc` sạch · `vitest` 881/881 · `npm run build` exit 0 · 12/12 bài mới có
+tiêu đề ≤60 và mô tả ≤160 đo trên HTML build · sitemap 30 bài Học.
+
+### Ba bài học rút ra (đừng lặp lại)
+
+1. **Commit + push sau MỖI đợt.** 01/08 một phiên Claude khác chạy song song trên
+   cùng repo đã `git checkout` sang nhánh của nó → toàn bộ file đợt 1 biến mất khỏi
+   cây làm việc. Lấy lại được vì đợt 1 đã commit lên `feat/learn-per-tool-wave1`.
+   Dấu hiệu: file "biến mất" nhưng `git reflog` vẫn còn commit.
+2. **Rà link tạm sau mỗi đợt.** Agent viết bài khi nhánh chưa có bài anh em sẽ trỏ
+   tạm sang bài khác (`thuoc-lo-ban` từng trỏ `/learn/phong-thuy` thay cho
+   `/learn/bat-trach`). Grep `TODO` + link tạm trong các bài mới trước khi commit.
+3. **Chạy vitest từ `frontend/apps/web`** — test dùng `process.cwd()`; chạy từ gốc
+   repo sẽ báo đỏ giả ở `jsonld-escape.guard.test.ts`.
+
+## Nền tảng can chi + xuất hành — XONG (01/08/2026)
+
+4 bài: `can-chi` (10 can × 12 chi, vì sao ra 60 chứ không phải 120), `nap-am`
+(mệnh ngũ hành ra từ nạp âm chứ không từ can/chi năm sinh), `tam-hop-luc-xung`
+(hình học vòng 12 chi: tam hợp = tam giác đều, lục xung = đối đỉnh), `xuat-hanh`
+(Hỷ Thần / Tài Thần theo can NGÀY, khác hướng nhà theo tuổi).
+Lộ trình mới `nen-tang-can-chi`; `xuat-hanh` vào lộ trình `ngay-gio-tot-xau`;
+hub thêm cụm "Nền tảng can chi" (34 chủ đề).
+
+Verify: tsc sạch · vitest 902/902 · build exit 0 · 4/4 bài đạt tiêu đề ≤60 và mô
+tả ≤160 trên HTML build · sitemap 34 bài Học · hub hiển thị đủ 4 thẻ.
+
+## Việc lớn theo tuổi + thiên văn — XONG (01/08/2026)
+
+4 bài: `cuoi-hoi` (nhiều hạn gộp thành một kết luận + xác suất năm "sạch" tính từ
+engine), `khai-truong` (Thái Tuế, xung Thái Tuế, năm tuổi), `xong-dat` (tục chọn
+người xông đất: tiêu chí lá số vs tiêu chí con người), `thien-van` (nhật/nguyệt
+thực, phân–chí, và cây cầu La Hầu – Kế Đô = giao điểm quỹ đạo).
+`/thien-van` cuối cùng đã rời khỏi `/learn/trach-cat` — đây là ánh xạ sai rõ nhất
+của tình trạng cũ (bấm Học từ lịch thiên văn lại ra bài chọn ngày cưới).
+
+Verify: tsc sạch · vitest 902/902 · build exit 0 · 4/4 bài đạt tiêu đề ≤60 và mô
+tả ≤160 trên HTML build · sitemap 38 bài Học · hub đủ 4 thẻ.
+
+### Hai việc còn treo, phải làm khi tới lượt (đừng quên)
+
+1. **Khi viết `/learn/thai-tue`** (thuộc `/tu-vi-2026`): `/learn/khai-truong` hiện đang trả lời
+   "Thái Tuế là gì" trong FAQPage của nó — có rào phạm vi ("trong cách tính của hieu.asia…")
+   nhưng vẫn phải rút gọn và trỏ sang bài Thái Tuế khi bài đó ra đời, kẻo hai trang cùng
+   trả lời một câu. Eyebrow của `khai-truong` đã đổi sang `MỞ HÀNG` để nhường chỗ.
+2. **`khai-truong/_active-learning.tsx`** còn gõ tay "3 năm Tam Tai / 1 năm xung trong mỗi 12"
+   và "Kim Lâu 4 năm trong mỗi 9" — đúng và mang tính định nghĩa của tục lệ, nhưng `page.tsx`
+   cùng bài đã suy `MIN_HOP`/`MAX_HOP`/`OVERLAP_CHIS` từ engine. Nên suy nốt cho nhất quán.
+
+## Lập lá số & tứ trụ — XONG (01/08/2026)
+
+4 bài: `menh-cuc` (Cục là gì, con số 2–6, vì sao thiếu Cục thì không an được sao),
+`lap-la-so` (quy trình an cung – an Mệnh/Thân – an chính tinh – độ sáng),
+`tiet-khi` (24 tiết khí thuộc lịch DƯƠNG, và đó là lúc trụ tháng đổi),
+`lap-bat-tu` (trụ năm đổi ở Lập Xuân chứ không ở Tết; Ngũ Thử Độn cho trụ giờ).
+Lộ trình mới `lap-la-so-tu-tru`; hub thêm cụm cùng tên (42 chủ đề).
+
+Verify: tsc sạch · vitest 902/902 · build exit 0 · 4/4 bài đạt tiêu đề ≤60 và mô
+tả ≤160 trên HTML build · sitemap 42 bài Học · hub đủ 4 thẻ.
+
+**Hai guard bắt lỗi trong đợt này (giữ lại làm kinh nghiệm):**
+- `cta-consistency.guard` — nhãn link "lập lá số" bị dùng cho HAI đích (bài Học mới
+  và `/onboarding`). Đặt tên link trong bài mới phải tránh trùng nhãn hành động đã
+  có. Đã đổi thành "quy trình lập lá số".
+- `tool-coverage` bắt đúng một slug bị quên xoá khỏi `PENDING`.
+
+**Việc phát sinh cần kiểm riêng:** repo ghi MÂU THUẪN số lượng sao Tử Vi — chỗ 114,
+chỗ 121 (mô tả catalog `/la-so-tu-vi` ghi "121 sao"). Agent viết `lap-la-so` đã cố ý
+KHÔNG nêu con số nào vì không biết bên nào đúng. Cần rà và thống nhất một con số.
+
+## Còn lại — 19 bài, lõi riêng từng bài
 
 Cột "lõi riêng" là ranh giới chống lấn: viết đúng phần đó, phần còn lại chỉ link.
 
@@ -80,14 +159,10 @@ Cột "lõi riêng" là ranh giới chống lấn: viết đúng phần đó, ph
 | `/xuat-hanh` | `/learn/xuat-hanh` | Hỷ Thần / Tài Thần: hướng xuất hành suy từ Can ngày, khác hẳn hướng nhà theo cung phi. |
 | `/thien-van` | `/learn/thien-van` | Thiên văn quan sát được: nhật/nguyệt thực, phân–chí — hiện tượng thật, tách bạch với tầng diễn giải phong tục. |
 
-### Đợt 4 — phong thuỷ chuyên sâu (4 bài)
+### Đợt 4 — phong thuỷ chuyên sâu — ĐÃ XONG 01/08/2026
 
-| Công cụ | Bài | Lõi riêng |
-|---|---|---|
-| `/huong-ban-lam-viec` | `/learn/du-nien` | 8 du niên (Sinh Khí, Thiên Y, Diên Niên…) và cách áp cho chỗ ngồi. Cung phi: link `/learn/bat-trach`. |
-| `/phi-tinh` | `/learn/huyen-khong-phi-tinh` | Huyền Không phi tinh: nguyên vận, sơn tinh/hướng tinh, Vượng sơn Vượng hướng — lý khí, khác Bát Trạch. |
-| `/thuoc-lo-ban` | `/learn/thuoc-lo-ban` | Thước Lỗ Ban: các dải cát/hung, vì sao có nhiều loại thước và đo cái gì. |
-| `/mau-xe-hop-menh` | `/learn/ngu-hanh-mau-sac` | Ngũ hành ↔ màu sắc: sinh/khắc áp vào chọn màu, và giới hạn của cách suy này. |
+4 bài này đã viết và verify, xem mục "Phong thuỷ chuyên sâu — XONG" ở trên.
+Bảng chi tiết đã gỡ khỏi đây để agent sau không viết lại lần nữa.
 
 ### Đợt 5 — nền tảng can chi & lập lá số (6 bài)
 

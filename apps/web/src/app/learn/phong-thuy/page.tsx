@@ -108,7 +108,7 @@ export default function LearnPhongThuyPage() {
           quy tắc minh bạch ấy như gợi ý tham khảo, không phải lời phán số mệnh.
         </>
       }
-      readMeta="15 phút đọc · Cập nhật 2026"
+      readMeta="12 phút đọc · Cập nhật 2026"
       breadcrumb={[
         { label: 'Trang chủ', href: '/' },
         { label: 'Học huyền học', href: '/learn' },
@@ -409,214 +409,65 @@ export default function LearnPhongThuyPage() {
         },
         {
           id: 'tinh-cung-phi',
-          tocLabel: 'Tính Cung Phi',
-          heading: 'Tính Cung Phi của bạn',
+          tocLabel: 'Cung Phi',
+          heading: 'Cung Phi — cửa vào của Bát Trạch',
           children: (
             <div className="space-y-4 text-foreground/85 leading-relaxed">
               <p>
-                Cung Phi tính bằng hai bước. Bước một: cộng dồn các chữ số của năm sinh dương
-                lịch, nếu ra số hai chữ số thì cộng tiếp cho tới khi còn một số từ 1 đến 9. Bước
-                hai: tra bảng dưới đây theo giới tính.
+                Bát Trạch không xem nhà trước, mà xem <strong>người</strong> trước: từ năm sinh và
+                giới tính, nó suy ra <strong>Cung Phi</strong> — quẻ bản mệnh xếp bạn vào Đông tứ
+                hay Tây tứ mệnh. Có con số đó rồi mới có bảng 8 hướng cát/hung của riêng bạn; thiếu
+                nó thì mọi lời khuyên "hướng này đẹp" đều là nói chung chung.
               </p>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left text-foreground">
-                      <th className="py-2 pr-4 font-semibold">Số rút gọn</th>
-                      <th className="py-2 pr-4 font-semibold">Nam → Cung Phi</th>
-                      <th className="py-2 font-semibold">Nữ → Cung Phi</th>
-                    </tr>
-                  </thead>
-                  <tbody className="align-top">
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">1</td>
-                      <td className="py-2 pr-4">Khảm (Đông tứ)</td>
-                      <td className="py-2">Cấn (Tây tứ)</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">2</td>
-                      <td className="py-2 pr-4">Ly (Đông tứ)</td>
-                      <td className="py-2">Càn (Tây tứ)</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">3</td>
-                      <td className="py-2 pr-4">Cấn (Tây tứ)</td>
-                      <td className="py-2">Đoài (Tây tứ)</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">4</td>
-                      <td className="py-2 pr-4">Đoài (Tây tứ)</td>
-                      <td className="py-2">Cấn (Tây tứ)</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">5</td>
-                      <td className="py-2 pr-4">Càn (Tây tứ)</td>
-                      <td className="py-2">Ly (Đông tứ)</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">6</td>
-                      <td className="py-2 pr-4">Khôn (Tây tứ)</td>
-                      <td className="py-2">Khảm (Đông tứ)</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">7</td>
-                      <td className="py-2 pr-4">Tốn (Đông tứ)</td>
-                      <td className="py-2">Khôn (Tây tứ)</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">8</td>
-                      <td className="py-2 pr-4">Chấn (Đông tứ)</td>
-                      <td className="py-2">Chấn (Đông tứ)</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium text-foreground">9</td>
-                      <td className="py-2 pr-4">Khôn (Tây tứ)</td>
-                      <td className="py-2">Tốn (Đông tứ)</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="rounded border border-border bg-card/40 p-4 space-y-2">
-                <p className="font-semibold text-foreground">
-                  Ví dụ: người sinh năm 1990
-                </p>
-                <p>
-                  Cộng dồn: 1 + 9 + 9 + 0 = 19. Còn hai chữ số nên cộng tiếp: 1 + 9 = 10, rồi 1 +
-                  0 = 1. Vậy số rút gọn là <strong>1</strong>. Tra bảng: nam ra{' '}
-                  <strong>Khảm</strong> (thuộc Đông tứ mệnh), nữ ra <strong>Cấn</strong> (thuộc Tây
-                  tứ mệnh).
-                </p>
-                <p className="text-sm text-foreground/70">
-                  Cộng lại lần nữa để chắc: 1 + 9 + 9 + 0 = 19 → 1 + 9 = 10 → 1 + 0 = 1. Đúng là 1.
+              <p>
+                Phép tính, bảng tra theo giới tính và hai chỗ các trường phái tính khác nhau (mốc
+                năm âm hay năm dương với người sinh sát Tết; số 5 ở trung cung Lạc Thư) là chuyện
+                của bài chuyên sâu — trang này chỉ đặt Cung Phi vào đúng vị trí trong bức tranh
+                chung.
+              </p>
+              <div className="rounded border border-border bg-card/40 p-4">
+                <Link
+                  href="/learn/bat-trach"
+                  className="font-semibold text-foreground underline hover:text-primary"
+                >
+                  Đọc bài chuyên sâu: Bát Trạch — cung phi và hướng nhà hợp tuổi →
+                </Link>
+                <p className="mt-1 text-sm text-foreground/70">
+                  Cách tính cung phi từng bước, phân Đông tứ – Tây tứ mệnh, đọc bảng 8 hướng và áp
+                  cho cửa chính, bếp, giường.
                 </p>
               </div>
-              <p className="text-sm text-foreground/70">
-                Lưu ý 1 — năm âm hay năm dương: bảng Cung Phi cổ điển vốn tính theo{' '}
-                <strong>năm âm lịch</strong> (đổi mốc quanh Tết Nguyên Đán), nên người sinh sát Tết
-                (cuối tháng 12 hoặc đầu tháng 1 dương lịch) có thể lệch một năm. Công cụ chốt dùng
-                năm dương lịch cho nhất quán; ai sinh sát Tết nên tự đối chiếu thêm. Đây là chỗ các
-                trường phái có thể tính khác.
-              </p>
-              <p className="text-sm text-foreground/70">
-                Lưu ý 2 — số 5 không có quẻ riêng: trong Lạc Thư, số 5 ở trung cung không ứng quẻ
-                nào. Có trường phái quy nam số 5 về Khôn (hoặc Cấn), nữ về Cấn (hoặc Khôn). Bảng tra
-                trực tiếp mà công cụ dùng chốt nam số 5 ra <strong>Càn</strong>, nữ số 5 ra{' '}
-                <strong>Ly</strong> — cứ bám theo kết quả công cụ.
-              </p>
             </div>
           ),
         },
         {
           id: 'du-nien-tinh',
           tocLabel: 'Tám du niên tinh',
-          heading: 'Tám du niên tinh: 4 cát, 4 hung và cách bố trí',
+          heading: 'Tám du niên tinh — lớp biến hướng thành lời khuyên',
           children: (
-            <div className="space-y-5 text-foreground/85 leading-relaxed">
+            <div className="space-y-4 text-foreground/85 leading-relaxed">
               <p>
-                Mỗi hướng, so với mệnh quái của bạn, mang một sao gọi là{' '}
-                <strong>du niên tinh</strong>. Có tám sao: bốn cát và bốn hung. Bảng dưới nêu tên,
-                chữ Hán, hành, ý nghĩa và gợi ý nên đặt gì về hướng mang sao đó.
+                Bảng 8 hướng chỉ có ích khi bạn biết mỗi sao nên dùng vào việc gì: ngồi làm việc
+                quay về đâu, kê giường về đâu, còn vùng nào thì để dành cho kho hay nhà vệ sinh.
+                Tám du niên tinh chính là lớp dịch đó — từ một quẻ mệnh trừu tượng ra quyết định
+                kê đồ rất cụ thể.
               </p>
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-foreground">Bốn sao cát (tốt giảm dần)</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left text-foreground">
-                        <th className="py-2 pr-4 font-semibold">Sao</th>
-                        <th className="py-2 pr-4 font-semibold">Hán</th>
-                        <th className="py-2 pr-4 font-semibold">Hành</th>
-                        <th className="py-2 pr-4 font-semibold">Chủ về</th>
-                        <th className="py-2 font-semibold">Nên đặt về hướng này</th>
-                      </tr>
-                    </thead>
-                    <tbody className="align-top">
-                      <tr className="border-b border-border/60">
-                        <td className="py-2 pr-4 font-medium text-foreground">Sinh Khí</td>
-                        <td className="py-2 pr-4">生氣</td>
-                        <td className="py-2 pr-4">Mộc</td>
-                        <td className="py-2 pr-4">Cát tinh số 1: công danh, tài lộc, sức sống, thăng tiến</td>
-                        <td className="py-2">Cửa chính, bàn làm việc; miệng bếp quay về</td>
-                      </tr>
-                      <tr className="border-b border-border/60">
-                        <td className="py-2 pr-4 font-medium text-foreground">Thiên Y</td>
-                        <td className="py-2 pr-4">天醫</td>
-                        <td className="py-2 pr-4">Thổ</td>
-                        <td className="py-2 pr-4">Sức khỏe và quý nhân: bình an, hồi phục, được nâng đỡ</td>
-                        <td className="py-2">Hướng giường ngủ, bàn ăn, bếp</td>
-                      </tr>
-                      <tr className="border-b border-border/60">
-                        <td className="py-2 pr-4 font-medium text-foreground">Diên Niên</td>
-                        <td className="py-2 pr-4">延年</td>
-                        <td className="py-2 pr-4">Kim</td>
-                        <td className="py-2 pr-4">Hòa hợp: hôn nhân, tình cảm, quan hệ bền lâu</td>
-                        <td className="py-2">Phòng ngủ vợ chồng, phòng khách, bàn tiếp khách</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-medium text-foreground">Phục Vị</td>
-                        <td className="py-2 pr-4">伏位</td>
-                        <td className="py-2 pr-4">Mộc</td>
-                        <td className="py-2 pr-4">Ổn định: yên định, củng cố, tĩnh tâm (hướng tọa của quẻ mệnh)</td>
-                        <td className="py-2">Bàn thờ, phòng học, nơi cần an tĩnh</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-foreground">Bốn sao hung (nặng giảm dần)</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left text-foreground">
-                        <th className="py-2 pr-4 font-semibold">Sao</th>
-                        <th className="py-2 pr-4 font-semibold">Hán</th>
-                        <th className="py-2 pr-4 font-semibold">Hành</th>
-                        <th className="py-2 pr-4 font-semibold">Chủ về</th>
-                        <th className="py-2 font-semibold">Lời khuyên</th>
-                      </tr>
-                    </thead>
-                    <tbody className="align-top">
-                      <tr className="border-b border-border/60">
-                        <td className="py-2 pr-4 font-medium text-foreground">Tuyệt Mệnh</td>
-                        <td className="py-2 pr-4">絕命</td>
-                        <td className="py-2 pr-4">Kim</td>
-                        <td className="py-2 pr-4">Hung nặng nhất: hao tổn sức khỏe, tinh thần</td>
-                        <td className="py-2">Tránh đặt cửa chính, giường, bếp về hướng này</td>
-                      </tr>
-                      <tr className="border-b border-border/60">
-                        <td className="py-2 pr-4 font-medium text-foreground">Ngũ Quỷ</td>
-                        <td className="py-2 pr-4">五鬼</td>
-                        <td className="py-2 pr-4">Hỏa</td>
-                        <td className="py-2 pr-4">Thị phi, hao tài, xáo trộn</td>
-                        <td className="py-2">Tránh cửa/bếp/giường; có thể dùng cho kho, nhà vệ sinh</td>
-                      </tr>
-                      <tr className="border-b border-border/60">
-                        <td className="py-2 pr-4 font-medium text-foreground">Lục Sát</td>
-                        <td className="py-2 pr-4">六煞</td>
-                        <td className="py-2 pr-4">Thủy</td>
-                        <td className="py-2 pr-4">Trục trặc, vướng mắc, tiểu nhân, mâu thuẫn</td>
-                        <td className="py-2">Tránh hướng cửa, giường, bếp</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-medium text-foreground">Họa Hại</td>
-                        <td className="py-2 pr-4">禍害</td>
-                        <td className="py-2 pr-4">Thổ</td>
-                        <td className="py-2 pr-4">Hao hụt nhẹ, lục đục, miệng tiếng</td>
-                        <td className="py-2">Nên tránh nếu còn lựa chọn tốt hơn</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
               <p>
-                Vì sao bếp lại đặt ở hướng hung? Trong Bát Trạch, tốt hay xấu gắn với{' '}
-                <strong>việc gì đặt ở đâu</strong>, không phải nhãn số phận. Quy tắc bếp truyền
-                thống là <strong>"tọa hung – hướng cát"</strong>: đặt bếp ở vùng mang sao hung (ý
-                niệm là ngọn lửa "đè" được vùng khí xấu), nhưng miệng bếp quay về hướng có sao cát
-                (để nguồn khí đi vào lấy từ chỗ tốt). Đây là điểm dễ nói nhầm — và luôn nhớ đó là
-                gợi ý bố trí để tham khảo, không phải bảo đảm kết quả.
+                Phần khái niệm ở trên đã nêu tên và ý nghĩa gọn của bốn sao cát cùng bốn sao hung.
+                Thứ tự nặng – nhẹ giữa các sao, đặc tính riêng của từng sao và cách chọn hướng theo
+                mục tiêu là nội dung của một bài riêng.
               </p>
+              <div className="rounded border border-border bg-card/40 p-4">
+                <Link
+                  href="/learn/du-nien"
+                  className="font-semibold text-foreground underline hover:text-primary"
+                >
+                  Đọc bài chuyên sâu: Du niên — 8 sao Bát Trạch và hướng ngồi làm việc →
+                </Link>
+                <p className="mt-1 text-sm text-foreground/70">
+                  Bốn cát tinh, bốn hung tinh và cách chọn hướng ngồi theo mục tiêu của bạn.
+                </p>
+              </div>
             </div>
           ),
         },
@@ -627,199 +478,93 @@ export default function LearnPhongThuyPage() {
           children: (
             <div className="space-y-4 text-foreground/85 leading-relaxed">
               <p>
-                Bát Trạch trả lời "hướng nào hợp với người này". Huyền Không Phi Tinh thêm một câu
-                hỏi khác: "ngôi nhà này, trong thời kỳ này, khí vận ra sao". Nó là một trường phái
-                Lý Khí khác, thêm vào <strong>lớp thời gian</strong> mà Bát Trạch không xét.
+                Bát Trạch trả lời "hướng nào hợp với người này" và không đổi theo thời gian. Huyền
+                Không Phi Tinh hỏi câu khác: "ngôi nhà này, trong thời kỳ này, khí vận ra sao" — nó
+                thêm <strong>lớp thời gian</strong> bằng cách chia thành các <strong>Vận</strong> 20
+                năm (hiện là Cửu Vận, 2024–2043), rồi lập bàn 9 cung theo tọa – hướng của chính ngôi
+                nhà thay vì theo năm sinh chủ nhà.
               </p>
               <p>
-                <strong>Cửu tinh</strong> là chín sao đánh số theo Lạc Thư, từ 1 đến 9, mỗi số mang
-                một tính chất; chúng "bay" (phi) qua chín cung của ngôi nhà. Thời gian được chia
-                thành các <strong>Vận</strong>, mỗi Vận 20 năm. Hiện nay là <strong>Cửu Vận</strong>{' '}
-                (vận 9), kéo dài 2024–2043; ngay trước đó là Bát Vận (2004–2023). Sao đương vận thay
-                đổi theo từng thời kỳ, nên đánh giá phong thủy của cùng một ngôi nhà cũng đổi theo.
+                Hai phương pháp trả lời hai câu hỏi khác nhau, không thay thế nhau: hỏi "nhà này hợp
+                với tôi không" thì dùng Bát Trạch, hỏi "căn nhà này thời kỳ này ra sao" mới cần tới
+                Phi Tinh. Cách lập tinh bàn từng bước và cách đọc các cách cục là nội dung của một
+                bài riêng.
               </p>
-              <p>
-                Với mỗi nhà, người ta lập ba tầng sao: <strong>vận tinh</strong> (bàn vận),{' '}
-                <strong>sơn tinh</strong> (山盤, thiên về người và nhân đinh) và{' '}
-                <strong>hướng tinh</strong> (向盤, thiên về tài lộc), bằng cách cho sao nhập trung
-                cung rồi bay thuận hoặc nghịch theo tọa – hướng của nhà (một trong 24 sơn, mỗi sơn
-                15 độ). Khi ba bàn xếp xong sẽ hiện ra các "cách cục", ví dụ{' '}
-                <strong>Vượng sơn Vượng hướng</strong> (旺山旺向 — cả người lẫn của đều được thời).
-              </p>
-              <p>
-                Khác biệt cốt lõi: <strong>Bát Trạch tĩnh</strong> — gắn với người (mệnh quái),
-                không đổi theo thời gian, chỉ cần năm sinh và giới tính. <strong>Phi Tinh động</strong>{' '}
-                — gắn với thời gian (Vận) cùng hướng nhà (tọa – hướng), không dùng năm sinh chủ nhà.
-                Hai phương pháp trả lời hai câu hỏi khác nhau, không thay thế nhau.
-              </p>
-              <p>
-                Công cụ{' '}
-                <Link href="/phi-tinh" className="underline hover:text-primary">
-                  Huyền Không Phi Tinh
-                </Link>{' '}
-                trên hieu.asia lập bàn 9 cung theo phương pháp <strong>Hạ Quái</strong> (下卦) tiêu
-                chuẩn — đã kiểm chứng tái lập đúng các cục kinh điển. Để minh bạch, engine{' '}
-                <strong>không</strong> làm phần <strong>Thế quái</strong> (替卦, kiêm hướng) vì khẩu
-                quyết các phái bất đồng; ca kiêm hướng chỉ được gắn cờ tham khảo. Bài này dừng ở mức
-                khái niệm, không đi vào an sao chi tiết.
-              </p>
+              <div className="rounded border border-border bg-card/40 p-4">
+                <Link
+                  href="/learn/huyen-khong-phi-tinh"
+                  className="font-semibold text-foreground underline hover:text-primary"
+                >
+                  Đọc bài chuyên sâu: Huyền Không Phi Tinh — cửu vận và tinh bàn →
+                </Link>
+                <p className="mt-1 text-sm text-foreground/70">
+                  Tam nguyên cửu vận, cách lập tinh bàn từ vận và 24 sơn, bốn cách cục chính.
+                </p>
+              </div>
             </div>
           ),
         },
         {
           id: 'bo-khuyet-ngu-hanh',
-          tocLabel: 'Bổ khuyết ngũ hành',
-          heading: 'Bổ khuyết ngũ hành: màu, hướng, nghề theo hành',
+          tocLabel: 'Ngũ hành & màu sắc',
+          heading: 'Bổ khuyết ngũ hành: hành nào hợp màu nào',
           children: (
             <div className="space-y-4 text-foreground/85 leading-relaxed">
               <p>
-                Từ hành chủ đạo của một người, có thể gợi ý môi trường "hợp gu" hành đó. Cách chọn:
-                màu hợp lấy màu của hành bản mệnh cộng màu của hành sinh ra nó (mẹ sinh con); hướng
-                hợp là hướng cố hữu của hành trong phong thủy.
+                Đây là nhánh ứng dụng đời thường nhất của ngũ hành: từ hành chủ đạo của một người,
+                vòng tương sinh gợi ra nhóm màu "hợp gu" và nhóm màu nên bớt — dùng khi chọn màu xe,
+                màu phòng, màu đồ mặc thường ngày.
               </p>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left text-foreground">
-                      <th className="py-2 pr-4 font-semibold">Hành</th>
-                      <th className="py-2 pr-4 font-semibold">Màu hợp</th>
-                      <th className="py-2 pr-4 font-semibold">Hướng tốt</th>
-                      <th className="py-2 pr-4 font-semibold">Khí chất (xu hướng)</th>
-                      <th className="py-2 font-semibold">Nhóm nghề gợi ý</th>
-                    </tr>
-                  </thead>
-                  <tbody className="align-top">
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">Kim</td>
-                      <td className="py-2 pr-4">Trắng, bạc, vàng kim, vàng nhạt</td>
-                      <td className="py-2 pr-4">Tây, Tây Bắc</td>
-                      <td className="py-2 pr-4">Quyết đoán, kỷ luật, trọng nghĩa; lưu ý dễ cứng nhắc</td>
-                      <td className="py-2">Tài chính, kỹ thuật/cơ khí, luật/hành chính, y tế</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">Mộc</td>
-                      <td className="py-2 pr-4">Xanh lá, xanh lục, xanh ngọc, xanh non</td>
-                      <td className="py-2 pr-4">Đông, Đông Nam</td>
-                      <td className="py-2 pr-4">Vươn lên, học hỏi, hoạch định; lưu ý dễ dàn trải</td>
-                      <td className="py-2">Giáo dục/tư vấn, nông–lâm–môi trường, viết/xuất bản, y học cổ truyền</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">Thủy</td>
-                      <td className="py-2 pr-4">Đen, xanh đen, xanh đậm, bạc lạnh</td>
-                      <td className="py-2 pr-4">Bắc</td>
-                      <td className="py-2 pr-4">Linh hoạt, trí tuệ, giao tiếp; lưu ý dễ thiếu quyết đoán</td>
-                      <td className="py-2">Nghiên cứu/phân tích, vận tải/logistics, triết–tâm lý, truyền thông</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">Hỏa</td>
-                      <td className="py-2 pr-4">Đỏ, cam, hồng đậm, hồng</td>
-                      <td className="py-2 pr-4">Nam</td>
-                      <td className="py-2 pr-4">Nhiệt huyết, truyền cảm hứng; lưu ý dễ "bùng rồi tắt"</td>
-                      <td className="py-2">Truyền thông/marketing, giải trí, lãnh đạo/khởi nghiệp, thể thao</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium text-foreground">Thổ</td>
-                      <td className="py-2 pr-4">Vàng, nâu đất, cam đất, be/kem</td>
-                      <td className="py-2 pr-4">Trung tâm, Đông Bắc, Tây Nam</td>
-                      <td className="py-2 pr-4">Ổn định, đáng tin; lưu ý dễ trì trệ, bảo thủ</td>
-                      <td className="py-2">Bất động sản/xây dựng, nông nghiệp/thực phẩm, kế toán/bảo hiểm, chăm sóc sức khỏe</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <p>
+                Cũng là chỗ trên mạng chép sai nhiều nhất: mỗi nơi liệt kê một danh sách màu khác
+                nhau nên cùng một mệnh lại ra kết quả vênh nhau. Bảng 5 hành ↔ nhóm màu mà công cụ
+                trên hieu.asia thật sự dùng, kèm lý do vì sao mỗi hành ứng nhóm màu đó, nằm ở bài
+                chuyên sâu.
+              </p>
+              <div className="rounded border border-border bg-card/40 p-4">
+                <Link
+                  href="/learn/ngu-hanh-mau-sac"
+                  className="font-semibold text-foreground underline hover:text-primary"
+                >
+                  Đọc bài chuyên sâu: Ngũ hành và màu sắc — hành nào hợp màu nào →
+                </Link>
+                <p className="mt-1 text-sm text-foreground/70">
+                  Hai vòng tương sinh – tương khắc, bảng 5 hành ↔ nhóm màu, và cách chọn màu theo
+                  năm sinh.
+                </p>
               </div>
-              <p className="text-sm text-foreground/70">
-                Về vật phẩm và môi trường: Kim hợp đồ kim loại, đá trắng, không gian ngăn nắp trung
-                tính; Mộc hợp cây xanh, đồ gỗ/tre, nhiều cửa sổ; Thủy hợp bể cá hoặc đài phun nhỏ,
-                màu navy, đồ thủy tinh; Hỏa hợp nến/đèn ấm, sắc đỏ – cam điểm xuyết; Thổ hợp gốm
-                sứ/đá/gạch nung, màu nâu ấm, cây mọng nước.
-              </p>
-              <p className="text-sm text-foreground/70">
-                Lưu ý nguồn "hành chủ đạo": công cụ lấy hành từ <strong>Cục</strong> trong lá số Tử
-                Vi (ví dụ Thủy Nhị Cục, Kim Tứ Cục). Trong Bát Tự (Tứ Trụ), khái niệm tương đương
-                lại là <strong>Nhật Chủ</strong> cộng <strong>Dụng Thần</strong> — hai hệ có thể ra
-                hành khác nhau, đó là do phương pháp tính khác, không phải lỗi. Và hãy hiểu đây là
-                cách <strong>điều chỉnh môi trường để dễ chịu, hợp gu</strong> — không phải bùa may,
-                càng không phải "đeo cái này thì đổi vận".
-              </p>
             </div>
           ),
         },
         {
           id: 'thuoc-lo-ban',
           tocLabel: 'Thước Lỗ Ban',
-          heading: 'Thước Lỗ Ban: bốn loại thước và 8 cung',
+          heading: 'Thước Lỗ Ban — chọn kích thước theo cung tốt',
           children: (
             <div className="space-y-4 text-foreground/85 leading-relaxed">
               <p>
-                Thước Lỗ Ban là cây thước phong thủy của nghề mộc cổ truyền (gắn với tên Lỗ Ban —
-                ông tổ nghề mộc). Thước chia chiều dài thành các cung Tốt – Xấu xen kẽ; khi đo cửa,
-                bàn thờ, giường…, thợ cố chọn kích thước rơi vào cung tốt. Đây là quy ước truyền
-                thống của thợ, mang tính tham khảo. Có bốn loại thước, mỗi loại một chu kỳ và một
-                mục đích:
+                Thước Lỗ Ban là cây thước phong thủy của nghề mộc cổ truyền: nó chia chiều dài thành
+                các cung Tốt – Xấu xen kẽ, để khi đo cửa, bàn thờ hay giường, thợ chọn được kích
+                thước rơi vào cung tốt. Đây là quy ước truyền thống của thợ, mang tính tham khảo —
+                rơi cung xấu chỉ cần nhích sang kích thước tốt gần nhất, không cần đập đi làm lại.
               </p>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left text-foreground">
-                      <th className="py-2 pr-4 font-semibold">Loại thước</th>
-                      <th className="py-2 pr-4 font-semibold">Chu kỳ</th>
-                      <th className="py-2 font-semibold">Dùng cho</th>
-                    </tr>
-                  </thead>
-                  <tbody className="align-top">
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">Lỗ Ban 42.9 cm</td>
-                      <td className="py-2 pr-4">42.9 cm</td>
-                      <td className="py-2">Thông thủy — cửa, cổng, bàn thờ (khoảng trống lọt lòng)</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">Lỗ Ban 38.8 cm</td>
-                      <td className="py-2 pr-4">38.8 cm</td>
-                      <td className="py-2">Dương trạch — đồ vật, giường, tủ</td>
-                    </tr>
-                    <tr className="border-b border-border/60">
-                      <td className="py-2 pr-4 font-medium text-foreground">Thước Đinh Lan 38.4 cm</td>
-                      <td className="py-2 pr-4">38.4 cm</td>
-                      <td className="py-2">Quan tài, mộ phần — đồ thờ gia tiên</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium text-foreground">Thước Ban 52.2 cm</td>
-                      <td className="py-2 pr-4">52.2 cm</td>
-                      <td className="py-2">Âm trạch — mộ phần (khối xây)</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <p>
+                Một điểm hay bị nói gọn quá đà: có <strong>bốn loại thước</strong> cho bốn mục đích
+                khác nhau, và <strong>mỗi loại mang một bộ cung riêng</strong> — không phải chỉ một
+                bộ tên dùng chung cho tất cả. Bốn cây thước ấy, bộ cung của từng cây và cách đo
+                thông thủy cho đúng nằm ở bài chuyên sâu.
+              </p>
+              <div className="rounded border border-border bg-card/40 p-4">
+                <Link
+                  href="/learn/thuoc-lo-ban"
+                  className="font-semibold text-foreground underline hover:text-primary"
+                >
+                  Đọc bài chuyên sâu: Thước Lỗ Ban — 4 loại thước và các cung tốt xấu →
+                </Link>
+                <p className="mt-1 text-sm text-foreground/70">
+                  Bốn chiều dài thước, bộ cung riêng của từng cây, cách đo đúng và cách đọc kết quả.
+                </p>
               </div>
-              <p>
-                Bộ cung kinh điển của thước Lỗ Ban gồm 8 cung xen kẽ tốt – xấu, mỗi cung mang một
-                chữ Hán nói lên ý nghĩa:
-              </p>
-              <ul className="list-disc space-y-1 pl-6">
-                <li><strong>Tài</strong> (財) — tiền tài, của cải: cung tốt.</li>
-                <li><strong>Bệnh</strong> (病) — bệnh tật, ốm đau: cung xấu.</li>
-                <li><strong>Ly</strong> (離) — chia lìa, xa cách: cung xấu.</li>
-                <li><strong>Nghĩa</strong> (義) — việc nghĩa, hợp đạo lý: cung tốt.</li>
-                <li><strong>Quan</strong> (官) — công danh, quan lộc: cung tốt.</li>
-                <li><strong>Kiếp</strong> (劫) — tai kiếp, mất mát: cung xấu.</li>
-                <li><strong>Hại</strong> (害) — tổn hại, trắc trở: cung xấu.</li>
-                <li><strong>Bản</strong> (本, còn đọc Bổn) — gốc, nền tảng, bản thân: cung tốt.</li>
-              </ul>
-              <p>
-                Bốn cung tốt là Tài, Nghĩa, Quan, Bản; bốn cung xấu là Bệnh, Ly, Kiếp, Hại. Mỗi
-                cung lớn còn chia thành các ô con mang ý nghĩa cụ thể hơn. Vì kích thước thật thường
-                vượt một chu kỳ (ví dụ cửa cao 210 cm), công cụ{' '}
-                <Link href="/thuoc-lo-ban" className="underline hover:text-primary">
-                  Thước Lỗ Ban
-                </Link>{' '}
-                lấy phần dư trong chu kỳ để xác định cung, rồi trả về tốt/xấu kèm gợi ý kích thước
-                tốt gần nhất (nhỏ hơn hoặc lớn hơn).
-              </p>
-              <p className="text-sm text-foreground/70">
-                Rơi cung xấu không có nghĩa xui xẻo chắc chắn — chỉ cần nhích sang kích thước tốt
-                gần nhất, không cần đập đi làm lại. Các xưởng và sách ghi chiều dài chu kỳ, cách
-                phân ô con hơi khác nhau (ví dụ 42.9 so với 43.0 cm); công cụ chốt theo bộ số đã cấu
-                hình, nên bạn cứ theo kết quả công cụ, tránh tranh luận con số lẻ.
-              </p>
             </div>
           ),
         },
@@ -837,7 +582,7 @@ export default function LearnPhongThuyPage() {
             <div className="space-y-6 text-foreground/85 leading-relaxed">
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold text-foreground">
-                  Bổ khuyết ngũ hành: màu, hướng, nghề
+                  Bổ khuyết ngũ hành: màu và hướng
                 </h3>
                 <p>
                   Từ hành chủ đạo của một người, có thể gợi ý môi trường hỗ trợ hành đó.{' '}
