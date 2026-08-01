@@ -42,6 +42,8 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'lich-am-duong', eyebrow: 'LỊCH PHÁP', name: 'Lịch âm dương', href: '/learn/lich-am-duong' },
   { slug: 'gio-hoang-dao', eyebrow: '12 GIỜ', name: 'Giờ hoàng đạo', href: '/learn/gio-hoang-dao' },
   { slug: 'ngay-kieng-ky', eyebrow: 'KIÊNG KỴ', name: 'Ngày kiêng kỵ', href: '/learn/ngay-kieng-ky' },
+  // Từ đợt "lập lá số & tứ trụ" (/tu-vi-thang → /learn/tiet-khi trong tool-coverage.ts).
+  { slug: 'tiet-khi', eyebrow: '24 MỐC MẶT TRỜI', name: '24 tiết khí', href: '/learn/tiet-khi' },
 ];
 
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
@@ -59,7 +61,7 @@ export function learnTopicBySlug(slug: string): LearnTopic | undefined {
 // Mọi slug ở đây phải là trang /learn có thật (khớp LEARN_TOPICS).
 const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'tu-vi': ['bat-tu', 'sao-han', 'con-giap', 'hop-tuoi'],
-  'bat-tu': ['tu-vi', 'hop-tuoi', 'dat-ten-ngu-hanh', 'phong-thuy'],
+  'bat-tu': ['tu-vi', 'hop-tuoi', 'dat-ten-ngu-hanh', 'tiet-khi'],
   'kinh-dich': ['tarot', 'phong-thuy', 'tu-vi', 'trach-cat'],
   'tarot': ['kinh-dich', 'chiem-tinh', 'than-so-hoc', 'mbti'],
   'phong-thuy': ['bat-trach', 'trach-cat', 'dat-ten-ngu-hanh', 'bat-tu'],
@@ -76,10 +78,14 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'hoang-oc': ['kim-lau', 'tam-tai', 'bat-trach', 'phong-thuy'],
   'bat-trach': ['phong-thuy', 'hoang-oc', 'trach-cat', 'dat-ten-ngu-hanh'],
   'cung-hoang-dao': ['chiem-tinh', 'tarot', 'than-so-hoc', 'con-giap'],
-  'lich-am-duong': ['trach-cat', 'gio-hoang-dao', 'ngay-kieng-ky', 'sao-han'],
-  'gio-hoang-dao': ['trach-cat', 'lich-am-duong', 'ngay-kieng-ky', 'phong-thuy'],
-  'ngay-kieng-ky': ['trach-cat', 'gio-hoang-dao', 'lich-am-duong', 'tam-tai'],
+  'lich-am-duong': ['trach-cat', 'gio-hoang-dao', 'ngay-kieng-ky', 'tiet-khi'],
+  'gio-hoang-dao': ['trach-cat', 'lich-am-duong', 'ngay-kieng-ky', 'tiet-khi'],
+  'ngay-kieng-ky': ['trach-cat', 'gio-hoang-dao', 'lich-am-duong', 'tiet-khi'],
   'dat-ten-ngu-hanh': ['phong-thuy', 'bat-tu', 'than-so-hoc', 'hop-tuoi'],
+  // Từ đợt "lập lá số & tứ trụ" — tiết khí là mốc đổi trụ tháng nên gắn chặt với
+  // bát tự và lịch pháp; thiên-van/can-chi (2 láng giềng lẽ ra cũng thuộc đây)
+  // chưa có bài riêng trên nhánh này nên tạm chưa đưa vào.
+  'tiet-khi': ['lich-am-duong', 'bat-tu', 'gio-hoang-dao', 'ngay-kieng-ky'],
   'palm': ['can-xuong', 'mbti', 'tu-vi', 'tarot'],
   'can-xuong': ['palm', 'tu-vi', 'sao-han', 'bat-tu'],
   'mbti': ['big-five', 'enneagram', 'disc', 'than-so-hoc'],

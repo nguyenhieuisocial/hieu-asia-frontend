@@ -136,7 +136,6 @@ export const PENDING: readonly string[] = [
   '/learn/dai-van',
   '/learn/giao-van',
   '/learn/nhat-van',
-  '/learn/tiet-khi',
   '/learn/thai-tue',
   '/learn/luu-nien',
   '/learn/that-tich',
