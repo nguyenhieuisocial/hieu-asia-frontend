@@ -97,8 +97,12 @@ export function AstroTickerLive() {
       className="astro-ticker border-y border-primary/15 bg-card/60"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* min-height reserves space pre-mount to avoid layout shift */}
-        <div className="flex min-h-[76px] items-stretch">
+        {/* min-height reserves space pre-mount to avoid layout shift.
+            Wave 65.02 — 76px chỉ đúng cho layout desktop 1 hàng; mobile render
+            grid 2 cột ≈230px (header + 2 hàng cell + CTA) → placeholder cũ gây
+            nhảy ~150-200px sau hydration (finding P2 vòng 4+8). Ước lượng 230px
+            từ cấu trúc cell; đối chiếu lại trên production sau deploy. */}
+        <div className="flex min-h-[230px] items-stretch sm:min-h-[76px]">
           {state === null ? (
             <div className="flex items-center gap-2 px-4 py-5 text-sm text-muted-foreground">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary/50" />

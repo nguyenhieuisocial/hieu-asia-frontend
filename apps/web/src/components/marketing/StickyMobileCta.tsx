@@ -29,6 +29,11 @@ import Link from 'next/link';
 import { ArrowRight, X } from 'lucide-react';
 import { cn } from '@hieu-asia/ui';
 import { track } from '@/lib/analytics';
+// Wave 65.02 — nghe sự kiện hồ sơ ngày sinh: khách vừa lập lá số ngay trên
+// trang (InstantChartHero) thì thanh CTA mời "Lập lá số" là mời làm lại việc
+// vừa xong → ẩn cho hết phiên trang. Data PostHog 30 ngày: shown 139 /
+// clicked 6 / dismissed 3 — CTR ~4% vì sai ngữ cảnh.
+import { BIRTH_PROFILE_EVENT } from '@/lib/birth-profile';
 
 const DISMISS_KEY = 'sticky-cta-dismissed';
 const SCROLL_THRESHOLD_VH = 0.5; // reveal after 50vh scroll
@@ -60,6 +65,15 @@ export function StickyMobileCta({
     } catch {
       /* noop */
     }
+  }, []);
+
+  // Wave 65.02 — khách submit form lá số ngay trên trang → tự ẩn (không ghi
+  // sessionStorage: phiên điều hướng sau vẫn mời bình thường; chỉ tắt đúng
+  // ngữ cảnh "lá số đang hiện trên màn hình").
+  React.useEffect(() => {
+    const onProfile = (): void => setDismissed(true);
+    window.addEventListener(BIRTH_PROFILE_EVENT, onProfile);
+    return () => window.removeEventListener(BIRTH_PROFILE_EVENT, onProfile);
   }, []);
 
   // Scroll listener — reveal after threshold, hide before.
@@ -97,6 +111,13 @@ export function StickyMobileCta({
 
   return (
     <div
+      // Wave 65.02 — (1) `inert` khi ẩn: thanh translate-y-full vẫn nằm trong
+      // tab order, control vô hình nhận focus (finding a11y vòng 6). (2) data
+      // attr cho globals.css `:has()` phối hợp: nâng BackToTop lên trên thanh
+      // + đệm đáy footer để dòng miễn trừ không bị che vĩnh viễn.
+      inert={visible ? undefined : true}
+      data-sticky-cta=""
+      data-visible={visible ? '' : undefined}
       className={cn(
         // Mobile-only — desktop hero CTA stays visible.
         'fixed inset-x-0 bottom-0 z-40 md:hidden',

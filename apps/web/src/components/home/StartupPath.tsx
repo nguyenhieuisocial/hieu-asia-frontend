@@ -15,6 +15,15 @@ import Link from 'next/link';
 import { Check, Gift, ArrowRight } from 'lucide-react';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { readSavedProfile } from '@/lib/saved-profile';
+// Wave 65.02 — bước 1 trước đây CHỈ đọc 'hieu:profile:v1' (hồ sơ onboarding)
+// nên khách lập lá số ngay tại hero trang chủ (ghi 'hieu:birth-profile') không
+// bao giờ được tick "Xong" (finding P2 vòng 3). Đọc thêm store dùng chung +
+// nghe event để tick ngay trong phiên.
+import {
+  readBirthProfile,
+  birthProfileToDateTime,
+  BIRTH_PROFILE_EVENT,
+} from '@/lib/birth-profile';
 
 interface Step {
   n: number;
@@ -61,8 +70,15 @@ export function StartupPath() {
   const [step1Done, setStep1Done] = React.useState(false);
 
   React.useEffect(() => {
-    const p = readSavedProfile();
-    if (p?.birthDate) setStep1Done(true);
+    const check = (): void => {
+      const p = readSavedProfile();
+      if (p?.birthDate || birthProfileToDateTime(readBirthProfile()) != null) {
+        setStep1Done(true);
+      }
+    };
+    check();
+    window.addEventListener(BIRTH_PROFILE_EVENT, check);
+    return () => window.removeEventListener(BIRTH_PROFILE_EVENT, check);
   }, []);
 
   return (

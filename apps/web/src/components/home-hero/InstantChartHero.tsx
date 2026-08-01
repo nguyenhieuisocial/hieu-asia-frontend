@@ -109,7 +109,10 @@ export function InstantChartHero(): React.JSX.Element {
       {/* glow trang trí — thuần thị giác, drift nhẹ (AuroraBackdrop), hợp tông giấy-kem + vàng */}
       <AuroraBackdrop />
 
-      <div className="relative z-10 mx-auto max-w-3xl px-6 pt-8 pb-28 sm:pt-12 sm:pb-16">
+      {/* Wave 65.02 — nén nhịp dọc MOBILE (pt-6/mt-2/mt-3/mt-5 + dời link hồi
+          cứu giờ sinh xuống dưới nút): nút submit trước đây rơi dưới fold trên
+          máy nhỏ (finding P2 vòng 8, ảnh fold.jpeg). Desktop (sm:) giữ nguyên. */}
+      <div className="relative z-10 mx-auto max-w-3xl px-6 pt-6 pb-28 sm:pt-12 sm:pb-16">
         {/* Wave 65 — lời hứa thương hiệu lên đầu (page 1) theo yêu cầu founder;
             GIỮ nguyên H1 hành động + form ngay dưới (không phá mối nối chuyển đổi). */}
         <p
@@ -118,17 +121,21 @@ export function InstantChartHero(): React.JSX.Element {
         >
           Lá số Bát Tự thật · tính ngay · miễn phí
         </p>
-        <h1 className="mt-3 text-balance font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
-          Nhập ngày sinh,{' '}
+        {/* Wave 65.01 SEO — H1 mang từ khoá "lá số Bát Tự" (trước đây title tag
+            nhắm "Tử Vi & Bát Tự AI" nhưng H1 + toàn bộ H2 không chứa từ khoá nào
+            — finding P1 vòng 5). Shimmer GIỮ trên lời hứa cảm xúc, không đổi
+            cấu trúc LCP (guardrail §5). */}
+        <h1 className="mt-2 text-balance font-heading text-3xl font-bold leading-tight text-foreground sm:mt-3 sm:text-4xl lg:text-5xl">
+          Nhập ngày sinh, xem lá số Bát Tự —{' '}
           <ShimmerText>hiểu mình rõ hơn</ShimmerText>{' '}
           trong một phút.
         </h1>
         <p
-          className="hero-enter mt-4 max-w-xl text-sm leading-relaxed text-foreground/75 sm:text-base"
+          className="hero-enter mt-3 max-w-xl text-sm leading-relaxed text-foreground/75 sm:mt-4 sm:text-base"
           style={{ animationDelay: '220ms' }}
         >
-          Từ ngày và giờ sinh, hệ thống dựng lá số Bát Tự của bạn: Nhật Chủ, ngũ hành mạnh yếu,
-          đại vận từng chặng. Con số tính bằng thuật toán theo tiết khí,{' '}
+          Từ ngày và giờ sinh, hệ thống dựng lá số Bát Tự của bạn: Nhật Chủ (đại diện chính
+          bạn), ngũ hành mạnh yếu, đại vận từng chặng 10 năm. Con số tính bằng thuật toán theo tiết khí,{' '}
           <strong className="text-foreground/90">không tra bảng sẵn</strong>. Phần luận giải giúp
           bạn hiểu mình và chọn thời điểm, không phán vận hạn.
         </p>
@@ -136,7 +143,7 @@ export function InstantChartHero(): React.JSX.Element {
         {/* Lời mời gọn — above the fold, không ngộp dữ liệu trước khi khách hành động */}
         <form
           onSubmit={onSubmit}
-          className="hero-enter mt-7 rounded-2xl border border-gold/25 bg-card/60 p-5 backdrop-blur-sm sm:p-6"
+          className="hero-enter mt-5 rounded-2xl border border-gold/25 bg-card/60 p-5 backdrop-blur-sm sm:mt-7 sm:p-6"
           style={{ animationDelay: '320ms' }}
         >
           <div className="grid gap-3 sm:grid-cols-3">
@@ -220,20 +227,9 @@ export function InstantChartHero(): React.JSX.Element {
             </span>
           </label>
 
-          {/* Không biết giờ sinh → công cụ Hồi cứu giờ sinh (BTR). Trang chủ
-              trước đây không có lối vào nào tới /tu-vi/rectify. */}
-          <p className="mt-2 text-xs text-foreground/70">
-            <Link
-              href="/tu-vi/rectify"
-              className="text-gold underline underline-offset-4 hover:text-gold-400"
-            >
-              Không biết giờ sinh? → Làm Hồi cứu giờ sinh (BTR)
-            </Link>
-          </p>
-
           <button
             type="submit"
-            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-md bg-gold px-6 text-sm font-medium text-ink transition hover:bg-gold-400 hover:shadow-lg hover:shadow-gold/30 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:w-auto"
+            className="mt-3 inline-flex h-12 w-full items-center justify-center rounded-md bg-gold px-6 text-sm font-medium text-ink transition hover:bg-gold-400 hover:shadow-lg hover:shadow-gold/30 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:mt-4 sm:w-auto"
           >
             ✦ Lập lá số Bát Tự của tôi →
           </button>
@@ -242,6 +238,18 @@ export function InstantChartHero(): React.JSX.Element {
               Hãy chọn ngày sinh dương lịch để lập lá số.
             </p>
           )}
+          {/* Không biết giờ sinh → công cụ Hồi cứu giờ sinh. Trang chủ trước
+              đây không có lối vào nào tới /tu-vi/rectify. Wave 65.02 — dời
+              XUỐNG DƯỚI nút submit: là lối thoát phụ, không đáng chiếm chỗ
+              trước hành động chính trên fold mobile. */}
+          <p className="mt-2 text-xs text-foreground/70">
+            <Link
+              href="/tu-vi/rectify"
+              className="text-gold underline underline-offset-4 hover:text-gold-400"
+            >
+              Không biết giờ sinh? → Tìm lại giờ sinh từ sự kiện đời bạn
+            </Link>
+          </p>
           <p className="mt-3 font-mono text-[13px] leading-relaxed text-muted-foreground">
             Tính ngay trên máy bạn · chưa đăng ký thì không lưu gì · không bán, không chia sẻ.
           </p>
