@@ -79,7 +79,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
         {/* Final wayfinding CTA — vault 130 §14 terminus */}
         <div className="mb-14 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.06] to-transparent px-6 py-10 text-center sm:px-10 sm:py-12">
-          <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
+          <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
             Sẵn sàng hiểu bản đồ của bạn?
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">

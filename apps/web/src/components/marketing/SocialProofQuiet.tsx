@@ -86,7 +86,7 @@ export function SocialProofQuiet() {
             >
               <span
                 aria-hidden
-                className="mb-1 block font-editorial-display text-5xl leading-none text-primary/60 md:text-6xl"
+                className="mb-1 block font-editorial-display text-4xl leading-none text-primary/60 md:text-5xl"
               >
                 &ldquo;
               </span>

@@ -125,7 +125,7 @@ export function InstantChartHero(): React.JSX.Element {
             nhắm "Tử Vi & Bát Tự AI" nhưng H1 + toàn bộ H2 không chứa từ khoá nào
             — finding P1 vòng 5). Shimmer GIỮ trên lời hứa cảm xúc, không đổi
             cấu trúc LCP (guardrail §5). */}
-        <h1 className="mt-2 text-balance font-heading text-3xl font-bold leading-tight text-foreground sm:mt-3 sm:text-4xl lg:text-5xl">
+        <h1 className="mt-2 text-balance font-heading text-2xl font-bold leading-tight text-foreground sm:mt-3 sm:text-3xl lg:text-4xl">
           Nhập ngày sinh, xem lá số Bát Tự —{' '}
           <ShimmerText>hiểu mình rõ hơn</ShimmerText>{' '}
           trong một phút.
