@@ -11,7 +11,7 @@
  */
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { getPostHog } from './posthog';
+import { whenPostHogReady } from './posthog';
 import { clearAnonState } from './anon-cleanup';
 import { safeNextPath } from './safe-next';
 
@@ -284,9 +284,12 @@ export async function signOut(): Promise<void> {
   // typically follows sign-out.
   clearAuthMarkerCookie();
   // Reset PostHog distinct_id so the next anonymous session is a new visitor.
+  // Wave 65.05b — whenPostHogReady: nếu SDK còn đang tải (init hoãn) thì reset
+  // vẫn chạy ngay sau init thay vì bị bỏ qua.
   try {
-    const ph = getPostHog();
-    if (ph) ph.reset();
+    whenPostHogReady((ph) => {
+      ph.reset();
+    });
   } catch {
     /* ignore */
   }

@@ -5,7 +5,7 @@
  */
 
 import type { User } from '@supabase/supabase-js';
-import { getPostHog } from './posthog';
+import { getPostHog, whenPostHogReady } from './posthog';
 import type { MembershipTier } from './event-taxonomy';
 import { fetchUserMe } from './user-me';
 
@@ -55,7 +55,15 @@ async function readMembershipTier(): Promise<MembershipTier> {
  */
 export async function identifyUser(user: User): Promise<void> {
   const ph = getPostHog();
-  if (!ph) return;
+  if (!ph) {
+    // Wave 65.05b — posthog init hoãn tới tương tác/idle: phiên auth khôi
+    // phục TRƯỚC khi init xong thì thử lại ngay sau init thay vì mất identify.
+    // (whenPostHogReady drop khi PostHog disabled → không lặp vô hạn.)
+    whenPostHogReady(() => {
+      void identifyUser(user);
+    });
+    return;
+  }
 
   // Alias the prior anonymous id → merges browse data with the new identity.
   try {

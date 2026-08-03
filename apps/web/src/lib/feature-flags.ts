@@ -18,7 +18,7 @@
 "use client";
 
 import * as React from "react";
-import { getPostHog } from "./posthog";
+import { getPostHog, whenPostHogReady } from "./posthog";
 import { track } from "./analytics";
 
 /**
@@ -138,27 +138,34 @@ export function useFeatureFlag<T extends boolean | string = boolean>(
   const reportedRef = React.useRef<string | boolean | null>(null);
 
   React.useEffect(() => {
-    const ph = getPostHog();
-    if (!ph) return;
+    // Wave 65.05b — posthog-js init hoãn tới tương tác/idle: component mount
+    // TRƯỚC init vẫn phải nhận flag sau đó, nên đăng ký qua whenPostHogReady
+    // (chạy ngay nếu client đã sẵn sàng, ngược lại chạy ngay sau init).
+    let cancelled = false;
+    let unsubscribe: (() => void) | undefined;
+    whenPostHogReady((ph) => {
+      if (cancelled) return;
 
-    const read = () => {
-      const flag = ph.getFeatureFlag(key);
-      if (flag === undefined) return;
-      setValue(flag as T);
-      // Fire `feature_flag_evaluated` once per (key, variant) per session
-      // so we can correlate downstream events with the variant they saw.
-      const variant = flag as string | boolean;
-      if (reportedRef.current !== variant) {
-        reportedRef.current = variant;
-        track("feature_flag_evaluated", { flag_key: key, variant });
-      }
-    };
+      const read = () => {
+        const flag = ph.getFeatureFlag(key);
+        if (flag === undefined) return;
+        setValue(flag as T);
+        // Fire `feature_flag_evaluated` once per (key, variant) per session
+        // so we can correlate downstream events with the variant they saw.
+        const variant = flag as string | boolean;
+        if (reportedRef.current !== variant) {
+          reportedRef.current = variant;
+          track("feature_flag_evaluated", { flag_key: key, variant });
+        }
+      };
 
-    // Initial read (flags may already be loaded).
-    read();
-    // Re-read whenever PostHog finishes loading remote flag config.
-    const unsubscribe = ph.onFeatureFlags(() => read());
+      // Initial read (flags may already be loaded).
+      read();
+      // Re-read whenever PostHog finishes loading remote flag config.
+      unsubscribe = ph.onFeatureFlags(() => read());
+    });
     return () => {
+      cancelled = true;
       try {
         unsubscribe?.();
       } catch {
