@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hieu-asia/ui';
 import { ZaloHeader } from '../components/zalo-header';
 import { purchaseReading } from '../lib/zalo-payment';
