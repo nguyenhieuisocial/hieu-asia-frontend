@@ -9,7 +9,9 @@
  *   • app/tu-vi-hom-nay/page.tsx + [zodiac]/page.tsx — công cụ đích: 12 thẻ con
  *     giáp, mỗi thẻ điểm tổng quan 1–10 + một câu; trang con thêm 4 lĩnh vực và
  *     4 mục vận may + dòng "nên tránh"; khối lưu ý "dự báo chung theo 12 con
- *     giáp, không phải lá số cá nhân"; lá số thật (LoTrinhChart) ở mục riêng;
+ *     giáp, không phải lá số cá nhân"; mục lá số riêng dùng LoTrinhChart — chỉ
+ *     dựng lá số khi trình duyệt đã có ngày giờ sinh đã lưu, chưa có thì hiện
+ *     InviteCard "Lập lá số của tôi" → /decisions/new (không nhập tại chỗ);
  *     resolveDailySummaries()/isGenericSummary() thay hoặc bỏ câu chung chung.
  *
  * CÔNG CỤ THẬT SỰ LÀM GÌ (đọc code, không đoán): nhận đúng MỘT dữ kiện là con
@@ -152,7 +154,7 @@ const SPLIT_ROWS = [
 const TOOL_GIVES = [
   {
     field: 'Điểm tổng quan',
-    detail: 'Một số từ 1 đến 10 cho mỗi con giáp, kèm một câu tóm tắt ngắn.',
+    detail: 'Một số trên thang 1–10 cho mỗi con giáp, kèm một câu tóm tắt ngắn.',
   },
   {
     field: 'Bốn lĩnh vực',
@@ -213,7 +215,7 @@ const FAQS = [
   },
   {
     q: 'Can chi của ngày có được dùng trong bản dự báo con giáp không?',
-    a: `Có thể có, và bài này không khẳng định thay bạn được: phần mô tả của chính trang công cụ ghi là tính theo can chi ngày, nhưng phép sinh ra chữ và điểm nằm ở máy chủ nên không đọc được từ mã trang. Thứ đọc được từ mã trang chỉ là công cụ KHÔNG hiển thị can chi ngày — trang chính ghi ngày dương, mười hai trang con ghi ngày dương kèm ngày âm. Và dù có dùng thì cũng không làm bản dự báo mịn thêm chút nào, vì can chi ngày là đại lượng của lịch chứ không của riêng ai: hàm tính can chi ngày của hieu.asia cho ngày ví dụ ${EXAMPLE_DAY_LABEL} ra ${THREE_DAYS[0]?.label}, hôm sau ${THREE_DAYS[1]?.label}, rồi lặp lại đúng nhãn cũ sau ${DAY_CYCLE} ngày — và hôm nay cả nước đều đang sống cùng một can chi ngày, nên nó không phân biệt được người này với người kia.`,
+    a: `Có thể có, và bài này không khẳng định thay bạn được: dòng mô tả của trang công cụ — thẻ mô tả dùng cho kết quả tìm kiếm và cho khung xem trước khi chia sẻ link, không phải chữ hiện trên trang — ghi là tính theo can chi ngày, nhưng phép sinh ra chữ và điểm nằm ở máy chủ nên không đọc được từ mã trang. Thứ đọc được từ mã trang chỉ là công cụ KHÔNG hiển thị can chi ngày — trang chính ghi ngày dương, mười hai trang con ghi ngày dương kèm ngày âm. Và dù có dùng thì cũng không làm bản dự báo mịn thêm chút nào, vì can chi ngày là đại lượng của lịch chứ không của riêng ai: hàm tính can chi ngày của hieu.asia cho ngày ví dụ ${EXAMPLE_DAY_LABEL} ra ${THREE_DAYS[0]?.label}, hôm sau ${THREE_DAYS[1]?.label}, rồi lặp lại đúng nhãn cũ sau ${DAY_CYCLE} ngày — và hôm nay cả nước đều đang sống cùng một can chi ngày, nên nó không phân biệt được người này với người kia.`,
   },
   {
     q: 'Đọc tử vi hôm nay thế nào cho lành mạnh?',
@@ -221,7 +223,7 @@ const FAQS = [
   },
   {
     q: 'Nếu muốn một bản riêng cho mình thì dùng gì?',
-    a: 'Dùng lá số cá nhân, tức bản lập từ giờ – ngày – tháng – năm sinh và giới tính của chính bạn. Trên chính trang tử vi hôm nay, hieu.asia đặt sẵn một khối lá số thật ở bên dưới phần dự báo con giáp và ghi rõ đây là hai lớp khác nhau. Cần nói thẳng luôn: lá số mịn hơn nhiều lần, nhưng mịn hơn không có nghĩa là đã được kiểm chứng — nó vẫn là một hệ quy ước để soi mình, không phải phép đo.',
+    a: 'Dùng lá số cá nhân, tức bản lập từ giờ – ngày – tháng – năm sinh và giới tính của chính bạn. Trên chính trang tử vi hôm nay, hieu.asia dành một mục riêng bên dưới phần dự báo con giáp cho lá số thật và ghi rõ đây là hai lớp khác nhau; mục ấy dựng lá số nếu bạn đã lưu ngày giờ sinh, còn chưa lưu thì hiện lời mời lập lá số. Cần nói thẳng luôn: lá số mịn hơn nhiều lần, nhưng mịn hơn không có nghĩa là đã được kiểm chứng — nó vẫn là một hệ quy ước để soi mình, không phải phép đo.',
   },
 ];
 
@@ -316,9 +318,9 @@ export default function LearnNhatVanPage() {
             <div className="space-y-4 text-foreground/85 leading-relaxed">
               <p>
                 Mỗi ngày, trang Tử Vi hôm nay của hieu.asia dựng <strong>{GROUP_COUNT} thẻ</strong>,
-                mỗi thẻ ứng với một con giáp. Bạn bấm vào con giáp của mình và đọc: một điểm tổng
-                quan từ 1 đến 10, một câu tóm tắt, rồi vào trang con thì có thêm bốn lĩnh vực, bốn
-                mục vận may và một dòng nên tránh.
+                mỗi thẻ ứng với một con giáp. Ngay ở trang chính, mỗi thẻ đã hiện sẵn một điểm tổng
+                quan trên thang 1–10 kèm một câu tóm tắt; bấm vào thẻ con giáp của mình là sang
+                trang con, ở đó có thêm bốn lĩnh vực, bốn mục vận may và một dòng nên tránh.
               </p>
               <p>
                 Toàn bộ phép chọn nằm ở <strong>một dữ kiện duy nhất</strong>: con giáp của bạn, tức
@@ -360,7 +362,9 @@ export default function LearnNhatVanPage() {
               <p>
                 Thêm hai điều cần chốt. Thứ nhất,{' '}
                 <strong>đây không phải lá số cá nhân của bạn</strong> — chính trang công cụ ghi sẵn
-                dòng lưu ý ấy ngay dưới tiêu đề, và đặt khối lá số thật ở một mục riêng bên dưới.
+                dòng lưu ý ấy ngay dưới tiêu đề, và dành hẳn một mục riêng bên dưới cho lá số thật
+                (mục ấy chỉ dựng được lá số khi bạn đã lưu ngày giờ sinh ở nơi khác trên hieu.asia;
+                chưa lưu thì nó hiện lời mời lập lá số).
                 Thứ hai, <strong>đây không phải dự báo đã được kiểm chứng</strong>: không có phép
                 kiểm nào cho thấy điểm số của một ngày đoán trước được điều sẽ xảy ra — mục{' '}
                 <Link href="#gioi-han" className={A}>giới hạn</Link> ở cuối bài nói kỹ chỗ này.
@@ -511,9 +515,10 @@ export default function LearnNhatVanPage() {
               </p>
               <p className="text-sm text-foreground/70">
                 Nếu bạn muốn bản mịn hơn cho chính mình:{' '}
-                <Link href="/la-so-tu-vi" className={A}>{L_LASO}</Link>. Trang Tử Vi hôm nay cũng đặt
-                sẵn một khối lá số thật ngay bên dưới phần dự báo con giáp, kèm dòng nói rõ đây là
-                hai lớp khác nhau.
+                <Link href="/la-so-tu-vi" className={A}>{L_LASO}</Link>. Trang Tử Vi hôm nay cũng
+                dành một mục riêng bên dưới phần dự báo con giáp cho lá số thật, kèm dòng nói rõ đây
+                là hai lớp khác nhau — mục ấy dựng lá số nếu bạn đã lưu ngày giờ sinh, còn chưa lưu
+                thì hiện lời mời lập lá số.
               </p>
             </div>
           ),
@@ -567,8 +572,8 @@ export default function LearnNhatVanPage() {
               </p>
               <p className="text-sm text-foreground/70">
                 Có một phép thử tự làm được: sáng mai, trước khi đọc, ghi ra giấy ba điều bạn nghĩ sẽ
-                xảy ra trong ngày. Tối đối chiếu cả ba với bản dự báo. Phần lớn người thử sẽ thấy
-                giấy của mình sát ngày thật hơn — vì bạn biết về ngày của bạn nhiều hơn mọi phép chia{' '}
+                xảy ra trong ngày. Tối đối chiếu cả ba với bản dự báo, rồi tự chấm xem bên nào sát
+                ngày thật của bạn hơn — bạn biết về ngày của bạn nhiều hơn mọi phép chia{' '}
                 {GROUP_COUNT} ô cộng lại.
               </p>
             </div>

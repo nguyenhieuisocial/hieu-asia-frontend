@@ -13,10 +13,18 @@
  * Tịch, KHÔNG chấm điểm ngày lễ, và không công cụ nào nhận "ngày bạn đang xem"
  * làm đầu vào — bài vì thế không dạy phần đó.
  *
- * PHẠM VI: KHÔNG lấn /learn/that-tich (đang viết song song — chỉ nhắc tên, không
- * link), KHÔNG dạy lại cách chấm hợp đôi (/learn/hop-doi) hay bảng quan hệ 12 chi
- * (/learn/hop-tuoi). Giọng: ngày lễ là QUY ƯỚC XÃ HỘI đáng giữ, không phải mốc
- * vận mệnh; nói thẳng nhưng không mỉa mai người đọc và không doạ.
+ * ĐẦU VÀO THẬT của phép xem hợp tuổi: components/hop-tuoi/BirthInputPair.tsx —
+ * mỗi người gồm NĂM SINH + GIỚI TÍNH (tên là tuỳ chọn), `isValidPerson` bắt buộc
+ * cả hai. Phải viết đủ "năm sinh và giới tính": giới tính là thứ nuôi cung mệnh
+ * Bát trạch, một trong ba lớp mà bài này kể tên. Câu "Nhập năm sinh hai người"
+ * trên trang công cụ là lời rút gọn của trang ấy, KHÔNG được chép lại làm mô tả
+ * đầu vào. Điều đó không đổi lập luận: cả hai trường đều không phải ngày đang xem.
+ *
+ * PHẠM VI: KHÔNG lấn /learn/that-tich — bài ấy nay ĐÃ CÓ THẬT trong repo và
+ * page.tsx của bài này link sang nó; ở file này Thất Tịch chỉ là vật đối chiếu về
+ * cách neo lịch. KHÔNG dạy lại cách chấm hợp đôi (/learn/hop-doi) hay bảng quan hệ
+ * 12 chi (/learn/hop-tuoi). Giọng: ngày lễ là QUY ƯỚC XÃ HỘI đáng giữ, không phải
+ * mốc vận mệnh; nói thẳng nhưng không mỉa mai người đọc và không doạ.
  */
 
 import * as React from 'react';
@@ -246,7 +254,7 @@ export function NgayTinhYeuDepth() {
               <p>
                 Cái cân đo cân nặng của bạn không quan tâm hôm nay là ngày gì. Đứng lên cân vào ngày
                 sinh nhật hay ngày thường thì kim vẫn chỉ một chỗ. Phép xem hợp tuổi cũng vậy: nó chỉ
-                nhìn {strong('năm sinh')}, không nhìn tờ lịch hôm bạn xem.
+                nhìn {strong('năm sinh và giới tính')}, không nhìn tờ lịch hôm bạn xem.
               </p>
             ),
           },
@@ -256,9 +264,10 @@ export function NgayTinhYeuDepth() {
             content: (
               <>
                 <p>
-                  Theo mô tả của chính trang công cụ, thứ bạn nhập vào khi xem hợp tuổi là{' '}
-                  {strong('năm sinh của hai người')}. Không có ô nào để nhập “hôm nay là ngày mấy”.
-                  Vậy nên kết quả ngày {VALENTINE_DAY}/{VALENTINE_MONTH} và kết quả ngày{' '}
+                  Mở form xem hợp tuổi ra thì thấy mỗi người chỉ có hai ô bắt buộc:{' '}
+                  {strong('năm sinh và giới tính')} (tên là tuỳ chọn). Không có ô nào để nhập “hôm
+                  nay là ngày mấy”. Vậy nên kết quả ngày {VALENTINE_DAY}/{VALENTINE_MONTH} và kết quả
+                  ngày{' '}
                   {VALENTINE_DAY + 1}/{VALENTINE_MONTH} {strong('giống hệt nhau')}.
                 </p>
                 <p>
@@ -277,8 +286,8 @@ export function NgayTinhYeuDepth() {
                 <p>
                   Cấu trúc của lỗi này là {strong('ghép hai hệ quy chiếu không liên quan')}: một bên
                   là ngày lễ — quy ước xã hội, do cộng đồng chọn; một bên là phép đối chiếu can chi —
-                  hàm của năm sinh. Hai bên không có biến chung, nên không thể có chuyện bên này làm
-                  bên kia chính xác hơn.
+                  hàm của năm sinh và giới tính. Hai bên không có biến chung, nên không thể có chuyện
+                  bên này làm bên kia chính xác hơn.
                 </p>
                 <p>
                   Cái thật sự đổi vào ngày lễ là {strong('người đọc')}: bạn đang mong chờ nhiều hơn,
@@ -358,7 +367,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       'Một trang quảng cáo: “Xem hợp đôi đúng ngày Valentine, kết quả chuẩn hơn ngày thường.” Chỗ sai nằm ở đâu?',
     choices: [
       {
-        text: 'Đầu vào của phép xem hợp tuổi là năm sinh hai người — không có ô nào nhận ngày bạn đang xem, nên kết quả hai ngày là như nhau',
+        text: 'Đầu vào của phép xem hợp tuổi là năm sinh và giới tính hai người — không có ô nào nhận ngày bạn đang xem, nên kết quả hai ngày là như nhau',
         correct: true,
         note: 'Đúng, và bạn tự kiểm được: xem hôm nay, lưu lại, xem lại đúng ngày lễ rồi đối chiếu.',
       },
@@ -447,7 +456,7 @@ const FACETS: UnderstandingFacet[] = [
   {
     id: 'category-error',
     facet: 'Ghép sai phạm trù',
-    can: 'Chỉ ra vì sao “xem tình duyên đúng ngày lễ” là ghép hai thứ không có biến chung: ngày lễ là quy ước xã hội, còn phép đối chiếu chỉ nhận năm sinh.',
+    can: 'Chỉ ra vì sao “xem tình duyên đúng ngày lễ” là ghép hai thứ không có biến chung: ngày lễ là quy ước xã hội, còn phép đối chiếu chỉ nhận năm sinh và giới tính.',
   },
   {
     id: 'self-check',
@@ -516,8 +525,8 @@ export function NgayTinhYeuWhys() {
           because: (
             <>
               Vì nó không tự mâu thuẫn ở đâu cả — trừ khi bạn đi kiểm. Mà kiểm thì rất gọn:{' '}
-              {strong('đầu vào của phép xem hợp tuổi là năm sinh hai người')}, không có ô nào nhận
-              ngày bạn đang xem. Xem hôm nay và xem đúng ngày lễ sẽ ra cùng một kết quả. Cái thật sự
+              {strong('đầu vào của phép xem hợp tuổi là năm sinh và giới tính hai người')}, không có
+              ô nào nhận ngày bạn đang xem. Xem hôm nay và xem đúng ngày lễ sẽ ra cùng một kết quả. Cái thật sự
               đổi là {strong('kỳ vọng của người đọc')}, và kỳ vọng thì không tự khai báo.
             </>
           ),

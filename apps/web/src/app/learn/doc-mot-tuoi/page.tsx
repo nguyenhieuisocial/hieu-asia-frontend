@@ -205,7 +205,7 @@ const LAYER_ROWS: LayerRow[] = [
   { muc: 'Can Chi', canGi: 'Năm sinh', tang: 'calendar',
     kiem: 'Đối chiếu bất kỳ bảng lịch can chi nào cũng ra cùng kết quả. Đây là tên của năm, không phải nhận định về bạn.' },
   { muc: 'Con giáp', canGi: 'Năm sinh', tang: 'calendar',
-    kiem: 'Chính là phần địa chi của can chi, gọi bằng tên con vật. Không thêm thông tin nào.' },
+    kiem: 'Chính là phần địa chi của can chi — trang kết quả hiện đúng tên chi, kèm hình con vật tương ứng. Không thêm thông tin nào.' },
   { muc: 'Nạp âm', canGi: 'Năm sinh', tang: 'calendar',
     kiem: `Bảng ${CYCLE} năm cố định, gồm ${NAP_AM_COUNT} tên nạp âm — mỗi tên dùng cho hai năm liền.` },
   { muc: 'Mệnh ngũ hành', canGi: 'Năm sinh (qua nạp âm)', tang: 'calendar',
@@ -241,9 +241,9 @@ const MIXED_COUNT = LAYER_ROWS.filter((r) => r.tang === 'mixed').length;
 // hỏi "công cụ này là gì", "có lưu dữ liệu không") và KHÁC các bài hạn riêng lẻ.
 const FAQS = [
   { q: 'Một năm sinh thật sự suy ra được những gì?',
-    a: `Suy chắc chắn được bốn thứ: can chi, con giáp, nạp âm và mệnh ngũ hành. Cả bốn đều là phép tra bảng trên vòng ${CYCLE} năm — sinh năm ${BIRTH} thì ra ${BIRTH_CANCHI}, con ${BIRTH_ZODIAC}, nạp âm ${BIRTH_NAPAM}, mệnh ${BIRTH_MENH}, và ai tính cũng ra đúng như vậy. Nhưng cần thấy rõ chúng đúng theo nghĩa nào: đây là cách gọi tên của năm, không phải một nhận định về người sinh ra trong năm đó.` },
+    a: `Suy chắc chắn được bốn thứ: can chi, con giáp, nạp âm và mệnh ngũ hành. Cả bốn đều là phép tra bảng trên vòng ${CYCLE} năm — sinh năm ${BIRTH} thì ra ${BIRTH_CANCHI}, tuổi ${BIRTH_ZODIAC}, nạp âm ${BIRTH_NAPAM}, mệnh ${BIRTH_MENH}, và ai tính cũng ra đúng như vậy. Nhưng cần thấy rõ chúng đúng theo nghĩa nào: đây là cách gọi tên của năm, không phải một nhận định về người sinh ra trong năm đó.` },
   { q: 'Vậy Kim Lâu, Tam Tai, Hoang Ốc, sao hạn thì sao — chúng có sai không?',
-    a: 'Không phải chuyện đúng hay sai, mà là chúng thuộc loại khác. Các lớp này đều có công thức rõ ràng và công cụ hiển thị nguyên phép tính, nên bạn kiểm được nó có tính đúng theo quy ước hay không. Cái không kiểm được là bản thân quy ước: vì sao tuổi mụ chia 9 dư một số nhất định lại bị coi là phạm thì các bản truyền lại không ghi lý do gốc, và phạm vi áp dụng cũng có biến thể vùng miền — chẳng hạn Kim Lâu theo tục xét tuổi cô dâu, nhưng có nơi xét cả tuổi chú rể. Nên cách đọc đúng là xem chúng như tục lệ để tham khảo.' },
+    a: 'Không phải chuyện đúng hay sai, mà là chúng thuộc loại khác. Các lớp này đều có công thức rõ ràng, và với Kim Lâu, Hoang Ốc, Tam Tai, xung năm thì công cụ hiển thị luôn phép tính nên bạn kiểm được nó có tính đúng theo quy ước hay không — riêng sao hạn thì chỉ hiện tên sao chứ không hiện phép chia đứng sau. Cái không kiểm được là bản thân quy ước: vì sao tuổi mụ chia 9 dư một số nhất định lại bị coi là phạm thì các bản truyền lại không ghi lý do gốc, và phạm vi áp dụng cũng có biến thể vùng miền — chẳng hạn Kim Lâu theo tục xét tuổi cô dâu, nhưng có nơi xét cả tuổi chú rể. Nên cách đọc đúng là xem chúng như tục lệ để tham khảo.' },
   { q: 'Cùng một năm sinh mà kết quả vẫn khác nhau được à?',
     a: `Được, ở hai chỗ. Thứ nhất là giới tính: cùng sinh năm ${BIRTH}, nam ra cung phi ${GENDER_ROWS[0]?.cungPhi ?? '—'} còn nữ ra ${GENDER_ROWS[1]?.cungPhi ?? '—'}, kéo theo hướng nhà và sao hạn khác nhau — trong khi can chi và nạp âm thì giống hệt. Thứ hai là năm đang xét: các lớp hạn là quan hệ giữa năm sinh và năm hiện tại, nên chúng đổi mỗi năm. Điều đó cho thấy chúng không phải đặc điểm cố định của một người.` },
   { q: 'Công cụ Tra cứu tuổi cần những gì, và nó KHÔNG làm được gì?',
@@ -253,9 +253,9 @@ const FAQS = [
   { q: 'Đọc mô tả con giáp thấy đúng với mình quá thì sao?',
     a: `Đó là dấu hiệu đáng chú ý, nhưng theo hướng ngược lại. Một năm sinh đặt bạn vào 1 trong ${CYCLE} nhóm, tính cả giới tính là ${CYCLE * 2} nhóm — mọi mô tả ở đó buộc phải viết đủ rộng để phần lớn nhóm thấy hợp. Khi một mô tả rộng như vậy mà bạn thấy trúng, phần lớn công đến từ cách bạn tự đối chiếu, không phải từ năm sinh. Phép thử rất nhanh: đọc mô tả của một con giáp khác và xem có thấy trúng không.` },
   { q: 'Năm nay tôi bị báo phạm mấy lớp cùng lúc, có phải năm hạn nặng không?',
-    a: `Không nên đọc theo kiểu cộng dồn, và lý do mạnh hơn bạn tưởng: các lớp này không độc lập với nhau. Kim Lâu và sao hạn Cửu Diệu dùng đúng cùng một phép trên đúng cùng một con số — tuổi mụ chia 9 — nên mỗi số dư luôn kéo theo đúng một cặp “loại Kim Lâu – tên sao”, không năm nào lệch. Hoang Ốc cũng đếm trên chính tuổi mụ ấy, chỉ đổi vòng 6 thay vì 9; Tam Tai và xung năm thì cùng đọc chi năm sinh. Thấy nhiều nhãn cùng sáng lên không có nghĩa nhiều nguồn cùng xác nhận một điều — đó là một hai con số được viết lại theo mấy cách. Và các nhãn vốn dày: chạy đúng phép tính của công cụ cho ${EXAM_YEARS.length} năm liên tiếp, quét mọi năm sinh mà ô nhập chấp nhận, số năm hoàn toàn trống chỉ dao động từ ${CLEAN_SPREAD.min} đến ${CLEAN_SPREAD.max}.` },
+    a: `Không nên đọc theo kiểu cộng dồn, và lý do mạnh hơn bạn tưởng: các lớp này không độc lập với nhau. Kim Lâu và sao hạn Cửu Diệu dùng đúng cùng một phép trên đúng cùng một con số — tuổi mụ chia 9 — nên với một người, mỗi số dư luôn kéo theo đúng một cặp “loại Kim Lâu – tên sao”, không năm nào lệch; bảng sao chỉ khác nhau giữa nam và nữ. Hoang Ốc cũng đếm trên chính tuổi mụ ấy, chỉ đổi vòng 6 thay vì 9; Tam Tai và xung năm thì cùng đọc chi năm sinh. Thấy nhiều nhãn cùng sáng lên không có nghĩa nhiều nguồn cùng xác nhận một điều — đó là một hai con số được viết lại theo mấy cách. Và các nhãn vốn dày: chạy đúng phép tính của công cụ cho ${EXAM_YEARS.length} năm liên tiếp, quét mọi năm sinh đã tới mà ô nhập chấp nhận (${TOOL_YEAR_RANGE.min}–${START_YEAR}), số năm hoàn toàn trống chỉ dao động từ ${CLEAN_SPREAD.min} đến ${CLEAN_SPREAD.max}.` },
   { q: 'Vậy dùng trang tra cứu thế nào cho có ích?',
-    a: 'Dùng nó như một cuốn từ điển về tuổi của mình: biết can chi, biết nạp âm, hiểu các thuật ngữ mà họ hàng hay nhắc, và hiểu vì sao một tục lệ lại tính ra như vậy. Đó là phần giá trị thật và cũng là lý do công cụ hiện rõ từng phép tính thay vì chỉ phán. Phần còn lại thì giữ ở mức tham khảo: đừng dời lịch khám bệnh, đừng đổi quyết định tiền bạc, và đừng trả tiền cho ai để “hoá giải” một con số chia dư.' },
+    a: 'Dùng nó như một cuốn từ điển về tuổi của mình: biết can chi, biết nạp âm, hiểu các thuật ngữ mà họ hàng hay nhắc, và hiểu vì sao một tục lệ lại tính ra như vậy. Đó là phần giá trị thật và cũng là lý do công cụ hiện rõ phép tính của Kim Lâu, Hoang Ốc, Tam Tai và xung năm thay vì chỉ phán. Phần còn lại thì giữ ở mức tham khảo: đừng dời lịch khám bệnh, đừng đổi quyết định tiền bạc, và đừng trả tiền cho ai để “hoá giải” một con số chia dư.' },
 ];
 
 const JSONLD = [
@@ -329,7 +329,7 @@ export default function LearnDocMotTuoiPage() {
       tryCta={{
         heading: 'Trải nghiệm ngay',
         blurb:
-          'Công cụ Tra cứu tuổi nhận năm sinh và giới tính, rồi hiện nguyên phép tính của từng lớp — tuổi mụ bao nhiêu, chia mấy, dư mấy — để bạn tự xếp chúng vào đúng tầng.',
+          'Công cụ Tra cứu tuổi nhận năm sinh và giới tính, rồi hiện nguyên phép tính — tuổi mụ bao nhiêu, chia mấy, dư mấy — để bạn tự xếp chúng vào đúng tầng.',
         href: '/tra-cuu-tuoi',
         label: 'Mở công cụ Tra cứu tuổi',
       }}
@@ -350,7 +350,7 @@ export default function LearnDocMotTuoiPage() {
                 Một năm sinh, với các công cụ trên hieu.asia, là{' '}
                 <strong>một ô trong bảng lịch can chi</strong>. Bảng ấy có {CYCLE} ô và lặp lại mãi,
                 nên nói “sinh năm {BIRTH}” tương đương nói “thuộc ô {BIRTH_CANCHI}”. Từ ô đó tra
-                được ngay con {BIRTH_ZODIAC}, nạp âm {BIRTH_NAPAM}, mệnh {BIRTH_MENH} — và chỉ vậy
+                được ngay tuổi {BIRTH_ZODIAC}, nạp âm {BIRTH_NAPAM}, mệnh {BIRTH_MENH} — và chỉ vậy
                 là hết phần chắc chắn.
               </p>
               <p>
@@ -438,7 +438,7 @@ export default function LearnDocMotTuoiPage() {
                 Tầng lịch – toán: cùng một năm sinh, ai tra cũng ra một kết quả
               </h3>
               <p>
-                Chỉ cột <strong>năm sinh</strong> là dữ kiện đầu vào; ba cột còn lại do trang này
+                Chỉ cột <strong>năm sinh</strong> là dữ kiện đầu vào; bốn cột còn lại do trang này
                 suy lại bằng đúng hàm mà công cụ đang gọi. Không có chỗ nào để hai người tra ra hai
                 đáp án khác nhau.
               </p>
@@ -461,7 +461,10 @@ export default function LearnDocMotTuoiPage() {
                 <strong>chúng đúng theo định nghĩa</strong>. Bảng lịch quy định năm {BIRTH} tên là{' '}
                 {BIRTH_CANCHI}, nên câu “sinh năm {BIRTH} thì tuổi {BIRTH_ZODIAC}” không thể sai —
                 cũng như “tháng sau tháng 5 là tháng 6” không thể sai. Nó không phát biểu điều gì về
-                đời bạn, nên cũng không có gì để kiểm.
+                đời bạn, nên cũng không có gì để kiểm. Chỗ sai được nằm ở đầu vào chứ không ở bảng:
+                năm can chi đổi vào Tết, nên người sinh tháng 1 hoặc đầu tháng 2 dương lịch thường
+                vẫn thuộc năm can chi liền trước — trang công cụ có ghi lưu ý này, và bài{' '}
+                <Link href="/learn/nap-am" className={A}>Nạp âm</Link> nói kỹ hơn.
               </p>
               <p className="text-sm text-foreground/70">
                 Hai biên cần phân biệt: bảng can chi bên dưới phủ từ năm {ENGINE_RANGE.min} đến{' '}
@@ -488,7 +491,7 @@ export default function LearnDocMotTuoiPage() {
               </p>
 
               <h3 className="text-lg font-semibold text-foreground">
-                Đổi giới tính: ba dòng đầu đứng yên, hai dòng cuối đổi hẳn
+                Đổi giới tính: can chi – nạp âm – mệnh đứng yên, cung phi – hướng – sao hạn đổi hẳn
               </h3>
               <Scroller minWidth="min-w-[820px]">
                 <TableHead
@@ -551,8 +554,9 @@ export default function LearnDocMotTuoiPage() {
                 Kim Lâu <strong>{KIM_LAU_COUNT} năm</strong>, nằm trong Tam Tai{' '}
                 <strong>{TAM_TAI_COUNT} năm</strong> (nhóm chi {TAM_TAI_CHIS}), phạm Hoang Ốc{' '}
                 <strong>{HOANG_OC_COUNT} năm</strong>; còn số năm mà cả bốn cột đều ghi “Không” là{' '}
-                <strong>{CLEAN_COUNT}</strong>. Chạy đúng bốn phép ấy cho mọi năm sinh mà ô nhập
-                chấp nhận, con số “trống hẳn” dao động từ <strong>{CLEAN_SPREAD.min}</strong> đến{' '}
+                <strong>{CLEAN_COUNT}</strong>. Chạy đúng bốn phép ấy cho mọi năm sinh đã tới mà ô
+                nhập chấp nhận ({TOOL_YEAR_RANGE.min}–{START_YEAR}), con số “trống hẳn” dao động từ{' '}
+                <strong>{CLEAN_SPREAD.min}</strong> đến{' '}
                 <strong>{CLEAN_SPREAD.max}</strong> năm trong mỗi {EXAM_YEARS.length} năm — tức{' '}
                 {EXAM_YEARS.length - CLEAN_SPREAD.max}–{EXAM_YEARS.length - CLEAN_SPREAD.min} năm
                 dính ít nhất một nhãn. Nếu coi mỗi nhãn là một lý do hoãn việc thì{' '}
@@ -562,8 +566,8 @@ export default function LearnDocMotTuoiPage() {
                 Nhưng đừng cộng dồn các nhãn lại thành “năm hạn nặng”, và lý do không phải vì chúng
                 trùng nhau ngẫu nhiên — ngược lại, chúng <strong>dính chặt vào nhau</strong>. Kim
                 Lâu và sao hạn Cửu Diệu dùng đúng cùng một phép trên đúng cùng một con số: tuổi mụ
-                chia 9. Nên với mỗi số dư, cặp “loại Kim Lâu – tên sao” luôn đi kèm nhau, không năm
-                nào lệch. Hoang Ốc cũng đếm trên chính tuổi mụ ấy, chỉ đổi vòng 6 thay vì 9; Tam Tai
+                chia 9. Nên với một người, mỗi số dư luôn kéo theo đúng một cặp “loại Kim Lâu – tên
+                sao”, không năm nào lệch — bảng sao chỉ khác nhau giữa nam và nữ. Hoang Ốc cũng đếm trên chính tuổi mụ ấy, chỉ đổi vòng 6 thay vì 9; Tam Tai
                 và xung năm thì cùng đọc một thứ là chi năm sinh. Bốn, năm nhãn cùng sáng lên không
                 phải là bốn, năm nguồn độc lập cùng xác nhận một điều — đó là một hai con số được
                 viết lại theo mấy cách khác nhau.
@@ -594,9 +598,10 @@ export default function LearnDocMotTuoiPage() {
                   này.
                 </li>
                 <li>
-                  <strong>Không thể có lời khuyên riêng cho bạn.</strong> Gợi ý nghề, gợi ý màu,
-                  gợi ý hướng đều suy từ mệnh của năm sinh, tức từ một dữ kiện dùng chung cho cả
-                  nhóm. Công cụ ghi rõ đây là mục để tham khảo, và nên đọc đúng như vậy.
+                  <strong>Không thể có lời khuyên riêng cho bạn.</strong> Gợi ý nghề và gợi ý màu
+                  suy từ mệnh của năm sinh; gợi ý hướng suy từ cung phi, tức năm sinh cộng giới
+                  tính. Cả hai đều là dữ kiện dùng chung cho cả nhóm. Công cụ ghi rõ đây là mục để
+                  tham khảo, và nên đọc đúng như vậy.
                 </li>
                 <li>
                   <strong>Thêm dữ kiện làm chi tiết hơn, không làm đúng hơn.</strong> Nhập cả ngày

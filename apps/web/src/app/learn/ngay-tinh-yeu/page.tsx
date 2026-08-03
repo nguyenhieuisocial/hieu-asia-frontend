@@ -20,7 +20,8 @@
  *   KHÔNG — không tính bất cứ thứ gì về Thất Tịch; không chấm điểm ngày lễ; không có
  *   ô nào nhận "ngày bạn đang xem" làm đầu vào. Bài vì thế KHÔNG dạy phần đó.
  *
- * ĐẦU VÀO THẬT của phép xem hợp tuổi (đọc form, không đọc lời quảng cáo):
+ * ĐẦU VÀO THẬT của phép xem hợp tuổi (đọc form, không đọc lời quảng cáo — KHÔNG chép
+ * lại câu "Nhập năm sinh hai người" của trang công cụ, câu đó thiếu giới tính):
  *   components/hop-tuoi/BirthInputPair.tsx + app/hop-tuoi/[type]/HopTuoiClient.tsx →
  *   mỗi người gồm NĂM SINH + GIỚI TÍNH (tên là tuỳ chọn, chỉ để hiển thị lại);
  *   `isValidPerson` bắt buộc cả hai. Body gửi lên API đúng bằng hai cặp đó, KHÔNG
@@ -48,7 +49,8 @@ import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@hieu-asia/ui';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { RelatedTools } from '@/components/tools/RelatedTools';
-import { learnTopicBySlug } from '@/lib/learn/related';
+import { relatedLearnLenses } from '@/lib/learn/related';
+import { SEASONAL_PAGES } from '@/lib/seasonal';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import { solarToLunar } from '@/lib/ngay-kieng-ky';
@@ -176,6 +178,17 @@ const JUMP_MAX = JUMP_SHIFTS.length > 0 ? Math.max(...JUMP_SHIFTS) : 0;
 /** Những năm Valentine rơi TRƯỚC Tết — nhận ra bằng tháng âm còn là tháng Chạp. */
 const BEFORE_TET = ROWS.filter((r) => r.lunar.month === 12);
 
+/**
+ * Số năm mỗi ngày lễ rơi vào ngày đi làm (Thứ Hai–Thứ Sáu). Đếm từ chính bảng vì
+ * đây là chỗ dễ nói theo cảm tính: bảng cho thấy CẢ HAI ngày đều hay rơi giữa tuần,
+ * nên không được viết như thể chỉ ngày âm mới dính chuyện đó.
+ */
+const isWeekendDay = (w: string) => w === 'Thứ Bảy' || w === 'Chủ Nhật';
+const VALENTINE_WORKDAY_YEARS = ROWS.filter((r) => !isWeekendDay(r.valentineWeekday)).length;
+const THAT_TICH_WORKDAY_YEARS = ROWS.filter(
+  (r) => r.thatTichWeekday !== '' && !isWeekendDay(r.thatTichWeekday),
+).length;
+
 // --- Liên kết: MỘT nhãn duy nhất cho mỗi đích --------------------------------
 // `cta-consistency.guard` chặn việc cùng một href mang hai nhãn khác nhau, nên mọi
 // link trong bài đi qua bảng này thay vì viết tay từng chỗ.
@@ -194,16 +207,24 @@ const LINKS = {
 } as const;
 
 /**
- * Thẻ "lăng kính khác" chọn tay (KHÔNG sửa registry): slug 'ngay-tinh-yeu' chưa có
- * trong bảng NEIGHBORS của lib/learn/related, nên relatedLearnLenses() rơi về nhánh
- * "4 chủ đề đầu danh sách" — Tử Vi, Bát Tự, MBTI, Big Five — chẳng dính gì tới ngày
- * lễ hay lịch pháp. Bốn slug dưới đây đều có thật trong LEARN_TOPICS. Cùng cách xử
- * lý mà /learn/tuong-mat đang dùng.
+ * Thẻ "lăng kính khác" lấy thẳng từ registry: lib/learn/related ĐÃ có mục cho slug
+ * này — NEIGHBORS['ngay-tinh-yeu'] = that-tich · hop-doi · lich-am-duong ·
+ * cung-hoang-dao — nên relatedLearnLenses() KHÔNG rơi vào nhánh dự phòng "4 chủ đề
+ * đầu danh sách". Trước đây chỗ này chọn tay bốn slug khác kèm chú thích nói registry
+ * chưa có mục; chú thích đó sai, và hệ quả là bài rụng mất /learn/that-tich — lăng
+ * kính gần nhất — khỏi khối gợi ý. Bài /learn/that-tich cũng gọi hàm này.
  */
-const RELATED_LENSES = ['hop-doi', 'hop-tuoi', 'lich-am-duong', 'barnum']
-  .map((slug) => learnTopicBySlug(slug))
-  .filter((t): t is NonNullable<typeof t> => t !== undefined)
-  .map(({ eyebrow, name, href }) => ({ eyebrow, name, href }));
+
+/**
+ * Mốc hết mùa của trang công cụ, đọc từ chính bảng mùa vụ (lib/seasonal) thay vì gõ
+ * tay: /valentine-2027 chuyển hướng ngay sau dịp lễ chứ không đợi hết năm.
+ */
+const TOOL_SEASONAL = SEASONAL_PAGES['/valentine-2027'];
+const TOOL_REDIRECT_FROM = (() => {
+  if (!TOOL_SEASONAL) return undefined;
+  const [y, m, d] = TOOL_SEASONAL.redirectFrom.split('-');
+  return y && m && d ? `${Number(d)}/${Number(m)}/${y}` : undefined;
+})();
 
 const A = 'text-gold-700 underline-offset-4 hover:underline';
 
@@ -241,15 +262,15 @@ const FAQS = [
   },
   {
     q: 'Xem hợp đôi đúng ngày Valentine có chuẩn hơn ngày thường không?',
-    a: 'Không, và chỗ này kiểm được chứ không phải chuyện tin hay không tin. Theo mô tả của chính trang công cụ, thứ bạn nhập khi xem hợp tuổi là năm sinh của hai người — không có ô nào nhận ngày bạn đang xem. Cùng đầu vào thì cùng kết quả, nên xem hôm nay hay xem đúng ngày lễ đều ra một thứ. Bạn có thể tự thử: xem một lần, lưu lại, rồi xem lại đúng ngày lễ và đối chiếu. Cái thật sự đổi vào ngày lễ là kỳ vọng của người đọc, không phải phép tính.',
+    a: 'Không, và chỗ này kiểm được chứ không phải chuyện tin hay không tin. Mở form xem hợp tuổi ra thì thấy mỗi người chỉ có hai ô bắt buộc là năm sinh và giới tính (tên là tuỳ chọn) — không có ô nào nhận ngày bạn đang xem. Cùng đầu vào thì cùng kết quả, nên xem hôm nay hay xem đúng ngày lễ đều ra một thứ. Bạn có thể tự thử: xem một lần, lưu lại, rồi xem lại đúng ngày lễ và đối chiếu. Cái thật sự đổi vào ngày lễ là kỳ vọng của người đọc, không phải phép tính.',
   },
   {
     q: 'Nên chọn Valentine hay Thất Tịch làm ngày của mình?',
-    a: 'Cả hai đều là ngày do cộng đồng chọn ra, nên không có ngày nào "đúng hơn" ngày nào — chọn ngày nào là chuyện của hai người và của gia đình. Điều đáng cân nhắc chỉ là chuyện thực tế: Valentine đứng yên trên lịch dương nên dễ hẹn trước, còn Thất Tịch trôi trên lịch dương nên năm nào cũng phải tra lại, và có năm nó rơi giữa tuần làm việc.',
+    a: `Cả hai đều là ngày do cộng đồng chọn ra, nên không có ngày nào "đúng hơn" ngày nào — chọn ngày nào là chuyện của hai người và của gia đình. Khác biệt thực tế chỉ có một: Valentine đứng yên ở ${VALENTINE_DAY}/${VALENTINE_MONTH} nên biết trước ngày từ nhiều năm, còn Thất Tịch trôi trên lịch dương nên năm nào cũng phải tra lại. Còn chuyện rơi vào ngày đi làm thì cả hai đều dính như nhau: trong ${YEAR_COUNT} năm ở bảng trên trang này, Valentine rơi vào Thứ Hai–Thứ Sáu ${VALENTINE_WORKDAY_YEARS} năm, Thất Tịch ${THAT_TICH_WORKDAY_YEARS} năm.`,
   },
   {
     q: `Trang Valentine ${TOOL_YEAR} của hieu.asia làm gì, và không làm gì?`,
-    a: `Trang đó nêu mốc ngày của dịp (dương lịch và âm lịch), giải thích ba lớp mà phép xem hợp tuổi đối chiếu là địa chi, ngũ hành nạp âm và cung mệnh, nói rõ vì sao nó từ chối gộp tất cả thành một con số phần trăm, và chỉ đường sang các công cụ tương ứng. Nó không tính bất cứ thứ gì về Thất Tịch, không chấm điểm ngày lễ, và không có chỗ nào nhận "ngày bạn đang xem" làm đầu vào — vì vậy bài học này cũng không dạy những phần đó. Đây còn là một trang theo mùa: hết mùa ${TOOL_YEAR} nó tự chuyển hướng sang trang thường trực, nên đừng ngạc nhiên nếu về sau đường dẫn đưa bạn tới chỗ khác.`,
+    a: `Trang đó nêu mốc ngày của dịp (dương lịch và âm lịch), giải thích ba lớp mà phép xem hợp tuổi đối chiếu là địa chi, ngũ hành nạp âm và cung mệnh, nói rõ vì sao nó từ chối gộp tất cả thành một con số phần trăm, và chỉ đường sang các công cụ tương ứng. Nó không tính bất cứ thứ gì về Thất Tịch, không chấm điểm ngày lễ, và không có chỗ nào nhận "ngày bạn đang xem" làm đầu vào — vì vậy bài học này cũng không dạy những phần đó. Đây còn là một trang theo mùa${TOOL_REDIRECT_FROM ? `: từ ngày ${TOOL_REDIRECT_FROM} — ngay sau dịp lễ, không đợi hết năm — nó tự chuyển hướng sang trang thường trực` : ': hết mùa nó tự chuyển hướng sang trang thường trực'}, nên đừng ngạc nhiên nếu về sau đường dẫn đưa bạn tới chỗ khác.`,
   },
 ];
 
@@ -324,7 +345,7 @@ export default function LearnNgayTinhYeuPage() {
         { label: 'Học huyền học', href: '/learn' },
         { label: 'Ngày tình yêu' },
       ]}
-      relatedLenses={RELATED_LENSES}
+      relatedLenses={relatedLearnLenses('ngay-tinh-yeu')}
       tryCta={{
         heading: 'Trải nghiệm ngay',
         blurb: `Trang Valentine ${TOOL_YEAR} nêu mốc ngày của dịp theo cả lịch dương lẫn lịch âm, giải thích ba lớp mà phép xem hợp tuổi đối chiếu, và chỉ đường sang đúng công cụ cho từng việc.`,
@@ -497,10 +518,11 @@ export default function LearnNgayTinhYeuPage() {
                 Đứng yên hay trôi: nhìn {YEAR_COUNT} năm là thấy
               </h3>
               <p>
-                Bảng dưới đặt hai ngày cạnh nhau. Cột giữa là Valentine — số ngày đứng yên, chỉ thứ
-                trong tuần và ngày âm tương ứng là đổi. Hai cột cuối là Thất Tịch — ngày âm đứng yên,
-                còn ngày dương thì chạy. Không ô nào trong bảng được gõ tay: tất cả do trang này đổi
-                bằng đúng engine lịch âm mà các trang tra ngày của hieu.asia dùng.
+                Bảng dưới đặt hai ngày cạnh nhau. Hai cột giữa là Valentine — số ngày đứng yên, chỉ
+                thứ trong tuần và ngày âm tương ứng là đổi. Hai cột cuối là Thất Tịch — ngày âm đứng
+                yên, còn ngày dương thì chạy. Không ô nào trong bảng được gõ tay: hai cột ngày âm –
+                ngày dương do trang này đổi bằng đúng engine lịch âm mà các trang tra ngày của
+                hieu.asia dùng, còn hai cột thứ suy thẳng từ lịch dương.
               </p>
               <Scroller minWidth="min-w-[820px]">
                 <TableHead
@@ -584,17 +606,19 @@ export default function LearnNgayTinhYeuPage() {
               </p>
               <p>
                 Một ngày lễ là <strong>quy ước xã hội</strong>: nó tồn tại vì đủ nhiều người đồng ý
-                rằng nó tồn tại. Một phép đối chiếu tuổi là <strong>hàm của năm sinh</strong>: đưa vào
-                hai năm sinh thì ra một kết quả. Hai thứ này{' '}
+                rằng nó tồn tại. Một phép đối chiếu tuổi là{' '}
+                <strong>hàm của năm sinh và giới tính</strong>: đưa vào hai cặp ấy thì ra một kết
+                quả. Hai thứ này{' '}
                 <strong>không có biến nào chung</strong>. Không phải là chúng “chưa được chứng minh
                 liên quan” — mà là chúng không thể liên quan, giống như hỏi một cái cân xem hôm nay
                 thứ mấy.
               </p>
               <p>
-                Bằng chứng nằm ngay trong mô tả của công cụ: thứ bạn nhập khi xem hợp tuổi là{' '}
-                <strong>năm sinh của hai người</strong>, và không có ô nào để nhập ngày bạn đang xem.
-                Cùng đầu vào thì cùng đầu ra. Bạn tự thử được trong hai phút: xem một lần hôm nay, lưu
-                lại màn hình, rồi xem lại đúng ngày lễ và đối chiếu hai kết quả.
+                Bằng chứng nằm ngay trên form của công cụ: mỗi người chỉ có hai ô bắt buộc là{' '}
+                <strong>năm sinh và giới tính</strong> (tên là tuỳ chọn, chỉ để hiển thị lại), và
+                không có ô nào để nhập ngày bạn đang xem. Cùng đầu vào thì cùng đầu ra. Bạn tự thử
+                được trong hai phút: xem một lần hôm nay, lưu lại màn hình, rồi xem lại đúng ngày lễ
+                và đối chiếu hai kết quả.
               </p>
               <p>
                 Vậy cái gì đổi thật vào ngày lễ? <strong>Người đọc đổi.</strong> Hôm đó bạn đang mong

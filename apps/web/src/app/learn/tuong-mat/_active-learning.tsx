@@ -2,8 +2,8 @@
  * Nội dung "học chủ động" cho trang /learn/tuong-mat — bài PHỤ của công cụ
  * /xem-tuong, chỉ nói về tướng MẶT. Bài chính của công cụ là /learn/palm.
  *
- * GROUNDING — nguồn duy nhất là app/xem-tuong/page.tsx ('use client', không
- * export gì nên KHÔNG import được → đọc mã rồi thuật lại). Công cụ THẬT SỰ:
+ * GROUNDING — nguồn duy nhất là app/xem-tuong/page.tsx ('use client', chỉ export
+ * default component nên các hằng số KHÔNG import được → đọc mã rồi thuật lại). Công cụ THẬT SỰ:
  * nhận MỘT tấm ảnh + giới tính (ô ghi rõ "không bắt buộc"), không ngày/giờ sinh,
  * không tên; resizeToDataUrl(file, maxPx = 1024, quality = 0.8) nén ảnh NGAY
  * TRÊN MÁY người dùng; POST {image_url, kind, gender} tới /tools/vision-read;
@@ -13,6 +13,9 @@
  * vào và DẠNG đầu ra. Trang tự nói: ảnh "không được lưu trữ"; "không phải khoa
  * học được kiểm chứng"; "tướng tự tâm sinh"; không chẩn đoán sức khoẻ/tâm lý,
  * không đoán tương lai; chỉ gửi ảnh của mình hoặc ảnh người khác khi được đồng ý.
+ * Riêng câu "không được lưu trữ" đã kiểm tận nơi ở handler /tools/vision-read
+ * bên repo backend (2026-08): ảnh chỉ chuyển tiếp cho mô hình, không ghi R2/KV/DB
+ * — xem chú thích dài đầu ./page.tsx. Đừng hạ nó xuống thành "cam kết".
  *
  * CÔNG CỤ KHÔNG TÍNH tam đình / ngũ quan / thập nhị cung — ba khung đó dạy ở đây
  * như DI SẢN VĂN HOÁ và bài nói thẳng là công cụ không tính chúng.
@@ -250,9 +253,9 @@ export function TuongMatDepth() {
             label: 'Người 14 tuổi',
             content: (
               <p>
-                Công cụ chỉ hỏi bạn {strong('hai thứ')}: tấm ảnh, và giới tính — không ngày sinh,
-                không giờ sinh, không tên; ảnh còn được thu nhỏ và nén ngay trên máy bạn trước khi
-                gửi. Đầu ra là {strong('một đoạn văn')}: công cụ không có ô điểm, không có bảng chấm,
+                Về bạn, công cụ chỉ hỏi {strong('hai thứ')}: tấm ảnh, và giới tính — không ngày
+                sinh, không giờ sinh, không tên (ô thứ ba trên form chỉ là nút chọn xem chỉ tay hay
+                xem tướng mặt); ảnh còn được thu nhỏ và nén ngay trên máy bạn trước khi gửi. Đầu ra là {strong('một đoạn văn')}: công cụ không có ô điểm, không có bảng chấm,
                 không có thang phần trăm nào. Vì vậy mọi con số trong bài này là kiến thức nền do bài
                 viết cung cấp, {strong('không phải thứ công cụ tính ra')}.
               </p>
@@ -291,8 +294,9 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     prompt: 'Công cụ Xem tướng nhận vào những dữ kiện gì về bạn, và trả ra cái gì?',
     answer: (
       <>
-        Nó hỏi đúng {strong('hai thứ')}: một tấm ảnh, và giới tính. Không ngày sinh, không giờ sinh,
-        không tên (nếu bạn đang đăng nhập thì có thêm một vé đăng nhập để tính lượt dùng, không phải
+        Nó hỏi đúng {strong('hai thứ')}: một tấm ảnh, và giới tính — ô thứ ba trên form chỉ là nút
+        chọn chế độ chỉ tay / tướng mặt. Không ngày sinh, không giờ sinh, không tên (nếu bạn đang
+        đăng nhập thì có thêm một vé đăng nhập để máy chủ biết đây là tài khoản nào, không phải
         dữ kiện để đọc mặt). Trả ra {strong('một đoạn văn')} do mô hình AI viết, hiển thị dưới dạng
         chữ. Trong cả công cụ không có ô điểm, không có bảng chấm nào — nên đừng đọc kết quả như một
         phép đo.

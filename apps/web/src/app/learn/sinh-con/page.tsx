@@ -9,13 +9,16 @@
  *   • app/sinh-con/page.tsx + components/sinh-con/SinhConChecker.tsx — công cụ đích.
  *
  * CÔNG CỤ /sinh-con THẬT SỰ LÀM GÌ (đọc code, không đoán):
- *   CÓ — nhận đúng BA ô nhập (năm bé dự kiến, năm sinh mẹ, năm sinh bố, đều là NĂM ÂM); tra
- *   can chi + con giáp + nạp âm + mệnh của bé; đối chiếu TỪNG phụ huynh với bé theo HAI lớp
- *   (quan hệ 12 con giáp; tương sinh – tương khắc giữa hai mệnh nạp âm); xuất PDF.
+ *   CÓ — đúng BA ô, đều theo NĂM ÂM, nhưng KHÔNG cùng kiểu: năm bé là ô CHỌN (<Select>) chỉ
+ *   mở đúng ba năm trong `CHILD_YEARS` của SinhConChecker, còn năm sinh mẹ và năm sinh bố là
+ *   hai ô NHẬP số tự do; tra can chi + con giáp + nạp âm + mệnh của bé; đối chiếu TỪNG phụ
+ *   huynh với bé theo HAI lớp (quan hệ 12 con giáp; tương sinh – tương khắc giữa hai mệnh nạp
+ *   âm); xuất PDF.
  *   KHÔNG — không nhận tháng/ngày/giờ sinh, giới tính, tuổi mẹ tại thời điểm sinh, dữ kiện
  *   sức khoẻ hay kinh tế; không chấm điểm, không xếp hạng năm; không đối chiếu bố với mẹ;
  *   không lập lá số / Bát Tự cho bé; không xét Tam Tai / Kim Lâu / Hoang Ốc. Khoảng năm hợp
- *   lệ 1900–2100 là literal trong parseYear() của SinhConChecker.
+ *   lệ 1900–2100 là literal trong parseYear(), mà parseYear() CHỈ chạy cho hai ô năm sinh bố
+ *   mẹ — ô năm bé không đi qua nó, nên đừng gán khoảng đó cho cả ba ô.
  *
  * KIỂM CHỨNG (đã chạy thật bằng chính các hàm trên): 2027 = Đinh Mùi, tuổi Mùi, Thiên Hà
  * Thủy, mệnh Thủy; sườn đếm 12 con giáp bố mẹ là 3 hợp / 2 lưu ý / 7 trung tính với cả ba
@@ -24,7 +27,8 @@
  * mà menhRelation() viết ra, vòng 5 hành chỉ sinh ra được NĂM.
  *
  * PHẠM VI — không lấn bài đã có, chỉ link: /learn/nap-am, /learn/tam-hop-luc-xung (mỗi bài
- * MỘT câu), /learn/dat-ten-ngu-hanh, /learn/hieu-nguoi-than. Giọng: bảng tra là NÉT VĂN HOÁ
+ * MỘT câu), /learn/dat-ten-ngu-hanh, /learn/hieu-nguoi-than, /learn/ra-quyet-dinh,
+ * /learn/kiem-chung, /learn/lich-am-duong. Giọng: bảng tra là NÉT VĂN HOÁ
  * để tham khảo, không phải tiêu chí sàng lọc. Lõi đạo đức: sức khoẻ mẹ, tuổi mẹ, điều kiện
  * kinh tế và sự sẵn sàng của cả hai người quan trọng hơn mọi bảng tra; và tuyệt đối không
  * dùng bảng này để trách một đứa trẻ đã sinh ra.
@@ -77,10 +81,14 @@ const FOCUS_YEAR = 2027;
 const MOTHER_YEAR = 1996;
 const FATHER_YEAR = 1993;
 
-/** Khoảng năm hợp lệ (literal trong parseYear()) và số ô nhập của công cụ. */
+/**
+ * Khoảng năm hợp lệ (literal trong parseYear()) — CHỈ áp cho hai ô nhập năm sinh bố mẹ.
+ * INPUT_COUNT là tổng số ô của công cụ: 1 ô chọn năm bé + 2 ô nhập năm sinh bố mẹ.
+ */
 const YEAR_MIN = 1900;
 const YEAR_MAX = 2100;
-const INPUT_COUNT = 3;
+const PARENT_INPUT_COUNT = 2;
+const INPUT_COUNT = PARENT_INPUT_COUNT + 1;
 
 const FOCUS = yearProfile(FOCUS_YEAR);
 const FOCUS_CANCHI = FOCUS?.canChi ?? '—';
@@ -117,7 +125,11 @@ const COUNT_HOP = countTone(ZODIAC_ROWS, 'hop');
 const COUNT_LUU_Y = countTone(ZODIAC_ROWS, 'luu-y');
 const COUNT_TRUNG_TINH = countTone(ZODIAC_ROWS, 'trung-tinh');
 
-/** Ba năm mà ô chọn của công cụ đang mở — mỗi năm một mệnh, một con giáp, một sườn đếm. */
+/**
+ * Ba năm mà ô chọn của công cụ đang mở — mỗi năm một can chi và một con giáp, nhưng KHÔNG
+ * phải mỗi năm một mệnh: nạp âm gán theo cặp hai năm liền nhau nên hai trong ba năm này
+ * trùng nạp âm (xem SAME_NAPAM bên dưới, suy tại runtime chứ không gõ tay).
+ */
 const YEAR_ROWS = TOOL_CHILD_YEARS.map((y) => {
   const p = yearProfile(y);
   const rows = zodiacRelationTable(y);
@@ -132,6 +144,18 @@ const YEAR_ROWS = TOOL_CHILD_YEARS.map((y) => {
     trungTinh: countTone(rows, 'trung-tinh'),
   };
 });
+
+/**
+ * Cặp năm liền nhau TRONG ô chọn dùng chung một tên nạp âm — null nếu ba năm đang mở không
+ * có cặp nào như vậy. Dùng để câu văn nói đúng thứ bảng ngay dưới nó đang in ra.
+ */
+const SAME_NAPAM_SECOND = YEAR_ROWS.findIndex(
+  (r, i) => i > 0 && YEAR_ROWS[i - 1]!.napAm === r.napAm,
+);
+const SAME_NAPAM =
+  SAME_NAPAM_SECOND > 0
+    ? { a: YEAR_ROWS[SAME_NAPAM_SECOND - 1]!, b: YEAR_ROWS[SAME_NAPAM_SECOND]! }
+    : null;
 
 /** Ma trận 5 hành bố/mẹ × 5 hành bé — mọi ô do menhRelation() sinh ra. */
 const ELEMENT_KEYS = Object.keys(ELEMENTS) as Element[];
@@ -165,7 +189,7 @@ const FAQS = [
   },
   {
     q: 'Kết quả ra nhóm “lưu ý” thì có nên đổi sang năm khác không?',
-    a: `Không nên đổi chỉ vì lý do đó. Với bé sinh năm ${FOCUS_CANCHI}, trong ${ZODIAC_ROWS.length} con giáp bố mẹ có ${COUNT_LUU_Y} con giáp rơi vào nhóm lưu ý — và điều đó chỉ có nghĩa là hai chi ở thế lục xung hoặc lục hại theo Can Chi, tức người xưa mô tả hai “nhịp” tính cách khác nhau. Nó không nói gì về sức khoẻ của mẹ, về tài chính của gia đình, hay về việc em bé sẽ lớn lên thế nào. Đổi năm là một cái giá thật: thêm một năm chờ, thêm tuổi cho mẹ, thêm rủi ro y khoa nếu mẹ đã lớn tuổi. Đừng trả giá thật cho một nhãn.`,
+    a: `Không nên đổi chỉ vì lý do đó. Với bé sinh năm ${FOCUS_CANCHI}, trong ${ZODIAC_ROWS.length} con giáp bố mẹ có ${COUNT_LUU_Y} con giáp rơi vào nhóm lưu ý — và điều đó chỉ có nghĩa là hai chi ở thế lục xung hoặc lục hại theo Can Chi, thứ mà chính trang công cụ gọi là lời nhắc “khác nhịp, cần dung hoà”: lục xung được diễn giải là hai “nhịp” tính cách khác nhau, lục hại là “lệch kênh” giao tiếp đôi chút. Nó không nói gì về sức khoẻ của mẹ, về tài chính của gia đình, hay về việc em bé sẽ lớn lên thế nào. Đổi năm là một cái giá thật: thêm một năm chờ, thêm tuổi cho mẹ, thêm rủi ro y khoa nếu mẹ đã lớn tuổi. Đừng trả giá thật cho một nhãn.`,
   },
   {
     q: 'Vì sao lệch một ngày sinh quanh Tết lại đổi cả kết quả đối chiếu?',
@@ -177,11 +201,11 @@ const FAQS = [
   },
   {
     q: 'Tuổi mẹ và sức khoẻ của mẹ có nằm trong phép tính không?',
-    a: `Không, và đây là điều quan trọng nhất cần biết trước khi dùng bảng tra. Công cụ có đúng ${INPUT_COUNT} ô nhập, mỗi ô là một con số năm — nó không hỏi tuổi mẹ tại thời điểm sinh, không hỏi tiền sử thai sản, không hỏi thu nhập, không hỏi hai người đã sẵn sàng chưa. Nhưng chính bốn thứ đó mới là thứ ảnh hưởng thật tới một lần sinh nở và tới những năm đầu đời của em bé. Bảng tra im lặng về chúng không phải vì chúng không quan trọng, mà vì phép tính không có chỗ để chứa chúng.`,
+    a: `Không, và đây là điều quan trọng nhất cần biết trước khi dùng bảng tra. Công cụ có đúng ${INPUT_COUNT} ô, mỗi ô chỉ chứa được một con số năm: một ô chọn năm bé — hiện chỉ mở ${TOOL_CHILD_YEARS.length} năm ${TOOL_CHILD_YEARS[0]}–${TOOL_CHILD_YEARS[TOOL_CHILD_YEARS.length - 1]} — và ${PARENT_INPUT_COUNT} ô nhập năm sinh của mẹ và của bố. Nó không hỏi tuổi mẹ tại thời điểm sinh, không hỏi tiền sử thai sản, không hỏi thu nhập, không hỏi hai người đã sẵn sàng chưa. Nhưng chính bốn thứ đó mới là thứ ảnh hưởng thật tới một lần sinh nở và tới những năm đầu đời của em bé. Bảng tra im lặng về chúng không phải vì chúng không quan trọng, mà vì phép tính không có chỗ để chứa chúng.`,
   },
   {
     q: 'Con tôi đã sinh vào năm bị coi là “không hợp” thì sao?',
-    a: `Thì không sao cả, và xin nói thật rõ: bảng tra này tuyệt đối không được dùng để trách một đứa trẻ đã sinh ra. Trong lời diễn giải của chính công cụ, nhóm “lưu ý” chỉ gợi ý bố mẹ thêm kiên nhẫn — không có chuyện con “khắc” cha mẹ hay mang lỗi với gia đình. Một đứa trẻ không chọn năm sinh của mình, và việc gắn cho bé nguyên nhân của những chuyện không may trong nhà là bất công với một người chưa đủ lớn để tự bênh vực. Nếu ai đó trong gia đình đang nói theo hướng ấy, phần “không trách một đứa trẻ” trong bài này viết ra để bạn đưa cho họ đọc.`,
+    a: `Thì không sao cả, và xin nói thật rõ: bảng tra này tuyệt đối không được dùng để trách một đứa trẻ đã sinh ra. Trang công cụ in nguyên câu này ngay dưới mỗi kết quả: nhóm “lưu ý” chỉ gợi ý bố mẹ thêm kiên nhẫn, tuyệt đối không có chuyện con “khắc” hay mang lỗi với cha mẹ. Một đứa trẻ không chọn năm sinh của mình, và việc gắn cho bé nguyên nhân của những chuyện không may trong nhà là bất công với một người chưa đủ lớn để tự bênh vực. Nếu ai đó trong gia đình đang nói theo hướng ấy, phần “không trách một đứa trẻ” trong bài này viết ra để bạn đưa cho họ đọc.`,
   },
 ];
 
@@ -280,7 +304,7 @@ export default function LearnSinhConPage() {
       relatedLenses={relatedLearnLenses('sinh-con')}
       tryCta={{
         heading: 'Trải nghiệm ngay',
-        blurb: `Nhập năm bé dự kiến sinh cùng năm sinh của mẹ và của bố, công cụ hiển thị can chi, con giáp và mệnh nạp âm của bé, kèm hai lớp đối chiếu với từng người — nguyên văn quy tắc, không chấm điểm.`,
+        blurb: `Chọn năm bé dự kiến sinh trong ${TOOL_CHILD_YEARS.length} năm công cụ đang mở rồi nhập năm sinh của mẹ và của bố; công cụ hiển thị can chi, con giáp và mệnh nạp âm của bé, kèm hai lớp đối chiếu với từng người — nguyên văn quy tắc, không chấm điểm.`,
         href: '/sinh-con',
         label: 'Đối chiếu năm sinh của bé với tuổi bố mẹ',
       }}
@@ -307,7 +331,10 @@ export default function LearnSinhConPage() {
                 <Link href="/sinh-con" className={A}>
                   Sinh con theo năm
                 </Link>{' '}
-                làm đúng việc đó, không gì hơn: {INPUT_COUNT} ô nhập, mỗi ô một con số năm.
+                làm đúng việc đó, không gì hơn: {INPUT_COUNT} ô, mỗi ô đúng một con số năm — một
+                ô chọn năm bé (hiện chỉ mở {TOOL_CHILD_YEARS.length} năm{' '}
+                {TOOL_CHILD_YEARS[0]}–{TOOL_CHILD_YEARS[TOOL_CHILD_YEARS.length - 1]}) và{' '}
+                {PARENT_INPUT_COUNT} ô nhập năm sinh của mẹ và của bố.
               </p>
               <p>Cần chốt ngay bốn điều phép tra này KHÔNG phải:</p>
               <ul className="list-disc space-y-2 pl-5">
@@ -363,16 +390,18 @@ export default function LearnSinhConPage() {
                 bố/mẹ và tuổi bé thành đúng {RELATION_LABELS.length} nhóm:{' '}
                 <strong>{RELATION_LABELS.join(', ')}</strong>. Ba sắc thái đi kèm là{' '}
                 {TONE_LABEL.hop}, {TONE_LABEL['luu-y']} và {TONE_LABEL['trung-tinh']} — không nhóm
-                nào bị gọi là xấu. Bảng dưới là toàn bộ lớp thứ nhất cho một em bé sinh năm{' '}
-                {FOCUS_CANCHI} (tuổi {FOCUS_TEN}); cả nhãn lẫn sắc thái đều đọc thẳng từ bộ quy tắc
-                mà công cụ đang chạy.
+                nào bị gọi là xấu. Trên trang công cụ, sắc thái được thể hiện bằng{' '}
+                <strong>màu khung kết quả</strong> chứ không in ra thành chữ; ba tên gọi dưới đây
+                là cách bài này đặt tên cho ba mức đó. Bảng dưới là toàn bộ lớp thứ nhất cho một em
+                bé sinh năm {FOCUS_CANCHI} (tuổi {FOCUS_TEN}); cả nhãn lẫn sắc thái đều đọc thẳng từ
+                bộ quy tắc mà công cụ đang chạy.
               </p>
               <DataTable
                 minWidth="min-w-[620px]"
                 cols={[
                   'Con giáp bố / mẹ',
                   `Quan hệ với bé tuổi ${FOCUS_TEN}`,
-                  'Sắc thái công cụ hiển thị',
+                  'Sắc thái trong bộ quy tắc',
                 ]}
                 rows={ZODIAC_ROWS.map((row) => [
                   <>
@@ -388,7 +417,8 @@ export default function LearnSinhConPage() {
                 lại thuộc nhóm {TONE_LABEL['trung-tinh'].toLowerCase()} — trên tổng{' '}
                 {ZODIAC_ROWS.length}. Nói cách khác,{' '}
                 <strong>
-                  phần lớn tổ hợp bố mẹ – con rơi vào ô mà quan niệm xưa không có gì để nói
+                  phần lớn tổ hợp bố mẹ – con không được xếp vào nhóm hợp mà cũng không bị xếp vào
+                  nhóm lưu ý
                 </strong>
                 . Đó đã là câu trả lời cho phần lớn gia đình đang lo lắng.
               </p>
@@ -398,8 +428,18 @@ export default function LearnSinhConPage() {
               </h3>
               <p>
                 Không. Ba năm mà ô chọn của công cụ đang mở cho thấy điều đó: can chi đổi, con giáp
-                đổi, mệnh đổi — nhưng sườn đếm giữ nguyên, vì mỗi con giáp luôn có đúng một bạn Lục
-                Hợp, một bạn Lục Xung, một bạn Lục Hại và hai bạn Tam Hợp.
+                đổi
+                {SAME_NAPAM ? (
+                  <>
+                    , còn mệnh thì chưa chắc — {SAME_NAPAM.a.year} và {SAME_NAPAM.b.year} cùng mang
+                    nạp âm {SAME_NAPAM.a.napAm}, tức cùng mệnh {SAME_NAPAM.a.menh}, vì mỗi tên nạp
+                    âm trong vòng 60 Giáp Tý phủ đúng hai năm liền nhau
+                  </>
+                ) : (
+                  <>, mệnh đổi</>
+                )}{' '}
+                — nhưng sườn đếm giữ nguyên, vì mỗi con giáp luôn có đúng một bạn Lục Hợp, một bạn
+                Lục Xung, một bạn Lục Hại và hai bạn Tam Hợp.
               </p>
               <ul className="list-disc space-y-2 pl-5">
                 {YEAR_ROWS.map((r) => (
@@ -519,8 +559,11 @@ export default function LearnSinhConPage() {
           children: (
             <div className="space-y-4 text-foreground/85 leading-relaxed">
               <p>
-                Đây là mục quan trọng nhất của bài. Công cụ có đúng {INPUT_COUNT} ô nhập, mỗi ô là
-                một con số năm trong khoảng {YEAR_MIN}–{YEAR_MAX}. Nó{' '}
+                Đây là mục quan trọng nhất của bài. Công cụ có đúng {INPUT_COUNT} ô, mỗi ô là một
+                con số năm: ô chọn năm bé hiện chỉ mở {TOOL_CHILD_YEARS.length} năm{' '}
+                {TOOL_CHILD_YEARS[0]}–{TOOL_CHILD_YEARS[TOOL_CHILD_YEARS.length - 1]}, còn{' '}
+                {PARENT_INPUT_COUNT} ô nhập năm sinh bố mẹ nhận năm trong khoảng {YEAR_MIN}–
+                {YEAR_MAX}. Nó{' '}
                 <strong>không có chỗ nào để nhận</strong> bốn thứ dưới đây — không phải vì chúng
                 không quan trọng, mà vì phép tính không chứa được chúng. Trong khi đó đúng bốn thứ
                 này mới ảnh hưởng thật tới một lần sinh nở và tới những năm đầu đời của em bé.
@@ -583,9 +626,10 @@ export default function LearnSinhConPage() {
               <ul className="list-disc space-y-2 pl-5">
                 <li>
                   <strong>Chính bộ quy tắc không nói vậy.</strong> Trong lời diễn giải mà công cụ
-                  hiển thị, nhóm lưu ý chỉ có nghĩa là hai “nhịp” tính cách khác nhau — kèm câu
-                  khẳng định rõ rằng không có chuyện con “khắc” hay mang lỗi với cha mẹ. Người trách
-                  đứa trẻ đang thêm vào bảng một nội dung nó không có.
+                  hiển thị, nhóm lưu ý chỉ là lời nhắc “khác nhịp, cần dung hoà” — lục xung được
+                  giải thích là hai “nhịp” tính cách khác nhau, lục hại là “lệch kênh” giao tiếp
+                  đôi chút — kèm câu khẳng định rõ rằng không có chuyện con “khắc” hay mang lỗi với
+                  cha mẹ. Người trách đứa trẻ đang thêm vào bảng một nội dung nó không có.
                 </li>
                 <li>
                   <strong>Quan hệ trong bảng là hai chiều.</strong> Lục Xung là một cặp: nếu đó là

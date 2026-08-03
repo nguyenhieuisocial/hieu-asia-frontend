@@ -168,7 +168,7 @@ export function DocMotTuoiDepth() {
               <>
                 <p>
                   Lịch can chi ghép Thiên Can với Địa Chi thành một vòng {CYCLE} năm. Nói bạn sinh
-                  năm {BIRTH} là nói bạn thuộc ô {CAN_CHI} — con {ZODIAC}, nạp âm {NAP_AM}, mệnh{' '}
+                  năm {BIRTH} là nói bạn thuộc ô {CAN_CHI} — tuổi {ZODIAC}, nạp âm {NAP_AM}, mệnh{' '}
                   {MENH}. Bốn thứ này {strong('suy thẳng ra từ năm')}, không cần hỏi thêm gì.
                 </p>
                 <p>
@@ -451,7 +451,7 @@ const FACETS: UnderstandingFacet[] = [
   { id: 'group-not-you', facet: 'Mô tả nhóm',
     can: 'Giải thích một năm sinh đặt bạn vào 1 trong 60 nhóm (120 nếu kể cả giới tính), nên mọi kết luận từ nó là mô tả nhóm chứ không phải mô tả bạn.' },
   { id: 'tool-scope', facet: 'Ranh giới công cụ',
-    can: 'Nói đúng thứ công cụ làm (gom các lát cắt phong tục của một năm sinh về một chỗ, hiện rõ từng phép tính) và thứ nó không làm (không chọn ngày, không xét cho một việc cụ thể, không lập lá số).' },
+    can: 'Nói đúng thứ công cụ làm (gom các lát cắt phong tục của một năm sinh về một chỗ, hiện rõ phép tính của Kim Lâu, Hoang Ốc, Tam Tai và xung năm) và thứ nó không làm (không chọn ngày, không xét cho một việc cụ thể, không lập lá số).' },
   { id: 'decision', facet: 'Quyết định',
     can: 'Nói được vì sao không hoãn một việc lớn chỉ vì một dòng “phạm”, và đâu là những tiêu chí thật sự nên cân nhắc thay vào đó.' },
   { id: 'teach-back', facet: 'Dạy lại',
@@ -524,10 +524,14 @@ export function DocMotTuoiWhys() {
           because: (
             <>
               Được sự an tâm về một quy ước. Mất một năm thật — tiền cọc, lịch của hai họ, kế hoạch
-              của hai người — và sang năm lại có{' '}
-              {strong('một nhãn kiêng khác đang chờ')}, vì các lớp hạn nối nhau liên tục chứ không
-              chừa năm nào trống hẳn. {strong('Cái giá là thật')}, còn cái được thì nằm trong một
-              cuốn sách tục lệ.
+              của hai người. Còn cái được thì mỏng, vì các nhãn kiêng vốn dày: chạy đúng phép tính
+              của công cụ cho {EXAM_YEARS.length} năm kể từ {START_YEAR}, người sinh {BIRTH} chỉ có{' '}
+              {strong(CLEAN_YEARS.length + ' năm trống hẳn cả bốn lớp')} — nên lùi một năm phần lớn
+              chỉ là đổi sang một nhãn khác.{' '}
+              {CLEAN_YEARS.includes(KL_YEAR + 1)
+                ? `Riêng ca này thì năm ${KL_YEAR + 1} lại trống, nhưng đó là chỗ rơi của phép chia chứ không phải phần thưởng cho việc kiêng.`
+                : `Ca này thì ngay năm ${KL_YEAR + 1} đã có nhãn khác chờ sẵn.`}{' '}
+              {strong('Cái giá là thật')}, còn cái được thì nằm trong một cuốn sách tục lệ.
             </>
           ),
         },

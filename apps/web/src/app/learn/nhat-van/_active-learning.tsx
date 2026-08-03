@@ -9,7 +9,8 @@
  *     dayCanChi mà ra.
  *   • app/tu-vi-hom-nay/page.tsx + [zodiac]/page.tsx — công cụ đích: chọn bản
  *     bằng ĐÚNG MỘT dữ kiện là con giáp; không có ô nhập ngày/giờ/nơi sinh ở
- *     phần dự báo con giáp; lá số thật nằm ở khối riêng bên dưới.
+ *     phần dự báo con giáp; mục lá số riêng nằm bên dưới và cũng KHÔNG nhập tại
+ *     chỗ (chỉ dựng lá số khi trình duyệt đã lưu ngày giờ sinh từ trước).
  *
  * PHẠM VI: KHÔNG dạy lại cấu tạo vòng can chi (bài /learn/can-chi), KHÔNG dạy
  * lại hiệu ứng Barnum ở mức chi tiết (bài /learn/barnum), KHÔNG dạy chấm ngày

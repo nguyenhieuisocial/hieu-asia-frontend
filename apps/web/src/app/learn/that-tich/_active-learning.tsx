@@ -19,10 +19,13 @@
  * ngày sinh, không tính gì theo người dùng, không có bản đồ sao, không tính vị trí
  * thiên thể, không dự đoán tình cảm. Nên phần thiên văn của bài là KIẾN THỨC NỀN,
  * và bài nói rõ công cụ không tính phần đó.
+ *   ⚠️ Trang đó CÓ đúng một ô nhập: ô email của <OccasionLeadCapture> (đăng ký
+ *   nhắc theo mùa). Vì vậy chỉ được viết "không có ô nhập NGÀY SINH" — viết
+ *   "không có ô nhập nào" là sai, mở trang ra là thấy ngay.
  *
  * PHẠM VI: 7/7 âm trôi trên lịch dương → /learn/lich-am-duong (một câu + link);
  * bầu trời thật nói chung → /learn/thien-van (link); so sánh với các ngày lễ tình
- * nhân khác thuộc chủ đề Ngày tình yêu — bài này không bàn.
+ * nhân khác → /learn/ngay-tinh-yeu (link) — bài này không bàn.
  *
  * GIỌNG: sao là THẬT, cầu Ô Thước là TRUYỆN. Không doạ, không phán duyên số,
  * không hứa đổi vận, không mỉa mai người giữ tục lệ.
@@ -301,8 +304,9 @@ export function ThatTichDepth() {
                 <p>
                   Trong repo này, ngày dương của 7/7 âm được suy bằng đúng hàm lịch mà các công cụ
                   ngày–giờ đang dùng, chứ không tra bảng: {strong('solarToLunar()')} theo thuật
-                  toán Hồ Ngọc Đức, múi giờ +7. Vì vậy con số trên trang luôn khớp với{' '}
-                  {strong('Lịch vạn niên')} của site.
+                  toán Hồ Ngọc Đức, múi giờ +7. {strong('Lịch vạn niên')} của site chạy một bản cài
+                  đặt riêng ở phía máy chủ, nhưng cùng thuật toán và cùng múi giờ ấy — nên hai nơi
+                  cho ra cùng một ngày.
                 </p>
               </>
             ),
@@ -358,7 +362,7 @@ export function ThatTichDepth() {
                 <p>
                   Nghĩa là nếu Chức Nữ bật một ngọn đèn, Ngưu Lang phải chờ{' '}
                   {strong('khoảng ' + vn(REAL_SEP_LY) + ' năm')} mới thấy. Không có phép gặp nào mỗi
-                  năm một lần: khoảng cách ấy gần như không đổi trong suốt đời sống của loài người.
+                  năm một lần: khoảng cách ấy gần như không đổi trong suốt đời một con người.
                 </p>
               </>
             ),
@@ -470,7 +474,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       },
       {
         text: 'Nhận ngày sinh rồi chấm điểm đường tình duyên trong năm',
-        note: 'Không. Không có ô nhập nào trên trang đó, và hieu.asia không chấm điểm đường tình duyên ở bất cứ đâu.',
+        note: 'Không. Trang đó không có ô nhập ngày sinh — ô duy nhất trên trang là ô email để đăng ký nhận nhắc theo mùa, và nó không tính gì cho bạn cả.',
       },
       {
         text: 'Vẽ bản đồ sao chỉ chỗ Altair và Vega theo vị trí của bạn',

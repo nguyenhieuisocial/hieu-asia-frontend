@@ -22,8 +22,8 @@
  *
  * PHẠM VI (chống trùng): vì sao 7/7 âm trôi trên lịch dương → MỘT câu + link tới
  * /learn/lich-am-duong. Bầu trời thật nói chung → link /learn/thien-van. So sánh
- * Thất Tịch với các ngày lễ tình nhân khác thuộc chủ đề Ngày tình yêu, bài này
- * không bàn.
+ * Thất Tịch với các ngày lễ tình nhân khác → link /learn/ngay-tinh-yeu (bài đó
+ * đã link ngược về đây), bài này không bàn.
  *
  * GIỌNG: sao là THẬT, cầu Ô Thước là TRUYỆN. Không doạ, không phán duyên số,
  * không hứa đổi vận, không mỉa mai người giữ tục lệ.
@@ -98,7 +98,7 @@ const TWO_LAYERS: readonly { chuDe: string; doDuoc: string; laTruyen: string }[]
   },
   {
     chuDe: 'Cuộc gặp mỗi năm',
-    doDuoc: `Hai sao cách nhau khoảng ${vn(SEP_DEG)} độ trên trời quanh năm và khoảng ${vn(REAL_SEP_LY)} năm ánh sáng trong không gian thật. Khoảng cách ấy không đổi.`,
+    doDuoc: `Hai sao cách nhau khoảng ${vn(SEP_DEG)} độ trên trời quanh năm và khoảng ${vn(REAL_SEP_LY)} năm ánh sáng trong không gian thật. Khoảng cách ấy gần như không đổi trong suốt một đời người.`,
     laTruyen: 'Mỗi năm một lần, hai người được gặp nhau trọn một đêm.',
   },
   {
@@ -282,7 +282,11 @@ export default function LearnThatTichPage() {
                   Lịch âm dương
                 </Link>
                 . Bài này chỉ dùng kết quả. Còn phần so sánh Thất Tịch với các ngày lễ tình nhân
-                khác thuộc chủ đề Ngày tình yêu, không nằm trong phạm vi ở đây.
+                khác thuộc bài{' '}
+                <Link href="/learn/ngay-tinh-yeu" className={A}>
+                  Ngày tình yêu
+                </Link>
+                , không nằm trong phạm vi ở đây.
               </p>
             </div>
           ),
@@ -340,7 +344,7 @@ export default function LearnThatTichPage() {
               </h3>
               <p>
                 Cột ngày dương không được gõ tay: trang này suy lại bằng đúng hàm đổi lịch âm –
-                dương mà mọi công cụ ngày–giờ của hieu.asia đang dùng, nên nếu engine lịch đổi thì
+                dương mà các công cụ ngày–giờ của hieu.asia đang dùng, nên nếu engine lịch đổi thì
                 bảng dưới đổi theo.
               </p>
               <Scroller minWidth="min-w-[620px]">

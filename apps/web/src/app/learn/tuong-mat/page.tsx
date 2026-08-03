@@ -4,8 +4,8 @@
  * không dạy lại chỉ tay.
  *
  * GROUNDING — nguồn duy nhất cho mọi câu về công cụ là app/xem-tuong/page.tsx
- * (đọc mã, không đoán). Trang đó là 'use client' và KHÔNG export gì (FAQS, hằng
- * số, hàm resize đều là biến cục bộ), nên không import được — phần dữ kiện được
+ * (đọc mã, không đoán). Trang đó là 'use client' và chỉ export default component
+ * (FAQS, hằng số, hàm resize đều là biến cục bộ), nên không import được — phần dữ kiện được
  * thuật lại kèm chú nguồn, và hai hằng số duy nhất phải chép tay
  * (RESIZE_MAX_PX = 1024, mức nén JPEG 0,8) được khai báo MỘT chỗ ở
  * ./_active-learning.tsx rồi import về đây.
@@ -29,10 +29,17 @@
  *   • Nếu đã đăng nhập, request còn kèm Bearer token Supabase → có thêm MỘT dữ
  *     kiện về người dùng (tài khoản nào), dù không phải dữ kiện để đọc mặt.
  *
- * ĐỪNG đổi ngược thành "ảnh không được lưu trữ" như một sự thật đã kiểm: đó là
- * CAM KẾT của site, frontend không kiểm được, và /methodology (mục Xem Tướng)
- * hiện ghi "Ảnh tự xoá sau 7 ngày" — hai câu này chưa khớp nhau. Bài học chỉ
- * được phép thuật lại kèm nhãn "cam kết", không phát ngôn thay máy chủ.
+ * CHUYỆN LƯU ẢNH — ĐÃ KIỂM TẬN NƠI (2026-08), đừng hạ xuống thành "cam kết":
+ * đọc handler `/tools/vision-read` trong repo backend
+ * (../backend/infra/cloudflare/workers/api-gateway/src/index.ts) thì ảnh chỉ
+ * được chuyển tiếp cho mô hình rồi thôi — KHÔNG ghi R2, KHÔNG ghi KV, KHÔNG ghi
+ * DB; bản ghi chi phí (writeTrace) cố tình để `content: ""`. Đường upload cũ
+ * (/v1/uploads/hand-image-url → MinIO) đã CHẾT vì worker không còn route /v1/
+ * nào, nên uploadImage luôn rơi vào nhánh dự phòng createObjectURL trong trình
+ * duyệt. /methodology và /onboarding/consent đã sửa cho khớp.
+ * Ranh giới còn lại phải giữ: ảnh CÓ rời máy bạn để tới nhà cung cấp mô hình —
+ * "không lưu" nói về máy chủ hieu.asia, không phải "ảnh không đi đâu cả".
+ * Nếu ai đó đổi handler đó, sửa lại bài này; đừng viết theo trí nhớ.
  *
  * CÔNG CỤ KHÔNG TÍNH: tam đình, ngũ quan, thập nhị cung — không có phép đo tỉ
  * lệ, không chấm điểm bộ phận, không chia cung nào. Ba khung đó được dạy ở đây
@@ -54,7 +61,7 @@ import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@hieu-asia/ui';
 import { LearnArticle } from '@/components/learn/LearnArticle';
 import { RelatedTools } from '@/components/tools/RelatedTools';
-import { learnTopicBySlug } from '@/lib/learn/related';
+import { relatedLearnLenses } from '@/lib/learn/related';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { article, breadcrumb, course, faqPage } from '@/lib/seo/jsonld';
 import {
@@ -98,7 +105,7 @@ const PIPELINE: readonly PipelineStep[] = [
   {
     buoc: 'Ảnh đã nén được gửi tới máy chủ',
     chiTiet:
-      'Gửi kèm loại xem và giới tính tới đúng một điểm cuối phân tích ảnh. Không kèm ngày sinh, giờ sinh hay tên — vì công cụ không hỏi những thứ đó. Nếu bạn đang đăng nhập thì có thêm một vé đăng nhập đi cùng, để máy chủ biết đây là tài khoản nào mà tính lượt dùng; nó không phải dữ kiện để đọc mặt.',
+      'Gửi kèm loại xem và giới tính tới đúng một điểm cuối phân tích ảnh. Không kèm ngày sinh, giờ sinh hay tên — vì công cụ không hỏi những thứ đó. Nếu bạn đang đăng nhập thì có thêm một vé đăng nhập đi cùng, để máy chủ biết đây là tài khoản nào (trang có sẵn đường mở khoá trả phí, mà thứ mở khoá thì phải gắn với một tài khoản); nó không phải dữ kiện để đọc mặt.',
   },
   {
     buoc: 'Máy chủ trả về một đoạn văn',
@@ -108,7 +115,7 @@ const PIPELINE: readonly PipelineStep[] = [
   {
     buoc: 'Trang hiển thị đoạn văn đó',
     chiTiet:
-      'Kèm nút chia sẻ, nút tải bản PDF và dòng lưu ý cố định rằng kết quả mang tính tham khảo, không phán định số phận. Trang cũng ghi rằng ảnh không được lưu trữ — đó là cam kết của site về phần máy chủ, không phải thứ trình duyệt kiểm được.',
+      'Kèm nút chia sẻ, nút tải bản PDF và dòng lưu ý cố định rằng kết quả mang tính tham khảo, không phán định số phận. Trang cũng ghi rằng ảnh không được lưu trữ — và đúng là máy chủ hieu.asia không ghi tấm ảnh vào bất kỳ kho nào: nó chuyển tiếp cho mô hình rồi thôi.',
   },
 ];
 
@@ -117,7 +124,7 @@ const NOT_DOING: readonly string[] = [
   'Không đo tỉ lệ tam đình, không chấm điểm ngũ quan, không chia thập nhị cung. Không chỗ nào trong công cụ tính ba khung ấy — chúng là kiến thức nền của bài học này. Đoạn văn AI viết vẫn có thể mượn chữ của chúng, vì đó là ngôn ngữ của môn này; nhưng mượn chữ thì không phải là đo.',
   'Không nhận ngày sinh hay giờ sinh, nên không dính dáng gì tới lá số hay can chi. Đây là lăng kính đọc ảnh, không phải lăng kính đọc lịch.',
   'Không chẩn đoán sức khoẻ hay tâm lý, không đoán tương lai, không xếp hạng ai với ai.',
-  'Không đối chiếu mặt bạn với kho ảnh nào để tìm ra bạn là ai — nó chỉ mô tả tấm ảnh đang có. Còn chuyện ảnh được giữ bao lâu thì nằm ở phía máy chủ: trang công cụ cam kết không lưu trữ, và đó là một lời cam kết, không phải một dòng mã bạn kiểm được.',
+  'Không hỏi bạn là ai để đọc mặt: trang chỉ gửi đi tấm ảnh cùng loại xem và giới tính (thêm vé đăng nhập nếu bạn đã đăng nhập), và trong trình duyệt không có bước nào đối chiếu khuôn mặt với một kho ảnh. Phần chạy trên máy chủ thì trình duyệt không tự kiểm được, nhưng mã máy chủ đã được đọc: tấm ảnh chỉ được chuyển tiếp cho mô hình để đọc rồi thôi, không ghi vào kho lưu trữ nào. Điều đó không có nghĩa ảnh không đi đâu cả — nó vẫn rời máy bạn để tới bên chạy mô hình.',
   'Không tính ra một con số nào để bạn so đo: không có thang điểm, không có ngưỡng, không có bảng xếp loại ở bất kỳ đâu trong công cụ.',
 ];
 
@@ -179,15 +186,14 @@ const JSONLD = [
 ];
 
 /**
- * Thẻ "lăng kính khác" chọn tay từ registry lib/learn/related (KHÔNG sửa registry:
- * slug 'tuong-mat' chưa có trong bảng NEIGHBORS nên relatedLearnLenses() sẽ rơi
- * về "4 chủ đề đầu danh sách" — Tử Vi, Bát Tự, MBTI, Big Five — chẳng liên quan
- * gì tới tướng mặt). Bốn slug dưới đây đều có thật trong LEARN_TOPICS.
+ * Thẻ "lăng kính khác" lấy thẳng từ registry lib/learn/related. Bảng NEIGHBORS
+ * ĐÃ có mục 'tuong-mat' → ['palm', 'can-xuong', 'barnum', 'kiem-chung'], nên
+ * relatedLearnLenses('tuong-mat') KHÔNG rơi vào nhánh dự phòng "4 chủ đề đầu
+ * danh sách" (Tử Vi, Bát Tự, MBTI, Big Five). Đã chạy đối chiếu: kết quả trùng
+ * đúng bốn thẻ mà bản chép tay trước đây dựng ra, nên bỏ bản chép tay để hai
+ * chỗ không lệch nhau khi registry đổi.
  */
-const RELATED_LENSES = ['palm', 'can-xuong', 'barnum', 'kiem-chung']
-  .map((slug) => learnTopicBySlug(slug))
-  .filter((t): t is NonNullable<typeof t> => t !== undefined)
-  .map(({ eyebrow, name, href }) => ({ eyebrow, name, href }));
+const RELATED_LENSES = relatedLearnLenses('tuong-mat');
 
 const TD = 'px-4 py-2 text-muted-foreground';
 const A = 'text-gold-700 underline-offset-4 hover:underline';
@@ -424,9 +430,9 @@ export default function LearnTuongMatPage() {
                 Phần này mở hộp đen. Bảng dưới là đường đi của một tấm ảnh, đọc thẳng từ mã của trang
                 công cụ chứ không phải mô tả tiếp thị — <strong>{PIPELINE.length} bước</strong>, và
                 không có bước nào là đo đạc. Một ranh giới cần nói trước: mã chạy trong trình duyệt
-                chỉ cho biết cái gì được gửi đi và cái gì nhận về. Chuyện xảy ra bên trong máy chủ là
-                thứ không kiểm được từ đây, nên chỗ nào là cam kết của site thì bài gọi đúng tên là
-                cam kết.
+                chỉ cho biết cái gì được gửi đi và cái gì nhận về. Phần chạy trên máy chủ thì phải
+                đọc mã máy chủ mới biết — bài này đã đọc, và chỗ nào là chuyện xảy ra bên ngoài tầm
+                với của hieu.asia thì bài nói thẳng ra như vậy.
               </p>
               <Scroller minWidth="min-w-[720px]">
                 <TableHead cols={['Bước', 'Chuyện gì xảy ra', 'Chi tiết']} />
@@ -445,8 +451,9 @@ export default function LearnTuongMatPage() {
               <p>
                 Đọc bảng theo chiều dữ liệu thì thấy rất gọn: <strong>một tấm ảnh vào</strong>,{' '}
                 <strong>một đoạn văn ra</strong>. Về bạn, công cụ chỉ hỏi đúng hai thứ — tấm ảnh và ô
-                giới tính (cộng vé đăng nhập nếu bạn đã đăng nhập, để tính lượt dùng). Nó không biết
-                bạn bao nhiêu tuổi, làm nghề gì, đang lo chuyện gì.
+                giới tính (cộng vé đăng nhập nếu bạn đã đăng nhập, để máy chủ biết đây là tài khoản
+                nào); ô thứ ba trên form chỉ là nút chọn chế độ xem. Nó không biết bạn bao nhiêu
+                tuổi, làm nghề gì, đang lo chuyện gì.
               </p>
 
               <h3 className="text-lg font-semibold text-foreground">Những việc công cụ KHÔNG làm</h3>

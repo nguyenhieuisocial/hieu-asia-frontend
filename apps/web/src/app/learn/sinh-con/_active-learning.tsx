@@ -7,8 +7,10 @@
  *     PARENT_CHILD_COPY (SÁU nhóm quan hệ con giáp mà công cụ phân biệt).
  *   • lib/dat-ten-ngu-hanh.ts — ELEMENTS (5 hành) để đọc tên mệnh.
  *
- * CÔNG CỤ /sinh-con LÀM GÌ (đọc code, không đoán): nhận BA ô nhập là năm bé dự kiến,
- * năm sinh mẹ, năm sinh bố — đều theo NĂM ÂM; trả can chi + con giáp + nạp âm + mệnh
+ * CÔNG CỤ /sinh-con LÀM GÌ (đọc code, không đoán): BA ô, đều theo NĂM ÂM nhưng không
+ * cùng kiểu — năm bé là ô CHỌN chỉ mở đúng ba năm (CHILD_YEARS trong SinhConChecker),
+ * năm sinh mẹ và năm sinh bố là hai ô NHẬP số (1900–2100, literal trong parseYear() và
+ * parseYear() KHÔNG chạy cho ô năm bé); trả can chi + con giáp + nạp âm + mệnh
  * của bé, rồi đối chiếu TỪNG phụ huynh với bé theo HAI lớp (quan hệ 12 con giáp; tương
  * sinh – tương khắc giữa hai mệnh nạp âm). KHÔNG nhận tháng/ngày/giờ sinh, KHÔNG nhận
  * giới tính, KHÔNG nhận tuổi mẹ / sức khoẻ / kinh tế, KHÔNG chấm điểm, KHÔNG xếp hạng
@@ -51,8 +53,17 @@ const FOCUS_YEAR = 2027;
 const MOTHER_YEAR = 1996;
 const FATHER_YEAR = 1993;
 
-/** Số ô nhập của công cụ: năm bé, năm sinh mẹ, năm sinh bố. */
-const INPUT_COUNT = 3;
+/**
+ * Bản sao có chủ đích của `CHILD_YEARS` trong SinhConChecker.tsx (const nội bộ, không export
+ * nên không import được). Ô năm bé là ô CHỌN và chỉ mở đúng những năm này.
+ */
+const TOOL_CHILD_YEARS = [2026, 2027, 2028] as const;
+const YEAR_FIRST = TOOL_CHILD_YEARS[0];
+const YEAR_LAST = TOOL_CHILD_YEARS[TOOL_CHILD_YEARS.length - 1];
+
+/** Số ô của công cụ: 1 ô chọn năm bé + 2 ô nhập năm sinh mẹ / bố. */
+const PARENT_INPUT_COUNT = 2;
+const INPUT_COUNT = PARENT_INPUT_COUNT + 1;
 
 const FOCUS = yearProfile(FOCUS_YEAR);
 const FOCUS_CANCHI = FOCUS?.canChi ?? '—';
@@ -130,7 +141,9 @@ export function SinhConFrame() {
         <>
           Công cụ tra {strong('con giáp và mệnh nạp âm')} của bé theo năm sinh âm lịch, rồi đối
           chiếu với tuổi bố mẹ theo hai lớp: quan hệ {ZODIAC_COUNT} con giáp, và tương sinh – tương
-          khắc giữa hai mệnh. Nó nhận đúng {INPUT_COUNT} ô nhập, mỗi ô là một con số năm.
+          khắc giữa hai mệnh. Nó có đúng {INPUT_COUNT} ô, mỗi ô một con số năm: một ô{' '}
+          {strong('chọn')} năm bé (hiện chỉ mở {TOOL_CHILD_YEARS.length} năm {YEAR_FIRST}–
+          {YEAR_LAST}) và {PARENT_INPUT_COUNT} ô nhập năm sinh của mẹ và của bố.
         </>
       }
       how={
@@ -292,7 +305,9 @@ export function SinhConDepth() {
             content: (
               <>
                 <p>
-                  Công cụ có {INPUT_COUNT} ô nhập, mỗi ô một con số năm. Nghĩa là nó{' '}
+                  Công cụ có {INPUT_COUNT} ô, mỗi ô một con số năm — một ô chọn năm bé trong{' '}
+                  {TOOL_CHILD_YEARS.length} năm đang mở, {PARENT_INPUT_COUNT} ô nhập năm sinh của
+                  mẹ và của bố. Nghĩa là nó{' '}
                   {strong('không có chỗ để nhận')} sức khoẻ của mẹ, tuổi của mẹ khi mang thai, điều
                   kiện kinh tế của gia đình, hay việc hai người đã thật sự muốn chưa.
                 </p>
@@ -337,8 +352,10 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     prompt: 'Công cụ sinh con nhận những dữ kiện gì — và KHÔNG nhận những gì?',
     answer: (
       <>
-        Nhận đúng {INPUT_COUNT} ô, mỗi ô là {strong('một con số năm âm lịch')}: năm bé dự kiến sinh,
-        năm sinh mẹ, năm sinh bố. Không nhận tháng, ngày hay giờ sinh, không nhận giới tính, và
+        Nhận đúng {INPUT_COUNT} ô, mỗi ô là {strong('một con số năm âm lịch')}: một ô chọn năm bé
+        dự kiến sinh (hiện chỉ mở {TOOL_CHILD_YEARS.length} năm {YEAR_FIRST}–{YEAR_LAST}, không
+        gõ được năm khác), rồi {PARENT_INPUT_COUNT} ô nhập năm sinh mẹ và năm sinh bố. Không nhận
+        tháng, ngày hay giờ sinh, không nhận giới tính, và
         không có ô nào cho sức khoẻ của mẹ, tuổi mẹ khi sinh, điều kiện kinh tế hay sự sẵn sàng của
         hai người. Vì vậy kết quả chỉ mô tả quan hệ giữa các nhãn lịch, không nói gì về một gia đình
         cụ thể.
@@ -373,7 +390,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       {
         text: `${COUNT_LUU_Y} con giáp — phần còn lại là ${COUNT_HOP} thuộc nhóm hợp và ${COUNT_TRUNG_TINH} thuộc nhóm trung tính`,
         correct: true,
-        note: 'Đúng. Phần lớn tổ hợp rơi vào ô mà quan niệm xưa không có gì để nói — đó đã là câu trả lời cho phần lớn gia đình đang lo.',
+        note: 'Đúng. Phần lớn tổ hợp không được xếp vào nhóm hợp mà cũng không bị xếp vào nhóm lưu ý — đó đã là câu trả lời cho phần lớn gia đình đang lo.',
       },
       {
         text: 'Khoảng một nửa, nên xác suất “không hợp” là rất cao',
@@ -381,7 +398,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       },
       {
         text: 'Không con giáp nào, vì bộ quy tắc đã bỏ hết các nhóm tiêu cực',
-        note: 'Không — bộ quy tắc vẫn giữ đủ nhóm Lục Xung và Lục Hại, chỉ diễn giải chúng theo hướng “khác nhịp, cần kiên nhẫn” thay vì hù doạ.',
+        note: 'Không — bộ quy tắc vẫn giữ đủ nhóm Lục Xung và Lục Hại, chỉ diễn giải chúng theo hướng “khác nhịp, cần dung hoà” thay vì hù doạ.',
       },
     ],
   },
@@ -407,7 +424,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     prompt: 'Kết quả ra nhóm “lưu ý” cho một trong hai vợ chồng. Xử lý thế nào cho lành mạnh?',
     choices: [
       {
-        text: 'Cứ theo kế hoạch — nhóm lưu ý chỉ mô tả hai “nhịp” tính cách khác nhau, nó không biết gì về sức khoẻ, tài chính hay sự sẵn sàng của hai người',
+        text: 'Cứ theo kế hoạch — nhóm lưu ý chỉ là lời nhắc “khác nhịp, cần dung hoà”, nó không biết gì về sức khoẻ, tài chính hay sự sẵn sàng của hai người',
         correct: true,
         note: 'Đúng. Và dời năm là cái giá thật: thêm một năm chờ, mẹ thêm một tuổi khi mang thai.',
       },
@@ -466,7 +483,7 @@ const FACETS: UnderstandingFacet[] = [
   {
     id: 'inputs',
     facet: 'Đầu vào',
-    can: `Nói được công cụ nhận đúng ${INPUT_COUNT} ô, mỗi ô là một con số năm âm lịch — và kể ra được những thứ nó hoàn toàn không nhận: tháng, ngày, giờ sinh, giới tính, sức khoẻ, kinh tế.`,
+    can: `Nói được công cụ có đúng ${INPUT_COUNT} ô, mỗi ô là một con số năm âm lịch — trong đó ô năm bé là ô CHỌN chỉ mở ${TOOL_CHILD_YEARS.length} năm, còn ${PARENT_INPUT_COUNT} ô năm sinh bố mẹ mới là ô nhập tự do — và kể ra được những thứ nó hoàn toàn không nhận: tháng, ngày, giờ sinh, giới tính, sức khoẻ, kinh tế.`,
   },
   {
     id: 'two-layers',
@@ -548,7 +565,7 @@ export function SinhConWhys() {
           because: (
             <>
               Vì các nhóm mang tên nghe nặng — Lục Xung, Lục Hại — trong khi{' '}
-              {strong('nội dung của chúng chỉ là “khác nhịp, cần thêm kiên nhẫn”')}. Chính lời diễn
+              {strong('nội dung của chúng chỉ là “khác nhịp, cần dung hoà”')}. Chính lời diễn
               giải mà công cụ hiển thị cũng nói rõ không có chuyện con “khắc” hay mang lỗi với cha
               mẹ. Cái nặng nằm ở tên gọi, không nằm ở quy tắc.
             </>
