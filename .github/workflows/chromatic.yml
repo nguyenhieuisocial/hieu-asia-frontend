@@ -1,22 +1,34 @@
-# Wave 60.42 — Chromatic visual regression CI.
+# Storybook build CI — kèm Chromatic KHI đã cấu hình.
 #
-# Catches color/layout regressions automatically by snapshotting every story
-# on every PR and diffing against the baseline. Triggered by the same kind
-# of bug that prompted Wave 60.41 (Button disabled state cream-on-cream
-# invisible on /signin light mode).
+# ─── Vì sao cổng này đổi tên (01/08/2026) ────────────────────────────────────
+# Wave 60.42 dựng nó làm cổng "Visual regression": chụp ảnh mọi story rồi so
+# với ảnh nền để bắt lỗi màu/bố cục.
 #
-# Chromatic free tier: 5000 snapshots/mo. With ~5 stories × theme switcher
-# (light+dark) × 5 PRs/week = ~100 snapshots/week = ~400/mo. Well under cap.
+# Nhưng CHROMATIC_PROJECT_TOKEN chưa bao giờ được đặt, nên:
+#   • Trước 31/07: bước publish bị `if:` bỏ qua ⇒ 96 XANH / 0 ĐỎ trong 100 lần
+#     chạy gần nhất mà KHÔNG một ảnh nào được chụp. Dấu tích xanh nói dối (#1019
+#     đã gỡ cái `if:` đó).
+#   • Sau 31/07: mọi PR đeo dấu X ĐỎ vĩnh viễn. Đo ngày 01/08: cả 4 PR đang mở
+#     đều đỏ ở đúng mục này và phải mở từng cái ra mới biết nó không liên quan
+#     gì tới code trong PR. Đỏ mãn tính mà không nói được lý do thì rồi cũng bị
+#     làm ngơ — cùng căn bệnh, chỉ đổi dấu.
 #
-# Setup steps for founder (one-time, ~3 min):
-# 1. Go to chromatic.com → sign in with GitHub
-# 2. Create project linked to nguyenhieuisocial/hieu-asia-frontend
+# Nay cổng khai đúng việc nó THẬT SỰ làm: **dựng Storybook** (22 file story —
+# bắt được story hỏng, component vỡ khi build). Việc đó không cần token nên
+# xanh/đỏ đều là tín hiệu thật. Chromatic chỉ là phần THÊM: có token thì publish,
+# chưa có thì in ::notice:: nói rõ đang thiếu gì — không giả vờ đã kiểm ảnh.
+#
+# ─── Bật kiểm ảnh giao diện thật (một lần, ~3 phút, chỉ founder làm được) ─────
+# 1. chromatic.com → đăng nhập bằng GitHub
+# 2. Tạo project trỏ tới nguyenhieuisocial/hieu-asia-frontend
 # 3. Copy project token
-# 4. Add to repo secrets: Settings → Secrets → Actions → add
-#    CHROMATIC_PROJECT_TOKEN
-# 5. First push to main runs baseline build; subsequent PRs auto-diff.
+# 4. Settings → Secrets → Actions → thêm CHROMATIC_PROJECT_TOKEN
+# 5. Lần push main kế tiếp dựng ảnh nền; từ đó mỗi PR tự so ảnh.
+# Không phải sửa file này — bước publish tự chạy ngay khi secret có mặt.
+# Muốn cổng ĐỎ trở lại khi thiếu token thì đổi `::notice::` + `exit 0` dưới cùng
+# thành `::error::` + `exit 1`.
 
-name: Chromatic
+name: Storybook
 
 on:
   push:
@@ -35,7 +47,9 @@ concurrency:
 
 jobs:
   visual:
-    name: Visual regression
+    # Tên = việc THẬT SỰ làm. Chưa có token thì đây thuần là cổng dựng Storybook;
+    # có token thì kèm luôn kiểm ảnh giao diện.
+    name: Storybook build (+ Chromatic khi đã cấu hình)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Chromatic skips PRs from forks (no secret access) — that's fine for
@@ -59,25 +73,11 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
 
-      # Đỏ SỚM, không đỏ muộn (thêm 2026-08-01).
-      #
-      # Vẫn giữ nguyên quyết định "chưa cấu hình = ĐỎ" ở dưới — chỉ đổi CHỖ đỏ.
-      # Trước đây job cài dependency + dựng Storybook (~1 phút) rồi mới chết ở
-      # bước publish với lỗi "Missing project token" nằm lẫn trong log. Mỗi PR
-      # tốn từng ấy CI cho một kết luận biết trước, và người xem phải mở log mới
-      # hiểu vì sao đỏ.
-      #
-      # Nay hỏng trong ~5 giây với đúng một dòng ::error:: nói rõ phải làm gì.
-      # Khi secret đã được đặt thì bước này im lặng đi qua, mọi thứ chạy như cũ.
-      - name: Kiểm tra CHROMATIC_PROJECT_TOKEN (hỏng sớm nếu thiếu)
-        env:
-          TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-        run: |
-          if [ -z "$TOKEN" ]; then
-            echo "::error title=Chưa cấu hình Chromatic::Thiếu secret CHROMATIC_PROJECT_TOKEN nên chưa có ảnh giao diện nào được chụp hay so sánh. Dấu đỏ này là LỖI CẤU HÌNH, không phải lỗi code trong PR. Cách sửa (một lần, ~3 phút): 1) chromatic.com đăng nhập bằng GitHub 2) tạo project trỏ tới nguyenhieuisocial/hieu-asia-frontend 3) copy project token 4) Settings > Secrets > Actions > thêm CHROMATIC_PROJECT_TOKEN 5) lần push main kế tiếp sẽ dựng ảnh nền."
-            exit 1
-          fi
-
+      # Bước "hỏng sớm nếu thiếu token" (#1042) đã bỏ: nó đúng khi cổng còn mang
+      # tên "Visual regression" — khai kiểm ảnh mà không kiểm thì phải đỏ. Nay
+      # cổng khai đúng là dựng Storybook, việc đó KHÔNG cần token, nên đỏ vì
+      # thiếu token sẽ thành đỏ sai. Chỗ báo thiếu token chuyển xuống cuối file
+      # dưới dạng ::notice:: (xem bước "Publish to Chromatic").
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -85,23 +85,35 @@ jobs:
         working-directory: apps/web
         run: pnpm build-storybook
 
-      # ⛔ CHƯA CẤU HÌNH = ĐỎ (cố ý, sửa 2026-07-31).
+      # ĐỌC KỸ TRƯỚC KHI SỬA — chỗ này đã sai hai lần theo hai hướng ngược nhau.
       #
-      # Wave 60.51.b đã bọc bước dưới bằng một "Check Chromatic token" +
-      # `if: steps.token_check.outputs.has_token == 'true'`, để khi thiếu
-      # CHROMATIC_PROJECT_TOKEN thì workflow chỉ in warning rồi thoát XANH.
+      # Lần 1 (Wave 60.51.b): cổng tên "Visual regression" + `if:` bỏ qua bước
+      # publish khi thiếu token ⇒ 96 XANH / 0 ĐỎ trong 100 lần chạy mà KHÔNG một
+      # ảnh nào được chụp. Dấu tích xanh nói dối.
+      # Lần 2 (#1019, 31/07): gỡ `if:` ⇒ mọi PR đỏ vĩnh viễn vì một lỗi cấu hình
+      # không liên quan gì tới PR. Đỏ mãn tính rồi cũng bị làm ngơ.
       #
-      # Hậu quả thật (bắt tại trận 2026-07-31): secret chưa bao giờ được đặt,
-      # nên bước publish luôn ở trạng thái `skipped` — 96 XANH / 0 ĐỎ trong 100
-      # lần chạy gần nhất, mà KHÔNG một ảnh chụp giao diện nào từng được chụp
-      # hay so sánh. Cổng chống lỗi giao diện đã "bảo vệ" suốt nhiều tháng bằng
-      # cách không làm gì cả. Một bước bị `if:` bỏ qua vẫn được tính là pass →
-      # dấu tích xanh nói dối.
+      # Cách thoát không nằm ở cái `if:`, mà ở chỗ CỔNG KHAI ĐÚNG VIỆC NÓ LÀM.
+      # Cổng nay tên "Storybook build", không hứa kiểm ảnh — nên bỏ qua bước
+      # publish là trung thực, không phải nói dối. Chromatic là phần THÊM.
       #
-      # Nay không còn cổng chặn: `chromaui/action` tự lỗi "Missing project
-      # token" khi thiếu secret. Đỏ = "hãy cấu hình tôi" (xem 5 bước ở đầu
-      # file), trung thực hơn hẳn một dấu tích xanh vô nghĩa.
+      # ⚠️ Ràng buộc: `if:` dưới đây CHỈ hợp lệ chừng nào tên job còn là
+      # "Storybook build...". Nếu ai đó đổi tên job về "Visual regression" thì
+      # phải bỏ `if:` này — bằng không lỗi lần 1 tái diễn nguyên xi.
+      - name: Kiểm tra token Chromatic
+        id: token
+        env:
+          TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            echo "has=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Kiểm ảnh giao diện ĐANG TẮT::Storybook đã dựng xong (đó là việc cổng này khai và nó đã làm), nhưng CHƯA có ảnh giao diện nào được chụp hay so sánh vì thiếu secret CHROMATIC_PROJECT_TOKEN. Bật (một lần, ~3 phút): 1) chromatic.com đăng nhập bằng GitHub 2) tạo project trỏ tới nguyenhieuisocial/hieu-asia-frontend 3) copy project token 4) Settings > Secrets > Actions > thêm CHROMATIC_PROJECT_TOKEN. Không phải sửa file workflow."
+          fi
+
       - name: Publish to Chromatic
+        if: steps.token.outputs.has == 'true'
         uses: chromaui/action@14cfaef73576e69f95f47f60058063f46ca38719 # v17
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
