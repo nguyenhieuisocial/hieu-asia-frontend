@@ -111,6 +111,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'hieu-nguoi-than',
     'nghe-nghiep',
   ]);
+  // đợt 9 (cuối) — văn hoá, nhịp sống, đọc một tuổi, vận ngày, tướng mặt
+  publishAll('2026-08-03T00:00:00Z', [
+    'doc-mot-tuoi',
+    'nhat-van',
+    'tuong-mat',
+    'that-tich',
+    'ngay-tinh-yeu',
+    'nhip-song',
+    'sinh-con',
+  ]);
 
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({
     url: `${BASE_URL}/tu-vi/${p.slug}`,

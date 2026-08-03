@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 54 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 61 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -298,6 +298,12 @@ const CLUSTERS: readonly LearnCluster[] = [
         subtitle: 'Vận trình · 1 năm',
         blurb: 'Lá số gốc, đại vận, lưu niên xếp chồng ra sao — lớp hẹp không xoá lớp rộng.',
       },
+      {
+        href: '/learn/nhat-van',
+        title: 'Tử Vi hôm nay',
+        subtitle: 'Vận ngày · 12 nhóm',
+        blurb: 'Vì sao dự báo theo con giáp là lớp thô nhất: 12 nhóm cho cả nước.',
+      },
     ],
   },
   {
@@ -345,6 +351,12 @@ const CLUSTERS: readonly LearnCluster[] = [
       'Ba hạn tuổi bị hỏi nhiều nhất khi cưới hỏi và làm nhà. Đọc để hiểu cách người xưa tính, từ đó bớt sợ — không phải để sợ thêm, và tuyệt đối không phải để mua lễ giải hạn.',
     topics: [
       {
+        href: '/learn/doc-mot-tuoi',
+        title: 'Đọc một tuổi',
+        subtitle: 'Xem tuổi · Một năm sinh',
+        blurb: 'Từ một năm sinh suy ra được gì — và thứ gì thì không suy ra được.',
+      },
+      {
         href: '/learn/kim-lau',
         title: 'Kim Lâu',
         subtitle: 'Cưới hỏi · Chia 9',
@@ -382,6 +394,34 @@ const CLUSTERS: readonly LearnCluster[] = [
       },
     ],
   },
+  // Đợt 9 (cuối). Ba bài về ngày lễ và nhịp thời gian — phần văn hoá thuần tuý,
+  // tách khỏi cụm thiên văn vì chúng nói về TỤC LỆ chứ không nói về hiện tượng.
+  {
+    id: 'van-hoa-nhip-song',
+    heading: 'Văn hoá & nhịp sống',
+    positioning:
+      'Những ngày người ta chọn để đánh dấu điều gì đó, và cách chia nhịp thời gian để sống chủ động thay vì ngồi chờ một giai đoạn đẹp.',
+    topics: [
+      {
+        href: '/learn/that-tich',
+        title: 'Thất Tịch',
+        subtitle: 'Văn hoá · Ngưu Lang – Chức Nữ',
+        blurb: 'Tích Ngưu Lang – Chức Nữ, và hai ngôi sao thật trên trời mà truyện nói tới.',
+      },
+      {
+        href: '/learn/ngay-tinh-yeu',
+        title: 'Ngày tình yêu',
+        subtitle: 'Văn hoá · Đối chiếu',
+        blurb: 'Valentine và Thất Tịch: hai cách một nền văn hoá đánh dấu chuyện yêu đương.',
+      },
+      {
+        href: '/learn/nhip-song',
+        title: 'Nhịp sống',
+        subtitle: 'Kế hoạch · Tuần – tháng – năm',
+        blurb: 'Chia nhịp để lên kế hoạch, không phải để chờ vận — ranh giới nằm ở đâu.',
+      },
+    ],
+  },
   {
     id: 'tuong-hoc',
     heading: 'Tướng học',
@@ -393,6 +433,12 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Xem chỉ tay',
         subtitle: 'Tướng học · Chiromancy',
         blurb: '7 đường chính: tâm đạo, trí đạo, sinh đạo, số mệnh, mặt trời, thuỷ tinh, kim tinh.',
+      },
+      {
+        href: '/learn/tuong-mat',
+        title: 'Tướng mặt',
+        subtitle: 'Tướng học · Nhân tướng',
+        blurb: 'Tam đình, ngũ quan, thập nhị cung — và bằng chứng khoa học tới đâu.',
       },
     ],
   },
@@ -459,6 +505,12 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Hiểu người thân',
         subtitle: 'Quan hệ · Đạo đức',
         blurb: 'Dùng để phối hợp, không dùng để dán nhãn — nhất là với trẻ con.',
+      },
+      {
+        href: '/learn/sinh-con',
+        title: 'Sinh con theo năm',
+        subtitle: 'Quan hệ · Chọn năm',
+        blurb: 'Mệnh và con giáp của bé theo năm sinh — kèm ranh giới không nên vượt.',
       },
     ],
   },

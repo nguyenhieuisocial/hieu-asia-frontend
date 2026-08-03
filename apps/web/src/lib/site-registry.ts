@@ -179,8 +179,10 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "surfaces": [
       "catalog"
     ],
-    "relatedLabel": "Tra cứu tuổi trọn đời"
-  },
+    "relatedLabel": "Tra cứu tuổi trọn đời",
+    "related": [
+      "/learn/doc-mot-tuoi"
+    ]  },
   {
     "href": "/luc-thap-hoa-giap",
     "catalog": {
@@ -360,7 +362,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi-thang",
       "/tu-vi-2026",
       "/tu-vi-2027",
-      "/lich-van-nien"
+      "/lich-van-nien",
+      "/learn/nhat-van"
     ]
   },
   {
@@ -384,7 +387,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "related": [
       "/tu-vi-tinh-yeu",
       "/hop-tuoi",
-      "/cung-hoang-dao"
+      "/cung-hoang-dao",
+      "/learn/that-tich"
     ]
   },
   {
@@ -408,7 +412,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "related": [
       "/tu-vi-tinh-yeu",
       "/hop-tuoi",
-      "/cung-hoang-dao"
+      "/cung-hoang-dao",
+      "/learn/ngay-tinh-yeu"
     ]
   },
   {
@@ -432,7 +437,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "related": [
       "/lich-van-nien",
       "/dai-van-hien-tai",
-      "/tu-vi-hom-nay"
+      "/tu-vi-hom-nay",
+      "/learn/nhip-song"
     ]
   },
   {
@@ -737,7 +743,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/tu-vi",
       "/gieo-que",
       "/than-so-hoc",
-      "/learn/palm"
+      "/learn/palm",
+      "/learn/tuong-mat"
     ]
   },
   {
@@ -1382,7 +1389,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/dat-ten-ngu-hanh",
       "/hop-tuoi",
       "/ban-menh",
-      "/xem-tuoi-cuoi"
+      "/xem-tuoi-cuoi",
+      "/learn/sinh-con"
     ]
   },
   {
@@ -1879,6 +1887,42 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/nghe-nghiep",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu gợi ý nghề nghiệp"
+  },
+  // Đợt 9 — đợt cuối.
+  {
+    "href": "/learn/doc-mot-tuoi",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu cách đọc một tuổi"
+  },
+  {
+    "href": "/learn/nhat-van",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu vận ngày"
+  },
+  {
+    "href": "/learn/tuong-mat",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu tướng mặt"
+  },
+  {
+    "href": "/learn/that-tich",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu Thất Tịch"
+  },
+  {
+    "href": "/learn/ngay-tinh-yeu",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu các ngày tình yêu"
+  },
+  {
+    "href": "/learn/nhip-song",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu nhịp sống"
+  },
+  {
+    "href": "/learn/sinh-con",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu chọn năm sinh con"
   }
 ];
 
