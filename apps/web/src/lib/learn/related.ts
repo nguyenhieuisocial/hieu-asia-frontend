@@ -71,6 +71,12 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   // Đợt 7 — khép cụm vận theo thời gian.
   { slug: 'giao-van', eyebrow: 'CHUYỂN VẬN', name: 'Giao vận', href: '/learn/giao-van' },
   { slug: 'luu-nien', eyebrow: 'CHỒNG LỚP', name: 'Lưu niên', href: '/learn/luu-nien' },
+  // Đợt 8 — quan hệ & tư duy phản biện.
+  { slug: 'so-sanh-lang-kinh', eyebrow: 'ĐỐI CHIẾU', name: 'So sánh lăng kính', href: '/learn/so-sanh-lang-kinh' },
+  { slug: 'ra-quyet-dinh', eyebrow: 'THIÊN KIẾN', name: 'Ra quyết định', href: '/learn/ra-quyet-dinh' },
+  { slug: 'hop-doi', eyebrow: 'HỢP ĐÔI', name: 'Điểm hợp đôi', href: '/learn/hop-doi' },
+  { slug: 'dong-nhom', eyebrow: 'NHÓM', name: 'Động lực nhóm', href: '/learn/dong-nhom' },
+  { slug: 'hieu-nguoi-than', eyebrow: 'ĐẠO ĐỨC', name: 'Hiểu người thân', href: '/learn/hieu-nguoi-than' },
   // Đợt 8 — tư duy phản biện (mở đầu cụm, còn 3 bài nữa trong PENDING).
   { slug: 'barnum', eyebrow: 'HIỆU ỨNG FORER', name: 'Hiệu ứng Barnum', href: '/learn/barnum' },
   { slug: 'kiem-chung', eyebrow: 'KHẢ SAI', name: 'Kiểm chứng dự đoán', href: '/learn/kiem-chung' },
@@ -135,6 +141,13 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'dai-van': ['giao-van', 'luu-nien', 'menh-cuc', 'thai-tue'],
   'giao-van': ['dai-van', 'luu-nien', 'tiet-khi', 'menh-cuc'],
   'luu-nien': ['dai-van', 'thai-tue', 'giao-van', 'sao-han'],
+  'so-sanh-lang-kinh': ['barnum', 'kiem-chung', 'ra-quyet-dinh', 'mbti'],
+  // 'nghe-nghiep' CHƯA tồn tại (agent viết bài đó bị kẹt, sẽ viết ở đợt sau) —
+  // thêm vào đây khi trang ra đời, kẻo lens rơi mất một ô.
+  'ra-quyet-dinh': ['so-sanh-lang-kinh', 'barnum', 'kiem-chung', 'big-five'],
+  'hop-doi': ['dong-nhom', 'hop-tuoi', 'tam-hop-luc-xung', 'hieu-nguoi-than'],
+  'dong-nhom': ['hop-doi', 'hieu-nguoi-than', 'disc', 'hop-tuoi'],
+  'hieu-nguoi-than': ['dong-nhom', 'hop-doi', 'enneagram', 'barnum'],
   // thai-tue ↔ khai-truong trỏ nhau: khai-truong dùng Thái Tuế ở lát cắt mở hàng,
   // thai-tue giữ khái niệm tổng quát. Không trỏ nhau thì đọc như hai bài rời rạc.
   'thai-tue': ['khai-truong', 'tam-hop-luc-xung', 'dai-van', 'can-chi'],

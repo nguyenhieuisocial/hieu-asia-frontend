@@ -1317,7 +1317,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "related": [
       "/hop-tuoi",
       "/xem-hop-nhom",
-      "/mbti"
+      "/mbti",
+      "/learn/hop-doi"
     ]
   },
   {
@@ -1341,7 +1342,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "related": [
       "/hop-tuoi",
       "/compatibility",
-      "/mbti"
+      "/mbti",
+      "/learn/dong-nhom"
     ]
   },
   {
@@ -1360,7 +1362,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/xem-hop-nhom",
       "/compatibility",
       "/hop-tuoi",
-      "/sinh-con"
+      "/sinh-con",
+      "/learn/hieu-nguoi-than"
     ]
   },
   {
@@ -1438,7 +1441,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "related": [
       "/mbti",
       "/big-five",
-      "/disc"
+      "/disc",
+      "/learn/so-sanh-lang-kinh"
     ]
   },
   {
@@ -1457,7 +1461,8 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "/so-sanh",
       "/career-fit",
       "/mbti",
-      "/gieo-que"
+      "/gieo-que",
+      "/learn/ra-quyet-dinh"
     ]
   },
   {
@@ -1844,6 +1849,31 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/kiem-chung",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu cách kiểm chứng dự đoán"
+  },
+  {
+    "href": "/learn/so-sanh-lang-kinh",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu cách so sánh lăng kính"
+  },
+  {
+    "href": "/learn/ra-quyet-dinh",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu cách ra quyết định"
+  },
+  {
+    "href": "/learn/hop-doi",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu điểm hợp đôi"
+  },
+  {
+    "href": "/learn/dong-nhom",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu động lực nhóm"
+  },
+  {
+    "href": "/learn/hieu-nguoi-than",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu cách đọc cho người thân"
   }
 ];
 

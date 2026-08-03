@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 46 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 53 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -413,6 +413,46 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Kiểm chứng dự đoán',
         subtitle: 'Phản biện · Khả sai',
         blurb: 'Ba câu hỏi kiểm một lời tiên đoán: khả sai, tỉ lệ nền, và ghi trước hay hồi cứu.',
+      },
+      {
+        href: '/learn/so-sanh-lang-kinh',
+        title: 'So sánh lăng kính',
+        subtitle: 'Phản biện · Đối chiếu',
+        blurb: 'Vì sao hai hệ nói khác nhau mà vẫn cùng hữu ích — và khi chúng mâu thuẫn thì nghĩa là gì.',
+      },
+      {
+        href: '/learn/ra-quyet-dinh',
+        title: 'Ra quyết định',
+        subtitle: 'Phản biện · Thiên kiến',
+        blurb: 'Dùng lăng kính để mở rộng lựa chọn, không phải để chọn hộ bạn.',
+      },
+    ],
+  },
+  // Đợt 8 — cụm về đọc lăng kính cho NGƯỜI KHÁC, gồm cả phần đạo đức mà trước
+  // đây chưa bài nào của khu Học đụng tới.
+  {
+    id: 'quan-he-gia-dinh',
+    heading: 'Quan hệ & gia đình',
+    positioning:
+      'Xem cho mình đã khó, xem cho người khác còn khó hơn — vì kết quả đó ảnh hưởng tới một người không ngồi đây. Ba bài này nói cả cách đọc lẫn ranh giới nên dừng.',
+    topics: [
+      {
+        href: '/learn/hop-doi',
+        title: 'Điểm hợp đôi',
+        subtitle: 'Quan hệ · Chấm điểm',
+        blurb: 'Một con số hợp đôi thật ra đo gì — và vì sao nó không quyết định được mối quan hệ.',
+      },
+      {
+        href: '/learn/dong-nhom',
+        title: 'Động lực nhóm',
+        subtitle: 'Quan hệ · 3–6 người',
+        blurb: 'Hợp từng cặp không cộng dồn thành hợp cả nhóm; nhóm càng đông càng nhiều quan hệ.',
+      },
+      {
+        href: '/learn/hieu-nguoi-than',
+        title: 'Hiểu người thân',
+        subtitle: 'Quan hệ · Đạo đức',
+        blurb: 'Dùng để phối hợp, không dùng để dán nhãn — nhất là với trẻ con.',
       },
     ],
   },

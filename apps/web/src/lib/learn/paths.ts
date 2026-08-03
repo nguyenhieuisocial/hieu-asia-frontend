@@ -120,7 +120,16 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     name: 'Tư duy phản biện',
     tagline:
       'Vì sao một lời mô tả chung chung luôn thấy đúng, và cách kiểm một lời tiên đoán trước khi tin — kể cả lời của chính hieu.asia.',
-    slugs: ['barnum', 'kiem-chung'],
+    slugs: ['barnum', 'kiem-chung', 'so-sanh-lang-kinh', 'ra-quyet-dinh'],
+  },
+  // Đợt 8. Ba bài về việc đọc lăng kính cho NGƯỜI KHÁC — phần đạo đức mà chưa
+  // bài nào của khu Học đụng tới trước đây.
+  {
+    id: 'quan-he-gia-dinh',
+    name: 'Quan hệ & gia đình',
+    tagline:
+      'Đọc lăng kính cho hai người, cho một nhóm, và cho người thân — kèm ranh giới đạo đức khi nói về người khác.',
+    slugs: ['hop-doi', 'dong-nhom', 'hieu-nguoi-than'],
   },
 ];
 
