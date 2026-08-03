@@ -109,6 +109,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'hop-doi',
     'dong-nhom',
     'hieu-nguoi-than',
+    'nghe-nghiep',
   ]);
 
   const palaceUrls: MetadataRoute.Sitemap = PALACES_CONTENT.map((p) => ({

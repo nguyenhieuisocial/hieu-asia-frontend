@@ -24,10 +24,10 @@
  * NĂM DƯƠNG LỊCH). Trang nói thẳng từng khoản không tính.
  *
  * PHẠM VI: vì sao hai chi tam hợp hay lục xung thuộc /learn/tam-hop-luc-xung và
- * /learn/hop-tuoi — ở đây một câu + link. Nhóm 3 người trở lên thuộc bài "Đồng
- * nhóm" (nhắc tên, KHÔNG link vì đang viết song song). Giọng: trung thực về giới
- * hạn, không doạ — điểm cao không bảo chứng quan hệ tốt, điểm thấp không phải lý
- * do chia tay.
+ * /learn/hop-tuoi — ở đây một câu + link. Nhóm 3 người trở lên thuộc bài
+ * /learn/dong-nhom (bài ấy nay đã xuất bản → LINK thật, không nhắc suông).
+ * Giọng: trung thực về giới hạn, không doạ — điểm cao không bảo chứng quan hệ
+ * tốt, điểm thấp không phải lý do chia tay.
  */
 
 import type { ReactNode } from 'react';
@@ -181,6 +181,11 @@ const TAM_HOP_NHUNG_KHAC = CHI_PAIRS.filter(
 const LUC_XUNG_NHUNG_CUNG_HANH = CHI_PAIRS.filter(
   ([a, b]) => isLucXung(a, b) && hanhRelation(a, b) === 'same',
 ).length;
+/** Lệch mốc Tết = bị gán chi của năm liền sau. Cặp chi LIỀN NHAU cùng một hành
+ * thì quan hệ ngũ hành không đổi, nên "lệch một chi" KHÔNG luôn sai đủ bốn trục. */
+const NEIGHBOUR_SAME_HANH = CHI.map(
+  (c, i) => [c, CHI[(i + 1) % CHI.length] as Chi] as const,
+).filter(([a, b]) => HANH_BY_CHI[a] === HANH_BY_CHI[b]);
 
 /** Bảng "mỗi trục đọc ra từ đâu". */
 const AXIS_ROWS = [
@@ -192,7 +197,7 @@ const AXIS_ROWS = [
     luat: `theo phần dư chia ${SEED_MOD} của mã băm, từ ${sgn(-SEED_OFFSET)} tới ${sgn(SEED_MOD - 1 - SEED_OFFSET)}` },
   { ten: AXES[3], nguon: 'Quan hệ ngũ hành (cùng dữ kiện với trục đầu)',
     luat: `sinh nhau ${sgn(D_TAI_CHINH.generative)}; cùng hành ${sgn(D_TAI_CHINH.same)}; khắc nhau ${sgn(D_TAI_CHINH.controlling)}` },
-  { ten: AXES[4], nguon: 'Tam hợp / lục xung / trùng chi (cùng dữ kiện với trục Giao tiếp)',
+  { ten: AXES[4], nguon: `Tam hợp / lục xung (như trục ${AXES[1]}), cộng trùng chi`,
     luat: `tam hợp ${sgn(D_TAM_HOP_GD)}; trùng chi ${sgn(D_TRUNG_CHI_GD)}; lục xung ${sgn(D_LUC_XUNG_GD)}` },
 ];
 
@@ -264,7 +269,7 @@ const FAQS = [
   },
   {
     q: 'Vậy phần nào của kết quả là dùng được?',
-    a: 'Phần chữ. Mỗi trục kèm một dòng mô tả khác biệt, và bên dưới là các gợi ý giao tiếp gồm ba phần: chỗ dễ trục trặc, cách diễn đạt lại, và một câu để thử nói. Những gợi ý ấy được chọn theo hai trục thấp điểm nhất, nhưng giá trị của chúng không phụ thuộc vào việc điểm số có đúng hay không — chúng chỉ là cớ để mở một cuộc trò chuyện mà cặp nào cũng nên có. Cách dùng lành mạnh là bỏ qua vòng tròn điểm, đọc phần mô tả, rồi mang câu gợi ý ra nói thật và xem phản ứng.',
+    a: 'Phần chữ. Mỗi trục kèm một dòng mô tả, và bên dưới là các gợi ý giao tiếp gồm ba phần: chỗ dễ trục trặc, cách diễn đạt lại, và một câu để thử nói. Những gợi ý ấy được chọn theo trục thấp điểm nhất — chỉ khi trục ấy có đúng một mẫu viết sẵn thì công cụ mới lấy thêm từ trục thấp thứ nhì. Giá trị của chúng không phụ thuộc vào việc điểm số có đúng hay không: chúng chỉ là cớ để mở một cuộc trò chuyện mà cặp nào cũng nên có. Cách dùng lành mạnh là bỏ qua vòng tròn điểm, đọc phần mô tả, rồi mang câu gợi ý ra nói thật và xem phản ứng.',
   },
 ];
 
@@ -383,14 +388,15 @@ export default function LearnHopDoiPage() {
                 </li>
               </ul>
               <p className="text-sm text-foreground/70">
-                Hai phạm vi bài này cố ý không lấn: vì sao hai chi được xếp là tam hợp hay lục xung
+                Ba phạm vi bài này cố ý không lấn: vì sao hai chi được xếp là tam hợp hay lục xung
                 thuộc bài{' '}
                 <Link href="/learn/tam-hop-luc-xung" className={A}>Tam hợp – Lục xung</Link>; hợp
                 tuổi theo can chi cho từng việc thuộc bài{' '}
                 <Link href="/learn/hop-tuoi" className={A}>Hợp tuổi 12 con giáp</Link>. Nhóm từ ba
                 người trở lên do{' '}
-                <Link href="/xem-hop-nhom" className={A}>Xem hợp nhóm / gia đình</Link> lo, và bài
-                Học riêng của nó — “Đồng nhóm” — đang được viết.
+                <Link href="/xem-hop-nhom" className={A}>Xem hợp nhóm / gia đình</Link> lo, và phép
+                gộp nhiều cặp thành một điểm nhóm nằm ở bài{' '}
+                <Link href="/learn/dong-nhom" className={A}>Hợp nhóm và phép trung bình</Link>.
               </p>
             </div>
           ),
@@ -433,7 +439,8 @@ export default function LearnHopDoiPage() {
                 Đọc cột thứ hai sẽ thấy điều bảng điểm không nói ra:{' '}
                 <strong>{AXES.length} cái tên nhưng chỉ có hai quan sát về hai con giáp</strong>.
                 Trục {AXES[0]} và {AXES[3]} cùng đọc từ quan hệ ngũ hành; trục {AXES[1]} và{' '}
-                {AXES[4]} cùng đọc từ tam hợp / lục xung / trùng chi. Nên khi hai chi khắc nhau, hai
+                {AXES[4]} cùng đọc từ tam hợp / lục xung — {AXES[4]} xét thêm trùng chi, {AXES[1]}{' '}
+                xét thêm giới tính. Nên khi hai chi khắc nhau, hai
                 trục tụt cùng lúc — vì dùng chung một dữ kiện, không phải vì hai mặt của đời sống
                 cùng có vấn đề. Mỗi trục còn được dán nhãn theo ngưỡng cố định: từ{' '}
                 {SIGNAL_THUAN_FROM} điểm trở lên là “{signalOf(SIGNAL_THUAN_FROM)}”, từ{' '}
@@ -512,7 +519,10 @@ export default function LearnHopDoiPage() {
               <p className="text-sm text-foreground/70">
                 Một khoản nữa công cụ không xử lý: <strong>mốc Tết âm lịch</strong>. Con giáp lấy
                 theo năm dương lịch, nên người sinh đầu năm dương trước Tết bị gán con giáp của năm
-                sau — lệch trọn một chi, sai cả bốn trục đọc can chi. Tra đúng chi năm sinh ở{' '}
+                sau — lệch trọn một chi, sai <strong>tới bốn trục</strong> đọc can chi. Không phải
+                lúc nào cũng đủ bốn: {NEIGHBOUR_SAME_HANH.length} trong {CHI.length} cặp chi liền
+                nhau lại cùng một hành ({NEIGHBOUR_SAME_HANH.map(([x, y]) => `${x}–${y}`).join(', ')}
+                ), nên hai trục đọc ngũ hành có khi giữ nguyên. Tra đúng chi năm sinh ở{' '}
                 <Link href="/tra-cuu-tuoi" className={A}>công cụ tra cứu tuổi</Link>.
               </p>
             </div>
@@ -622,7 +632,8 @@ export default function LearnHopDoiPage() {
                 <li>
                   <strong>Lấy phần “Thử nói” ra dùng thật.</strong> Mỗi gợi ý có chỗ dễ trục trặc,
                   cách diễn đạt lại và một câu mở lời; chúng được chọn theo{' '}
-                  <strong>hai trục thấp điểm nhất</strong>.
+                  <strong>trục thấp điểm nhất</strong>, và chỉ lấn sang trục thấp thứ nhì khi trục
+                  thấp nhất có đúng một mẫu viết sẵn.
                 </li>
                 <li>
                   <strong>Xem phản ứng, không xem điểm</strong> — người kia có chịu nói không, có
@@ -664,12 +675,15 @@ export default function LearnHopDoiPage() {
                 <li>
                   <strong>Nhiều lớp quan hệ can chi không được xét:</strong> chỉ có tam hợp, lục
                   xung, trùng chi. Lục hợp, lục hại, tương hình đều{' '}
-                  <strong>không được tính</strong> — muốn xem thì dùng{' '}
-                  <Link href="/hop-tuoi" className={A}>công cụ hợp tuổi theo can chi</Link>.
+                  <strong>không được tính</strong>. Lục hợp và lục hại thì{' '}
+                  <Link href="/hop-tuoi" className={A}>công cụ hợp tuổi theo can chi</Link> có xét;
+                  riêng tương hình thì chưa công cụ nào của hieu.asia tính — bài{' '}
+                  <Link href="/learn/hop-tuoi" className={A}>Hợp tuổi 12 con giáp</Link> nói rõ
+                  khoản đó.
                 </li>
                 <li>
                   <strong>Mốc đổi năm là dương lịch, không phải Tết</strong> — người sinh đầu năm
-                  dương trước Tết bị gán lệch một con giáp, kéo theo sai bốn trục.
+                  dương trước Tết bị gán lệch một con giáp, kéo theo sai tới bốn trục.
                 </li>
                 <li>
                   <strong>Giới tính chỉ được dùng ở mức thô nhất:</strong> hỏi hai người giống hay

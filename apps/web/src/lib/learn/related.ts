@@ -77,6 +77,7 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'hop-doi', eyebrow: 'HỢP ĐÔI', name: 'Điểm hợp đôi', href: '/learn/hop-doi' },
   { slug: 'dong-nhom', eyebrow: 'NHÓM', name: 'Động lực nhóm', href: '/learn/dong-nhom' },
   { slug: 'hieu-nguoi-than', eyebrow: 'ĐẠO ĐỨC', name: 'Hiểu người thân', href: '/learn/hieu-nguoi-than' },
+  { slug: 'nghe-nghiep', eyebrow: 'SỞ THÍCH NGHỀ', name: 'Gợi ý nghề nghiệp', href: '/learn/nghe-nghiep' },
   // Đợt 8 — tư duy phản biện (mở đầu cụm, còn 3 bài nữa trong PENDING).
   { slug: 'barnum', eyebrow: 'HIỆU ỨNG FORER', name: 'Hiệu ứng Barnum', href: '/learn/barnum' },
   { slug: 'kiem-chung', eyebrow: 'KHẢ SAI', name: 'Kiểm chứng dự đoán', href: '/learn/kiem-chung' },
@@ -142,9 +143,8 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'giao-van': ['dai-van', 'luu-nien', 'tiet-khi', 'menh-cuc'],
   'luu-nien': ['dai-van', 'thai-tue', 'giao-van', 'sao-han'],
   'so-sanh-lang-kinh': ['barnum', 'kiem-chung', 'ra-quyet-dinh', 'mbti'],
-  // 'nghe-nghiep' CHƯA tồn tại (agent viết bài đó bị kẹt, sẽ viết ở đợt sau) —
-  // thêm vào đây khi trang ra đời, kẻo lens rơi mất một ô.
-  'ra-quyet-dinh': ['so-sanh-lang-kinh', 'barnum', 'kiem-chung', 'big-five'],
+  'ra-quyet-dinh': ['so-sanh-lang-kinh', 'nghe-nghiep', 'barnum', 'kiem-chung'],
+  'nghe-nghiep': ['ra-quyet-dinh', 'so-sanh-lang-kinh', 'mbti', 'disc'],
   'hop-doi': ['dong-nhom', 'hop-tuoi', 'tam-hop-luc-xung', 'hieu-nguoi-than'],
   'dong-nhom': ['hop-doi', 'hieu-nguoi-than', 'disc', 'hop-tuoi'],
   'hieu-nguoi-than': ['dong-nhom', 'hop-doi', 'enneagram', 'barnum'],

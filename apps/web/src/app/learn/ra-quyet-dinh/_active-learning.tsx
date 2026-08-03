@@ -28,8 +28,8 @@
  * Những phần đó bài này nói thẳng là công cụ không có nên không dạy.
  *
  * PHẠM VI: cơ chế khiến lời chung chung nghe đúng thuộc bài /learn/barnum;
- * cách kiểm một lời tiên đoán bằng dữ kiện thuộc bài /learn/kiem-chung. Bài so
- * sánh hai lăng kính đang được viết song song, chưa tồn tại nên không link.
+ * cách kiểm một lời tiên đoán bằng dữ kiện thuộc bài /learn/kiem-chung; vì sao
+ * hai hệ nói khác nhau thuộc bài /learn/so-sanh-lang-kinh (đã tồn tại).
  *
  * Giọng: lăng kính để MỞ RỘNG lựa chọn chứ không chọn hộ; không phán số mệnh,
  * không doạ, không mỉa mai người đọc.
@@ -163,10 +163,10 @@ export function RaQuyetDinhDepth() {
             content: (
               <>
                 <p>
-                  Một lăng kính (tử vi, MBTI, một bộ tiêu chí, hay cả một người bạn thân) không có
-                  thông tin về hai lựa chọn của bạn. Nó không biết lương bao nhiêu, sếp thế nào, nhà
-                  còn bao nhiêu tiền. Nên thứ nó tạo ra được là {strong('câu hỏi')}, không phải đáp
-                  án.
+                  Một lăng kính (tử vi, MBTI, hay một bộ tiêu chí) không có thông tin về hai lựa
+                  chọn của bạn. Nó không biết lương bao nhiêu, sếp thế nào, nhà còn bao nhiêu tiền —
+                  khác hẳn một người bạn thân, người mà bạn kể cho nghe đúng những dữ kiện ấy. Nên
+                  thứ một lăng kính tạo ra được là {strong('câu hỏi')}, không phải đáp án.
                 </p>
                 <p>
                   Cái được của việc trả lời một bộ câu hỏi là bạn phát hiện ra chỗ mình{' '}
@@ -239,7 +239,8 @@ export function RaQuyetDinhDepth() {
             content: (
               <>
                 <p>
-                  Ba tầng vấn đề, tách riêng cho rõ. Một là {strong('tầng thông tin')}: đầu vào của
+                  Ba tầng cốt lõi, tách riêng cho rõ — phần chính của bài còn tách thêm tầng khung
+                  câu hỏi và tầng trách nhiệm. Một là {strong('tầng thông tin')}: đầu vào của
                   một hệ bói (ngày giờ sinh, một lần gieo) không chứa dữ kiện nào về A và B, nên đầu
                   ra không thể chứa thông tin về chúng.
                 </p>
@@ -298,8 +299,8 @@ export function RaQuyetDinhDepth() {
                 <p>
                   Đọc mã thì thấy rất gọn: hàm xử lý khi bấm nút chỉ bật một cờ hiển thị, không gọi
                   phép tính nào, không gọi máy chủ nào. Bộ tiêu chí là một hằng số cố định, nên{' '}
-                  {strong('chủ đề bạn chọn không làm đổi câu hỏi')} — nó chỉ xuất hiện lại ở dòng
-                  phụ đề của bản PDF.
+                  {strong('chủ đề bạn chọn không làm đổi câu hỏi')} — nó chỉ được ghi lại trong bản
+                  PDF, ở dòng phụ đề và ở mục hai lựa chọn.
                 </p>
                 <p>
                   Hệ quả cần biết trước khi dùng: công cụ {strong('không đọc lá số')} và không đọc
@@ -344,7 +345,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
         note: 'Không — bộ tiêu chí là một hằng số cố định trong mã, dùng chung cho mọi chủ đề.',
       },
       {
-        text: `Không đổi gì cả — vẫn đúng ${CRITERIA.length} tiêu chí đó; chủ đề chỉ hiện lại ở dòng phụ đề của bản PDF`,
+        text: `Không đổi gì cả — vẫn đúng ${CRITERIA.length} tiêu chí đó; chủ đề chỉ được ghi lại trong bản PDF`,
         correct: true,
         note: 'Đúng. Biết điều này để không kỳ vọng công cụ “hiểu ngữ cảnh” — nó không có phần đó.',
       },
@@ -367,7 +368,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       },
       {
         text: 'Sợ mất mát — bạn sợ mất khoản đã bỏ ra',
-        note: 'Chưa đúng ở ca này. Sợ mất mát là khi bạn ở lại chỉ vì tiếc thứ đã bỏ vào, không phải vì phương án đầu chiếm chỗ tham chiếu.',
+        note: 'Chưa đúng ở ca này. Sợ mất mát là khi danh sách “những thứ sẽ mất” đọc nặng hơn hẳn danh sách “những thứ sẽ được” cùng độ lớn — chứ không phải chuyện phương án nghĩ ra đầu tiên chiếm mất chỗ tham chiếu.',
       },
       {
         text: 'Tìm thông tin xác nhận — bạn chỉ đọc bài viết ủng hộ mở quán',

@@ -26,11 +26,12 @@
  *     hợp cả nhóm, xếp hạng thành viên, hay lời khuyên hành động dành cho người
  *     kia. Bài này vì thế KHÔNG dạy mấy phần đó.
  *
- * PHẠM VI — không lấn bài đang viết song song: điểm hợp giữa HAI người (bài Hợp
- * đôi) và hợp NHÓM 3–6 người (bài Đồng nhóm) chỉ được NHẮC TÊN, không link, vì
- * hai trang đó chưa tồn tại. Chọn năm sinh cho con thuộc bài Sinh con — không
- * nhắc nội dung. Vì sao lời mô tả chung chung nghe rất đúng thuộc bài Hiệu ứng
- * Barnum (trang có thật → có link).
+ * PHẠM VI — không lấn bài khác: điểm hợp giữa HAI người thuộc /learn/hop-doi,
+ * hợp NHÓM 3–6 người thuộc /learn/dong-nhom. Cả hai trang ĐÃ tồn tại (kiểm bằng
+ * ls, và cả hai đã có mặt trong LEARN_TOPICS + sitemap) → bài này chỉ nêu ranh
+ * giới rồi LINK sang, không mô tả lại nội dung. Chọn năm sinh cho con thuộc bài
+ * Sinh con — không nhắc nội dung. Vì sao lời mô tả chung chung nghe rất đúng
+ * thuộc bài Hiệu ứng Barnum (trang có thật → có link).
  *
  * Giọng: trung thực về giới hạn, không doạ, không phán số mệnh, không mỉa mai
  * người đọc. Lõi riêng của bài: đạo đức khi đọc lăng kính cho NGƯỜI KHÁC.
@@ -70,6 +71,9 @@ export const metadata: Metadata = {
 
 const TD = 'px-4 py-2 text-muted-foreground';
 const A = 'text-gold-700 underline-offset-4 hover:underline';
+
+/** Route của chính bài này — lọc khỏi TOOL_RELATED để không tự link về mình. */
+const SELF_HREF = '/learn/hieu-nguoi-than';
 
 function TableHead({ cols }: { cols: string[] }) {
   return (
@@ -119,7 +123,7 @@ const TOOL_FACTS: { label: string; value: string }[] = [
   {
     label: 'Công cụ KHÔNG làm',
     value:
-      'Không chấm điểm hợp – khắc giữa hai người, không tính hợp cả nhóm, không xếp hạng thành viên, không đưa lời khuyên hành động dành cho người kia. Bài này vì vậy cũng không dạy mấy phần đó.',
+      'Ba bước mà trang mô tả không gồm: chấm điểm hợp – khắc giữa hai người, tính độ hợp cả nhóm, xếp hạng thành viên, hay đưa lời khuyên hành động dành cho người kia. Bài này vì vậy cũng không dạy mấy phần đó.',
   },
 ];
 
@@ -129,7 +133,8 @@ const USE_ROWS: { hoi: string; phoiHop: string; danNhan: string }[] = [
   {
     hoi: 'Câu này làm đổi hành vi của ai?',
     phoiHop: 'Của bạn — cách mở lời, chọn lúc nói, nói bao nhiêu là đủ.',
-    danNhan: 'Của không ai cả. Nó chỉ đổi cách bạn nhìn người kia.',
+    danNhan:
+      'Không đổi việc bạn định làm. Nó đổi cách bạn nhìn người kia, rồi lặng lẽ khiến bạn hỏi ít đi.',
   },
   {
     hoi: 'Có cách nào cho thấy nó sai không?',
@@ -170,7 +175,7 @@ const SHOULD_SAY: { cau: string; viSao: string }[] = [
   },
   {
     cau: '“Con thấy dạo này mẹ hay để ý không khí trong nhà. Có chuyện gì mẹ đang lo không ạ?”',
-    viSao: 'Biến một dòng mô tả thành một câu hỏi. Đây là cách duy nhất để kiểm xem nó có đúng không.',
+    viSao: 'Biến một dòng mô tả thành một câu hỏi. Người thật trả lời là cách kiểm trực tiếp nhất.',
   },
 ];
 
@@ -227,7 +232,7 @@ const FAQS = [
   },
   {
     q: 'Tôi đọc hồ sơ thấy đúng y như người nhà mình. Vậy chẳng phải là bằng chứng sao?',
-    a: 'Cảm giác trúng là một trải nghiệm thật, nhưng nó không đo được điều bạn tưởng nó đo. Bạn sống cùng người đó hàng chục năm, nên kho ký ức của bạn đủ lớn để tìm ra ví dụ khớp với gần như mọi mô tả — và bạn chỉ nhớ những lần khớp, không đếm những lần trật. Đọc cho người lạ còn thiếu dữ liệu để tự thuyết phục; đọc cho người thân thì không bao giờ thiếu. Muốn biết một mô tả có thật sự nói đúng người kia không, chỉ có một cách: biến nó thành một dự đoán cụ thể cho tuần tới rồi xem có xảy ra không.',
+    a: 'Cảm giác trúng là một trải nghiệm thật, nhưng nó không đo được điều bạn tưởng nó đo. Bạn sống cùng người đó hàng chục năm, nên kho ký ức của bạn đủ lớn để tìm ra ví dụ khớp với gần như mọi mô tả — và bạn chỉ nhớ những lần khớp, không đếm những lần trật. Đọc cho người lạ còn thiếu dữ liệu để tự thuyết phục; đọc cho người thân thì không bao giờ thiếu. Muốn biết một mô tả có thật sự nói đúng người kia không thì cách chắc nhất là biến nó thành một dự đoán cụ thể cho tuần tới rồi xem có xảy ra không — hoặc đơn giản hơn, hỏi thẳng chính người đó.',
   },
   {
     q: 'Hồ sơ nói vợ/chồng tôi cần không gian riêng. Tôi dùng câu đó để giải thích mọi lần họ im lặng được không?',
@@ -235,7 +240,7 @@ const FAQS = [
   },
   {
     q: 'Có nên dùng hồ sơ người thân để quyết định thay họ không?',
-    a: 'Không. Chọn trường cho con, khuyên ai đó nghỉ việc, quyết chuyện tiền bạc hay chuyện chữa bệnh — không việc nào trong số đó nên có mặt một bảng tra suy từ ngày sinh. Lý do rất đơn giản: đầu vào của hồ sơ chỉ có ngày sinh, nên mọi người sinh cùng ngày đều nhận cùng một mô tả, và không có phép đo nào cho thấy nó dự đoán được cách một con người cụ thể phản ứng. Dùng nó cho những quyết định có hậu quả với người khác là để một thứ không mang thông tin quyết định thay bạn. Hồ sơ chỉ nên dừng ở mức gợi ý cách bạn mở lời với người trong nhà.',
+    a: 'Không. Chọn trường cho con, khuyên ai đó nghỉ việc, quyết chuyện tiền bạc hay chuyện chữa bệnh — không việc nào trong số đó nên có mặt một bảng tra suy từ ngày sinh. Lý do rất đơn giản: đầu vào của hồ sơ chỉ có ngày sinh và một tên gọi do bạn tự đặt, mà con giáp với ngũ hành lại lấy theo năm sinh, nên mọi người sinh cùng năm đều nhận cùng một mô tả — và không có phép đo nào cho thấy nó dự đoán được cách một con người cụ thể phản ứng. Dùng nó cho những quyết định có hậu quả với người khác là để một thứ không mang thông tin quyết định thay bạn. Hồ sơ chỉ nên dừng ở mức gợi ý cách bạn mở lời với người trong nhà.',
   },
 ];
 
@@ -330,7 +335,11 @@ export default function LearnHieuNguoiThanPage() {
               <p className="text-sm text-foreground/70">
                 Hai dòng đầu của bảng được đọc thẳng từ sổ đăng ký công cụ của site, nên nếu công cụ
                 đổi tên hay đổi mô tả thì bảng này đổi theo. Các dòng còn lại tóm từ chính trang{' '}
-                {TOOL_NAME}.
+                {TOOL_NAME}. Có một chỗ vênh nên chỉ ra: dòng thứ hai — câu giới thiệu ngắn trong
+                danh mục — có chữ <em>hợp khắc</em>, trong khi ba bước mà chính trang mô tả thì dừng
+                ở hồ sơ cơ bản và gợi ý giao tiếp; phần chấm hợp – khắc nằm ở hai công cụ khác. Câu
+                quảng bá một dòng thường hứa rộng hơn thứ trang đó thật sự mô tả, và đây là ví dụ
+                ngay tại chỗ.
               </p>
               <p>Bốn điều một hồ sơ người thân KHÔNG phải:</p>
               <ul className="list-disc space-y-2 pl-5">
@@ -340,9 +349,10 @@ export default function LearnHieuNguoiThanPage() {
                   thử, và người thật có quyền phủ quyết.
                 </li>
                 <li>
-                  <strong>Không phải thông tin riêng của người đó.</strong> Đầu vào chỉ có ngày sinh,
-                  nên mọi người sinh cùng ngày đều nhận cùng một mô tả. Nó không biết người kia đang
-                  ốm, đang áp lực công việc, hay vừa cãi nhau với ai.
+                  <strong>Không phải thông tin riêng của người đó.</strong> Đầu vào chỉ có ngày sinh
+                  — tên gọi chỉ là nhãn bạn tự đặt — mà con giáp với ngũ hành lại lấy theo{' '}
+                  <strong>năm</strong> sinh, nên mọi người sinh cùng năm đều nhận cùng phần mô tả ấy.
+                  Nó không biết người kia đang ốm, đang áp lực công việc, hay vừa cãi nhau với ai.
                 </li>
                 <li>
                   <strong>Không phải cái để đem ra làm bằng chứng.</strong> Câu “đã bảo mà, đúng như
@@ -358,9 +368,16 @@ export default function LearnHieuNguoiThanPage() {
               <p className="text-sm text-foreground/70">
                 Ba phạm vi bài này cố ý không lấn, vì công cụ cũng không tính: <strong>điểm hợp</strong>{' '}
                 giữa hai người và <strong>độ hợp của cả nhóm</strong> ba tới sáu người là việc của
-                hai công cụ khác (mỗi cái có bài riêng đang được viết); còn chuyện chọn năm sinh cho
-                con thuộc một chủ đề khác hẳn. Ở đây chỉ bàn đúng một việc: bạn đã có trong tay vài
-                dòng mô tả về một người thân — rồi sao nữa.
+                hai công cụ khác, mỗi cái có bài riêng —{' '}
+                <Link href="/learn/hop-doi" className={A}>
+                  Điểm hợp đôi
+                </Link>{' '}
+                và{' '}
+                <Link href="/learn/dong-nhom" className={A}>
+                  Động lực nhóm
+                </Link>
+                ; còn chuyện chọn năm sinh cho con thuộc một chủ đề khác hẳn. Ở đây chỉ bàn đúng một
+                việc: bạn đã có trong tay vài dòng mô tả về một người thân — rồi sao nữa.
               </p>
             </div>
           ),
@@ -714,7 +731,10 @@ export default function LearnHieuNguoiThanPage() {
               </p>
               <div className="mt-6">
                 <RelatedTools
-                  links={[{ href: TOOL_HREF, label: TOOL_LABEL }, ...TOOL_RELATED]}
+                  links={[
+                    { href: TOOL_HREF, label: TOOL_LABEL },
+                    ...TOOL_RELATED.filter((l) => l.href !== SELF_HREF),
+                  ]}
                 />
               </div>
             </>

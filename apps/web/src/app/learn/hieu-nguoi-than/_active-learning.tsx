@@ -28,10 +28,10 @@
  * câu về "hồ sơ sẽ có gì" trong bài đều được nói ở thì DỰ KIẾN, đúng như trang
  * tự mô tả.
  *
- * PHẠM VI — KHÔNG lấn bài khác: điểm hợp giữa HAI người (bài Hợp đôi) và hợp cả
- * NHÓM 3–6 người (bài Đồng nhóm) đang được viết song song → chỉ nhắc tên, KHÔNG
- * link. Chọn năm sinh cho con và đối chiếu mệnh bố mẹ thuộc bài Sinh con →
- * không nhắc nội dung.
+ * PHẠM VI — KHÔNG lấn bài khác: điểm hợp giữa HAI người thuộc /learn/hop-doi,
+ * hợp cả NHÓM 3–6 người thuộc /learn/dong-nhom — hai trang đó ĐÃ tồn tại, nên
+ * page.tsx nêu ranh giới rồi link sang, không mô tả lại. Chọn năm sinh cho con
+ * và đối chiếu mệnh bố mẹ thuộc bài Sinh con → không nhắc nội dung.
  *
  * Giọng: trung thực về giới hạn, không doạ, không phán số mệnh, không mỉa mai
  * người đọc. Lõi đạo đức là "phối hợp, không dán nhãn".
@@ -168,10 +168,14 @@ export function HieuNguoiThanDepth() {
             content: (
               <>
                 <p>
-                  Đầu vào chỉ có ngày sinh nên {strong('mọi người sinh cùng ngày nhận cùng một mô tả')}
-                  . Độ phân giải của hồ sơ bằng đúng số ô trong bảng lịch, còn khoảng khác biệt giữa
-                  hai người bất kỳ trong cùng một ô thì không có gì thu hẹp lại. Giá trị khả dĩ của
-                  hồ sơ vì thế nằm ở chỗ nó {strong('đặt câu hỏi')}, không nằm ở chỗ nó trả lời.
+                  Đầu vào chỉ có ngày sinh, mà hai thứ trang hứa — con giáp và ngũ hành — lại lấy
+                  theo NĂM sinh: ba thẻ minh hoạ trên trang ghi “Tuổi Quý Mão”, “Tuổi Bính Ngọ”,
+                  “Tuổi Mậu Thìn”, đều là can chi của năm. Nên{' '}
+                  {strong('mọi người sinh cùng năm nhận cùng một mô tả')}: độ phân giải thật của hồ
+                  sơ nhiều nhất là 60 ô của một vòng hoa giáp, chứ không phải từng ngày — còn khoảng
+                  khác biệt giữa hai người bất kỳ trong cùng một ô thì không có gì thu hẹp lại. Giá
+                  trị khả dĩ của hồ sơ vì thế nằm ở chỗ nó {strong('đặt câu hỏi')}, không nằm ở chỗ
+                  nó trả lời.
                 </p>
                 <p>
                   Và một sự thật quan trọng hơn mọi lý luận trên: hôm nay trang{' '}
@@ -210,7 +214,7 @@ export function HieuNguoiThanDepth() {
                   Cùng một dòng chữ, hai cách dùng ngược nhau. Dùng để{' '}
                   {strong('phối hợp')} là bạn đổi hành vi của mình: nói gọn hơn, chọn lúc khác, cho
                   người kia thêm thời gian. Dùng để {strong('dán nhãn')} là bạn đổi cách nhìn người
-                  kia và giữ nguyên cách cư xử của mình.
+                  kia mà không đổi việc mình định làm — có chăng chỉ là hỏi ít đi và nghe ít đi.
                 </p>
                 <p>
                   Ba dấu hiệu bạn đang dán nhãn: mọi hành vi của người kia đều được quy về một câu;
@@ -394,7 +398,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     id: 'q6',
     type: 'mcq',
     prompt:
-      'Bốn cam kết riêng tư trên trang công cụ (chỉ lưu trong tài khoản bạn, chỉ phân tích cơ bản, xoá được bất cứ lúc nào, mời người kia tự lập hồ sơ) bảo vệ được điều gì?',
+      'Bốn cam kết riêng tư trên trang công cụ (chỉ lưu trong tài khoản bạn, chỉ phân tích cơ bản, xoá được bất cứ lúc nào, mời người kia tự lập hồ sơ) bảo vệ được tới đâu?',
     choices: [
       {
         text: 'Chúng ràng buộc HỆ THỐNG, không ràng buộc bạn — người kể lại nội dung hồ sơ cho họ hàng vẫn là bạn',
@@ -542,8 +546,9 @@ export function HieuNguoiThanWhys() {
           question: 'Vì sao người kia không sửa lại được?',
           because: (
             <>
-              Vì họ {strong('không biết cái nhãn tồn tại')}. Hồ sơ nằm trong tài khoản của bạn;
-              người bị mô tả không đọc, không phản biện, không cập nhật được. Một mô tả mà đối tượng
+              Vì họ {strong('không biết cái nhãn tồn tại')}. Nó nằm trong đầu bạn — và nếu sau này
+              có hồ sơ thật thì hồ sơ cũng nằm trong tài khoản của bạn; người bị mô tả không đọc,
+              không phản biện, không cập nhật được. Một mô tả mà đối tượng
               của nó không có quyền cãi thì không còn cơ chế nào để tự sửa — nó chỉ dày thêm theo
               thời gian.
             </>

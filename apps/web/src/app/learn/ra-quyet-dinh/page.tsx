@@ -18,8 +18,8 @@
  *
  * PHẠM VI: vì sao lời chung chung nghe đúng → bài /learn/barnum (link, không
  * giảng lại); cách kiểm một lời tiên đoán bằng dữ kiện → bài /learn/kiem-chung
- * (link, không giảng lại). Bài so sánh hai lăng kính đang viết song song, chưa
- * tồn tại nên không có link nào trỏ tới.
+ * (link, không giảng lại); vì sao hai hệ nói khác nhau → bài
+ * /learn/so-sanh-lang-kinh (đã tồn tại; vào bài qua thẻ lăng kính liên quan).
  */
 
 import type { ReactNode } from 'react';
@@ -202,7 +202,7 @@ const TOOL_SCOPE = [
   },
   {
     phan: 'Chủ đề bạn chọn',
-    co: 'Xuất hiện lại ở dòng phụ đề của bản PDF tải về.',
+    co: 'Xuất hiện lại trong bản PDF tải về — ở dòng phụ đề và ở mục hai lựa chọn của bạn.',
     khong: 'Không làm đổi bộ tiêu chí — bộ câu hỏi là cố định cho mọi chủ đề.',
   },
   {
@@ -237,7 +237,7 @@ const FAQS = [
   },
   {
     q: 'Chọn chủ đề Sự nghiệp hay Tài chính thì bộ tiêu chí có khác nhau không?',
-    a: `Không khác. Bộ tiêu chí là một danh sách cố định trong mã, dùng chung cho cả ${TOPIC_LABELS.length} chủ đề; chủ đề bạn chọn chỉ xuất hiện lại ở dòng phụ đề của bản PDF tải về. Nói rõ điều này để bạn không kỳ vọng công cụ “hiểu ngữ cảnh” rồi thất vọng — nó không có phần đó, nên bài này cũng không dạy cách khai thác thứ nó không làm.`,
+    a: `Không khác. Bộ tiêu chí là một danh sách cố định trong mã, dùng chung cho cả ${TOPIC_LABELS.length} chủ đề; chủ đề bạn chọn chỉ được ghi lại trong bản PDF tải về — ở dòng phụ đề và ở mục hai lựa chọn — chứ không tác động gì tới câu hỏi. Nói rõ điều này để bạn không kỳ vọng công cụ “hiểu ngữ cảnh” rồi thất vọng — nó không có phần đó, nên bài này cũng không dạy cách khai thác thứ nó không làm.`,
   },
   {
     q: 'Tôi muốn phần phân tích theo lá số của riêng mình thì dùng gì?',
@@ -326,11 +326,12 @@ export default function LearnRaQuyetDinhPage() {
             <div className="space-y-4 leading-relaxed text-foreground/85">
               <p>
                 “Lăng kính” ở đây là bất cứ hệ thống nào bạn soi vào trước một quyết định: một lá số
-                Tử Vi, một kết quả MBTI, một quẻ gieo, một bộ tiêu chí, hay cả một người bạn thân
-                chịu ngồi nghe. Điểm chung của chúng là{' '}
-                <strong>không có thông tin nào về hai lựa chọn của bạn</strong>. Không cái nào biết
-                mức lương, điều khoản hợp đồng, sức khoẻ của mẹ bạn, hay việc con bạn sắp vào lớp
-                một.
+                Tử Vi, một kết quả MBTI, một quẻ gieo, hay một bộ tiêu chí. Điểm chung của chúng là{' '}
+                <strong>không có thông tin nào về hai lựa chọn của bạn</strong>: không cái nào nhận
+                vào mức lương, điều khoản hợp đồng, sức khoẻ của mẹ bạn, hay việc con bạn sắp vào
+                lớp một. Một người bạn thân chịu ngồi nghe thì không nằm trong nhóm này — bạn kể cho
+                họ đúng những dữ kiện đó, nên họ nói được cả những điều một hệ tra cứu không nói
+                được.
               </p>
               <p>
                 Vì vậy thứ một lăng kính tạo ra được là <strong>câu hỏi</strong>, không phải đáp án.

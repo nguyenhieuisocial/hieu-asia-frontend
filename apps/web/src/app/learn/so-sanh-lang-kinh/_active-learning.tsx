@@ -156,11 +156,17 @@ export const SHARED_AXIS_DEMO = (() => {
 export const MBTI_TRONG_TAM = cellFor(MBTI_ENNEAGRAM, 'Trọng tâm', '/mbti');
 export const TU_VI_MANH_O = cellFor(TU_VI_BAT_TU, 'Mạnh ở', '/tu-vi');
 
-/** Trục "Trả lời câu hỏi" — chính công cụ đã phân biệt hai hệ theo LOẠI câu hỏi. */
+/**
+ * Trục "Trả lời câu hỏi" — chính công cụ đã phân biệt hai hệ theo LOẠI câu hỏi.
+ * QUESTION_PAIR để nói rõ trục này nằm ở cặp nào: nó chỉ có ở MỘT cặp và cả hai
+ * vế đều thuộc họ bảng hỏi, nên nó minh hoạ nguyên tắc chứ KHÔNG phải bằng chứng
+ * cho ranh giới giữa hai họ.
+ */
 export const QUESTION_AXIS = 'Trả lời câu hỏi';
-export const QUESTION_DIM = COMPARISONS.flatMap((c) => c.dims).find(
-  (d) => d.aspect === QUESTION_AXIS,
+export const QUESTION_PAIR = COMPARISONS.find((c) =>
+  c.dims.some((d) => d.aspect === QUESTION_AXIS),
 );
+export const QUESTION_DIM = QUESTION_PAIR?.dims.find((d) => d.aspect === QUESTION_AXIS);
 
 /** Câu FAQ của lib nói thẳng vì sao MBTI và Big Five hiếm khi mâu thuẫn. */
 export const OVERLAP_FAQ = MBTI_BIG_FIVE?.faqs.find((f) => f.q.includes('mâu thuẫn'));
@@ -247,9 +253,10 @@ export function SoSanhDepth() {
             label: 'Chuyên gia',
             content: (
               <p>
-                Công cụ còn có hẳn một trục tên “{QUESTION_AXIS}”:{' '}
-                {QUESTION_DIM ? `một bên là ${QUESTION_DIM.a}, bên kia là ${QUESTION_DIM.b}` : ''} —
-                tức bảng so sánh cũng phân biệt các hệ theo{' '}
+                Công cụ còn có hẳn một trục tên “{QUESTION_AXIS}” — ở cặp{' '}
+                {QUESTION_PAIR?.title ?? '—'}, tức giữa hai hệ cùng họ:{' '}
+                {QUESTION_DIM ? `một bên là ${QUESTION_DIM.a}, bên kia là ${QUESTION_DIM.b}` : ''}.
+                Vậy là bảng so sánh cũng phân biệt các hệ theo{' '}
                 {strong('loại câu hỏi chúng trả lời')}, không phải theo độ đúng. Đọc tiếp cấu trúc
                 dữ liệu: trong {PAIR_COUNT} cặp có đúng {strong(CROSS_FAMILY_PAIRS + ' cặp')} bắc
                 cầu giữa hai họ. Bài này không đọc được ý định của người dựng bảng, nhưng lý do kỹ
@@ -301,8 +308,8 @@ export function SoSanhDepth() {
                 họ — trục không dùng lại được giữa hai họ chính là hiệu lực cấu trúc hiện ra dưới
                 dạng bảng. Còn {SHARED_AXES.length} trục có mặt ở cả hai họ (
                 {SHARED_AXES.map((a) => `“${a.aspect}”`).join(' và ')}), nhưng{' '}
-                {strong('cùng tên không có nghĩa cùng thang đo')}: hai ô nằm cùng một hàng, trông
-                như so được, mà nội dung thuộc hai loại đại lượng khác nhau.
+                {strong('cùng tên không có nghĩa cùng thang đo')}: hai ô ở hai cặp khác họ cùng đứng
+                dưới một tên trục, trông như so được, mà nội dung thuộc hai loại đại lượng khác nhau.
               </p>
             ),
           },

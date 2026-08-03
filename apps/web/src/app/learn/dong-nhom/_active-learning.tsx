@@ -20,8 +20,8 @@
  * xướng / kết nối / giữ nhịp / soi lỗi (chỉ ĐÚNG BA nhãn, hai trong ba có điều
  * kiện); không đo chất lượng quyết định; không lập lá số.
  *
- * PHẠM VI: KHÔNG dạy lại cách chấm MỘT cặp (bài Hợp đôi — chỉ nhắc tên, chưa có
- * route nên không link), KHÔNG dạy lại bảng hợp/khắc 12 con giáp (/learn/hop-tuoi)
+ * PHẠM VI: KHÔNG dạy lại cách chấm MỘT cặp (bài /learn/hop-doi — route ĐÃ có,
+ * page.tsx link thẳng tới), KHÔNG dạy lại bảng hợp/khắc 12 con giáp (/learn/hop-tuoi)
  * hay hình học vòng 12 chi (/learn/tam-hop-luc-xung). Giọng: trung thực về giới
  * hạn, không doạ, không phán số mệnh, không dán nhãn ai.
  */
@@ -128,11 +128,27 @@ export function buildOneWeakPairCase(size: number, high: number, low: number): W
 }
 
 /**
+ * DẢI THẬT của điểm MỘT CẶP — không phải 1..10 như tên thang gợi ý.
+ * Điểm cặp chỉ phụ thuộc đúng bốn thứ: con giáp A, con giáp B, hai người khác
+ * giới hay không, và số dư mã băm hai chuỗi ngày sinh. Quét VÉT CẠN toàn bộ
+ * không gian đó (144 cặp con giáp × 4 tổ hợp giới tính × 36 tổ hợp số dư) chỉ
+ * cho ra {4, 5, 6, 7, 8, 9}. Chứng minh khớp với số học của bảng cộng trừ: tổng
+ * 5 chiều thấp nhất là 4+3+4+4+3 = 18 → trung bình 3,6 → làm tròn 4; cao nhất
+ * là 9+10+9+9+8 = 45 → 9. Nên KHÔNG có cặp nào đạt 1, 2, 3 hay 10.
+ * Hệ quả: điểm nhóm là trung bình của các điểm cặp nên cũng nằm gọn trong 4–9.
+ * Cùng kết luận với bài /learn/hop-doi (bài đó quét trên mirror của engine).
+ */
+export const PAIR_MIN = 4;
+export const PAIR_MAX = 9;
+
+/**
  * Hai mức điểm cặp của kịch bản demo — hai con số DUY NHẤT được chọn tay trong cả
  * bài; mọi hệ quả đều tính ra từ chúng bằng đúng công thức của engine.
+ * CASE_LOW BẮT BUỘC là PAIR_MIN: bản đầu dùng 3, nhưng engine không bao giờ chấm
+ * một cặp 3 điểm, nên kịch bản minh hoạ khi ấy không thể xảy ra trên máy thật.
  */
 export const CASE_HIGH = 8;
-export const CASE_LOW = 3;
+export const CASE_LOW = PAIR_MIN;
 
 export const WEAK_CASES: WeakPairCase[] = GROUP_SIZES.map((size) =>
   buildOneWeakPairCase(size, CASE_HIGH, CASE_LOW),
@@ -157,8 +173,10 @@ export function DongNhomFrame() {
       }
       why={
         <>
-          Vì huyền học cổ chỉ định nghĩa quan hệ giữa {strong('hai')} địa chi. Không có bảng nào cho
-          quan hệ của sáu con giáp cùng lúc, nên mọi điểm số dành cho cả nhóm đều là{' '}
+          Cổ thư có quan hệ giữa hai chi (lục xung, lục hại) và có cả nhóm ba chi (tam hợp, tam
+          hội) — nhưng {strong('không có bảng nào cho một nhóm 4–6 người bất kỳ')}, và engine này
+          còn hạ tam hợp xuống thành một câu hỏi CẶP: “hai người có cùng nhóm tam hợp không”. Nên
+          mọi điểm số dành cho cả nhóm đều là{' '}
           {strong('một phép gộp do người viết công cụ chọn')}. Biết phép gộp đó thì bạn đọc kết quả
           như đọc một bảng số, không phải như nghe một lời phán.
         </>
@@ -213,8 +231,10 @@ export function DongNhomDepth() {
             content: (
               <p>
                 Mỗi cặp hai người được chấm trên {DIMENSIONS.length} chiều — {DIMENSIONS.join(', ')}{' '}
-                — rồi lấy trung bình {DIMENSIONS.length} chiều đó thành điểm của cặp, thang 1 đến 10.
-                Điểm nhóm là {strong('trung bình của tất cả các điểm cặp')}, làm tròn về số nguyên.
+                — rồi lấy trung bình {DIMENSIONS.length} chiều đó thành điểm của cặp. Thang ghi là
+                trên 10, nhưng biên cộng trừ hẹp nên điểm cặp thật ra chỉ chạy từ {PAIR_MIN} tới{' '}
+                {PAIR_MAX}. Điểm nhóm là {strong('trung bình của tất cả các điểm cặp')}, làm tròn về
+                số nguyên.
                 Nhóm {MIN_GROUP} người có {pairCount(MIN_GROUP)} cặp, nhóm {MAX_GROUP} người có{' '}
                 {pairCount(MAX_GROUP)} cặp. Cộng lại, chia cho số cặp, xong.
               </p>
@@ -226,9 +246,11 @@ export function DongNhomDepth() {
             content: (
               <p>
                 Trong mã nguồn, phép gộp là đúng một dòng:{' '}
-                {strong('làm tròn tổng điểm các cặp chia số cặp')}, rồi kẹp vào khoảng 1–10 — điểm
-                nhóm là số nguyên, còn điểm từng người giữ một chữ số thập phân, nên hai con số có độ
-                mịn khác nhau. Hệ quả quan trọng: trung bình là phép{' '}
+                {strong('làm tròn tổng điểm các cặp chia số cặp')}, rồi kẹp vào khoảng 1–10 — nhưng
+                cái kẹp ấy không bao giờ chạm tới, vì mọi điểm cặp đã nằm sẵn trong {PAIR_MIN}–
+                {PAIR_MAX} nên trung bình của chúng cũng vậy. Điểm nhóm là số nguyên, còn điểm từng
+                người giữ một chữ số thập phân, nên hai con số có độ mịn khác nhau. Hệ quả quan
+                trọng: trung bình là phép{' '}
                 {strong('tuyến tính và không có trọng số')}. Chọn phép gộp khác — lấy cặp thấp nhất
                 chẳng hạn — thì cùng một nhóm ra con số khác hẳn, và không phép nào “đúng theo cổ
                 thư” cả, vì cổ thư không có phép gộp.
@@ -342,7 +364,8 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       <>
         {pairCount(MAX_GROUP)} cặp, theo công thức n × (n − 1) ÷ 2. Điểm nhóm là{' '}
         {strong('trung bình của ' + pairCount(MAX_GROUP) + ' điểm cặp đó')}, làm tròn về số nguyên
-        và kẹp trong khoảng 1–10. Không có phép tính nào xét ba người trở lên cùng lúc — cả nhóm chỉ
+        (thang ghi là trên 10, dải chạy thật là {PAIR_MIN}–{PAIR_MAX}). Không có phép tính nào xét
+        ba người trở lên cùng lúc — cả nhóm chỉ
         được nhìn qua các cặp rồi gộp lại.
       </>
     ),
@@ -557,10 +580,13 @@ export function DongNhomWhys() {
           question: 'Vì sao không có phép nào xét cả nhóm một lần?',
           because: (
             <>
-              Vì thứ được thừa hưởng từ cổ thư chỉ là {strong('quan hệ giữa hai địa chi')}: tam hợp,
-              lục xung, lục hại, ngũ hành sinh khắc. Không có bảng nào định nghĩa quan hệ của sáu chi
-              cùng lúc — nên mọi con số dành cho cả nhóm, của công cụ này hay của bất kỳ ai, đều là
-              phát minh hiện đại chứ không phải di sản.
+              Vì thứ thừa hưởng từ cổ thư dừng ở {strong('hai chi hoặc một nhóm ba chi cố định')}:
+              lục xung, lục hại và ngũ hành sinh khắc đi theo cặp; tam hợp, tam hội đi theo bộ ba
+              đã định sẵn. Không có bảng nào định nghĩa quan hệ của sáu chi bất kỳ cùng lúc — và
+              engine này thậm chí không dùng cả bộ ba: nó chỉ hỏi hai người có cùng nhóm tam hợp
+              không, chứ không thưởng điểm khi đủ cả ba chi trong nhóm. Nên mọi con số dành cho cả
+              nhóm, của công cụ này hay của bất kỳ ai, đều là phát minh hiện đại chứ không phải di
+              sản.
             </>
           ),
         },

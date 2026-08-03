@@ -1874,6 +1874,11 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/hieu-nguoi-than",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu cách đọc cho người thân"
+  },
+  {
+    "href": "/learn/nghe-nghiep",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu gợi ý nghề nghiệp"
   }
 ];
 

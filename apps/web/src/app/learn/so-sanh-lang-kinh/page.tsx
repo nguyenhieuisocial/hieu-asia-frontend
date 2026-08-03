@@ -57,6 +57,7 @@ import {
   SCIENCE_AXIS,
   SCIENCE_PAIRS,
   QUESTION_AXIS,
+  QUESTION_PAIR,
   QUESTION_DIM,
   SHARED_AXIS_DEMO,
   MBTI_TRONG_TAM,
@@ -94,6 +95,13 @@ const LEARN_HREF: Record<string, string> = {
   '/bat-tu': '/learn/bat-tu',
   '/than-so-hoc': '/learn/than-so-hoc',
 };
+
+/**
+ * Các hệ mà công cụ ghi trục "Dữ liệu cần" — CĂN CỨ để bài gom họ. Suy từ dữ
+ * liệu, không gõ tay: bảng TOOLS bên dưới KHÔNG xếp theo họ nên không được chỉ
+ * nhóm bằng vị trí ("ba hệ ở nhóm dưới"), phải gọi thẳng tên.
+ */
+const BIRTH_TOOLS = TOOLS.filter((t) => familyOf(t.href) === 'du-kien-sinh');
 
 /** Nhãn "trục này xuất hiện ở họ nào" cho bảng thống kê trục. */
 function famLabel(axis: AxisStat): string {
@@ -251,10 +259,10 @@ export default function LearnSoSanhLangKinhPage() {
                 ))}
               </ul>
               <p>
-                Mỗi trang cặp gồm đúng những phần này:{' '}
+                Mỗi trang cặp gồm những phần này:{' '}
                 <strong>giới thiệu, bảng đối chiếu theo trục, gợi ý chọn bên nào khi nào, kết luận
-                và câu hỏi thường gặp</strong>. Toàn bộ là nội dung biên tập soạn sẵn — không có
-                phép tính nào chạy khi bạn mở trang.
+                và câu hỏi thường gặp</strong>, kèm link sang hai công cụ và một nút chia sẻ. Toàn
+                bộ là nội dung biên tập soạn sẵn — không có phép tính nào chạy khi bạn mở trang.
               </p>
               <p>Vì vậy cần chốt ngay bốn điều công cụ KHÔNG làm:</p>
               <ul className="list-disc space-y-2 pl-5">
@@ -312,16 +320,18 @@ export default function LearnSoSanhLangKinhPage() {
                 một lá số hỏi đời bạn có những lĩnh vực nào nổi bật.
               </p>
               <p>
-                Đây không phải cách diễn đạt của riêng bài này. Chính dữ liệu của công cụ có một
-                trục tên “{QUESTION_AXIS}”, và hai ô của nó được ghi là{' '}
+                Cách phân biệt theo LOẠI câu hỏi không phải của riêng bài này. Chính dữ liệu công cụ
+                có một trục tên “{QUESTION_AXIS}” — ở cặp {QUESTION_PAIR?.title ?? '—'} — và hai ô
+                của nó được ghi là{' '}
                 {QUESTION_DIM ? (
                   <>
                     <strong>{QUESTION_DIM.a}</strong> với <strong>{QUESTION_DIM.b}</strong>
                   </>
                 ) : (
                   <>hai câu hỏi khác nhau</>
-                )}{' '}
-                — tức bảng so sánh cũng phân biệt các hệ theo{' '}
+                )}
+                . Cặp ấy gồm hai hệ cùng họ, nên trục này không nói gì về ranh giới giữa trắc nghiệm
+                và lá số; điều nó cho thấy là bảng so sánh phân biệt các hệ theo{' '}
                 <strong>loại câu hỏi chúng trả lời</strong>, không phải theo độ đúng.
               </p>
 
@@ -330,9 +340,13 @@ export default function LearnSoSanhLangKinhPage() {
               </h3>
               <p>
                 Cột “Họ” là <strong>cách gom nhóm của bài này</strong>, không có sẵn trong dữ liệu
-                công cụ. Căn cứ để gom: công cụ ghi trục “Dữ liệu cần” (ngày và giờ sinh, hoặc họ
-                tên) cho đúng ba hệ ở nhóm dưới. Cột mô tả lấy nguyên văn dòng mà công cụ gắn cho
-                từng hệ.
+                công cụ. Căn cứ để gom: công cụ chỉ ghi trục “Dữ liệu cần” (ngày và giờ sinh, hoặc
+                họ tên) cho {BIRTH_TOOLS.length} hệ —{' '}
+                {BIRTH_TOOLS.map((t) => t.ten).join(', ')}; {TOOL_COUNT - BIRTH_TOOLS.length} hệ còn
+                lại không có trục đó và đều lấy dữ liệu từ câu trả lời của bạn. Bảng dưới xếp theo
+                thứ tự các hệ xuất hiện trong dữ liệu, không xếp theo họ. Cột mô tả lấy nguyên văn
+                dòng công cụ gắn cho từng hệ ở lần hệ đó xuất hiện đầu tiên — một hệ có thể được mô
+                tả bằng hơn một dòng tuỳ cặp.
               </p>
               <Scroller minWidth="min-w-[720px]">
                 <TableHead cols={['Công cụ', 'Họ (cách gom của bài)', 'Công cụ mô tả là', 'Bài học riêng']} />
@@ -420,9 +434,10 @@ export default function LearnSoSanhLangKinhPage() {
                 Cạm bẫy: cùng tên trục không có nghĩa cùng thang đo
               </h3>
               <p>
-                {SHARED_AXES.length} trục dùng chung là chỗ dễ hụt chân nhất. Chúng khiến hai ô nằm
-                cùng một hàng, trông như so được với nhau — trong khi nội dung bên trong thuộc hai
-                loại đại lượng khác nhau. Dưới đây là nguyên văn các ô đó:
+                {SHARED_AXES.length} trục dùng chung là chỗ dễ hụt chân nhất. Chúng khiến hai ô
+                thuộc hai cặp khác họ cùng đứng dưới một tên trục, trông như so được với nhau —
+                trong khi nội dung bên trong thuộc hai loại đại lượng khác nhau. Dưới đây là nguyên
+                văn các ô đó:
               </p>
               <Scroller minWidth="min-w-[820px]">
                 <TableHead cols={['Trục', 'Cặp', 'Vế trái ghi gì', 'Vế phải ghi gì']} />
@@ -449,7 +464,8 @@ export default function LearnSoSanhLangKinhPage() {
               </Scroller>
               {SHARED_AXIS_DEMO ? (
                 <p className="text-sm text-foreground/70">
-                  Đọc theo hàng thì thấy ngay. Cùng nằm trên trục “{SHARED_AXIS_DEMO.aspect}”, cặp{' '}
+                  Đối chiếu hai hàng cùng trục thì thấy ngay. Cùng nằm trên trục “
+                  {SHARED_AXIS_DEMO.aspect}”, cặp{' '}
                   {SHARED_AXIS_DEMO.birth.title} ghi “{SHARED_AXIS_DEMO.birthCell}”, còn cặp{' '}
                   {SHARED_AXIS_DEMO.quiz.title} ghi “{SHARED_AXIS_DEMO.quizCell}”. Một bên nói về
                   các lĩnh vực của đời sống, bên kia nói về động lực bên trong —{' '}
@@ -523,8 +539,9 @@ export default function LearnSoSanhLangKinhPage() {
                   biết chúng không cãi nhau được.
                 </li>
                 <li>
-                  <strong>Tìm trục chung.</strong> Có trục mà cả hai cùng định nghĩa thì mới so.
-                  Không có thì dừng, và giữ cả hai như hai mô tả song song.
+                  <strong>Tìm trục chung.</strong> Có trục mà cả hai cùng định nghĩa thì mới xếp
+                  hơn kém. Không có thì dừng phần xếp hạng ngay tại đây, giữ cả hai như hai mô tả
+                  song song — rồi vẫn làm tiếp bước ba.
                 </li>
                 <li>
                   <strong>Dịch sang một ngôn ngữ rồi tìm chỗ trùng.</strong> Bỏ hết thuật ngữ, viết

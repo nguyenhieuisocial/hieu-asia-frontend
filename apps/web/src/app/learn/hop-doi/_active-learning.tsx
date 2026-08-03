@@ -24,7 +24,7 @@
  * và không có LLM — mọi câu chữ đều từ bảng mẫu cố định.
  *
  * PHẠM VI: KHÔNG dạy lại quan hệ can chi giữa hai con giáp (bài /learn/hop-tuoi,
- * /learn/tam-hop-luc-xung), KHÔNG lấn bài "Đồng nhóm" (nhóm 3 người trở lên).
+ * /learn/tam-hop-luc-xung), KHÔNG lấn bài /learn/dong-nhom (nhóm 3 người trở lên).
  * Giọng: điểm chỉ đo mức GIỐNG hoặc BỔ TRỢ trên vài trục hẹp — điểm cao không
  * bảo chứng quan hệ tốt, điểm thấp không phải lý do chia tay. Không doạ.
  */
@@ -166,6 +166,12 @@ const TINH_CACH_VALUES = sortedUnique(ALL_CONFIGS.map((f) => scoreAxes(f)[0] ?? 
 /** Cặp chi KHÁC nhau, và bao nhiêu cặp rơi vào nhánh ngũ hành "trung tính". */
 const CHI_PAIRS = CHI.flatMap((a, i) => CHI.slice(i + 1).map((b) => [a, b] as const));
 const NEUTRAL_PAIRS = CHI_PAIRS.filter(([a, b]) => hanhRelation(a, b) === 'neutral').length;
+
+/** Lệch mốc Tết = bị gán chi của năm liền sau. Cặp chi LIỀN NHAU cùng một hành
+ * thì quan hệ ngũ hành không đổi, nên "lệch một chi" KHÔNG luôn sai đủ bốn trục. */
+const NEIGHBOUR_SAME_HANH = CHI.map(
+  (c, i) => [c, CHI[(i + 1) % CHI.length] as Chi] as const,
+).filter(([a, b]) => HANH_BY_CHI[a] === HANH_BY_CHI[b]);
 
 // Ví dụ. Chỉ NGÀY SINH và giới tính là dữ kiện nhập; điểm do khối mirror tính.
 // Cặp 1: lục xung nhưng CÙNG hành → bảng điểm tự mâu thuẫn.
@@ -434,7 +440,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
       },
       {
         text: `Coi ${OVERALL_MIN}/10 là dấu hiệu nghiêm trọng vì nó gần đáy thang 10`,
-        note: `Đọc sai đơn vị. Thang thật chỉ chạy ${OVERALL_MIN}–${OVERALL_MAX}, nên ${OVERALL_MIN} là đáy thực tế chứ không phải mức bất thường — mọi cặp lục xung khắc hành đều rơi vào đó.`,
+        note: `Đọc sai đơn vị. Thang thật chỉ chạy ${OVERALL_MIN}–${OVERALL_MAX}, nên ${OVERALL_MIN} là đáy thực tế chứ không phải mức bất thường — phần lớn cặp lục xung khắc hành đều rơi vào đó.`,
       },
       {
         text: 'Nhập lại với giờ sinh khác để tìm kết quả tốt hơn',
@@ -451,8 +457,11 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
         Không chắc — đây là một giới hạn thật. Phép chấm lấy con giáp theo{' '}
         {strong('năm dương lịch')} của ngày sinh, trong khi tục lệ đổi con giáp ở{' '}
         {strong('Tết âm lịch')}. Người sinh đầu năm dương trước Tết vì vậy bị gán con giáp của năm
-        sau, {strong('lệch trọn một chi')} — mà lệch một chi thì đổi luôn cả quan hệ ngũ hành lẫn
-        tam hợp / lục xung, tức đổi bốn trong năm trục.
+        sau, {strong('lệch trọn một chi')} — mà lệch một chi thì có thể đổi cả quan hệ ngũ hành lẫn
+        tam hợp / lục xung, tức {strong('sai tới bốn trong năm trục')}. Không phải lúc nào cũng đủ
+        bốn: {NEIGHBOUR_SAME_HANH.length} trong {CHI.length} cặp chi liền nhau lại cùng một hành (
+        {NEIGHBOUR_SAME_HANH.map(([x, y]) => `${x}–${y}`).join(', ')}), nên hai trục đọc ngũ hành có
+        khi giữ nguyên.
       </>
     ),
   },

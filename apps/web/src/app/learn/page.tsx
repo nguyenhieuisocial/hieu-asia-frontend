@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 53 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 54 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -425,6 +425,12 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Ra quyết định',
         subtitle: 'Phản biện · Thiên kiến',
         blurb: 'Dùng lăng kính để mở rộng lựa chọn, không phải để chọn hộ bạn.',
+      },
+      {
+        href: '/learn/nghe-nghiep',
+        title: 'Gợi ý nghề nghiệp',
+        subtitle: 'Phản biện · Sở thích nghề',
+        blurb: 'Trắc nghiệm nghề đo sở thích, không đo năng lực và không dự báo thành công.',
       },
     ],
   },

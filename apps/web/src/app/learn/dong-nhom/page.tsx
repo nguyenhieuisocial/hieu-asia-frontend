@@ -34,15 +34,25 @@
  *   chất lượng quyết định của nhóm; không xếp hạng ai nên rời nhóm.
  *
  * KIỂM CHỨNG SỐ LIỆU (chạy lại được bằng chính các hàm khai báo dưới đây, và đã
- * đối chiếu với công thức trong compatibility-group.ts): nhóm 3 người = 3 cặp,
- * 6 người = 15 cặp; kịch bản "mọi cặp 8 điểm, đúng một cặp 3 điểm" cho điểm nhóm
- * 6 với nhóm 3 người nhưng 8 với nhóm 6 người; ở nhóm 6 người chênh lệch trung
- * bình cá nhân chỉ 1,0 < 1,5 nên công cụ KHÔNG gán nhãn vai trò nào.
+ * đối chiếu bằng cách BUNDLE + CHẠY THẬT compatibility-group.ts): nhóm 3 người =
+ * 3 cặp, 6 người = 15 cặp; groupScore === round(trung bình điểm cặp) đúng trên
+ * 40.000 nhóm ngẫu nhiên, không có số hạng "cả nhóm" nào; kịch bản "mọi cặp 8
+ * điểm, đúng một cặp 4 điểm" cho điểm nhóm 7 ("trung tính") với nhóm 3 người
+ * nhưng 8 ("thuận") với nhóm 6 người; ở nhóm 6 người chênh lệch trung bình cá
+ * nhân chỉ 0,8 < 1,5 nên công cụ KHÔNG gán nhãn vai trò nào.
  *
- * PHẠM VI: cách chấm MỘT cặp thuộc bài Hợp đôi (chỉ nhắc TÊN, chưa có route nên
- * KHÔNG link); bảng hợp/khắc 12 con giáp thuộc /learn/hop-tuoi; hình học vòng 12
- * chi thuộc /learn/tam-hop-luc-xung (được link). Giọng: trung thực về giới hạn,
- * không doạ, không phán số mệnh, không dán nhãn ai.
+ * ⚠️ DẢI ĐIỂM THẬT — điểm MỘT CẶP chỉ nhận {4,5,6,7,8,9}, KHÔNG phải 1..10.
+ * Quét vét cạn toàn bộ không gian cấu hình của buildCompatibilityPair (144 cặp
+ * con giáp × 4 tổ hợp giới tính × 36 tổ hợp số dư mã băm ngày sinh) cho đúng sáu
+ * giá trị đó; khớp số học: tổng 5 chiều min 4+3+4+4+3 = 18 → 4, max 9+10+9+9+8 =
+ * 45 → 9. Điểm nhóm là trung bình các điểm cặp nên cũng nằm trong 4–9. Vì vậy
+ * CASE_LOW = PAIR_MIN = 4: một cặp 3 điểm là kịch bản engine KHÔNG tạo ra được.
+ * Trùng kết luận với /learn/hop-doi — hai bài cùng phát FAQPage, phải khớp nhau.
+ *
+ * PHẠM VI: cách chấm MỘT cặp thuộc bài /learn/hop-doi (route ĐÃ có → link thật ở
+ * hai chỗ trong thân bài); bảng hợp/khắc 12 con giáp thuộc /learn/hop-tuoi; hình
+ * học vòng 12 chi thuộc /learn/tam-hop-luc-xung (được link). Giọng: trung thực
+ * về giới hạn, không doạ, không phán số mệnh, không dán nhãn ai.
  */
 
 import type { ReactNode } from 'react';
@@ -80,6 +90,8 @@ import {
   CASE_HIGH,
   CASE_LOW,
   SIGNAL_CHU_Y_MAX,
+  PAIR_MIN,
+  PAIR_MAX,
 } from './_active-learning';
 
 export const metadata: Metadata = {
@@ -101,7 +113,7 @@ const SIZE_ROWS = GROUP_SIZES.map((size) => ({
   weight: vn((100 / pairCount(size)), 1),
 }));
 
-/** Bảng kịch bản "mọi cặp 8 điểm, đúng một cặp 3 điểm" cho từng cỡ nhóm. */
+/** Bảng kịch bản "mọi cặp CASE_HIGH điểm, đúng một cặp CASE_LOW điểm" cho từng cỡ nhóm. */
 const WEAK_ROWS = WEAK_CASES;
 
 /** Số cặp mà một người bất kỳ tham gia trong nhóm n người = n − 1. */
@@ -124,7 +136,7 @@ const A = 'text-gold-700 underline-offset-4 hover:underline';
 const FAQS = [
   {
     q: 'Công cụ xem hợp nhóm thật sự tính cái gì?',
-    a: `Nó chấm điểm TỪNG CẶP trong nhóm rồi gộp lại. Với nhóm ${MAX_GROUP} người, đó là ${pairCount(MAX_GROUP)} lần chấm cặp; điểm nhóm bạn nhìn thấy là trung bình của ${pairCount(MAX_GROUP)} con số đó, làm tròn về số nguyên trong khoảng 1 đến 10. Ngoài ra công cụ tính điểm trung bình của từng người với phần còn lại của nhóm, sắp danh sách cặp từ cao xuống thấp, và nêu tối đa ${FRICTION_SLOTS} cặp yếu kèm gợi ý câu nói. Không có phép tính nào xét ba người trở lên cùng một lúc — mọi thứ đều đi qua cặp.`,
+    a: `Nó chấm điểm TỪNG CẶP trong nhóm rồi gộp lại. Với nhóm ${MAX_GROUP} người, đó là ${pairCount(MAX_GROUP)} lần chấm cặp; điểm nhóm bạn nhìn thấy là trung bình của ${pairCount(MAX_GROUP)} con số đó, làm tròn về số nguyên. Thang hiển thị ghi là trên 10, nhưng biên cộng trừ của phép chấm cặp hẹp nên điểm một cặp chỉ nhận được các giá trị từ ${PAIR_MIN} tới ${PAIR_MAX} — và vì điểm nhóm là trung bình của chúng nên nó cũng không ra ngoài khoảng đó. Ngoài ra công cụ tính điểm trung bình của từng người với phần còn lại của nhóm, sắp danh sách cặp từ cao xuống thấp, và nêu tối đa ${FRICTION_SLOTS} cặp yếu kèm gợi ý câu nói. Không có phép tính nào xét ba người trở lên cùng một lúc — mọi thứ đều đi qua cặp.`,
   },
   {
     q: `Nhóm ${MAX_GROUP} người thì có bao nhiêu quan hệ cần xét?`,
@@ -132,7 +144,7 @@ const FAQS = [
   },
   {
     q: 'Vì sao điểm nhóm cao mà trong bảng vẫn có cặp lệch nặng?',
-    a: `Vì điểm nhóm là một phép TRUNG BÌNH, mà trung bình thì làm loãng chỗ lệch. Thử một kịch bản tính được: mọi cặp đều ${CASE_HIGH} điểm, đúng một cặp ${CASE_LOW} điểm. Với nhóm ${CASE_MIN.size} người, một cặp chiếm ${vn(100 / CASE_MIN.pairs, 1)}% trọng số nên điểm nhóm rơi xuống ${CASE_MIN.groupScore}. Với nhóm ${CASE_MAX.size} người, đúng cặp lệch ấy chỉ còn ${vn(100 / CASE_MAX.pairs, 1)}% trọng số nên điểm nhóm vẫn là ${CASE_MAX.groupScore} — mức mà công cụ gọi là "${CASE_MAX.band}". Cùng một mâu thuẫn, hai dòng tiêu đề trái ngược. Bảng từng cặp và mục cặp nên chú ý mới là chỗ giữ thông tin đó.`,
+    a: `Vì điểm nhóm là một phép TRUNG BÌNH, mà trung bình thì làm loãng chỗ lệch. Thử một kịch bản tính được: mọi cặp đều ${CASE_HIGH} điểm, đúng một cặp ${CASE_LOW} điểm — ${CASE_LOW} là đáy thật của thang chấm cặp, tức cặp lệch nhất mà công cụ có thể cho ra. Với nhóm ${CASE_MIN.size} người, một cặp chiếm ${vn(100 / CASE_MIN.pairs, 1)}% trọng số nên điểm nhóm rơi xuống ${CASE_MIN.groupScore}, mức công cụ gọi là "${CASE_MIN.band}". Với nhóm ${CASE_MAX.size} người, đúng cặp lệch ấy chỉ còn ${vn(100 / CASE_MAX.pairs, 1)}% trọng số nên điểm nhóm là ${CASE_MAX.groupScore} — mức công cụ gọi là "${CASE_MAX.band}". Cùng một mâu thuẫn, hai dòng tiêu đề khác hẳn nhau. Bảng từng cặp và mục cặp nên chú ý mới là chỗ giữ thông tin đó.`,
   },
   {
     q: 'Công cụ có gán cho mỗi người một vai trò trong nhóm không?',
@@ -148,7 +160,7 @@ const FAQS = [
   },
   {
     q: `Nhóm ít hơn ${MIN_GROUP} người hoặc nhiều hơn ${MAX_GROUP} người thì sao?`,
-    a: `Công cụ từ chối, kèm câu báo lỗi ghi rõ số người đang có. Giới hạn dưới là ${MIN_GROUP} vì với 2 người thì chỉ có đúng một cặp, và phép gộp nhóm không còn ý nghĩa gì. Giới hạn trên là ${MAX_GROUP} vì số cặp tăng theo bình phương: ${MAX_GROUP} người đã là ${pairCount(MAX_GROUP)} cặp, thêm nữa thì bảng kết quả dài tới mức không ai đọc hết — mà đọc bảng cặp mới là phần có giá trị nhất.`,
+    a: `Bạn không tạo được nhóm như vậy: biểu mẫu chặn sẵn hai đầu — xuống tới ${MIN_GROUP} người thì nút bỏ thành viên biến mất, lên tới ${MAX_GROUP} người thì nút thêm người tắt đi. Nếu gọi thẳng máy chủ ngoài khoảng này thì nó trả về lỗi ghi rõ số người đang có. Về lý do của hai mốc: với 2 người chỉ có đúng một cặp, nên chẳng còn gì để gộp — bài này sẽ không có nội dung. Còn ở đầu trên, số cặp tăng theo bình phương: ${MAX_GROUP} người đã là ${pairCount(MAX_GROUP)} cặp, và bảng cặp mới là phần đáng đọc nhất, nên để nó dài thêm thì lợi bất cập hại.`,
   },
 ];
 
@@ -241,10 +253,13 @@ export default function LearnDongNhomPage() {
           children: (
             <div className="space-y-4 text-foreground/85 leading-relaxed">
               <p>
-                Trong huyền học phương Đông, cái có sẵn từ cổ thư là{' '}
-                <strong>quan hệ giữa HAI địa chi</strong>: tam hợp, lục xung, lục hại, ngũ hành sinh
-                khắc. Không có bảng nào định nghĩa “quan hệ của sáu con giáp cùng lúc”. Nghĩa là mọi
-                con số dành cho cả một nhóm đều phải do người viết công cụ{' '}
+                Trong huyền học phương Đông, cái có sẵn từ cổ thư dừng ở hai cỡ:{' '}
+                <strong>quan hệ giữa HAI địa chi</strong> — lục xung, lục hại, ngũ hành sinh khắc —
+                và <strong>nhóm BA địa chi cố định</strong> là tam hợp, tam hội. Không có bảng nào
+                định nghĩa “quan hệ của bốn, năm hay sáu con giáp bất kỳ cùng lúc”. Đáng nói hơn:
+                engine của công cụ này <em>không dùng cả bộ ba</em> — nó chỉ hỏi hai người có cùng
+                một nhóm tam hợp hay không, và không có điểm thưởng nào khi đủ cả ba chi của nhóm ấy
+                cùng có mặt. Nghĩa là mọi con số dành cho cả một nhóm đều phải do người viết công cụ{' '}
                 <strong>tự nghĩ ra một phép gộp</strong> — và phép gộp ấy là thứ bài này mổ.
               </p>
               <p>
@@ -256,8 +271,12 @@ export default function LearnDongNhomPage() {
                 <li>
                   <strong>Chấm mọi cặp.</strong> Nhóm {MAX_GROUP} người thì chấm{' '}
                   {pairCount(MAX_GROUP)} cặp. Mỗi cặp được chấm trên {DIMENSIONS.length} chiều —{' '}
-                  {DIMENSIONS.join(', ')} — rồi lấy trung bình {DIMENSIONS.length} chiều đó thành
-                  điểm của cặp, thang 1 đến 10.
+                  {DIMENSIONS.join(', ')} — rồi lấy trung bình {DIMENSIONS.length} chiều đó, làm
+                  tròn thành điểm của cặp. Thang ghi là trên 10, nhưng dải chạy thật chỉ là{' '}
+                  <strong>
+                    {PAIR_MIN} đến {PAIR_MAX}
+                  </strong>{' '}
+                  — quét hết mọi cấu hình đầu vào cũng không có cặp nào ra 1, 2, 3 hay 10.
                 </li>
                 <li>
                   <strong>Gộp các cặp thành một điểm nhóm.</strong> Cộng điểm của tất cả các cặp,
@@ -294,7 +313,11 @@ export default function LearnDongNhomPage() {
               </ul>
               <p className="text-sm text-foreground/70">
                 Hai phạm vi bài này cố ý không lấn: cách chấm điểm cho <em>một cặp</em> là chủ đề của
-                bài Hợp đôi, còn bảng hợp – khắc giữa hai con giáp nằm ở bài{' '}
+                bài{' '}
+                <Link href="/learn/hop-doi" className={A}>
+                  Điểm hợp đôi
+                </Link>
+                , còn bảng hợp – khắc giữa hai con giáp nằm ở bài{' '}
                 <Link href="/learn/hop-tuoi" className={A}>Hợp tuổi 12 con giáp</Link>. Ở đây chỉ bàn
                 đúng một chuyện: <strong>gộp nhiều cặp lại thì được gì và mất gì</strong>.
               </p>
@@ -381,8 +404,11 @@ export default function LearnDongNhomPage() {
                 <strong>
                   mọi cặp trong nhóm đều {CASE_HIGH} điểm, đúng một cặp {CASE_LOW} điểm
                 </strong>{' '}
-                — hai người cuối danh sách lệch nhau nặng. Giữ nguyên cặp lệch ấy, chỉ đổi cỡ nhóm,
-                rồi xem điểm nhóm đi đâu. Mọi ô dưới đây tính bằng đúng công thức của engine, không
+                — hai người cuối danh sách lệch nhau nặng. Chọn {CASE_LOW} là có lý do:{' '}
+                <strong>đó là đáy thật của thang chấm cặp</strong>, cặp lệch nhất mà công cụ có thể
+                cho ra. Giữ nguyên cặp lệch ấy, chỉ đổi cỡ nhóm, rồi xem điểm nhóm đi đâu. Đây là
+                một kịch bản dựng để cô lập đúng phép gộp — với người thật bạn không giữ được các
+                cặp khác đứng yên — nhưng mọi ô dưới đây tính bằng đúng công thức của engine, không
                 chép tay.
               </p>
               <Scroller minWidth="min-w-[760px]">
@@ -470,8 +496,11 @@ export default function LearnDongNhomPage() {
                     Một cặp có thể mang nhãn “{bandOf(FRICTION_MAX_SCORE)}” mà vẫn lọt vào khối này.
                   </strong>{' '}
                   Ngưỡng gắn nhãn cặp và ngưỡng lọc cặp yếu là hai ngưỡng khác nhau: nhãn “
-                  {bandOf(CASE_LOW)}” chỉ dành cho cặp từ {SIGNAL_CHU_Y_MAX} điểm trở xuống, còn
-                  khối cặp nên chú ý nhận tới {FRICTION_MAX_SCORE} điểm.
+                  {bandOf(CASE_LOW)}” chỉ dành cho cặp từ {SIGNAL_CHU_Y_MAX} điểm trở xuống — mà{' '}
+                  {PAIR_MIN} đã là đáy thang, nên trên thực tế nhãn ấy chỉ hiện ở đúng{' '}
+                  {SIGNAL_CHU_Y_MAX}/10. Còn khối cặp nên chú ý nhận tới {FRICTION_MAX_SCORE} điểm.
+                  Vì vậy chuyện thường gặp là một cặp {FRICTION_MAX_SCORE}/10 mang nhãn “
+                  {bandOf(FRICTION_MAX_SCORE)}” nhưng vẫn được nêu ra ở khối cặp nên chú ý.
                 </li>
               </ul>
             </div>
@@ -624,7 +653,11 @@ export default function LearnDongNhomPage() {
                   tên gọi để hiển thị. Trong {DIMENSIONS.length} chiều chấm cặp, bốn chiều đọc từ con
                   giáp của <em>năm</em> sinh — nghĩa là hai người sinh cùng năm cho kết quả gần như
                   nhau, dù họ khác nhau thế nào ngoài đời. Cơ chế chi tiết của từng chiều là chủ đề
-                  của bài Hợp đôi, không lặp lại ở đây.
+                  của bài{' '}
+                  <Link href="/learn/hop-doi" className={A}>
+                    Điểm hợp đôi
+                  </Link>
+                  , không lặp lại ở đây.
                 </li>
                 <li>
                   <strong>Có một chỗ kém chặt khi hai người bằng điểm nhau.</strong> Nhãn “
