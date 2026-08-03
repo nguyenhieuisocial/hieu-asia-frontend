@@ -1833,6 +1833,17 @@ export const TOOL_REGISTRY: ToolEntry[] = [
     "href": "/learn/luu-nien",
     "surfaces": [],
     "relatedLabel": "Tìm hiểu lưu niên"
+  },
+  // Đợt 8 — tư duy phản biện.
+  {
+    "href": "/learn/barnum",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu hiệu ứng Barnum"
+  },
+  {
+    "href": "/learn/kiem-chung",
+    "surfaces": [],
+    "relatedLabel": "Tìm hiểu cách kiểm chứng dự đoán"
   }
 ];
 

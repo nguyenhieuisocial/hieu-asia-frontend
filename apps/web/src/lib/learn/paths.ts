@@ -111,6 +111,17 @@ export const LEARN_PATHS: readonly LearnPath[] = [
       'Các lớp thời gian chồng lên lá số: chặng 10 năm và lớp từng năm — đọc để thấy nhịp, không phải để chờ vận.',
     slugs: ['dai-van', 'giao-van', 'thai-tue', 'luu-nien'],
   },
+  // Đợt 8. Lộ trình "tư duy phản biện" — công cụ đặt câu hỏi cho CHÍNH những
+  // lăng kính ở các lộ trình trên, không thuộc riêng lăng kính nào. Sẽ dài
+  // thêm khi so-sanh-lang-kinh, ra-quyet-dinh, nghe-nghiep viết xong (còn
+  // trong PENDING) — hiện đủ 2 bài nên đã hợp lệ.
+  {
+    id: 'tu-duy-phan-bien',
+    name: 'Tư duy phản biện',
+    tagline:
+      'Vì sao một lời mô tả chung chung luôn thấy đúng, và cách kiểm một lời tiên đoán trước khi tin — kể cả lời của chính hieu.asia.',
+    slugs: ['barnum', 'kiem-chung'],
+  },
 ];
 
 export interface TopicPathPosition {

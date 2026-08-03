@@ -396,6 +396,26 @@ const CLUSTERS: readonly LearnCluster[] = [
       },
     ],
   },
+  {
+    id: 'tu-duy-phan-bien',
+    heading: 'Tư duy phản biện',
+    positioning:
+      'Công cụ đặt câu hỏi cho CHÍNH những lăng kính ở trên — không thuộc riêng huyền học hay tâm lý học nào, mà là cách kiểm bất kỳ lời giải nào trước khi tin.',
+    topics: [
+      {
+        href: '/learn/barnum',
+        title: 'Hiệu ứng Barnum',
+        subtitle: 'Tâm lý học · Hiệu ứng Forer',
+        blurb: 'Vì sao một lời mô tả chung chung luôn khiến ai đọc cũng thấy đúng với riêng mình.',
+      },
+      {
+        href: '/learn/kiem-chung',
+        title: 'Kiểm chứng dự đoán',
+        subtitle: 'Phản biện · Khả sai',
+        blurb: 'Ba câu hỏi kiểm một lời tiên đoán: khả sai, tỉ lệ nền, và ghi trước hay hồi cứu.',
+      },
+    ],
+  },
 ];
 
 // Phẳng hoá TOÀN BỘ chủ đề cho itemList JSON-LD (để AI/Google đọc được

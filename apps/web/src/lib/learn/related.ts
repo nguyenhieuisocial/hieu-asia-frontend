@@ -71,6 +71,9 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   // Đợt 7 — khép cụm vận theo thời gian.
   { slug: 'giao-van', eyebrow: 'CHUYỂN VẬN', name: 'Giao vận', href: '/learn/giao-van' },
   { slug: 'luu-nien', eyebrow: 'CHỒNG LỚP', name: 'Lưu niên', href: '/learn/luu-nien' },
+  // Đợt 8 — tư duy phản biện (mở đầu cụm, còn 3 bài nữa trong PENDING).
+  { slug: 'barnum', eyebrow: 'HIỆU ỨNG FORER', name: 'Hiệu ứng Barnum', href: '/learn/barnum' },
+  { slug: 'kiem-chung', eyebrow: 'KHẢ SAI', name: 'Kiểm chứng dự đoán', href: '/learn/kiem-chung' },
 ];
 
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
@@ -146,6 +149,11 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'big-five': ['mbti', 'disc', 'enneagram', 'chiem-tinh'],
   'disc': ['mbti', 'big-five', 'enneagram', 'palm'],
   'enneagram': ['mbti', 'big-five', 'disc', 'tarot'],
+  // Đợt 8 — hai bài trỏ nhau trước (companion), rồi ra ngoài cụm mình đang
+  // soi: barnum về phía các bảng hỏi tính cách, kiem-chung về phía Tử Vi vì
+  // công cụ Bằng Chứng backtest đúng hệ đó.
+  'barnum': ['kiem-chung', 'mbti', 'tarot', 'than-so-hoc'],
+  'kiem-chung': ['barnum', 'tu-vi', 'sao-han', 'thai-tue'],
 };
 
 /**
