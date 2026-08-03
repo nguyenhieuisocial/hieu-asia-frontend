@@ -40,7 +40,7 @@ const FAQS = [
   },
   {
     q: 'Có bao nhiêu sao?',
-    a: 'Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...) cộng các phụ tinh, tổng cộng hơn 100 sao. hieu.asia dùng engine dựa trên Iztro (thư viện an sao mã nguồn mở), bọc trong lớp kiểm-định riêng, để tính đầy đủ chính tinh và phụ tinh.',
+    a: 'Hệ thống tiêu chuẩn dùng 14 chính tinh (Tử Vi, Thiên Phủ, Vũ Khúc, Liêm Trinh...) cộng các phụ tinh. Trên mỗi lá số, engine của hieu.asia an đúng 114 sao: 14 chính tinh, 14 phụ tinh, 38 sao lẻ và 4 vòng 12 sao. Engine dựa trên Iztro (thư viện an sao mã nguồn mở), bọc trong lớp kiểm-định riêng.',
   },
   {
     q: 'Đọc lá số để làm gì?',
