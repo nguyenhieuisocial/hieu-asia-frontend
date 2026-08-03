@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { MessageSquareQuote, ArrowRight, RotateCcw, Send } from 'lucide-react';
 
@@ -581,6 +581,13 @@ export function MentorSampleInteractive() {
     question: string;
     template: Template;
   } | null>(null);
+  const responseRef = useRef<HTMLElement | null>(null);
+
+  // Wave 65.05b a11y — sau khi reveal, dời focus vào khối kết quả để keyboard/
+  // screen-reader user không bị "rơi" khi form biến mất (nút submit unmount).
+  useEffect(() => {
+    if (submitted) responseRef.current?.focus();
+  }, [submitted]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -652,7 +659,7 @@ export function MentorSampleInteractive() {
 
         {/* Input + response */}
         <div className="mx-auto mt-8 max-w-marketing-tight">
-          {!submitted ? (
+          {!submitted && (
             <form onSubmit={handleSubmit}>
               <label
                 htmlFor="mentor-demo-input"
@@ -682,10 +689,20 @@ export function MentorSampleInteractive() {
                 </button>
               </div>
             </form>
-          ) : (
-            <div aria-live="polite">
+          )}
+          {/* Wave 65.05b a11y — live-region MOUNT SẴN từ đầu (rỗng), nội dung
+              đổ vào SAU khi submit: screen reader chỉ announce thay đổi bên
+              trong live-region đã tồn tại; mount region cùng lúc với nội dung
+              thì không được đọc. */}
+          <div aria-live="polite">
+            {submitted && (
+              <>
               {/* User question echo */}
-              <article className="rounded-[2px] border border-border/30 bg-card p-5 md:p-6">
+              <article
+                ref={responseRef}
+                tabIndex={-1}
+                className="rounded-[2px] border border-border/30 bg-card p-5 focus:outline-none md:p-6"
+              >
                 <div className="mb-4 flex items-start gap-2">
                   <MessageSquareQuote
                     className="mt-0.5 size-4 shrink-0 text-primary/70"
@@ -725,8 +742,9 @@ export function MentorSampleInteractive() {
                   Phản hồi dựa trên persona Chi Lan · ENFP · Mệnh Hỏa
                 </p>
               </div>
-            </div>
-          )}
+              </>
+            )}
+          </div>
         </div>
 
         {/* Footer CTA */}

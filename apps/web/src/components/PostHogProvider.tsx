@@ -1,9 +1,10 @@
 "use client";
 
 /**
- * PostHogProvider — initialises the PostHog browser client on mount,
- * wires Web Vitals reporting, attaches identify on auth state change,
- * and manually tracks pageviews on route change.
+ * PostHogProvider — tải + init PostHog browser client SAU tương tác đầu
+ * hoặc idle (trần 3.5s — Wave 65.05b, pattern GoogleTags), wires Web Vitals
+ * reporting, attaches identify on auth state change, and manually tracks
+ * pageviews on route change (queued cho tới khi init xong).
  *
  * We disable PostHog's built-in `capture_pageview` so we can fire a single
  * `$pageview` per Next.js navigation (App Router doesn't fire a full reload).
@@ -19,7 +20,7 @@
 import * as React from "react";
 import { Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { getPostHog } from "@/lib/posthog";
+import { capturePostHog, loadPostHog } from "@/lib/posthog";
 import { wireWebVitals } from "@/lib/web-vitals";
 import { identifyUser } from "@/lib/identify";
 import { onboardAffiliateFromRef } from "@/lib/affiliate-onboard";
@@ -37,9 +38,31 @@ function PostHogTracking(): null {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Initialise once on mount + wire web vitals, attribution, behaviour.
+  // Wire web vitals, attribution, behaviour ngay khi mount; RIÊNG posthog-js
+  // (~60-80KB gz) hoãn tải tới tương tác đầu HOẶC idle trần 3.5s — đúng
+  // pattern GoogleTags 65.05 (gtm.js). Track/pageview bắn trước lúc đó được
+  // lib/posthog queue lại và flush sau init. Đánh đổi trung thực: khách thoát
+  // <3.5s mà không tương tác sẽ KHÔNG được đếm pageview/replay.
   React.useEffect(() => {
-    getPostHog();
+    let done = false;
+    const boot = (): void => {
+      if (done) return;
+      done = true;
+      cleanup();
+      void loadPostHog();
+    };
+    const EVENTS: readonly (keyof WindowEventMap)[] = ["pointerdown", "keydown", "scroll"];
+    const hasRIC = typeof window.requestIdleCallback === "function";
+    const idleId = hasRIC
+      ? window.requestIdleCallback(boot, { timeout: 3500 })
+      : window.setTimeout(boot, 3500);
+    const cleanup = (): void => {
+      EVENTS.forEach((e) => window.removeEventListener(e, boot));
+      if (hasRIC) window.cancelIdleCallback(idleId as number);
+      else window.clearTimeout(idleId as number);
+    };
+    EVENTS.forEach((e) => window.addEventListener(e, boot, { once: true, passive: true }));
+
     wireWebVitals();
     // Wave 41 Track A — capture UTM/click-IDs on first paint, before any
     // user interaction or identify() can blow away the anon attribution.
@@ -60,6 +83,7 @@ function PostHogTracking(): null {
     // keep a bare-uuid PH id; autocapture-vs-custom may fragment for that small
     // cohort — acceptable pre-launch; revisit with a dual-alias if it ships to
     // real traffic.)
+    return cleanup;
   }, []);
 
   // Watch Supabase auth — re-identify on session restore + tier refresh.
@@ -96,15 +120,16 @@ function PostHogTracking(): null {
     };
   }, []);
 
-  // Manual pageview on every route change.
+  // Manual pageview on every route change. capturePostHog tự queue khi SDK
+  // chưa init (Wave 65.05b) nên pageview đầu phiên không bị rơi — miễn là
+  // khách còn ở lại tới lúc init (tương tác/idle 3.5s).
   React.useEffect(() => {
-    const ph = getPostHog();
     if (!pathname) return;
 
     let url = window.location.origin + pathname;
     const qs = searchParams?.toString();
     if (qs) url += `?${qs}`;
-    if (ph) ph.capture("$pageview", { $current_url: url });
+    capturePostHog("$pageview", { $current_url: url });
 
     // Wave 41 — re-capture attribution on every SPA nav so cross-page
     // `?utm_*` / `?fbclid` arrivals still register.

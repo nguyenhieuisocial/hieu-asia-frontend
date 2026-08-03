@@ -4,7 +4,9 @@ import * as React from 'react';
 
 /**
  * Marquee — seamless infinite horizontal scroll of its children (duplicated
- * track). Pauses on hover. Under prefers-reduced-motion it does NOT auto-scroll
+ * track). Pauses on hover + :focus-within (65.05b — keyboard user tab vào link
+ * trong track thì băng chuyền đứng lại; chưa đạt WCAG 2.2.2 tuyệt đối vì chưa
+ * có nút pause riêng — bước pragmatic). Under prefers-reduced-motion it does NOT auto-scroll
  * (renders a single static, horizontally-scrollable row). Pure CSS transform
  * loop — no RAF.
  */
@@ -53,7 +55,7 @@ export function Marquee({
       <style>{`
         @keyframes mq-${id}{from{transform:translateX(0)}to{transform:translateX(-50%)}}
         .mq-${id}{display:inline-flex;gap:2.5rem;white-space:nowrap;will-change:transform;animation:mq-${id} ${dur}s linear infinite ${direction === 'right' ? 'reverse' : 'normal'};}
-        .mq-wrap-${id}:hover .mq-${id}{animation-play-state:paused;}
+        .mq-wrap-${id}:hover .mq-${id},.mq-wrap-${id}:focus-within .mq-${id}{animation-play-state:paused;}
       `}</style>
       <div className={`mq-wrap-${id}`}>
         <div ref={trackRef} className={`mq-${id}`}>
