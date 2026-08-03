@@ -76,7 +76,7 @@ export function NewsletterSignup({
           <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary/90 sm:text-xs">
             Newsletter · mỗi tuần một bài
           </p>
-          <h2 className="mt-4 text-balance font-editorial-display text-2xl font-normal leading-tight text-foreground sm:text-3xl">
+          <h2 className="mt-4 text-balance font-editorial-display text-xl font-normal leading-tight text-foreground sm:text-2xl">
             Theo dõi tri thức <span className="text-primary">hàng tuần</span>
           </h2>
           <p className="mt-4 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">

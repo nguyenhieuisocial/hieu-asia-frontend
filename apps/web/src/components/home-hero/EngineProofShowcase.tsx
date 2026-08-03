@@ -27,7 +27,7 @@ export function EngineProofShowcase(): React.JSX.Element {
         </p>
         {/* Wave 65.01 SEO — thêm "Tử Vi" vào H2 (heading duy nhất phù hợp để
             mang từ khoá này một cách tự nhiên: section trưng đúng lá số Tử Vi). */}
-        <h2 className="mt-3 font-editorial-display text-3xl leading-tight text-foreground sm:text-4xl">
+        <h2 className="mt-3 font-editorial-display text-2xl leading-tight text-foreground sm:text-3xl">
           Lá số Tử Vi được <em className="italic text-primary">tính ra</em>, không chép sẵn.
         </h2>
         <p className="mt-3 max-w-[36em] leading-relaxed text-muted-foreground">

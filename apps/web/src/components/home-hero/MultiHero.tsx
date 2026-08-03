@@ -154,7 +154,7 @@ const CSS = `
 
 .mh-eyebrow { display: flex; align-items: center; font-family: var(--font-be-vietnam), system-ui, sans-serif; letter-spacing: .16em; font-size: 11px; color: ${SOFT}; margin: 0; }
 .mh-livedot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${OCHRE}; margin-right: 9px; flex: none; }
-.mh-h1 { font-size: clamp(3.4rem, 16vw, 4.7rem); line-height: 1.08; margin: .42em 0 .34em; font-weight: 400; letter-spacing: -.028em; }
+.mh-h1 { font-size: clamp(2.3rem, 10vw, 3rem); line-height: 1.12; margin: .42em 0 .34em; font-weight: 400; letter-spacing: -.028em; }
 .mh-line { display: block; }
 .mh-l2 { color: ${OCHRE}; font-style: italic; }
 .mh-rot-slot { display: inline-grid; vertical-align: bottom; }
@@ -213,7 +213,7 @@ const CSS = `
   .mh-copy { grid-area: copy; align-self: end; }
   .mh-vis { grid-area: vis; }
   .mh-act { grid-area: act; align-self: start; }
-  .mh-h1 { font-size: clamp(3.8rem, 7.2vw, 6.2rem); line-height: .94; }
+  .mh-h1 { font-size: clamp(2.75rem, 5vw, 4.25rem); line-height: 1.02; }
   .mh-deck { font-size: .96rem; max-width: 30em; }
   .mh-soi { min-height: 3em; }
   .mh-cta-row { flex-direction: row; flex-wrap: wrap; }
