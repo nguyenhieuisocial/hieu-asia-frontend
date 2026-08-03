@@ -66,8 +66,17 @@ const OPTIONAL_ITEMS: OptionalItem[] = [
   },
   {
     key: 'palm',
-    label: 'Upload ảnh bàn tay để Xem chỉ tay (ảnh tự xoá sau 7 ngày)',
-    hint: 'Ảnh chỉ dùng để phân tích, không chia sẻ, mã hoá at-rest, xoá tự động sau 7 ngày.',
+    // SỰ THẬT ĐÃ XÁC MINH 03/08/2026 — đây là nhãn ĐỒNG Ý nên phải mô tả đúng
+    // hành vi thật, không được hứa quá. Trang /xem-tuong nén ảnh trên máy người
+    // dùng rồi gửi thẳng dạng data URI trong body request tới `/tools/vision-read`;
+    // handler đó (backend api-gateway/src/index.ts) chuyển ảnh sang mô hình rồi
+    // trả kết quả, KHÔNG ghi vào R2/KV/DB, và log chi phí có `content: ""`.
+    // Luồng upload cũ (`/v1/uploads/hand-image-url` → MinIO) đã CHẾT: worker hiện
+    // tại không còn route `/v1/` nào, helper `uploadHandImage` rơi về object URL
+    // trong trình duyệt. Bản cũ ghi "mã hoá at-rest, xoá tự động sau 7 ngày" —
+    // hứa bảo vệ một thứ không hề được lưu.
+    label: 'Upload ảnh bàn tay để Xem chỉ tay (ảnh không lưu trên máy chủ)',
+    hint: 'Ảnh được nén ngay trên máy bạn rồi gửi kèm yêu cầu phân tích, xong là thôi — không lưu trên máy chủ, không chia sẻ.',
   },
   {
     key: 'mentor',
