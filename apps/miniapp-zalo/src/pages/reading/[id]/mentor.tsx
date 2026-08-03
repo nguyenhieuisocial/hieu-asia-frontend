@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { Button, Input } from '@hieu-asia/ui';
 import { ZaloHeader } from '../../../components/zalo-header';
 import { apiClient } from '../../../lib/api-bridge';

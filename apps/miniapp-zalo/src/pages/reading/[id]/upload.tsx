@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { Card, CardContent } from '@hieu-asia/ui';
 import { Sun, Focus, Hand, MoveDiagonal, Camera } from 'lucide-react';
 import { ZaloHeader } from '../../../components/zalo-header';
