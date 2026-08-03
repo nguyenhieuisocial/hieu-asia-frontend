@@ -100,8 +100,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   publishAll('2026-08-01T00:00:00Z', ['dai-van', 'thai-tue']);
   // đợt 7 — khép cụm vận theo thời gian
   publishAll('2026-08-01T00:00:00Z', ['giao-van', 'luu-nien']);
-  // đợt 8 — quan hệ & tư duy phản biện
+  // đợt 8 — tư duy phản biện & quan hệ (hai phiên viết song song, gộp làm một mốc)
   publishAll('2026-08-03T00:00:00Z', [
+    'barnum',
+    'kiem-chung',
     'so-sanh-lang-kinh',
     'ra-quyet-dinh',
     'hop-doi',

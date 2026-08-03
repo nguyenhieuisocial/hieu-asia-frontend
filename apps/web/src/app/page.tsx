@@ -25,8 +25,8 @@ import { StartupPath } from '@/components/home/StartupPath';
 // founder voice, no stars/faces).
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 // Homepage hero "4 lăng kính → AI" (MultiHero) + editorial sections. Moved out
-// of the retired /muc-lab demo into components/home-hero/. HeroV4 stays
-// available for other surfaces.
+// of the retired /muc-lab demo into components/home-hero/. (HeroV4 đã XOÁ
+// ở Wave 65.07 — 0 consumer toàn repo; xem git history nếu cần khôi phục.)
 import { MultiHero } from '@/components/home-hero/MultiHero';
 import { OracleBrain } from '@/components/home-hero/OracleBrain';
 import { InstantChartHero } from '@/components/home-hero/InstantChartHero';
@@ -272,12 +272,12 @@ const HOME_FAQ: readonly HomeFaqEntry[] = [
   {
     q: 'hieu.asia có khác gì với các app xem bói khác?',
     aCrawler:
-      'Tử Vi và Bát Tự tính theo Bắc phái với 121 sao (không tra bảng), Mentor AI đối thoại có ngữ cảnh, văn phong điềm tĩnh không định mệnh hoá.',
+      'Tử Vi và Bát Tự tính theo Bắc phái với 114 sao (không tra bảng), Mentor AI đối thoại có ngữ cảnh, văn phong điềm tĩnh không định mệnh hoá.',
     a: (
       <>
         <p>
           Ba điểm khác biệt rõ ràng: (1) tính toán Tử Vi và Bát Tự theo trường
-          phái Bắc phái với 121 sao, không phải bảng tra cứu sẵn; (2) Mentor AI
+          phái Bắc phái với 114 sao, không phải bảng tra cứu sẵn; (2) Mentor AI
           đặt câu hỏi và đối thoại có ngữ cảnh, không phải chatbot scripted;
           (3) văn phong điềm tĩnh, không định mệnh hoá — bạn vẫn là người chọn.
         </p>
