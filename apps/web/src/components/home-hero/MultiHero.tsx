@@ -61,7 +61,16 @@ export function MultiHero(): React.JSX.Element {
     let a = 0, w = 0, s = 0;
     const start = window.setTimeout(() => {
       a = window.setInterval(() => { if (hoverRef.current == null) setAutoActive((x) => (x + 1) % (LENS_N + 1)); }, 2400);
-      w = window.setInterval(() => setWordIdx((x) => (x + 1) % WORDS.length), 3400);
+      // Wave 65.05b a11y — word-rotation trong <h1> dừng HẲN sau 2 vòng đầy đủ
+      // (8 lần đổi, kết thúc đúng ở từ đầu tiên): chữ nhấp nháy vô hạn ngay
+      // cạnh headline gây khó đọc/mất tập trung (WCAG 2.2.2 hướng tới). Đếm
+      // số lần đổi rồi clearInterval khi đạt; reduce-motion check giữ nguyên.
+      let wTicks = 0;
+      w = window.setInterval(() => {
+        setWordIdx((x) => (x + 1) % WORDS.length);
+        wTicks += 1;
+        if (wTicks >= WORDS.length * 2) window.clearInterval(w);
+      }, 3400);
       s = window.setInterval(() => setSample((x) => (x + 1) % SAMPLES.length), 3600);
     }, 3000);
     return () => {
