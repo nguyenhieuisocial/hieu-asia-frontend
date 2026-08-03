@@ -25,8 +25,8 @@ import { StartupPath } from '@/components/home/StartupPath';
 // founder voice, no stars/faces).
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 // Homepage hero "4 lăng kính → AI" (MultiHero) + editorial sections. Moved out
-// of the retired /muc-lab demo into components/home-hero/. HeroV4 stays
-// available for other surfaces.
+// of the retired /muc-lab demo into components/home-hero/. (HeroV4 đã XOÁ
+// ở Wave 65.07 — 0 consumer toàn repo; xem git history nếu cần khôi phục.)
 import { MultiHero } from '@/components/home-hero/MultiHero';
 import { OracleBrain } from '@/components/home-hero/OracleBrain';
 import { InstantChartHero } from '@/components/home-hero/InstantChartHero';
