@@ -75,7 +75,7 @@ const FEATURED: FeaturedConfig = {
   subcopy:
     'Chưa biết bắt đầu từ đâu? Lập lá số miễn phí trong 30 giây — đây là điểm xuất phát, mọi con đường đều dẫn về chính bạn.',
   free: [
-    { href: '/la-so-tu-vi', emoji: '☯', name: 'Lá số Tử Vi', tagline: '12 cung · 121 sao · con số thật', cta: 'Lập miễn phí' },
+    { href: '/la-so-tu-vi', emoji: '☯', name: 'Lá số Tử Vi', tagline: '12 cung · 114 sao · con số thật', cta: 'Lập miễn phí' },
     { href: '/la-so-bat-tu', emoji: '🔯', name: 'Lá số Bát Tự', tagline: '8 chữ · ngũ hành · Nhật Chủ', cta: 'Lập miễn phí' },
   ],
   lensesHeading: 'Lăng kính khác',
