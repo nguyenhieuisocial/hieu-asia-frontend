@@ -59,6 +59,25 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
 
+      # Đỏ SỚM, không đỏ muộn (thêm 2026-08-01).
+      #
+      # Vẫn giữ nguyên quyết định "chưa cấu hình = ĐỎ" ở dưới — chỉ đổi CHỖ đỏ.
+      # Trước đây job cài dependency + dựng Storybook (~1 phút) rồi mới chết ở
+      # bước publish với lỗi "Missing project token" nằm lẫn trong log. Mỗi PR
+      # tốn từng ấy CI cho một kết luận biết trước, và người xem phải mở log mới
+      # hiểu vì sao đỏ.
+      #
+      # Nay hỏng trong ~5 giây với đúng một dòng ::error:: nói rõ phải làm gì.
+      # Khi secret đã được đặt thì bước này im lặng đi qua, mọi thứ chạy như cũ.
+      - name: Kiểm tra CHROMATIC_PROJECT_TOKEN (hỏng sớm nếu thiếu)
+        env:
+          TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error title=Chưa cấu hình Chromatic::Thiếu secret CHROMATIC_PROJECT_TOKEN nên chưa có ảnh giao diện nào được chụp hay so sánh. Dấu đỏ này là LỖI CẤU HÌNH, không phải lỗi code trong PR. Cách sửa (một lần, ~3 phút): 1) chromatic.com đăng nhập bằng GitHub 2) tạo project trỏ tới nguyenhieuisocial/hieu-asia-frontend 3) copy project token 4) Settings > Secrets > Actions > thêm CHROMATIC_PROJECT_TOKEN 5) lần push main kế tiếp sẽ dựng ảnh nền."
+            exit 1
+          fi
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 

@@ -118,9 +118,7 @@ export const EXEMPT_TOOLS: readonly string[] = ['/reading', '/hoi-dap'];
  */
 export const PENDING: readonly string[] = [
   '/learn/doc-mot-tuoi',
-  '/learn/giao-van',
   '/learn/nhat-van',
-  '/learn/luu-nien',
   '/learn/that-tich',
   '/learn/ngay-tinh-yeu',
   '/learn/nhip-song',
@@ -128,8 +126,6 @@ export const PENDING: readonly string[] = [
   '/learn/dong-nhom',
   '/learn/hieu-nguoi-than',
   '/learn/sinh-con',
-  '/learn/kiem-chung',
-  '/learn/barnum',
   '/learn/so-sanh-lang-kinh',
   '/learn/ra-quyet-dinh',
   '/learn/nghe-nghiep',

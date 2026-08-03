@@ -75,30 +75,59 @@ export const DA_XET = {
       'mini-app, và bundle mini-app đã kiểm: 0 lần xuất hiện chuỗi "babel".',
     xetNgay: '2026-07-31',
   },
+  // ── 4 advisory react-router ─────────────────────────────────────────────────
+  // Lý do cũ (29/07) mới trả lời được nửa câu hỏi: "KHÔNG NÂNG ĐƯỢC". Nửa quan
+  // trọng hơn — "mã dính lỗ hổng có nằm trên đường chạy của ta không" — đo ngày
+  // 01/08/2026 trên `apps/miniapp-zalo` (nơi DUY NHẤT dùng react-router):
+  //
+  //   • `src/app.tsx` dùng `HashRouter`; `src/main.tsx` render bằng `createRoot`.
+  //     Đếm trong `src`: 0 lần `renderToString` / `renderToPipeableStream` /
+  //     `createStaticHandler` / `StaticRouter` / `hydrateRoot` / RSC ⇒ KHÔNG SSR,
+  //     KHÔNG RSC.
+  //   • 12 lời gọi `navigate()`: mọi đích đều là chuỗi HẰNG, biến chỉ là id chèn
+  //     vào giữa (`/reading/${readingId}/...`). Tham số động duy nhất là `backTo`
+  //     ở `components/zalo-header.tsx`, và cả 8 nơi truyền vào đều là hằng.
+  //     `useSearchParams` chỉ đọc `session_id` để gọi API, không dùng làm đích.
+  //   • Nhánh 6.x chỉ tồn tại BÊN TRONG `zmp-ui`; không file nào của app import
+  //     react-router 6.
+  //
+  // XÉT LẠI NGAY nếu một trong các điều sau đổi: mini-app bật SSR/RSC, đổi sang
+  // `BrowserRouter`, hoặc điều hướng tới URL lấy từ query param / dữ liệu API.
   'GHSA-qwww-vcr4-c8h2': {
     goi: 'react-router',
     lyDo:
-      'Cần 8.3.0. Ta ở 7.18.1 do `react-router-dom@7` kéo — mà react-router-dom ' +
-      'MỚI NHẤT chỉ 7.18.2, KHÔNG có bản 8. Nên không có đường nâng nào không ' +
-      'phải là ép `react-router` lên major mà react-router-dom chưa theo.',
-    xetNgay: '2026-07-29',
+      'CSRF bypass ở RSC mode. Mini-app KHÔNG dùng RSC (render thuần client bằng ' +
+      '`createRoot`, HashRouter) ⇒ đường tấn công không tồn tại ở đây. Ngoài ra ' +
+      'cần 8.3.0 mà react-router-dom mới nhất chỉ 7.18.2, KHÔNG có bản 8 — nâng ' +
+      'nghĩa là ép `react-router` lên major mà react-router-dom chưa theo.',
+    xetNgay: '2026-08-01',
   },
   'GHSA-wrjc-x8rr-h8h6': {
     goi: 'react-router',
-    lyDo: 'Cần 7.18.0; bản 6.x dính là do `zmp-ui@1.11.14` ghim, mà đó ĐÚNG LÀ bản zmp-ui mới nhất.',
-    xetNgay: '2026-07-29',
+    lyDo:
+      'Open redirect qua dấu gạch ngược trong `<Link>`/`useNavigate`. ĐÃ ĐẾM 12 ' +
+      'lời gọi navigate: đích đều là chuỗi hằng, không đích nào lấy từ input ' +
+      'người dùng ⇒ không có gì để bẻ. Thêm nữa HashRouter giữ điều hướng trong ' +
+      'fragment của chính trang, không đổi origin. Bản vá cần 7.18.0; nhánh 6.x ' +
+      'dính là do `zmp-ui@1.11.14` ghim, mà đó ĐÚNG LÀ bản zmp-ui mới nhất.',
+    xetNgay: '2026-08-01',
   },
   'GHSA-337j-9hxr-rhxg': {
     goi: 'react-router',
-    lyDo: 'Cùng gốc với GHSA-wrjc: zmp-ui@1.11.14 (mới nhất) ghim react-router 6.x.',
-    xetNgay: '2026-07-29',
+    lyDo:
+      'Constructor injection qua `deserializeErrors()` khi HYDRATE SSR. Mini-app ' +
+      'không SSR và không gọi `hydrateRoot` (đếm: 0) ⇒ hàm này không bao giờ ' +
+      'chạy. Cùng gốc kẹt với GHSA-wrjc: zmp-ui@1.11.14 (mới nhất) ghim 6.x.',
+    xetNgay: '2026-08-01',
   },
   'GHSA-jjmj-jmhj-qwj2': {
     goi: 'react-router-dom',
     lyDo:
       '`first_patched_version` là **null** — KHÔNG tồn tại bản vá nào cả, không ' +
-      'phải "chưa nâng". Cũng do zmp-ui ghim 6.x.',
-    xetNgay: '2026-07-29',
+      'phải "chưa nâng". Cũng do zmp-ui ghim 6.x. Cùng lớp open-redirect với ' +
+      'GHSA-wrjc nên cùng kết luận: app không điều hướng tới URL do người dùng ' +
+      'kiểm soát, và nhánh 6.x chỉ chạy bên trong zmp-ui chứ app không gọi.',
+    xetNgay: '2026-08-01',
   },
 };
 
