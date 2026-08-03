@@ -10,14 +10,14 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const DESC =
-  'Lập & xem lá số Tử Vi Đẩu Số miễn phí từ ngày giờ sinh — 12 cung, 121 sao, độ sáng, Tứ Hóa, cách cục, bằng engine chuẩn. Luận giải để hiểu mình, không bói toán.';
+  'Lập & xem lá số Tử Vi Đẩu Số miễn phí từ ngày giờ sinh — 12 cung, 114 sao, độ sáng, Tứ Hóa, cách cục, bằng engine chuẩn. Luận giải để hiểu mình, không bói toán.';
 
 const BASE_META: Metadata = {
-  title: 'Xem lá số Tử Vi miễn phí — 12 cung, 121 sao',
+  title: 'Xem lá số Tử Vi miễn phí — 12 cung, 114 sao',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/la-so-tu-vi' },
   openGraph: {
-    title: 'Xem lá số Tử Vi miễn phí — 12 cung, 121 sao, cách cục',
+    title: 'Xem lá số Tử Vi miễn phí — 12 cung, 114 sao, cách cục',
     description: DESC,
     url: 'https://hieu.asia/la-so-tu-vi',
     type: 'website',
@@ -74,7 +74,7 @@ const FAQS = [
   },
   {
     q: 'Lá số ở đây dựa trên gì, có chính xác không?',
-    a: 'Lá số được an bằng engine Tử Vi chuẩn (thư viện iztro, 121 sao, đủ độ sáng miếu/vượng/đắc/bình/hãm, Tứ Hóa, đại vận – lưu niên). Phần CON SỐ — an cung, an sao — là kết quả tính toán xác định, kiểm chứng được, không phải phán đoán cảm tính.',
+    a: 'Lá số được an bằng engine Tử Vi chuẩn (thư viện iztro, 114 sao, đủ độ sáng miếu/vượng/đắc/bình/hãm, Tứ Hóa, đại vận – lưu niên). Phần CON SỐ — an cung, an sao — là kết quả tính toán xác định, kiểm chứng được, không phải phán đoán cảm tính.',
   },
   {
     q: 'Xem miễn phí ở đây khác gì bản đọc Tử Vi trả phí?',
@@ -110,7 +110,7 @@ export default async function LaSoTuViPage({
       <JsonLd
         data={[
           webPage({
-            name: 'Xem lá số Tử Vi miễn phí — 12 cung, 121 sao, cách cục',
+            name: 'Xem lá số Tử Vi miễn phí — 12 cung, 114 sao, cách cục',
             description: DESC,
             url: '/la-so-tu-vi',
           }),
@@ -129,7 +129,7 @@ export default async function LaSoTuViPage({
             Xem <GoldAccent>lá số Tử Vi</GoldAccent> miễn phí
           </>
         }
-        description="Lập lá số đầy đủ 12 cung, 121 sao, độ sáng & Tứ Hóa từ ngày giờ sinh — bằng engine chuẩn. Con số là thật; cách cục & tam phương để bạn tự soi, không bói toán."
+        description="Lập lá số đầy đủ 12 cung, 114 sao, độ sáng & Tứ Hóa từ ngày giờ sinh — bằng engine chuẩn. Con số là thật; cách cục & tam phương để bạn tự soi, không bói toán."
         breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Xem lá số Tử Vi' }]}
         relatedSlug="/la-so-tu-vi"
       >

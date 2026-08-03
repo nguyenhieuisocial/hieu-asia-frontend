@@ -88,7 +88,7 @@ export const TOOL_REGISTRY: ToolEntry[] = [
       "cat": "la-so",
       "emoji": "☯",
       "name": "Xem lá số Tử Vi",
-      "desc": "Lập lá số Tử Vi miễn phí: 12 cung, 121 sao, độ sáng, cách cục — con số thật."
+      "desc": "Lập lá số Tử Vi miễn phí: 12 cung, 114 sao, độ sáng, cách cục — con số thật."
     },
     "surfaces": [
       "catalog"
