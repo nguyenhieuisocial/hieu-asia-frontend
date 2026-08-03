@@ -53,32 +53,29 @@ import { execFileSync } from 'node:child_process';
  * hiện chuỗi "babel".
  * → Bài học: "gói này chỉ chỗ kia dùng" là loại khẳng định phải ĐẾM mới được
  *   nói. Lý do dài chưa chắc là lý do đúng.
+ *
+ * ⚠️ DỌN 2026-08-03 — hai mục đã rời khỏi đây vì `pnpm audit` KHÔNG còn báo:
+ *   • `GHSA-mh99-v99m-4gvg` (brace-expansion): dải advisory thượng nguồn đã
+ *     được sửa lại nên 1.1.18 hết bị tính là dính. Lý do dài ở mục cũ (237
+ *     đường, minimatch@3 không nâng được) nay chỉ còn giá trị lịch sử.
+ *   • `GHSA-qwww-vcr4-c8h2` (react-router, HIGH): ĐÃ VÁ THẬT — #1043 nâng
+ *     mini-app lên `react-router@8.3.0`, nhánh 7.x biến mất khỏi lockfile.
+ *
+ * → Bài học đắt nhất của đợt này: mục cũ kết luận "không có đường nâng nào" vì
+ *   `react-router-dom` mới nhất chỉ 7.18.2, KHÔNG có bản 8. Đúng dữ kiện, sai
+ *   kết luận — v8 ĐỔI TÊN GÓI: `react-router-dom` gộp vào `react-router@8`.
+ *   Tra một cái tên gói rồi kết luận "hết đường" là chưa đủ; phải hỏi cả xem
+ *   gói có đổi tên / gộp ở major kế tiếp không.
  */
 export const DA_XET = {
-  'GHSA-mh99-v99m-4gvg': {
-    goi: 'brace-expansion',
-    lyDo:
-      'Kho có 5.0.8 (đã vá) và 1.1.18 — ĐÃ VÁ Ở MỨC MÃ NGUỒN: nhánh 1.x được ' +
-      'backport CVE-2026-14257 ở 1.1.17 (29/07) và 1.1.18 (30/07), tức SAU khi ' +
-      'advisory chốt ngày 24/07 nên dải của nó chưa biết. Dải `<= 5.0.7` PHẲNG ' +
-      '⇒ 1.1.18 vẫn bị tính là dính, đó là lý do mục này còn ở đây. ' +
-      'KHÔNG gỡ được 1.x khỏi cây: cha DUY NHẤT của nó là minimatch@3, mà ép ' +
-      '`minimatch@3` lên ^10 làm LINT ĐỎ TOÀN KHO — ' +
-      '@eslint/eslintrc/lib/config-array/override-tester.js dùng ' +
-      '`import minimatch from "minimatch"` còn minimatch@10 không có default ' +
-      'export ("does not provide an export named \'default\'"); bản eslintrc ' +
-      'mới nhất 3.3.6 VẪN ghim minimatch ^3.1.5, eslint-plugin-import/react/' +
-      'jsx-a11y mới nhất vẫn ^3.1.2 ⇒ thượng nguồn chưa với tới được. ' +
-      'ĐÃ ĐẾM 237 đường: mọi cửa vào là devDependency (eslint, ' +
-      'eslint-config-next, eslint-plugin-storybook, @lhci/cli, @eslint/eslintrc) ' +
-      '⇒ không vào bundle. Cửa vào runtime DUY NHẤT là zmp-sdk→@babel/cli của ' +
-      'mini-app, và bundle mini-app đã kiểm: 0 lần xuất hiện chuỗi "babel".',
-    xetNgay: '2026-07-31',
-  },
-  // ── 4 advisory react-router ─────────────────────────────────────────────────
-  // Lý do cũ (29/07) mới trả lời được nửa câu hỏi: "KHÔNG NÂNG ĐƯỢC". Nửa quan
-  // trọng hơn — "mã dính lỗ hổng có nằm trên đường chạy của ta không" — đo ngày
-  // 01/08/2026 trên `apps/miniapp-zalo` (nơi DUY NHẤT dùng react-router):
+  // ── 3 advisory react-router còn lại — TẤT CẢ đều là nhánh 6.x của `zmp-ui` ──
+  // Từ 03/08 (#1043) mini-app chạy `react-router@8.3.0`, nên KHÔNG còn advisory
+  // nào thuộc phần code ta tự chọn phiên bản. Ba mục dưới đây dính bản 6.30.4 mà
+  // `zmp-ui@1.11.14` (bản zmp-ui MỚI NHẤT) ghim cứng — ta không đổi được.
+  //
+  // Nửa câu hỏi quan trọng hơn "có nâng được không" là "mã dính lỗ hổng có nằm
+  // trên đường chạy của ta không". Đo ngày 01/08/2026 trên `apps/miniapp-zalo`
+  // (nơi DUY NHẤT dùng react-router), phần đo vẫn đúng sau khi lên v8:
   //
   //   • `src/app.tsx` dùng `HashRouter`; `src/main.tsx` render bằng `createRoot`.
   //     Đếm trong `src`: 0 lần `renderToString` / `renderToPipeableStream` /
@@ -92,16 +89,8 @@ export const DA_XET = {
   //     react-router 6.
   //
   // XÉT LẠI NGAY nếu một trong các điều sau đổi: mini-app bật SSR/RSC, đổi sang
-  // `BrowserRouter`, hoặc điều hướng tới URL lấy từ query param / dữ liệu API.
-  'GHSA-qwww-vcr4-c8h2': {
-    goi: 'react-router',
-    lyDo:
-      'CSRF bypass ở RSC mode. Mini-app KHÔNG dùng RSC (render thuần client bằng ' +
-      '`createRoot`, HashRouter) ⇒ đường tấn công không tồn tại ở đây. Ngoài ra ' +
-      'cần 8.3.0 mà react-router-dom mới nhất chỉ 7.18.2, KHÔNG có bản 8 — nâng ' +
-      'nghĩa là ép `react-router` lên major mà react-router-dom chưa theo.',
-    xetNgay: '2026-08-01',
-  },
+  // `BrowserRouter`, điều hướng tới URL lấy từ query param / dữ liệu API, hoặc
+  // `zmp-ui` ra bản mới bỏ được react-router 6.
   'GHSA-wrjc-x8rr-h8h6': {
     goi: 'react-router',
     lyDo:
