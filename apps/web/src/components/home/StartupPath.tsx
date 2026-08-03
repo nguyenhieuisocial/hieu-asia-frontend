@@ -97,7 +97,9 @@ export function StartupPath() {
           </h2>
         </div>
 
-        <ol className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        {/* Wave 65.06 — mobile 1 cột (2 cột trên máy 320-375px làm cột nội dung
+            chỉ ~96-123px, chữ wrap vụn — finding P3 vòng 8). */}
+        <ol className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
           {STEPS.map((s, i) => {
             const done = s.n === 1 && step1Done;
             return (

@@ -37,8 +37,11 @@ export function ScrollProgress({
   className,
   height = 3,
 }: ScrollProgressProps): React.JSX.Element {
-  // Scroll completion in the range 0..1. Drives the fill width.
-  const [progress, setProgress] = useState<number>(0);
+  // Wave 65.06 — progress KHÔNG còn là React state: setState mỗi frame bắt
+  // React re-render suốt phiên cuộn (trang chủ là trang dài nhất). Ghi thẳng
+  // style.transform vào node qua ref — rAF coalescing giữ nguyên, còn React
+  // chỉ render đúng 1 lần.
+  const barRef = useRef<HTMLDivElement | null>(null);
   // When reduced motion is requested we drop the easing transition so the
   // bar snaps to position instead of gliding.
   const [reduceMotion, setReduceMotion] = useState<boolean>(false);
@@ -58,17 +61,19 @@ export function ScrollProgress({
 
     // --- Core measurement: how far down the document are we, 0..1?
     const measure = (): void => {
+      const bar = barRef.current;
+      if (!bar) return;
       const doc = document.documentElement;
       // Total scrollable distance. Guard against zero/negative on short pages.
       const scrollable = doc.scrollHeight - doc.clientHeight;
       if (scrollable <= 0) {
-        setProgress(0);
+        bar.style.transform = 'scaleX(0)';
         return;
       }
       const ratio = doc.scrollTop / scrollable;
       // Clamp to 0..1 (overscroll / rubber-banding can push outside).
       const clamped = ratio < 0 ? 0 : ratio > 1 ? 1 : ratio;
-      setProgress(clamped);
+      bar.style.transform = `scaleX(${clamped})`;
     };
 
     // Coalesce bursts of scroll/resize events into one measurement per frame.
@@ -116,11 +121,12 @@ export function ScrollProgress({
       {/* The gold fill. scaleX is GPU-friendly and avoids reflow on each frame.
           transform-origin left so it grows from the start of the line. */}
       <div
+        ref={barRef}
         style={{
           height: '100%',
           width: '100%',
           transformOrigin: 'left center',
-          transform: `scaleX(${progress})`,
+          transform: 'scaleX(0)',
           // Brand gold → ochre, left-to-right, for a touch of depth.
           background:
             'linear-gradient(90deg, #E0AE62 0%, #A47532 100%)',
