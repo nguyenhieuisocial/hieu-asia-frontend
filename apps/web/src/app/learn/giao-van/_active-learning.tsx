@@ -18,7 +18,8 @@
  *   • src/components/time-flow/TimeFlowChecker.tsx (dùng ở /timeline) —
  *     `ageFromDate()` TRỪ THÊM 1 nếu chưa qua sinh nhật trong năm. Hai công cụ
  *     của cùng site dùng hai quy ước tuổi khác nhau → lệch nhau đúng 1 năm ở
- *     nửa cuối năm dương lịch. Cũng chính component này render CẢ CHUỖI đại vận
+ *     quãng từ đầu năm tới TRƯỚC sinh nhật (không phải nửa cuối năm — TimeFlowChecker
+ *     trừ 1 khi CHƯA qua sinh nhật). Cũng chính component này render CẢ CHUỖI đại vận
  *     (mọi chặng, chặng hiện tại được tô sáng), kèm câu "đọc theo trình tự
  *     tuổi… đây là khung tham khảo để soi nhịp dài hạn, không phải dự đoán may
  *     rủi".
@@ -141,7 +142,7 @@ export function GiaoVanDepth() {
                 <p>
                   Và con số tuổi dùng để chiếu vào bảng cũng có hai quy ước: lấy năm trừ năm, hay
                   tính đã qua sinh nhật chưa. Hai công cụ trên chính hieu.asia đang dùng hai
-                  quy ước khác nhau, nên ở nửa cuối năm dương lịch chúng lệch nhau đúng một
+                  quy ước khác nhau, nên trong quãng từ đầu năm tới trước sinh nhật chúng lệch nhau đúng một
                   tuổi. Cộng lại: {strong('ranh giới nhoè ít nhất một năm')} ngay từ trong cách
                   tính, chưa cần ai diễn giải rộng ra.
                 </p>
@@ -318,7 +319,7 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
         note: 'Chưa chắc — cả hai đều chạy đúng phép tính của mình.',
       },
       {
-        text: 'Hai công cụ dùng hai quy ước tuổi khác nhau (lấy năm trừ năm, hay tính đã qua sinh nhật chưa), lệch nhau một tuổi ở nửa cuối năm — nếu tuổi đó rơi sát mốc thì ra hai chặng',
+        text: 'Hai công cụ dùng hai quy ước tuổi khác nhau (lấy năm trừ năm, hay tính đã qua sinh nhật chưa), lệch nhau một tuổi trong quãng từ đầu năm tới trước sinh nhật — nếu tuổi đó rơi sát mốc thì ra hai chặng',
         correct: true,
         note: 'Đúng. Chính vì vậy ranh giới đã nhoè sẵn một năm trước khi ai diễn giải rộng thêm.',
       },

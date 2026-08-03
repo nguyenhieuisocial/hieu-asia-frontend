@@ -588,9 +588,11 @@ export default function LearnLuuNienPage() {
                 </li>
                 <li>
                   <strong>Lớp hẹp lại là lớp thô nhất về mặt phân loại.</strong> Thập Thần của lưu
-                  niên chỉ phụ thuộc can Ngày, mà can Ngày có {CAN.length} giá trị — nên lớp lưu niên
-                  của Bát Tự chỉ sinh ra đúng <strong>{LN_BUCKETS} kiểu đọc</strong> cho toàn bộ
-                  người đang sống. Lớp con giáp còn thô hơn: {CHI.length} nhóm tuổi chỉ nhận{' '}
+                  niên chỉ phụ thuộc can Ngày, mà can Ngày có {CAN.length} giá trị — nên{' '}
+                  <strong>trên trục Thập Thần mà engine của site xuất ra</strong>, lớp lưu niên của
+                  Bát Tự chỉ sinh ra đúng <strong>{LN_BUCKETS} kiểu đọc</strong> cho toàn bộ người
+                  đang sống. (Chi của năm gặp chi lá số là một trục khác, có nhãn riêng — xem bài Thái
+                  Tuế.) Lớp con giáp còn thô hơn: {CHI.length} nhóm tuổi chỉ nhận{' '}
                   <strong>{TOOL_LABEL_KINDS} nhãn</strong> khác nhau.
                 </li>
                 <li>

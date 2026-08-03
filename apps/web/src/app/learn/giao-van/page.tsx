@@ -203,7 +203,7 @@ const FAQS = [
   },
   {
     q: 'Cùng một người mà hai công cụ trên hieu.asia báo hai chặng khác nhau thì sai ở đâu?',
-    a: `Không bên nào sai phép tính — hai bên dùng hai quy ước tuổi khác nhau. Trang đại vận hiện tại lấy năm hiện tại trừ năm sinh. Trang timeline thì trừ thêm một nếu bạn chưa qua sinh nhật trong năm. Ở nửa cuối năm dương lịch, hai cách này lệch nhau đúng một tuổi; nếu tuổi của bạn lại đang nằm sát mốc chuyển thì hai công cụ chỉ vào hai chặng. Cách xử lý: xem con số tuổi mà công cụ đang dùng trước khi tin vào cái chặng nó trả về.`,
+    a: `Không bên nào sai phép tính — hai bên dùng hai quy ước tuổi khác nhau. Trang đại vận hiện tại lấy năm hiện tại trừ năm sinh. Trang timeline thì trừ thêm một nếu bạn chưa qua sinh nhật trong năm. Trong quãng từ đầu năm dương lịch tới trước sinh nhật của bạn, hai cách này lệch nhau đúng một tuổi; qua sinh nhật rồi thì chúng trùng nhau; nếu tuổi của bạn lại đang nằm sát mốc chuyển thì hai công cụ chỉ vào hai chặng. Cách xử lý: xem con số tuổi mà công cụ đang dùng trước khi tin vào cái chặng nó trả về.`,
   },
   {
     q: 'Năm giao vận có nên tránh việc lớn không?',
@@ -418,10 +418,18 @@ export default function LearnGiaoVanPage() {
                 </li>
               </ul>
               <p>
-                Nhãn của {N_CHANG} chặng thì <strong>giống hệt nhau</strong> ở cả hai người:{' '}
-                {SHIFT_EARLY.pillars.map(label).join(' · ')}. Chỉ mọi mốc lệch đi một năm. Nói
-                cách khác, một ngày sinh chênh lệch không đổi <em>nội dung</em> chuỗi, mà đổi{' '}
-                <em>chỗ đặt dao</em>.
+                <strong>Nhãn can chi</strong> của {N_CHANG} chặng thì{' '}
+                <strong>giống hệt nhau</strong> ở cả hai người:{' '}
+                {SHIFT_EARLY.pillars.map(label).join(' · ')}. Chỉ mọi mốc lệch đi một năm — tức là
+                cùng một bộ nhãn nhưng <em>chỗ đặt dao</em> khác.
+              </p>
+              <p className="text-sm text-foreground/70">
+                Nói cho hết: lệch một ngày sinh thì <strong>trụ Ngày cũng đổi</strong>, kéo theo Nhật
+                Chủ đổi từ {SHIFT_EARLY.dayMaster} sang {SHIFT_LATE.dayMaster} — nên Thập Thần của
+                từng chặng đổi hết, dù nhãn can chi giữ nguyên. Ví dụ này chỉ dùng để nói về{' '}
+                <strong>vị trí các mốc</strong>, không phải để nói nội dung luận không đổi. Muốn thấy
+                riêng hiệu ứng dịch mốc mà giữ nguyên mọi thứ khác thì so hai người sinh{' '}
+                <strong>cùng ngày, lệch giờ</strong> — trường hợp đó trụ Ngày mới đứng yên.
               </p>
               <p>Nhìn cả cửa sổ {WINDOW.length} ngày liên tiếp thì thấy rõ mốc nhảy theo bậc:</p>
               <div className="overflow-x-auto rounded-xl border border-border">
@@ -465,6 +473,13 @@ export default function LearnGiaoVanPage() {
                 {MAIN.yearPillar}, trụ tháng {MAIN.monthPillar}, Nhật Chủ {MAIN.dayMaster}, đi{' '}
                 {dirOf(MAIN)}, khởi vận {MAIN.startAge} tuổi) và tra vào ngày tham chiếu{' '}
                 <strong>{REF_LABEL}</strong>:
+              </p>
+              <p className="text-sm text-foreground/70">
+                Một lưu ý để khỏi hiểu nhầm: hai công cụ nói trên chạy chuỗi đại vận của{' '}
+                <strong>Tử Vi</strong>, còn ví dụ dưới đây minh hoạ bằng chuỗi <strong>Bát Tự</strong>{' '}
+                cho gọn — hai hệ có hai bộ mốc riêng. Thứ đang được minh hoạ không phải cặp trụ vận cụ
+                thể, mà là <strong>cơ chế lệch một tuổi</strong>: cơ chế ấy y hệt nhau ở cả hai hệ, vì
+                nó nằm ở khâu quy đổi tuổi chứ không nằm ở khâu chia chặng.
               </p>
               <ul className="list-disc space-y-1.5 pl-5">
                 <li>

@@ -235,9 +235,10 @@ export function LuuNienDepth() {
                 </p>
                 <p>
                   Và phần riêng ấy thô hơn ta tưởng: Thập Thần của lưu niên chỉ phụ thuộc can Ngày,
-                  mà can Ngày có {CAN.length} giá trị — nên trong một năm bất kỳ, lớp lưu niên của
-                  Bát Tự chỉ sinh ra đúng {strong(LN_BUCKETS + ' kiểu đọc')} khác nhau cho toàn bộ
-                  người đang sống.
+                  mà can Ngày có {CAN.length} giá trị — nên trong một năm bất kỳ,{' '}
+                  {strong('xét trên trục Thập Thần')}, lớp lưu niên của Bát Tự chỉ sinh ra đúng{' '}
+                  {strong(LN_BUCKETS + ' kiểu đọc')} khác nhau cho toàn bộ người đang sống. Chi của
+                  năm gặp chi lá số là một trục riêng, không nằm trong con số này.
                 </p>
               </>
             ),
