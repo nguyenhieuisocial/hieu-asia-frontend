@@ -84,7 +84,7 @@ export function GET(req: Request) {
               {personal.conGiap ? ` · Tuổi ${personal.conGiap} (${personal.yearPillar})` : ''}
             </div>
             <div style={{ marginTop: 22, fontSize: 32, color: 'rgba(242,237,227,0.5)', display: 'flex' }}>
-              12 cung · 121 sao · Tứ Hóa · độ sáng miếu–vượng–hãm
+              12 cung · 114 sao · Tứ Hóa · độ sáng miếu–vượng–hãm
             </div>
           </div>
         ) : (
@@ -93,7 +93,7 @@ export function GET(req: Request) {
               Lá số Tử Vi
             </div>
             <div style={{ marginTop: 26, fontSize: 36, color: 'rgba(242,237,227,0.6)', display: 'flex' }}>
-              12 cung · 121 sao · độ sáng & Tứ Hóa
+              12 cung · 114 sao · độ sáng & Tứ Hóa
             </div>
           </div>
         )}
