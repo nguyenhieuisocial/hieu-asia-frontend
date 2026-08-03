@@ -25,6 +25,13 @@ export function NewsletterSignup({
   const [state, setState] = React.useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
   const [error, setError] = React.useState<string | null>(null);
   const [alreadySubscribed, setAlreadySubscribed] = React.useState(false);
+  const sentRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Wave 65.05b a11y — form unmount khi 'sent' (nút submit đang giữ focus biến
+  // mất) → dời focus vào card xác nhận để keyboard/screen-reader không bị rơi.
+  React.useEffect(() => {
+    if (state === 'sent') sentRef.current?.focus();
+  }, [state]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -95,24 +102,31 @@ export function NewsletterSignup({
         </div>
 
         <div>
-          {state === 'sent' ? (
-            <div
-              role="status"
-              className="flex items-start gap-3 rounded-xl border border-emerald-500/30 bg-emerald-950/40 p-4 text-sm text-emerald-100"
-            >
-              <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" />
-              <div>
-                <p className="font-medium">
-                  {alreadySubscribed ? 'Bạn đã đăng ký trước đó' : 'Đã đăng ký'}
-                </p>
-                <p className="mt-1 text-emerald-200/80">
-                  {alreadySubscribed
-                    ? 'Hộp thư của bạn vẫn nằm trong danh sách. Hẹn gặp lại vào tuần tới.'
-                    : 'Hãy kiểm tra hộp thư để xác nhận đăng ký.'}
-                </p>
+          {/* Wave 65.05b a11y — live-region (role="status" = aria-live polite)
+              MOUNT SẴN từ đầu, rỗng; card xác nhận đổ vào SAU khi sent. Mount
+              region cùng lúc với nội dung thì screen reader không announce. */}
+          <div role="status">
+            {state === 'sent' && (
+              <div
+                ref={sentRef}
+                tabIndex={-1}
+                className="flex items-start gap-3 rounded-xl border border-emerald-500/30 bg-emerald-950/40 p-4 text-sm text-emerald-100 focus:outline-none"
+              >
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" />
+                <div>
+                  <p className="font-medium">
+                    {alreadySubscribed ? 'Bạn đã đăng ký trước đó' : 'Đã đăng ký'}
+                  </p>
+                  <p className="mt-1 text-emerald-200/80">
+                    {alreadySubscribed
+                      ? 'Hộp thư của bạn vẫn nằm trong danh sách. Hẹn gặp lại vào tuần tới.'
+                      : 'Hãy kiểm tra hộp thư để xác nhận đăng ký.'}
+                  </p>
+                </div>
               </div>
-            </div>
-          ) : (
+            )}
+          </div>
+          {state !== 'sent' && (
             <form onSubmit={onSubmit} className="space-y-3" noValidate>
               <label htmlFor={`${id}-email`} className="sr-only">
                 Email

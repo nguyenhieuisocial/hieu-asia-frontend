@@ -150,6 +150,14 @@ export function OracleBrain(): React.JSX.Element {
   // `obTouched` chặn event ghi đè khi khách đã tự gõ vào form NÀY.
   const [prefilled, setPrefilled] = React.useState(false);
   const obTouchedRef = React.useRef(false);
+  const revealRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Wave 65.05b a11y — sau khi "Soi thử" reveal, dời focus vào khối kết quả
+  // (form đã unmount cùng nút submit đang giữ focus) để keyboard/screen-reader
+  // đọc tiếp được ngay từ "Lát cắt về bạn".
+  React.useEffect(() => {
+    if (reveal) revealRef.current?.focus();
+  }, [reveal]);
 
   React.useEffect(() => {
     const apply = (): void => {
@@ -673,10 +681,21 @@ export function OracleBrain(): React.JSX.Element {
 
         <p className="ob-tap-hint">Chạm mỗi nhóm sao để xem riêng lăng kính đó.</p>
 
-        {/* v5 — Lát cắt THẬT qua nhiều lăng kính (tính trên máy; chưa lưu gì). */}
-        {reveal && (
+        {/* v5 — Lát cắt THẬT qua nhiều lăng kính (tính trên máy; chưa lưu gì).
+            Wave 65.05b a11y — live-region MOUNT SẴN từ đầu (div rỗng, không
+            style → không chiếm chỗ), nội dung đổ vào SAU khi soi: screen reader
+            chỉ announce thay đổi trong live-region đã tồn tại; mount cùng lúc
+            với nội dung thì không được đọc. */}
+        <div aria-live="polite">
+          {reveal && (
           <div className="ob-detail-wrap">
-            <div className="ob-reveal" role="region" aria-live="polite" aria-label="Lát cắt về bạn">
+            <div
+              ref={revealRef}
+              tabIndex={-1}
+              className="ob-reveal"
+              role="region"
+              aria-label="Lát cắt về bạn"
+            >
               <div className="ob-reveal-head">
                 <span className="ob-reveal-emoji" aria-hidden="true">
                   {reveal.dong.zodiac.emoji}
@@ -804,7 +823,8 @@ export function OracleBrain(): React.JSX.Element {
               </div>
             </div>
           </div>
-        )}
+          )}
+        </div>
 
         <div className="mt-8">
           <Marquee speed={34}>
