@@ -393,9 +393,11 @@ export default function LandingPage() {
             <strong className="font-medium text-foreground">miễn phí mãi mãi</strong> · đọc sâu từ{' '}
             {formatVND(PRICING.premium.vnd)}.
           </p>
+          {/* Wave 65.06 T-TAP — inline-flex min-h-11: vùng chạm 44px (link text
+              trần trước đây ~18px — finding P3 vòng 6). */}
           <a
             href="#pricing"
-            className="whitespace-nowrap font-mono text-editorial-mono uppercase tracking-[0.12em] text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+            className="inline-flex min-h-11 items-center whitespace-nowrap font-mono text-editorial-mono uppercase tracking-[0.12em] text-primary underline underline-offset-4 transition-colors hover:text-primary/80 touch-manipulation"
           >
             Xem các gói →
           </a>

@@ -96,7 +96,10 @@ export function Time24({
         max={23}
         step={1}
         placeholder="Giờ"
-        aria-label="Giờ (0–23)"
+        // Wave 65.06 — nối ngữ cảnh từ nhãn ngoài (vd "Giờ sinh") vào aria-label
+        // của ô giờ: trước đây "Giờ (0–23)" cứng ĐÈ nhãn nhìn thấy, screen
+        // reader mất ngữ cảnh "giờ GÌ" (finding a11y vòng 6).
+        aria-label={ariaLabel ? `${ariaLabel} — giờ (0–23)` : 'Giờ (0–23)'}
         aria-describedby={ariaDescribedby}
         aria-invalid={ariaInvalid}
         disabled={disabled}
@@ -114,7 +117,7 @@ export function Time24({
         max={59}
         step={1}
         placeholder="Phút"
-        aria-label="Phút (0–59)"
+        aria-label={ariaLabel ? `${ariaLabel} — phút (0–59)` : 'Phút (0–59)'}
         disabled={disabled}
         value={mStr}
         onChange={(e) => push(hStr, e.target.value)}

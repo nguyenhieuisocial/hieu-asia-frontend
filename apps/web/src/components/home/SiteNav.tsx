@@ -426,7 +426,7 @@ function MobileDrawer({
           <SheetTitle className="font-heading text-primary">hieu.asia</SheetTitle>
         </SheetHeader>
         <nav
-          className="mt-6 flex max-h-[calc(100vh-8rem)] flex-col gap-1 overflow-y-auto pb-6"
+          className="mt-6 flex max-h-[calc(100dvh-8rem)] flex-col gap-1 overflow-y-auto pb-6"
           aria-label="Điều hướng di động"
         >
           {isAuthed && userEmail && (
