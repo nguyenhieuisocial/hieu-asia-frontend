@@ -33,7 +33,7 @@ export const Default: Story = {
       {
         id: 'chapter-philosophy',
         eyebrow: 'CHƯƠNG 1 · TRIẾT LÝ',
-        title: 'Bốn ống kính, một con người',
+        title: 'Bốn lăng kính, một con người',
         content: longBody,
       },
       {

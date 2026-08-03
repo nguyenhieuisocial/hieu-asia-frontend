@@ -649,7 +649,7 @@ export default function FeaturesPage() {
           eyebrow="SẢN PHẨM · 50+ CÔNG CỤ · 4 CHƯƠNG"
           title={
             <>
-              Năm ống kính, <em className="italic text-gold-soft">nhiều</em> ngôn
+              Năm lăng kính, <em className="italic text-gold-soft">nhiều</em> ngôn
               ngữ tự hiểu<span className="text-gold-dot">.</span>
             </>
           }
@@ -755,7 +755,7 @@ export default function FeaturesPage() {
             </p>
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <Button asChild size="lg" className="min-h-12 min-w-[220px]">
-                <Link href="/onboarding">Mở khoá lá số</Link>
+                <Link href="/onboarding">Lập lá số miễn phí</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="min-h-12 min-w-[220px]">
                 <Link href="/pricing">Xem bảng giá</Link>

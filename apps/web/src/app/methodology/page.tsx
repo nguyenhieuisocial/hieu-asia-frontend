@@ -1365,7 +1365,7 @@ export default function MethodologyPage() {
             {
               id: 'chapter-philosophy',
               eyebrow: 'CHƯƠNG 1 · TRIẾT LÝ',
-              title: 'Năm ống kính, một con người',
+              title: 'Năm lăng kính, một con người',
               content: <Chapter1Content />,
             },
             {

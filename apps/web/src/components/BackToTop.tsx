@@ -35,7 +35,11 @@ export function BackToTop(): React.JSX.Element {
       aria-label="Về đầu trang"
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}
-      className={`fixed right-4 bottom-[max(1.5rem,env(safe-area-inset-bottom))] z-30 inline-flex h-11 w-11 items-center justify-center rounded-full border border-gold/30 bg-card/90 text-foreground shadow-[0_6px_24px_-8px_rgba(0,0,0,0.35)] backdrop-blur-md transition-opacity duration-300 hover:border-gold/60 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold md:hidden ${
+      // Wave 65.02 — thêm class hook `back-to-top`: globals.css dùng
+      // body:has([data-sticky-cta][data-visible]) để NÂNG nút lên trên thanh
+      // CTA đáy thay vì để bị che chết sau nó (z-30 < z-40 giữ nguyên làm
+      // fallback cho trình duyệt không có :has).
+      className={`back-to-top fixed right-4 bottom-[max(1.5rem,env(safe-area-inset-bottom))] z-30 inline-flex h-11 w-11 items-center justify-center rounded-full border border-gold/30 bg-card/90 text-foreground shadow-[0_6px_24px_-8px_rgba(0,0,0,0.35)] backdrop-blur-md transition-opacity duration-300 hover:border-gold/60 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold md:hidden ${
         visible ? 'opacity-100' : 'pointer-events-none opacity-0'
       }`}
     >

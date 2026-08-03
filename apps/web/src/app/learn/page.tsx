@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // Giữ ≤160 ký tự: seo-guard (vault 172) đo trên HTML build, quá ngưỡng thì
   // Google cắt giữa câu — câu chốt "không phán bừa" sẽ mất khỏi kết quả tìm.
   description:
-    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 26 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
+    'Tử Vi, Bát Tự, Kinh Dịch, Tarot, thần số cùng MBTI, Big Five, DISC, Enneagram — 44 chủ đề, mỗi môn nói rõ cơ sở đến đâu và giới hạn ở đâu, không phán bừa.',
   alternates: { canonical: 'https://hieu.asia/learn' },
 };
 
@@ -66,12 +66,6 @@ const CLUSTERS: readonly LearnCluster[] = [
         title: 'Phong Thủy ứng dụng',
         subtitle: 'Đông phương · Tổng quan',
         blurb: 'Bức tranh chung: ngũ hành, hướng, chọn ngày giờ, thước Lỗ Ban.',
-      },
-      {
-        href: '/learn/bat-trach',
-        title: 'Bát Trạch — cung phi & hướng',
-        subtitle: 'Đông phương · Cung phi',
-        blurb: 'Tính cung phi từ năm sinh, Đông tứ mệnh – Tây tứ mệnh, 4 hướng tốt – 4 hướng tránh.',
       },
       {
         href: '/learn/hop-tuoi',
@@ -202,6 +196,134 @@ const CLUSTERS: readonly LearnCluster[] = [
         subtitle: 'Dân gian · Kiêng kỵ',
         blurb: 'Tam Nương, Nguyệt Kỵ, Dương Công Kỵ Nhật — gốc tích và cách nghĩ tỉnh táo.',
       },
+      {
+        href: '/learn/xuat-hanh',
+        title: 'Hướng xuất hành',
+        subtitle: 'Dân gian · Hỷ Thần',
+        blurb: 'Hỷ Thần, Tài Thần đổi theo can của NGÀY — khác hẳn hướng nhà tính theo tuổi.',
+      },
+      {
+        href: '/learn/thien-van',
+        title: 'Lịch thiên văn',
+        subtitle: 'Khoa học · Nhật nguyệt thực',
+        blurb: 'Nhật thực, nguyệt thực, phân – chí: hiện tượng tính trước được hàng nghìn năm.',
+      },
+    ],
+  },
+  {
+    id: 'nen-tang-can-chi',
+    heading: 'Nền tảng can chi',
+    positioning:
+      'Bộ máy đánh số thời gian mà Bát Tự, Tử Vi, trạch cát và hợp tuổi đều đứng trên. Bản thân can chi chỉ là cách gọi tên năm tháng ngày giờ — mọi diễn giải vận mệnh là tầng gán thêm phía trên.',
+    topics: [
+      {
+        href: '/learn/can-chi',
+        title: 'Thiên can – Địa chi',
+        subtitle: 'Nền tảng · Chu kỳ 60',
+        blurb: '10 can, 12 chi, và vì sao ghép lại chỉ ra 60 cặp chứ không phải 120.',
+      },
+      {
+        href: '/learn/nap-am',
+        title: 'Nạp âm & mệnh ngũ hành',
+        subtitle: 'Nền tảng · 30 nạp âm',
+        blurb: 'Mệnh ngũ hành của bạn ra từ nạp âm, không phải từ can hay chi năm sinh.',
+      },
+      {
+        href: '/learn/tam-hop-luc-xung',
+        title: 'Tam hợp – Lục xung',
+        subtitle: 'Nền tảng · Vòng 12 chi',
+        blurb: 'Hình học của vòng 12 con giáp: tam hợp là tam giác đều, lục xung là đối đỉnh.',
+      },
+    ],
+  },
+  {
+    id: 'lap-la-so-tu-tru',
+    heading: 'Lập lá số & tứ trụ',
+    positioning:
+      'Mở nắp máy: từ ngày giờ sinh, kết quả được dựng lên bằng những bước nào. Đọc cụm này rồi thì bạn không còn phải tin vào một hộp đen — bạn kiểm được từng bước.',
+    topics: [
+      {
+        href: '/learn/menh-cuc',
+        title: 'Mệnh và Cục',
+        subtitle: 'Tử Vi · Nền lá số',
+        blurb: 'Cục là gì, con số 2–6 nghĩa gì, và vì sao thiếu Cục thì không an được sao.',
+      },
+      {
+        href: '/learn/lap-la-so',
+        title: 'Lập lá số Tử Vi',
+        subtitle: 'Tử Vi · An sao',
+        blurb: 'An 12 cung, tìm cung Mệnh và cung Thân, an chính tinh, độ sáng miếu – vượng – đắc – hãm.',
+      },
+      {
+        href: '/learn/tiet-khi',
+        title: '24 tiết khí',
+        subtitle: 'Lịch pháp · Mặt Trời',
+        blurb: 'Tiết khí thuộc lịch dương chứ không phải lịch âm — và đó là lúc trụ tháng đổi.',
+      },
+      {
+        href: '/learn/lap-bat-tu',
+        title: 'Lập tứ trụ Bát Tự',
+        subtitle: 'Bát Tự · 4 trụ',
+        blurb: 'Trụ năm đổi ở Lập Xuân chứ không ở Tết; trụ giờ suy từ can ngày bằng Ngũ Thử Độn.',
+      },
+    ],
+  },
+  {
+    id: 'van-theo-thoi-gian',
+    heading: 'Vận theo thời gian',
+    positioning:
+      'Các lớp thời gian chồng lên lá số. Càng chia nhỏ thời gian thì độ chắc càng giảm chứ không tăng — đọc để thấy nhịp mà chủ động, không phải để ngồi chờ vận.',
+    topics: [
+      {
+        href: '/learn/dai-van',
+        title: 'Đại vận — chặng 10 năm',
+        subtitle: 'Vận trình · 10 năm',
+        blurb: 'Tử Vi và Bát Tự tính đại vận khác nhau, cho hai bộ mốc khác nhau — đừng trộn.',
+      },
+      {
+        href: '/learn/thai-tue',
+        title: 'Thái Tuế & năm tuổi',
+        subtitle: 'Vận trình · Theo năm',
+        blurb: 'Trùng, xung, hình, hại Thái Tuế — và cái nào công cụ thật sự tính, cái nào không.',
+      },
+    ],
+  },
+  {
+    id: 'phong-thuy-chuyen-sau',
+    heading: 'Phong thuỷ chuyên sâu',
+    positioning:
+      'Bốn lớp phong thuỷ hay bị gộp làm một, ở đây tách hẳn ra: xét NGƯỜI (cung phi, du niên), xét NHÀ theo thời gian (phi tinh), và xét KÍCH THƯỚC (thước Lỗ Ban). Đều là hệ quy ước để tham khảo, chưa có bằng chứng khoa học.',
+    topics: [
+      {
+        href: '/learn/bat-trach',
+        title: 'Bát Trạch — cung phi',
+        subtitle: 'Phong thuỷ · Cung phi',
+        blurb: 'Tính cung phi từ năm sinh, Đông tứ mệnh – Tây tứ mệnh, 4 hướng tốt – 4 hướng tránh.',
+      },
+      {
+        href: '/learn/du-nien',
+        title: '8 du niên',
+        subtitle: 'Phong thuỷ · Bát biến',
+        blurb: 'Sinh Khí, Thiên Y, Diên Niên, Phục Vị và 4 hung tinh — hướng nào cho việc nào.',
+      },
+      {
+        href: '/learn/huyen-khong-phi-tinh',
+        title: 'Huyền Không Phi Tinh',
+        subtitle: 'Phong thuỷ · Cửu vận',
+        blurb: 'Phong thuỷ đổi theo thời gian: tam nguyên cửu vận, sơn tinh – hướng tinh, tinh bàn 9 cung.',
+      },
+      {
+        href: '/learn/thuoc-lo-ban',
+        title: 'Thước Lỗ Ban',
+        subtitle: 'Phong thuỷ · Kích thước',
+        blurb: 'Vì sao có nhiều loại thước, cung tốt – xấu, và cách đo cho đúng.',
+      },
+      {
+        href: '/learn/ngu-hanh-mau-sac',
+        title: 'Ngũ hành & màu sắc',
+        subtitle: 'Phong thuỷ · Sinh khắc',
+        blurb: 'Vòng tương sinh – tương khắc đọc bằng màu, và vì sao an toàn phải đứng trước hợp mệnh.',
+      },
     ],
   },
   {
@@ -228,6 +350,24 @@ const CLUSTERS: readonly LearnCluster[] = [
         subtitle: 'Làm nhà · 6 cung',
         blurb: 'Sáu cung Hoang Ốc tra theo tuổi mụ, và cơ chế "mượn tuổi" khi xây nhà.',
       },
+      {
+        href: '/learn/cuoi-hoi',
+        title: 'Xem tuổi cưới',
+        subtitle: 'Cưới hỏi · Gộp điều kiện',
+        blurb: 'Nhiều hạn gộp lại thành một kết luận ra sao — và còn bao nhiêu phần trăm số năm "sạch".',
+      },
+      {
+        href: '/learn/khai-truong',
+        title: 'Tuổi khai trương',
+        subtitle: 'Kinh doanh · Thái Tuế',
+        blurb: 'Thái Tuế, xung Thái Tuế và năm tuổi — cách chọn năm, ngày, giờ mở hàng.',
+      },
+      {
+        href: '/learn/xong-dat',
+        title: 'Xông đất đầu năm',
+        subtitle: 'Tục Tết · Chọn người',
+        blurb: 'Chọn người bước vào nhà sáng mùng Một: tiêu chí lá số và tiêu chí con người.',
+      },
     ],
   },
   {
@@ -246,7 +386,7 @@ const CLUSTERS: readonly LearnCluster[] = [
   },
 ];
 
-// Phẳng hoá 18 chủ đề cho itemList JSON-LD (giữ đủ 18 để AI/Google đọc được
+// Phẳng hoá TOÀN BỘ chủ đề cho itemList JSON-LD (để AI/Google đọc được
 // cả danh mục, không rụng chủ đề nào khi chia nhóm hiển thị).
 const ALL_TOPICS: readonly LearnTopic[] = CLUSTERS.flatMap((c) => c.topics);
 

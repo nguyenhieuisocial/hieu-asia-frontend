@@ -39,7 +39,7 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     id: 'ung-dung-doi-song',
     name: 'Ứng dụng đời sống',
     tagline: 'Phần "dùng được ngay" của ngũ hành: xem hướng, chọn ngày, đặt tên.',
-    slugs: ['phong-thuy', 'bat-trach', 'trach-cat', 'dat-ten-ngu-hanh'],
+    slugs: ['phong-thuy', 'trach-cat', 'dat-ten-ngu-hanh'],
   },
   {
     id: 'soi-chieu-phan-tu',
@@ -63,14 +63,53 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     name: 'Ngày giờ tốt xấu',
     tagline:
       'Hiểu cuốn lịch trước đã: lịch âm dương chạy thế nào, rồi mới tới giờ đẹp và ngày kiêng.',
-    slugs: ['lich-am-duong', 'gio-hoang-dao', 'ngay-kieng-ky'],
+    slugs: ['lich-am-duong', 'gio-hoang-dao', 'ngay-kieng-ky', 'xuat-hanh', 'thien-van'],
   },
   {
     id: 'xem-tuoi-viec-lon',
     name: 'Xem tuổi việc lớn',
     tagline:
       'Ba hạn tuổi hay bị hỏi nhất khi cưới hỏi và làm nhà — biết cách tính để bớt sợ, không phải để sợ thêm.',
-    slugs: ['kim-lau', 'tam-tai', 'hoang-oc'],
+    slugs: ['kim-lau', 'tam-tai', 'hoang-oc', 'cuoi-hoi', 'khai-truong', 'xong-dat'],
+  },
+  // Đợt 2. `bat-trach` chuyển từ "Ứng dụng đời sống" sang đây: khi đã có đủ 5 bài
+  // chuyên sâu thì Bát Trạch là bài MỞ ĐẦU đúng nghĩa của cụm (phải biết cung phi
+  // trước mới đọc được du niên), còn "Ứng dụng đời sống" quay về đúng vai giới thiệu.
+  {
+    id: 'phong-thuy-chuyen-sau',
+    name: 'Phong thuỷ chuyên sâu',
+    tagline:
+      'Từ cung phi của bạn tới tinh bàn của ngôi nhà — bốn lớp phong thuỷ hay bị gộp làm một, tách ra cho rõ.',
+    slugs: ['bat-trach', 'du-nien', 'huyen-khong-phi-tinh', 'thuoc-lo-ban', 'ngu-hanh-mau-sac'],
+  },
+  // Đợt 3. Đây là lộ trình NỀN: can chi là bộ đánh số thời gian mà Bát Tự, Tử Vi,
+  // trạch cát, hợp tuổi đều đứng trên. Đọc trước thì các bài kia bớt phải giải
+  // thích lại từ đầu.
+  {
+    id: 'nen-tang-can-chi',
+    name: 'Nền tảng can chi',
+    tagline:
+      'Bộ máy đánh số thời gian của cổ học Á Đông: 10 can, 12 chi, vì sao ra đúng 60 — và mệnh ngũ hành thật ra lấy từ đâu.',
+    slugs: ['can-chi', 'nap-am', 'tam-hop-luc-xung'],
+  },
+  // Đợt 5. Lộ trình "mở nắp máy": không dạy luận, chỉ dạy KẾT QUẢ RA TỪ ĐÂU.
+  // Thứ tự sư phạm: Mệnh & Cục (thứ thiếu thì không an được sao) → lập lá số Tử
+  // Vi → tiết khí (thứ thiếu thì sai trụ tháng) → lập tứ trụ.
+  {
+    id: 'lap-la-so-tu-tru',
+    name: 'Lập lá số & tứ trụ',
+    tagline:
+      'Mở nắp máy: từ ngày giờ sinh ra lá số và tứ trụ bằng những bước nào — để bạn đọc kết quả mà không phải tin vào một hộp đen.',
+    slugs: ['menh-cuc', 'lap-la-so', 'tiet-khi', 'lap-bat-tu'],
+  },
+  // Đợt 6. Lộ trình này sẽ dài thêm khi các bài còn lại của cụm vận (giao vận,
+  // lưu niên, nhật vận) ra đời — hiện đủ 2 bài nên đã hợp lệ.
+  {
+    id: 'van-theo-thoi-gian',
+    name: 'Vận theo thời gian',
+    tagline:
+      'Các lớp thời gian chồng lên lá số: chặng 10 năm và lớp từng năm — đọc để thấy nhịp, không phải để chờ vận.',
+    slugs: ['dai-van', 'thai-tue'],
   },
 ];
 

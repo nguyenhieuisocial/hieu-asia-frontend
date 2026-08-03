@@ -42,6 +42,32 @@ export const LEARN_TOPICS: readonly LearnTopic[] = [
   { slug: 'lich-am-duong', eyebrow: 'LỊCH PHÁP', name: 'Lịch âm dương', href: '/learn/lich-am-duong' },
   { slug: 'gio-hoang-dao', eyebrow: '12 GIỜ', name: 'Giờ hoàng đạo', href: '/learn/gio-hoang-dao' },
   { slug: 'ngay-kieng-ky', eyebrow: 'KIÊNG KỴ', name: 'Ngày kiêng kỵ', href: '/learn/ngay-kieng-ky' },
+  // Đợt 2 — cụm phong thuỷ chuyên sâu. Trước đó 3 công cụ (/thuoc-lo-ban,
+  // /phi-tinh, /huong-ban-lam-viec) cùng trỏ về bài ô /learn/phong-thuy.
+  { slug: 'du-nien', eyebrow: 'BÁT BIẾN', name: '8 du niên', href: '/learn/du-nien' },
+  { slug: 'huyen-khong-phi-tinh', eyebrow: 'CỬU VẬN', name: 'Huyền Không Phi Tinh', href: '/learn/huyen-khong-phi-tinh' },
+  { slug: 'thuoc-lo-ban', eyebrow: 'KÍCH THƯỚC', name: 'Thước Lỗ Ban', href: '/learn/thuoc-lo-ban' },
+  { slug: 'ngu-hanh-mau-sac', eyebrow: 'SINH KHẮC', name: 'Ngũ hành & màu sắc', href: '/learn/ngu-hanh-mau-sac' },
+  // Đợt 3 — nền tảng can chi + hướng xuất hành.
+  { slug: 'can-chi', eyebrow: 'CHU KỲ 60', name: 'Thiên can – Địa chi', href: '/learn/can-chi' },
+  { slug: 'nap-am', eyebrow: 'BẢN MỆNH', name: 'Nạp âm', href: '/learn/nap-am' },
+  { slug: 'tam-hop-luc-xung', eyebrow: 'VÒNG 12 CHI', name: 'Tam hợp – Lục xung', href: '/learn/tam-hop-luc-xung' },
+  { slug: 'xuat-hanh', eyebrow: 'HỶ THẦN', name: 'Hướng xuất hành', href: '/learn/xuat-hanh' },
+  // Đợt 4 — việc lớn theo tuổi + thiên văn.
+  { slug: 'cuoi-hoi', eyebrow: 'CƯỚI HỎI', name: 'Xem tuổi cưới', href: '/learn/cuoi-hoi' },
+  // eyebrow KHÔNG để 'THÁI TUẾ': đó là nhãn của bài /learn/thai-tue (nay đã có).
+  // Bài này chỉ dùng Thái Tuế ở lát cắt cần cho việc mở hàng.
+  { slug: 'khai-truong', eyebrow: 'MỞ HÀNG', name: 'Tuổi khai trương', href: '/learn/khai-truong' },
+  { slug: 'xong-dat', eyebrow: 'TỤC TẾT', name: 'Xông đất', href: '/learn/xong-dat' },
+  { slug: 'thien-van', eyebrow: 'NHẬT NGUYỆT THỰC', name: 'Lịch thiên văn', href: '/learn/thien-van' },
+  // Đợt 5 — cách máy tính ra kết quả: lập lá số, lập tứ trụ, và hai thứ làm nền.
+  { slug: 'menh-cuc', eyebrow: 'MỆNH & CỤC', name: 'Mệnh và Cục', href: '/learn/menh-cuc' },
+  { slug: 'lap-la-so', eyebrow: 'AN SAO', name: 'Lập lá số Tử Vi', href: '/learn/lap-la-so' },
+  { slug: 'tiet-khi', eyebrow: '24 TIẾT KHÍ', name: '24 tiết khí', href: '/learn/tiet-khi' },
+  { slug: 'lap-bat-tu', eyebrow: 'TỨ TRỤ', name: 'Lập tứ trụ Bát Tự', href: '/learn/lap-bat-tu' },
+  // Đợt 6 — vận theo thời gian.
+  { slug: 'dai-van', eyebrow: '10 NĂM', name: 'Đại vận', href: '/learn/dai-van' },
+  { slug: 'thai-tue', eyebrow: 'NĂM TUỔI', name: 'Thái Tuế', href: '/learn/thai-tue' },
 ];
 
 const BY_SLUG: ReadonlyMap<string, LearnTopic> = new Map(
@@ -62,19 +88,48 @@ const NEIGHBORS: Readonly<Record<string, readonly string[]>> = {
   'bat-tu': ['tu-vi', 'hop-tuoi', 'dat-ten-ngu-hanh', 'phong-thuy'],
   'kinh-dich': ['tarot', 'phong-thuy', 'tu-vi', 'trach-cat'],
   'tarot': ['kinh-dich', 'chiem-tinh', 'than-so-hoc', 'mbti'],
-  'phong-thuy': ['bat-trach', 'trach-cat', 'dat-ten-ngu-hanh', 'bat-tu'],
+  // Bài ô trỏ XUỐNG 4 bài chuyên sâu của chính nó (ngu-hanh-mau-sac được link
+  // trong thân bài). Trước đây bài ô giảng lại đủ cả 4 chủ đề mà không có một
+  // link nào sang chúng — hai trang cùng chủ đề, cùng domain, không liên kết là
+  // đúng kịch bản Google tự chọn một bản và dìm bản kia.
+  'phong-thuy': ['bat-trach', 'du-nien', 'huyen-khong-phi-tinh', 'thuoc-lo-ban'],
   'chiem-tinh': ['cung-hoang-dao', 'tarot', 'than-so-hoc', 'big-five'],
   'than-so-hoc': ['chiem-tinh', 'tarot', 'dat-ten-ngu-hanh', 'mbti'],
   'hop-tuoi': ['con-giap', 'tu-vi', 'bat-tu', 'trach-cat'],
   'con-giap': ['hop-tuoi', 'sao-han', 'tu-vi', 'trach-cat'],
-  'sao-han': ['tu-vi', 'con-giap', 'trach-cat', 'hop-tuoi'],
+  // thien-van đứng đầu: nó giải thích La Hầu / Kế Đô thực chất là hai giao điểm
+  // quỹ đạo. Thiếu chiều này thì liên kết giữa hai bài chỉ có một chiều.
+  'sao-han': ['thien-van', 'tu-vi', 'con-giap', 'trach-cat'],
   'trach-cat': ['gio-hoang-dao', 'ngay-kieng-ky', 'lich-am-duong', 'phong-thuy'],
   // Đợt 1 — mỗi bài mới trỏ về 4 bài gần nghĩa, và các bài cũ ở trên đã được
   // chỉnh để trỏ NGƯỢC lại, tránh chủ đề mới thành ngõ cụt trong liên kết nội bộ.
   'kim-lau': ['tam-tai', 'hoang-oc', 'hop-tuoi', 'sao-han'],
   'tam-tai': ['kim-lau', 'hoang-oc', 'sao-han', 'con-giap'],
   'hoang-oc': ['kim-lau', 'tam-tai', 'bat-trach', 'phong-thuy'],
-  'bat-trach': ['phong-thuy', 'hoang-oc', 'trach-cat', 'dat-ten-ngu-hanh'],
+  'bat-trach': ['du-nien', 'huyen-khong-phi-tinh', 'phong-thuy', 'hoang-oc'],
+  'du-nien': ['bat-trach', 'huyen-khong-phi-tinh', 'phong-thuy', 'thuoc-lo-ban'],
+  'huyen-khong-phi-tinh': ['bat-trach', 'du-nien', 'phong-thuy', 'thuoc-lo-ban'],
+  'thuoc-lo-ban': ['phong-thuy', 'bat-trach', 'ngu-hanh-mau-sac', 'hoang-oc'],
+  'ngu-hanh-mau-sac': ['nap-am', 'dat-ten-ngu-hanh', 'phong-thuy', 'thuoc-lo-ban'],
+  'can-chi': ['nap-am', 'tam-hop-luc-xung', 'con-giap', 'bat-tu'],
+  'nap-am': ['can-chi', 'ngu-hanh-mau-sac', 'dat-ten-ngu-hanh', 'bat-tu'],
+  'tam-hop-luc-xung': ['con-giap', 'hop-tuoi', 'can-chi', 'sao-han'],
+  'xuat-hanh': ['gio-hoang-dao', 'trach-cat', 'lich-am-duong', 'bat-trach'],
+  'cuoi-hoi': ['kim-lau', 'tam-tai', 'hop-tuoi', 'trach-cat'],
+  'khai-truong': ['thai-tue', 'tam-tai', 'xong-dat', 'trach-cat'],
+  // xong-dat ↔ khai-truong phải trỏ nhau: hai bài đối xử KHÁC NHAU với cùng một
+  // cấu hình "trùng chi năm / Thái Tuế", nên phải đọc được sang nhau để người
+  // đọc thấy đó là khác biệt có chủ ý giữa hai tục, không phải site tự mâu thuẫn.
+  'xong-dat': ['tam-hop-luc-xung', 'khai-truong', 'nap-am', 'hop-tuoi'],
+  'thien-van': ['lich-am-duong', 'sao-han', 'chiem-tinh', 'tiet-khi'],
+  'menh-cuc': ['lap-la-so', 'nap-am', 'tu-vi', 'can-chi'],
+  'lap-la-so': ['menh-cuc', 'tu-vi', 'lap-bat-tu', 'can-chi'],
+  'lap-bat-tu': ['tiet-khi', 'bat-tu', 'can-chi', 'lap-la-so'],
+  'tiet-khi': ['lich-am-duong', 'lap-bat-tu', 'thien-van', 'trach-cat'],
+  'dai-van': ['menh-cuc', 'lap-bat-tu', 'thai-tue', 'tu-vi'],
+  // thai-tue ↔ khai-truong trỏ nhau: khai-truong dùng Thái Tuế ở lát cắt mở hàng,
+  // thai-tue giữ khái niệm tổng quát. Không trỏ nhau thì đọc như hai bài rời rạc.
+  'thai-tue': ['khai-truong', 'tam-hop-luc-xung', 'dai-van', 'can-chi'],
   'cung-hoang-dao': ['chiem-tinh', 'tarot', 'than-so-hoc', 'con-giap'],
   'lich-am-duong': ['trach-cat', 'gio-hoang-dao', 'ngay-kieng-ky', 'sao-han'],
   'gio-hoang-dao': ['trach-cat', 'lich-am-duong', 'ngay-kieng-ky', 'phong-thuy'],

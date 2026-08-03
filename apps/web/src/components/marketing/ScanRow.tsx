@@ -84,8 +84,11 @@ export function ScanRow({
             — {eyebrow}
           </p>
         )}
+        {/* Wave 65.04 — heading grammar thống nhất: serif editorial (Newsreader)
+            thay sans-bold, GIỮ nguyên size token để không re-flow layout.
+            (Finding P1 vòng 2: trang luân phiên 2 hệ heading không quy luật.) */}
         {title && (
-          <h2 className="text-balance font-sans text-section-display font-bold tracking-tight text-foreground">
+          <h2 className="text-balance font-editorial-display text-section-display font-normal tracking-tight text-foreground">
             {title}
           </h2>
         )}

@@ -70,7 +70,7 @@ export const ThreeItems: Story = {
     eyebrow: 'BA HƯỚNG NHÌN',
     title: (
       <>
-        Ba ống kính, một <em className="italic text-gold-soft">câu chuyện</em>.
+        Ba lăng kính, một <em className="italic text-gold-soft">câu chuyện</em>.
       </>
     ),
     items: fourItems.slice(0, 3),

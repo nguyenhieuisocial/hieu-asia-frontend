@@ -22,6 +22,7 @@ import {
   WEBSITE_ID,
   abs,
 } from './constants';
+import { LENSES } from '@/lib/catalog/lenses';
 
 export type JsonLdNode = Record<string, unknown>;
 
@@ -179,6 +180,27 @@ export function faqPage(items: FaqItem[]): JsonLdNode {
       '@type': 'Question',
       name: item.q,
       acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+}
+
+/**
+ * Wave 65.01 — Service graph cho 5 lăng kính flagship, sinh từ lib/catalog/lenses
+ * (một nguồn sự thật). Thay bản hand-code trong app/page.tsx vốn đã drift khỏi
+ * catalog (tên/mô tả/URL lệch — vd Xem Tướng trỏ /learn/palm trong khi catalog
+ * là /xem-tuong). Đổi lens trong catalog → JSON-LD tự khớp, hết drift.
+ */
+export function lensServices(): JsonLdNode {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': LENSES.map((l) => ({
+      '@type': 'Service',
+      name: l.name,
+      provider: { '@id': ORG_ID },
+      areaServed: 'VN',
+      inLanguage: 'vi-VN',
+      url: l.url,
+      description: l.serviceDesc,
     })),
   };
 }

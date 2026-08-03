@@ -25,7 +25,6 @@
  * Renders identically across day/night via semantic CSS variables.
  */
 
-import { ShimmerText } from '@/components/fx/ShimmerText';
 
 type Quote = {
   /** Quote body — 30-60 words in founder voice, italic Newsreader. */
@@ -34,6 +33,9 @@ type Quote = {
   topic: string;
 };
 
+// Wave 65.03(e) — 4 → 2 quote: giảm nửa chiều cao section (data: đa số khách
+// không cuộn tới đây), giữ 2 câu mạnh + phổ quát nhất (sự nghiệp gia đình +
+// hôn nhân). Hai câu "du học" + "về quê" giữ trong git history nếu muốn xoay.
 const QUOTES: ReadonlyArray<Quote> = [
   {
     body: 'Tôi đã hỏi Mentor về việc có nên tiếp tục công ty của ba. Nó không trả lời nên hay không. Nó hỏi lại tôi: nếu ba mất ngày mai, ai sẽ là người tôi muốn báo tin đầu tiên? Tôi ngồi im 20 phút trước câu hỏi đó.',
@@ -42,14 +44,6 @@ const QUOTES: ReadonlyArray<Quote> = [
   {
     body: 'Tôi vào Mentor để hỏi xem có nên cưới không. Mentor không xem hợp tuổi. Nó hỏi tôi đã từng cãi nhau lớn với người này về tiền chưa, và lúc đó ai là người chủ động làm hoà. Tôi nhận ra mình chưa có dữ liệu để trả lời.',
     topic: 'quyết định kết hôn',
-  },
-  {
-    body: 'Tôi mất ba tháng để dám hỏi Mentor về việc có nên cho con đi du học sớm. Câu trả lời không phải nên hay không. Nó liệt kê 3 nỗi sợ tôi đang gán cho con — và 2 trong số đó là của chính tôi hồi 18 tuổi.',
-    topic: 'cho con đi du học',
-  },
-  {
-    body: 'Tôi nhắn Mentor lúc 2 giờ sáng để hỏi có nên rời thành phố về quê. Nó không bảo tôi nên ở hay nên về. Nó hỏi: ba tháng gần nhất, đêm nào tôi ngủ sâu nhất, và đêm đó tôi đang ở đâu. Tôi tắt máy, mở lịch ra xem.',
-    topic: 'rời thành phố lớn về quê',
   },
 ] as const;
 
@@ -70,15 +64,16 @@ export function SocialProofQuiet() {
             className="rv-up mt-6 max-w-marketing-text font-editorial-display text-editorial-h2 font-normal tracking-tight text-foreground"
             style={{ animationDelay: '80ms' }}
           >
-            Không sao. Không ảnh. Không lời khen.{' '}
-            <em className="italic text-primary/80"><ShimmerText>Kiểu câu hỏi mọi người mang tới</ShimmerText></em>
+            {/* Wave 65.03(e) — "Không sao." đọc nhị nghĩa ("ổn mà") → "Không
+                ngôi sao." (finding P2 vòng 1). */}
+            Không ngôi sao. Không ảnh. Không lời khen.{' '}
+            <em className="italic text-primary/80">Kiểu câu hỏi mọi người mang tới</em>
             <span className="text-primary">.</span>
           </h2>
           <p className="rv-up mt-6 max-w-marketing-text font-sans text-editorial-lede text-muted-foreground" style={{ animationDelay: '160ms' }}>
-            Đây là ví dụ minh hoạ — không phải lời chứng thực của người dùng
-            thật — về kiểu câu hỏi khó mà người ta mang tới Mentor và cách
-            Mentor hỏi ngược lại. Không phải quảng cáo, không phải trích dẫn
-            có thật.
+            Đây là ví dụ minh hoạ do chúng tôi viết — không phải trích dẫn của
+            người dùng thật — về kiểu câu hỏi khó mà người ta mang tới Mentor
+            và cách Mentor hỏi ngược lại.
           </p>
         </header>
 
@@ -98,8 +93,11 @@ export function SocialProofQuiet() {
               <blockquote className="font-editorial-display text-lg italic leading-relaxed text-foreground md:text-xl">
                 {q.body}
               </blockquote>
+              {/* Wave 65.03(e) — bỏ "Ví dụ minh hoạ" khỏi attribution từng thẻ:
+                  nhãn minh hoạ đã nói rõ ở eyebrow + lede + footer (3 chỗ);
+                  lặp thêm mỗi thẻ nữa là boilerplate (finding P2 vòng 1). */}
               <p className="mt-5 font-mono text-editorial-caption uppercase tracking-[0.12em] text-muted-foreground">
-                — Ví dụ minh hoạ · câu hỏi về {q.topic}
+                — Câu hỏi về {q.topic}
               </p>
               {/* Decorative index numeral. aria-hidden, but sighted low-vision
                   users still see it, so use full `text-muted-foreground` (the

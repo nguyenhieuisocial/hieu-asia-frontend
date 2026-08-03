@@ -16,13 +16,19 @@ import { InfographicBatTu } from '@/components/learn/InfographicBatTu';
  */
 export function EngineProofShowcase(): React.JSX.Element {
   return (
-    <section aria-label="Ví dụ lá số được tính ra" className="bg-muted/20 py-12 sm:py-16">
+    // Wave 65.03(c) — mở đầu DẢI BẰNG CHỨNG chung với SampleOutputShowcase ngay
+    // dưới: nền đồng bộ bg-background, đáy thu hẹp (pb-4/6), disclaimer
+    // "Persona demo" gộp về MỘT dòng ở cuối SampleOutputShowcase — hai khối đọc
+    // như một section "lá số tính ra → báo cáo đọc được".
+    <section aria-label="Ví dụ lá số được tính ra" className="bg-background pt-12 pb-4 sm:pt-16 sm:pb-6">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
         <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           TÍNH THẬT, KHÔNG TRA BẢNG
         </p>
+        {/* Wave 65.01 SEO — thêm "Tử Vi" vào H2 (heading duy nhất phù hợp để
+            mang từ khoá này một cách tự nhiên: section trưng đúng lá số Tử Vi). */}
         <h2 className="mt-3 font-editorial-display text-3xl leading-tight text-foreground sm:text-4xl">
-          Lá số được <em className="italic text-primary">tính ra</em>, không chép sẵn.
+          Lá số Tử Vi được <em className="italic text-primary">tính ra</em>, không chép sẵn.
         </h2>
         <p className="mt-3 max-w-[36em] leading-relaxed text-muted-foreground">
           Từ ngày–giờ sinh, thuật toán dựng lá số Tử Vi 12 cung và Tứ Trụ Bát Tự —{' '}
@@ -46,9 +52,8 @@ export function EngineProofShowcase(): React.JSX.Element {
           </figure>
         </div>
 
-        <p className="mt-8 text-center font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground sm:mt-10">
-          Persona demo · không phải dữ liệu thật
-        </p>
+        {/* Wave 65.03(c) — dòng "Persona demo · không phải dữ liệu thật" gộp về
+            cuối SampleOutputShowcase (một disclaimer cho cả dải bằng chứng). */}
       </div>
     </section>
   );

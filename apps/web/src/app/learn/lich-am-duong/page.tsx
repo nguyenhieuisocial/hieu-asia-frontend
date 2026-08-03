@@ -446,8 +446,11 @@ export default function LearnLichAmDuongPage() {
               <p>
                 Đường đi biểu kiến của Mặt Trời quanh bầu trời (hoàng đạo) được chia thành{' '}
                 <strong>12 mốc cách đều 30°</strong>, gọi là các <strong>Trung khí</strong> — Đông chí,
-                Đại hàn, Vũ Thuỷ, Xuân phân… (Trung khí là một nửa của hệ 24 tiết khí; nửa còn lại nằm
-                xen giữa và không tham gia vào việc đặt tháng nhuận.)
+                Đại hàn, Vũ Thuỷ, Xuân phân… (Trung khí là một nửa của hệ{' '}
+                <Link href="/learn/tiet-khi" className="text-gold-700 underline-offset-4 hover:underline">
+                  24 tiết khí
+                </Link>
+                ; nửa còn lại nằm xen giữa và không tham gia vào việc đặt tháng nhuận.)
               </p>
               <p>
                 Vì tháng trăng (29,53 ngày) <em>ngắn hơn</em> khoảng cách trung bình giữa hai Trung khí

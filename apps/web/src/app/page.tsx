@@ -25,25 +25,23 @@ import { StartupPath } from '@/components/home/StartupPath';
 // founder voice, no stars/faces).
 import { StickyMobileCta } from '@/components/marketing/StickyMobileCta';
 // Homepage hero "4 lăng kính → AI" (MultiHero) + editorial sections. Moved out
-// of the retired /muc-lab demo into components/home-hero/. HeroV4 stays
-// available for other surfaces.
+// of the retired /muc-lab demo into components/home-hero/. (HeroV4 đã XOÁ
+// ở Wave 65.07 — 0 consumer toàn repo; xem git history nếu cần khôi phục.)
 import { MultiHero } from '@/components/home-hero/MultiHero';
 import { OracleBrain } from '@/components/home-hero/OracleBrain';
 import { InstantChartHero } from '@/components/home-hero/InstantChartHero';
-import { NotOraclesStrip } from '@/components/home-hero/NotOraclesStrip';
 import { Methodology } from '@/components/home-hero/Methodology';
-import { ToolkitSection } from '@/components/home-hero/ToolkitSection';
 import { MissionNote } from '@/components/home-hero/MissionNote';
 import { EngineProofShowcase } from '@/components/home-hero/EngineProofShowcase';
 import { PricingTierV2 } from '@/components/marketing/PricingTierV2';
 import { SampleOutputShowcase } from '@/components/marketing/SampleOutputShowcase';
 import { MentorSampleLazy } from '@/components/marketing/MentorSampleLazy';
 import { ScanRow } from '@/components/marketing/ScanRow';
-import { PullQuote } from '@/components/marketing/PullQuote';
 import { SocialProofQuiet } from '@/components/marketing/SocialProofQuiet';
 import { RevealOnScroll } from '@/components/motion/RevealOnScroll';
 import { ScrollProgress } from '@/components/fx/ScrollProgress';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { faqPage, lensServices } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   // Homepage title already contains the brand → bypass the layout
@@ -62,7 +60,12 @@ export const metadata: Metadata = {
   // tư"). Ngưỡng 160 là chốt chung của mọi agent (seo-guard).
   description:
     'Lá số Tử Vi, Bát Tự tính thật từ ngày giờ sinh — không bói chung chung, không hù dọa, không bán giải hạn. Có căn cứ cung và sao. Lá số của bạn là riêng tư.',
-  alternates: { canonical: 'https://hieu.asia/' },
+  // Wave 65.01 — languages chuyển từ root layout về đây: chỉ trang chủ mang
+  // hreflang vi-VN tự trỏ mình (layout cũ làm MỌI trang con hreflang về '/').
+  alternates: {
+    canonical: 'https://hieu.asia/',
+    languages: { 'vi-VN': 'https://hieu.asia/' },
+  },
   openGraph: {
     title: 'hieu.asia — Hiểu mình. Quyết định mình.',
     description:
@@ -101,158 +104,52 @@ export const metadata: Metadata = {
 // duplicated the entity with drifted data (short sameAs, off-brand description),
 // so Google saw two conflicting Organizations. Removed; the homepage-specific
 // nodes below (HowTo / Services / FAQ / SoftwareApplication) stay.
+// Wave 65.01 — viết lại HowTo khớp trang HIỆN TẠI: bản cũ mô tả flow onboarding
+// 3 bước đã gỡ khỏi trang và bước 2 trỏ anchor #how không tồn tại (finding P2
+// vòng 5 + vòng 7). Ba bước mới = đúng những gì khách làm được trên trang chủ:
+// nhập ngày sinh ở hero → lá số hiện ngay → hỏi Mentor.
 const HOWTO_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
   name: 'Bắt đầu trong 3 phút với hieu.asia',
   description:
-    'Ba bước để có góc nhìn huyền học cá nhân hóa: nhập thông tin, để AI phân tích, trò chuyện với AI Mentor.',
+    'Ba bước để hiểu mình bằng lá số thật: nhập ngày giờ sinh, xem lá số Bát Tự tính ngay, trò chuyện với AI Mentor.',
   inLanguage: 'vi-VN',
   totalTime: 'PT3M',
   step: [
     {
       '@type': 'HowToStep',
       position: 1,
-      name: 'Nhập thông tin cơ bản',
-      text: 'Cung cấp ngày giờ sinh và giới tính. Khoảng 1 phút, có thể chỉnh sửa sau.',
-      url: 'https://hieu.asia/onboarding',
+      name: 'Nhập ngày giờ sinh ngay trên trang chủ',
+      text: 'Điền ngày, giờ sinh và giới tính vào form đầu trang. Khoảng 1 phút, không cần tài khoản.',
+      url: 'https://hieu.asia/',
     },
     {
       '@type': 'HowToStep',
       position: 2,
-      name: 'AI phân tích trong 30 giây',
-      text: 'Hệ thống tổng hợp Tử Vi, Bát Tự, MBTI, Big Five và Xem Tướng (cùng các công cụ như Thần Số Học) thành một bản tổng hợp rõ ràng.',
-      url: 'https://hieu.asia/#how',
+      name: 'Xem lá số Bát Tự tính ngay trên máy bạn',
+      text: 'Lá số hiện ngay bên dưới: Nhật Chủ, ngũ hành mạnh yếu, đại vận — tính trong trình duyệt, chưa đăng ký thì không lưu gì.',
+      url: 'https://hieu.asia/',
     },
     {
       '@type': 'HowToStep',
       position: 3,
       name: 'Trò chuyện với AI Mentor để hành động',
-      text: 'Đặt câu hỏi về quyết định bạn đang cân nhắc. Mentor gợi ý các bước tiếp theo.',
+      text: 'Đặt câu hỏi về quyết định bạn đang cân nhắc. Mentor đối thoại dựa trên lá số của bạn và gợi ý bước tiếp theo.',
       url: 'https://hieu.asia/onboarding',
     },
   ],
 };
 
-const SERVICES_JSONLD = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Service',
-      name: 'Tử Vi Đẩu Số',
-      serviceType: 'Tử Vi astrology reading',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/learn/tu-vi',
-      description:
-        'Lá số Tử Vi 12 cung với chính tinh và phụ tinh — bản đồ 12 lĩnh vực đời sống.',
-    },
-    {
-      '@type': 'Service',
-      name: 'Bát Tự Tứ Trụ',
-      serviceType: 'Bát Tự (BaZi) reading',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/learn/bat-tu',
-      description:
-        'Bát Tự 4 trụ Năm – Tháng – Ngày – Giờ theo Ngũ Hành — cân bằng năng lượng bẩm sinh.',
-    },
-    {
-      '@type': 'Service',
-      name: 'MBTI 16 loại tính cách',
-      serviceType: 'MBTI personality assessment',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/learn/mbti',
-      description:
-        'MBTI dựa trên 4 trục của Carl Jung — khung tự nhận thức về cách bạn vận hành tự nhiên.',
-    },
-    {
-      '@type': 'Service',
-      name: 'Big Five (OCEAN)',
-      serviceType: 'Big Five (OCEAN) personality assessment',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/big-five',
-      description:
-        'Trắc nghiệm Big Five (OCEAN) — 5 chiều tính cách có cơ sở khoa học vững nhất, kèm bản đọc sâu cá nhân hoá.',
-    },
-    {
-      '@type': 'Service',
-      name: 'Xem Tướng AI',
-      serviceType: 'Palmistry / chiromancy AI analysis',
-      provider: { '@type': 'Organization', name: 'hieu.asia', url: 'https://hieu.asia' },
-      areaServed: 'VN',
-      inLanguage: 'vi-VN',
-      url: 'https://hieu.asia/learn/palm',
-      description:
-        'AI phân tích 7 đường chính trên lòng bàn tay — tâm đạo, trí đạo, sinh đạo và các đường phụ.',
-    },
-  ],
-};
+// Wave 65.01 — SERVICES_JSONLD hand-code đã thay bằng lensServices() (lib/seo/
+// jsonld) sinh từ lib/catalog/lenses: bản cũ drift khỏi catalog (Xem Tướng trỏ
+// /learn/palm thay vì /xem-tuong, MBTI trỏ /learn/mbti thay vì /mbti, mô tả
+// lệch). Một nguồn sự thật — đổi lens trong catalog là JSON-LD tự khớp.
 
-// FAQPage JSON-LD — answers ≤200 chars each, mirror the visible FAQ semantics
-// but trimmed for crawlers (rich-result eligibility). Keep in sync with HOME_FAQ
-// below: if you change the visible Q&A, update this block too.
-const FAQ_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  inLanguage: 'vi-VN',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'hieu.asia có dự đoán tương lai không?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Không. Chúng tôi không dự đoán tương lai. Mục tiêu là giúp bạn nhìn rõ mẫu hình hành vi và động lực bẩm sinh để tự ra quyết định tốt hơn.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Có. Bạn vẫn dùng được MBTI, Big Five, Thần Số Học và Xem Tướng mà không cần giờ sinh. Có thể cập nhật lá số bất cứ lúc nào sau đó.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Dữ liệu cá nhân được bảo vệ thế nào?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: `Tier Standard miễn phí gồm các công cụ tra cứu cơ bản. Premium ${formatVND(PRICING.premium.vnd)} một lần, Mentor Monthly ${formatVND(PRICING.monthly.vnd)}/tháng hoặc Mentor Yearly ${formatVND(PRICING.yearly.vnd)}/năm, Lifetime ${formatVND(PRICING.lifetime.vnd)} một lần.`,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Tôi có thể huỷ gói subscription bất cứ lúc nào?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Có. Huỷ trong trang Tài khoản, gói dùng hết kỳ đã thanh toán, không tự gia hạn. Hoàn tiền 100% trong 24h nếu báo cáo chưa tạo.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'hieu.asia có khác gì với các app xem bói khác?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Tử Vi và Bát Tự tính theo Bắc phái với 121 sao (không tra bảng), Mentor AI đối thoại có ngữ cảnh, văn phong điềm tĩnh không định mệnh hoá.',
-      },
-    },
-  ],
-};
+// Wave 65.01 — FAQ_JSONLD không còn là khối chép tay tách rời: câu hỏi lấy
+// CHUNG từ HOME_FAQ bên dưới (hết drift q giữa markup và bản hiển thị), đáp án
+// crawler là field `aCrawler` nằm NGAY CẠNH JSX của từng item (≤200 ký tự cho
+// rich-result eligibility — giữ nguyên quy ước cũ). Khối build ở sau HOME_FAQ.
 
 // SoftwareApplication JSON-LD — offers sourced from PRICING (lib/pricing.ts).
 // No aggregateRating: we have no audited review data and refuse to fabricate.
@@ -294,9 +191,15 @@ const SOFTWARE_APP_JSONLD = {
   ],
 };
 
-const HOME_FAQ: readonly FaqItem[] = [
+// Wave 65.01 — mỗi item mang cả bản hiển thị (a: JSX) lẫn bản crawler
+// (aCrawler: plain text ≤200 ký tự). Sửa đáp án thì sửa cả hai NGAY tại đây.
+type HomeFaqEntry = FaqItem & { aCrawler: string };
+
+const HOME_FAQ: readonly HomeFaqEntry[] = [
   {
     q: 'hieu.asia có dự đoán tương lai không?',
+    aCrawler:
+      'Không. Chúng tôi không dự đoán tương lai. Mục tiêu là giúp bạn nhìn rõ mẫu hình hành vi và động lực bẩm sinh để tự ra quyết định tốt hơn.',
     a: (
       <p>
         Không. Chúng tôi không tuyên bố dự đoán tương lai. Mục tiêu của hieu.asia
@@ -307,6 +210,8 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
   {
     q: 'Tôi không có giờ sinh chính xác thì có dùng được không?',
+    aCrawler:
+      'Có. Bạn vẫn dùng được MBTI, Big Five, Thần Số Học và Xem Tướng mà không cần giờ sinh. Có thể cập nhật lá số bất cứ lúc nào sau đó.',
     a: (
       <p>
         Có. Bạn vẫn có thể bắt đầu với MBTI, Big Five, Thần Số Học và Xem Tướng mà
@@ -317,6 +222,8 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
   {
     q: 'Dữ liệu cá nhân được bảo vệ thế nào?',
+    aCrawler:
+      'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
     a: (
       <>
         <p>
@@ -334,9 +241,10 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
   {
     q: 'Giá bao nhiêu? Có dùng thử miễn phí không?',
+    aCrawler: `Gói Standard miễn phí gồm các công cụ tra cứu cơ bản. Premium ${formatVND(PRICING.premium.vnd)} một lần, Mentor Monthly ${formatVND(PRICING.monthly.vnd)}/tháng hoặc Mentor Yearly ${formatVND(PRICING.yearly.vnd)}/năm, Lifetime ${formatVND(PRICING.lifetime.vnd)} một lần.`,
     a: (
       <p>
-        Tier <strong>Standard miễn phí</strong> gồm khảo sát đầu vào và các công
+        Gói <strong>Standard miễn phí</strong> gồm khảo sát đầu vào và các công
         cụ tra cứu cơ bản. <strong>Premium {formatVND(PRICING.premium.vnd)} một lần</strong>{' '}
         (1 lá số đầy đủ + PDF + 3 câu hỏi Mentor).{' '}
         <strong>Mentor Monthly {formatVND(PRICING.monthly.vnd)}/tháng</strong> hoặc{' '}
@@ -348,7 +256,9 @@ const HOME_FAQ: readonly FaqItem[] = [
     ),
   },
   {
-    q: 'Tôi có thể huỷ gói subscription bất cứ lúc nào?',
+    q: 'Tôi có thể huỷ gói bất cứ lúc nào?',
+    aCrawler:
+      'Có. Huỷ trong trang Tài khoản, gói dùng hết kỳ đã thanh toán, không tự gia hạn. Hoàn tiền 100% trong 24h nếu báo cáo chưa tạo.',
     a: (
       <p>
         Có. Bạn huỷ trong trang Tài khoản — gói vẫn dùng được đến hết kỳ đã
@@ -361,6 +271,8 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
   {
     q: 'hieu.asia có khác gì với các app xem bói khác?',
+    aCrawler:
+      'Tử Vi và Bát Tự tính theo Bắc phái với 121 sao (không tra bảng), Mentor AI đối thoại có ngữ cảnh, văn phong điềm tĩnh không định mệnh hoá.',
     a: (
       <>
         <p>
@@ -374,12 +286,18 @@ const HOME_FAQ: readonly FaqItem[] = [
   },
 ];
 
+// Câu hỏi + đáp án crawler build từ đúng HOME_FAQ ở trên — một nguồn sự thật.
+const FAQ_JSONLD = {
+  ...faqPage(HOME_FAQ.map((e) => ({ q: e.q, a: e.aCrawler }))),
+  inLanguage: 'vi-VN',
+};
+
 export default function LandingPage() {
   return (
     <>
       <ScrollProgress />
       <JsonLd data={HOWTO_JSONLD} />
-      <JsonLd data={SERVICES_JSONLD} />
+      <JsonLd data={lensServices()} />
       <JsonLd data={FAQ_JSONLD} />
       <JsonLd data={SOFTWARE_APP_JSONLD} />
       <SiteNav />
@@ -450,8 +368,12 @@ export default function LandingPage() {
           <OracleBrain />
         </Suspense>
 
-        {/* Brand "không phải oracle" — editorial decoder strip ngay dưới hero */}
-        <RevealOnScroll><NotOraclesStrip /></RevealOnScroll>
+        {/* Wave 65.03(a) — NotOraclesStrip ĐÃ GỠ: thông điệp "không bói toán ·
+            bạn tự quyết" đã nằm NGUYÊN VĂN trong MultiHero (eyebrow "LÁ SỐ THẬT
+            · KHÔNG PHÁN MỆNH" + deck "Không hù dọa, không bán giải hạn") ngay
+            phía trên — strip là lặp lại thuần tuý, tốn 1 màn cuộn. Component
+            còn trong repo nếu surface khác cần. Data: đa số khách chỉ xem
+            25–50% trang → mỗi section phải tự trả tiền thuê chỗ. */}
 
         {/* Thiên văn hôm nay — dải lịch can-chi & giờ hoàng đạo chạy động (dữ
             liệu THẬT, tính client-side; cho cảm giác "sống" + lý do quay lại
@@ -504,7 +426,7 @@ export default function LandingPage() {
               <u className="underline decoration-primary decoration-2">
                 về điều gì
               </u>
-              <span className="text-primary">.</span>
+              <span className="text-primary">?</span>
             </>
           }
           items={[
@@ -556,10 +478,12 @@ export default function LandingPage() {
         <Suspense fallback={null}>
           <RevealOnScroll><Methodology /></RevealOnScroll>
         </Suspense>
-        {/* Breadth — chống undersell (founder feedback): KHÔNG chỉ 4 lăng kính, có cả bộ 12 công cụ. */}
-        <Suspense fallback={null}>
-          <RevealOnScroll><ToolkitSection /></RevealOnScroll>
-        </Suspense>
+        {/* Wave 65.03(d) — ToolkitSection ĐÃ GỠ: trùng 100% nguồn dữ liệu
+            (TOOLKIT_GROUPS) với OracleBrain ở trên — cùng kể "độ phủ công cụ"
+            hai lần, thêm ~30 chip = bức tường link thoát giữa funnel (finding
+            P1 nhiều vòng + P2 ">50 link thoát trước khi thấy giá"). OracleBrain
+            giữ vai section độ phủ (tương tác, đã sửa rageclick 65.02) và tự có
+            link "Xem tất cả công cụ →" /cong-cu. Component còn trong repo. */}
 
         {/* Wave 64 (declutter) — 3 khối bỏ ở đây:
             • WhyTrust + HowToStart: niềm tin đã do TrustBand phủ SỚM (gồm Bằng
@@ -577,23 +501,15 @@ export default function LandingPage() {
             wrong-proof. 14-day refund promise lives on /pricing CTA and as
             MarketingHero trustLine, so the risk-reversal is not lost. */}
 
-        {/* Wave 60.95.ak — PhilosophyBlock removed per founder direction
-            (TRIẾT LÝ block "Bạn vẫn là người quyết định" + body "Tử Vi không
-            tiên tri..."). Philosophy stance now lives entirely in the PullQuote
-            below (same message, denser editorial format).
-            PhilosophyBlock component itself stays in `marketing/` and renders
-            on /about page (gitnexus impact confirmed LOW + isolated usage).
-            2026-06-23 — bỏ SectionDivider lotus (founder: ngôi sao ngắt trang
-            thừa, phí chiều cao); PullQuote tự đủ "khoảng thở" editorial. */}
-
-        {/* Wave 60.66.P5 — Editorial PullQuote between philosophy and pricing
-            (vault 109 §3 Phase 5 ENRICHED). Motion `whileInView` fade-in via
-            LazyMotion provider (Phase 2 root setup). One of 3 preserved
-            Instrument Serif decorative roles. */}
-        <PullQuote attribution="— Triết lý hieu.asia" bg="warm-dark-100">
-          Trí tuệ phương Đông không phải lời tiên tri.{' '}
-          Đó là <em className="text-primary/80">khoảng lặng</em> để bạn nghe rõ chính mình.
-        </PullQuote>
+        {/* Wave 60.95.ak — PhilosophyBlock removed per founder direction;
+            PhilosophyBlock component stays in `marketing/` and renders on
+            /about. (Chuỗi thay thế sau đó — PullQuote Triết lý — cũng đã gỡ
+            ở Wave 65.03(b) bên dưới.) */}
+        {/* Wave 65.03(b) — PullQuote "Triết lý" ĐÃ GỠ: triết lý "không tiên
+            tri, bạn tự quyết" đã có ở MultiHero (đầu trang) và MissionNote
+            (quote đầy đủ của đội ngũ, ngay trước FAQ). Ba khối cùng một thông
+            điệp trên một trang là hai khối thừa; giữ MissionNote vì giàu ngữ
+            cảnh nhất và đứng đúng vị trí trust trước FAQ. */}
 
         {/* Wave 64 — EngineProofShowcase: lá số Tử Vi + bảng Bát Tự MẪU (data
             tĩnh, có nhãn demo) ngay trước báo cáo mẫu — cho thấy "lá số được
@@ -629,7 +545,10 @@ export default function LandingPage() {
             task-center/rewards của Bitget; mời bạn → voucher giảm giá có thật).
             Đặt trước Giá: làm xong các bước free rồi mới tới gói trả phí. */}
         <Suspense fallback={null}>
-          <RevealOnScroll><StartupPath /></RevealOnScroll>
+          {/* Wave 65.02 — bỏ RevealOnScroll bọc ngoài: StartupPath TỰ bọc
+              RevealOnScroll bên trong (double-wrap = 2 lần observer + 2 lần
+              delay animation — finding P3 vòng 7). /qua dùng bare là đúng. */}
+          <StartupPath />
         </Suspense>
 
         {/* Lời mời "lập lá số thật" giờ là HERO (InstantChartHero, trên cùng) —
@@ -707,7 +626,7 @@ export default function LandingPage() {
               features: [
                 'Mentor AI — 30 câu hỏi mỗi ngày',
                 'Đại vận và lưu niên hàng năm',
-                'Tất cả 5 ống kính sâu',
+                'Tất cả 5 lăng kính sâu',
                 'Huỷ bất cứ lúc nào',
               ],
               ctaLabel: 'Bắt đầu với Mentor',
@@ -730,7 +649,7 @@ export default function LandingPage() {
             Hoàn 100% trong 24h nếu chưa tạo báo cáo · bảo hành 14 ngày
           </p>
           <p className="text-editorial-caption text-muted-foreground">
-            Có gói Mentor theo năm (₫1.990.000) và Lifetime (₫4.990.000) —{' '}
+            Có gói Mentor theo năm ({formatVND(PRICING.yearly.vnd)}) và Lifetime ({formatVND(PRICING.lifetime.vnd)}) —{' '}
             <a
               href="/pricing"
               className="text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
@@ -753,6 +672,25 @@ export default function LandingPage() {
         {/* 7. FaqAccordion — existing 6 Q, warm-dark-100 */}
         <div className="bg-muted/40">
           <FaqAccordion items={HOME_FAQ} id="faq" />
+        </div>
+
+        {/* Wave 65.03(f) — CTA chốt sau FAQ: trước đây desktop kết thúc bằng
+            newsletter rồi footer, KHÔNG còn lời mời chuyển đổi nào sau khi FAQ
+            đã đóng hết objection (finding P2 vòng 3). Một dòng + một nút, đúng
+            hành động chính của trang. */}
+        <div className="mx-auto flex max-w-marketing-tight flex-col items-center gap-4 px-6 py-12 text-center sm:py-14">
+          <p className="font-editorial-display text-2xl leading-snug text-foreground sm:text-3xl">
+            Sẵn sàng? Lá số của bạn <em className="italic text-primary">tính xong trong 30 giây</em>.
+          </p>
+          <a
+            href="/onboarding"
+            className="inline-flex items-center justify-center rounded-[2px] bg-[hsl(var(--primary-cta))] px-8 py-3 font-editorial-display text-base font-medium text-primary-foreground transition-all duration-300 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            Lập lá số miễn phí →
+          </a>
+          <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
+            Không cần thẻ · lá số của bạn để giữ
+          </p>
         </div>
 
         {/* 8. NewsletterSignup — existing, warm-dark-50 */}

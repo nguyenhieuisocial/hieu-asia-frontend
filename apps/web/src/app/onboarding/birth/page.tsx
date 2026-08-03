@@ -30,7 +30,7 @@ export default function OnboardingBirthPage() {
           <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>
             <span className="mx-1.5">/</span>
-            <Link href="/onboarding" className="hover:text-gold">Mở khoá lá số</Link>
+            <Link href="/onboarding" className="hover:text-gold">Lập lá số miễn phí</Link>
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Thông tin sinh</span>
           </nav>

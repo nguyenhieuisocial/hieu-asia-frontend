@@ -8,6 +8,13 @@ import type { BanMenhData } from '@/lib/ban-menh-data';
 import { Time24 } from '@/components/Time24';
 // Diễn giải Bát Tự đời thường (data tĩnh nhỏ, dùng chung — engine vẫn lazy-import).
 import { CAN_PLAIN, TEN_GOD_PLAIN, NGU_HANH_PLAIN } from '@/lib/bat-tu-plain';
+// Wave 65.02 — form "Soi thử" đọc hồ sơ ngày sinh dùng chung (khách vừa nhập ở
+// InstantChartHero đầu trang) thay vì bắt gõ lại từ đầu (finding P1, 5/8 vòng).
+import {
+  readBirthProfile,
+  birthProfileToDateTime,
+  BIRTH_PROFILE_EVENT,
+} from '@/lib/birth-profile';
 
 /**
  * OracleBrain — the signature "night-sky" section: the whole toolkit (Eastern
@@ -139,6 +146,25 @@ export function OracleBrain(): React.JSX.Element {
   const [err, setErr] = React.useState<string | null>(null);
   const reducedRef = React.useRef(false);
   const timerRef = React.useRef<number | null>(null);
+  // Wave 65.02 — prefill từ hồ sơ dùng chung. `prefilled` đổi label mời;
+  // `obTouched` chặn event ghi đè khi khách đã tự gõ vào form NÀY.
+  const [prefilled, setPrefilled] = React.useState(false);
+  const obTouchedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    const apply = (): void => {
+      if (obTouchedRef.current) return;
+      const dt = birthProfileToDateTime(readBirthProfile());
+      if (!dt) return;
+      setBirthDate(dt.date);
+      setBirthTime(dt.time);
+      setPrefilled(true);
+    };
+    apply(); // khách quay lại (hồ sơ đã lưu từ phiên trước)
+    // khách MỚI: nhập ở InstantChartHero phía trên → saveBirthDateTime bắn event
+    window.addEventListener(BIRTH_PROFILE_EVENT, apply);
+    return () => window.removeEventListener(BIRTH_PROFILE_EVENT, apply);
+  }, []);
 
   React.useEffect(() => {
     try {
@@ -431,7 +457,11 @@ export function OracleBrain(): React.JSX.Element {
         {!reveal && (
           <form className="ob-soi" onSubmit={onSoi}>
             <label htmlFor="ob-dob" className="ob-soi-label">
-              Nhập ngày sinh (giờ sinh không bắt buộc) — để bộ não soi bạn qua nhiều lăng kính
+              {/* Review N-2 — copy trung tính: prefill có thể tới từ hồ sơ đã
+                  lưu phiên trước, không chỉ "vừa nhập ở đầu trang". */}
+              {prefilled
+                ? 'Dùng ngày sinh đã lưu của bạn — bấm Soi thử, hoặc thử ngày khác'
+                : 'Nhập ngày sinh (giờ sinh không bắt buộc) — để bộ não soi bạn qua nhiều lăng kính'}
             </label>
             <div className="ob-soi-row">
               <input
@@ -442,6 +472,7 @@ export function OracleBrain(): React.JSX.Element {
                 max="2026-12-31"
                 value={birthDate}
                 onChange={(e) => {
+                  obTouchedRef.current = true;
                   setBirthDate(e.target.value);
                   if (err) setErr(null);
                 }}
@@ -452,6 +483,7 @@ export function OracleBrain(): React.JSX.Element {
                 id="ob-tob"
                 value={birthTime}
                 onChange={(v) => {
+                  obTouchedRef.current = true;
                   setBirthTime(v);
                   if (err) setErr(null);
                 }}
@@ -626,7 +658,11 @@ export function OracleBrain(): React.JSX.Element {
               onMouseLeave={() => setHover(null)}
               onFocus={() => setHover(i)}
               onBlur={() => setHover(null)}
-              onClick={() => setSelected((s) => (s === i ? null : i))}
+              // Wave 65.02 — bấm LẠI cùng nhóm KHÔNG đóng panel nữa. PostHog đo
+              // được 31 rageclick/30 ngày tập trung đúng các nút nhóm này: tap
+              // nhanh 2-3 lần = mở/đóng/mở nhấp nháy, người dùng tưởng nút hỏng.
+              // Đóng vẫn còn 3 đường: nút ×, phím Esc, chạm ngoài panel.
+              onClick={() => setSelected(i)}
             >
               <span className="ob-hub-dot" aria-hidden="true" />
               <span className="ob-hub-label">{h.label}</span>
