@@ -156,7 +156,7 @@ const PIPELINE = [
   {
     icon: Cpu,
     label: 'Engine deterministic',
-    desc: 'An sao 121 Bắc phái, lập 12 cung, đại vận, lưu niên.',
+    desc: 'An sao 114 Bắc phái, lập 12 cung, đại vận, lưu niên.',
   },
   {
     icon: FileCheck,
@@ -1338,7 +1338,7 @@ export default function MethodologyPage() {
             <div className="mt-6 flex flex-wrap gap-2 font-sans text-xs">
               {[
                 'Engine tính xác định',
-                'Tử Vi Bắc phái 121 sao',
+                'Tử Vi Bắc phái 114 sao',
                 'AI không tự an sao',
                 'Có confidence score',
                 'Có algorithm changelog',

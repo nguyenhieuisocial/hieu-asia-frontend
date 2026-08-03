@@ -16,10 +16,10 @@ const PILLARS = [
   {
     icon: ScrollText,
     title: 'Tính thật, không tra bảng',
-    // body split around the genuine "121 sao" count so the number can count up
+    // body split around the genuine "114 sao" count so the number can count up
     // on scroll (CountUp). Copy is unchanged when reassembled.
     bodyBefore: 'Tử Vi Bắc phái · ',
-    count: 121,
+    count: 114,
     bodyAfter: ' sao (chính tinh & phụ tinh), an sao bằng thuật toán — không bịa.',
     href: '/methodology',
   },

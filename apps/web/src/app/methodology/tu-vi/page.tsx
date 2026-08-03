@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   // " · hieu.asia" automatically from root layout, so don't include it here.
   title: 'Phương pháp Tử Vi — trường phái & an sao',
   description:
-    'Chi tiết phương pháp Tử Vi Bắc phái dùng tại hieu.asia: 121 sao chính/phụ, cách an Mệnh-Thân-Cục, đại vận, lưu niên, và đường phân định engine vs AI.',
+    'Chi tiết phương pháp Tử Vi Bắc phái dùng tại hieu.asia: 114 sao trên mỗi lá số, cách an Mệnh-Thân-Cục, đại vận, lưu niên, và đường phân định engine vs AI.',
   alternates: { canonical: 'https://hieu.asia/methodology/tu-vi' },
   openGraph: {
     title: 'Phương pháp Tử Vi',
@@ -125,7 +125,17 @@ const SAO_NHO: string[] = [
   'Tấu Thư',
 ];
 
-// §5.1 — Full 114-star list with metadata
+// §5.1 — Bảng tra ĐẦY ĐỦ của engine: 121 sao.
+//
+// HAI CON SỐ, ĐỪNG LẪN (đã đo trên engine thật 01/08/2026):
+//   • 121 = số sao trong bảng tra dưới đây — gồm cả 4 Tứ Hoá (là hoá khí gắn
+//     lên sao khác, không phải sao độc lập) và các lưu sao chỉ xuất hiện khi
+//     xem đại vận / lưu niên.
+//   • 114 = số sao THỰC SỰ an trên một lá số gốc (14 chính tinh + 14 phụ tinh
+//     + 38 sao lẻ + 4 vòng 12 sao = 114). Gọi /tools/tuvi-v2 với 4 ngày sinh
+//     khác nhau đều ra đúng 114.
+// Mọi trang mô tả "lá số bạn nhận được" phải dùng 114; chỉ trang này — nơi in
+// ra chính bảng tra — mới được nói 121.
 type StarRow = {
   name: string;
   group: string;
@@ -134,7 +144,7 @@ type StarRow = {
   note?: string;
 };
 
-const STARS_114: StarRow[] = [
+const STARS_CATALOG: StarRow[] = [
   // 14 chính tinh
   { name: 'Tử Vi', group: 'Chính tinh', basis: 'Cục + ngày âm', defaultShow: 'Có', note: 'Đế tinh — gốc an sao' },
   { name: 'Thiên Cơ', group: 'Chính tinh', basis: 'Vị trí Tử Vi', defaultShow: 'Có' },
@@ -430,8 +440,10 @@ export default function MethodologyTuViPage() {
                 <Star className="h-5 w-5 text-gold" aria-hidden /> Danh sách sao sử dụng
               </CardTitle>
               <CardDescription className="text-muted-foreground">
-                14 chính tinh + 10 phụ tinh chính + ~97 sao phụ/sao nhỏ. Tổng 121 sao
-                trong engine.
+                14 chính tinh + 11 phụ tinh chính + 4 Tứ Hoá + 92 sao phụ/sao nhỏ:
+                tổng 121 sao trong bảng tra của engine. Mỗi lá số gốc an 114 sao —
+                phần chênh là Tứ Hoá (hoá khí gắn lên sao khác) và lưu sao chỉ hiện
+                khi xem đại vận / lưu niên.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 text-sm leading-relaxed text-foreground/80 sm:text-base">
@@ -479,7 +491,7 @@ export default function MethodologyTuViPage() {
                 </h3>
                 <p className="text-muted-foreground">{SAO_NHO.join(' · ')}</p>
                 <p className="mt-3 rounded-lg border border-border bg-card/60 p-3 text-xs text-muted-foreground">
-                  Đầy đủ 121 sao có trong engine; hiển thị tuỳ vào tầm quan trọng từng
+                  Đầy đủ 121 sao có trong bảng tra; hiển thị tuỳ vào tầm quan trọng từng
                   cung — sao nào ảnh hưởng mạnh tới cung thì hiện rõ, sao "trang trí" thì
                   ẩn vào chi tiết.
                 </p>
@@ -487,7 +499,7 @@ export default function MethodologyTuViPage() {
             </CardContent>
           </Card>
 
-          {/* §5.1 — Danh sách 114 sao đầy đủ */}
+          {/* §5.1 — Danh sách 121 sao trong bảng tra */}
           <h2 className="sr-only">Danh sách 121 sao đầy đủ</h2>
           <Card id="danh-sach-114" className="border-border bg-card/40 scroll-mt-24">
             <CardHeader>
@@ -495,7 +507,7 @@ export default function MethodologyTuViPage() {
                 Danh sách 121 sao đầy đủ
               </CardTitle>
               <CardDescription className="text-muted-foreground">
-                Bảng tham chiếu — nhóm, căn cứ an, hiển thị mặc định. Tổng {STARS_114.length} sao.
+                Bảng tham chiếu — nhóm, căn cứ an, hiển thị mặc định. Tổng {STARS_CATALOG.length} sao.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-foreground/80 sm:text-base">
@@ -511,7 +523,7 @@ export default function MethodologyTuViPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-cream/10">
-                    {STARS_114.slice(0, 30).map((s) => (
+                    {STARS_CATALOG.slice(0, 30).map((s) => (
                       <tr key={s.name} className="hover:bg-card/40">
                         <td className="whitespace-nowrap px-3 py-2 text-foreground">{s.name}</td>
                         <td className="whitespace-nowrap px-3 py-2 text-muted-foreground">{s.group}</td>
@@ -525,7 +537,7 @@ export default function MethodologyTuViPage() {
               </div>
               <details className="rounded-lg border border-border bg-card/40 p-3">
                 <summary className="cursor-pointer text-sm text-gold-700 hover:text-gold">
-                  Xem {STARS_114.length - 30} sao còn lại
+                  Xem {STARS_CATALOG.length - 30} sao còn lại
                 </summary>
                 <div className="mt-3 overflow-x-auto rounded-lg border border-border">
                   <table className="min-w-full text-left text-xs sm:text-sm">
@@ -539,7 +551,7 @@ export default function MethodologyTuViPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-cream/10">
-                      {STARS_114.slice(30).map((s) => (
+                      {STARS_CATALOG.slice(30).map((s) => (
                         <tr key={s.name} className="hover:bg-card/40">
                           <td className="whitespace-nowrap px-3 py-2 text-foreground">{s.name}</td>
                           <td className="whitespace-nowrap px-3 py-2 text-muted-foreground">{s.group}</td>

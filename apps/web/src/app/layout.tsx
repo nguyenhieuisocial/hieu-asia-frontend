@@ -103,7 +103,7 @@ const newsreader = Newsreader({
   // bản ghim không có mức 600, nên hai chỗ dưới đây đang bị trình duyệt làm
   // tròn LÊN 700; từ nay chúng hiện ĐÚNG 600 (mảnh hơn một chút):
   //   · `MultiHero.tsx` `.mh-gift strong` — dòng "Quà mở đầu…" ở hero
-  //   · `BigNumberRow.tsx:220` — hàng số cỡ lớn (clamp 3–6rem)
+  //   · BigNumberRow (đã xoá Wave 65.07) — hàng số cỡ lớn (clamp 3–6rem)
   // Mọi chỗ khác dùng 300/400/500/700 nên hiện y nguyên.
   // Muốn quay lại: thêm lại đúng dòng `weight` bên dưới, không cần sửa gì khác.
   //
