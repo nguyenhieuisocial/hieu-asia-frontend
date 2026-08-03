@@ -1,4 +1,8 @@
-'use client';
+// Wave 65.05 — BỎ 'use client': component không có hook/handler/browser API
+// nào (đã rà), chỉ Link + lucide icon (đều RSC-safe) → 270 dòng thôi bị
+// hydrate trên MỌI trang. Lưu ý duy nhất: `new Date().getFullYear()` giờ chạy
+// lúc build/render server — năm ở footer bám theo lần deploy gần nhất (chấp
+// nhận được; site deploy liên tục).
 
 import * as React from 'react';
 import Link from 'next/link';
