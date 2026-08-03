@@ -649,7 +649,7 @@ export default function FeaturesPage() {
           eyebrow="SẢN PHẨM · 50+ CÔNG CỤ · 4 CHƯƠNG"
           title={
             <>
-              Năm ống kính, <em className="italic text-gold-soft">nhiều</em> ngôn
+              Năm lăng kính, <em className="italic text-gold-soft">nhiều</em> ngôn
               ngữ tự hiểu<span className="text-gold-dot">.</span>
             </>
           }

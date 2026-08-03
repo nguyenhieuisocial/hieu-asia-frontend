@@ -37,7 +37,7 @@ export const LongQuote: Story = {
     children: (
       <>
         Tử Vi không tiên tri. MBTI không nhãn dán. Bát Tự không định mệnh.
-        Đây là <em className="text-gold-soft">bốn ngôn ngữ</em> — bốn ống kính —
+        Đây là <em className="text-gold-soft">bốn ngôn ngữ</em> — bốn lăng kính —
         để bạn nghe rõ hơn chính mình. Quyết định cuối cùng vẫn là của bạn.
       </>
     ),

@@ -29,7 +29,7 @@ const defaultTiers: PricingTierV2Tier[] = [
     description: 'Một lát cắt đầu — đủ để cảm nhận giọng nói.',
     priceMonthly: 0,
     features: [
-      '1 ống kính / tháng',
+      '1 lăng kính / tháng',
       'Luận giải tóm tắt',
       'Lưu 30 ngày gần nhất',
     ],
@@ -40,12 +40,12 @@ const defaultTiers: PricingTierV2Tier[] = [
     id: 'premium',
     name: 'PREMIUM',
     nameDisplay: 'Đối thoại',
-    description: 'Bốn ống kính đầy đủ — đi sâu, đi đều, đi dài.',
+    description: 'Bốn lăng kính đầy đủ — đi sâu, đi đều, đi dài.',
     priceMonthly: 199000,
     priceYearly: 1990000,
     yearlyDiscount: 'Tiết kiệm 20%',
     features: [
-      '4 ống kính, không giới hạn',
+      '4 lăng kính, không giới hạn',
       'Luận giải sâu, có ngữ cảnh',
       'Nhật ký nội tâm có A.I phản chiếu',
       'Xuất PDF chia sẻ',

@@ -173,11 +173,11 @@ export const metadata: Metadata = {
   // page omits canonical, Next.js will not emit a canonical tag (self-canonical
   // by default, which is correct).
   // The homepage canonical is declared in `app/page.tsx`'s own metadata.
-  alternates: {
-    languages: {
-      'vi-VN': 'https://hieu.asia',
-    },
-  },
+  // Wave 65.01 SEO — BỎ alternates.languages ở root layout: URL cố định
+  // 'https://hieu.asia' bị MỌI trang con thừa kế → hreflang của /pricing,
+  // /learn/*, v.v. đều trỏ về trang chủ (sai; cùng lớp lỗi với og:url đã gỡ
+  // ở khối openGraph bên dưới). Trang chủ tự khai languages trong page.tsx;
+  // trang con một ngôn ngữ không cần hreflang.
   // SEO-FIX: removed root-level `url` from openGraph.
   // The root layout must NOT set `openGraph.url` because child pages that
   // inherit this block (without declaring their own `openGraph`) would get
@@ -293,6 +293,21 @@ export default async function RootLayout({
             — that host is never hit from the browser in production. */}
         <link rel="preconnect" href="https://us.i.posthog.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://browser.sentry-cdn.com" crossOrigin="anonymous" />
+        {/* Wave 65.01 — preload woff2 cho LCP element. next/font/google khai
+            preload:true nhưng HTML build ra 0 preload font (nguyên nhân chưa rõ,
+            KHÔNG phải inlineCss — xem next.config.ts:31-39); hệ quả đo được:
+            LCP − FCP ≈ 0,9s đồng đều 5 trang vì H1 (Be Vietnam Pro, display:swap)
+            đợi font về muộn. Workaround: preload thủ công đúng 4 file H1 + body
+            above-the-fold dùng — Be Vietnam Pro 400/700 × vietnamese/latin.
+            ⚠️ URL là content-hash từ build production (đối chiếu @font-face trong
+            CSS bản live 2026-08-01). Hash CHỈ đổi khi nâng version font trong
+            next/font — khi đó preload cũ thành 404 vô hại (console warning),
+            cập nhật lại 4 URL theo build mới. Gỡ được khối này khi tìm ra vì sao
+            next/font mất preload. */}
+        <link rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href="/_next/static/media/cd79e1ff94fa521b-s.p.woff2" />
+        <link rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href="/_next/static/media/e11f95d95ac59fa4-s.p.woff2" />
+        <link rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href="/_next/static/media/9ddf1512dbee9c99-s.p.woff2" />
+        <link rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href="/_next/static/media/e270c9fc4fe96f5a-s.p.woff2" />
       </head>
       <body>
         {/* Site-wide structured data (Organization + WebSite) — centralized via

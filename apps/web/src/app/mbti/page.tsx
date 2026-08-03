@@ -292,12 +292,12 @@ export default function MbtiHubPage() {
             <div className="mb-6 flex items-center gap-3">
               <Brain className="h-5 w-5 text-gold" aria-hidden />
               <h2 className="font-sans text-section-display font-bold tracking-tight text-foreground">
-                hieu.asia <ItalicSpan>kết hợp</ItalicSpan> MBTI với 4 ống kính khác
+                hieu.asia <ItalicSpan>kết hợp</ItalicSpan> MBTI với 4 lăng kính khác
               </h2>
             </div>
             <p className="max-w-marketing-text font-sans text-base leading-relaxed text-muted-foreground">
               MBTI một mình là một chân dung tâm lý hiện đại. Khi đặt cạnh Tử Vi, Bát
-              Tự, Big Five, Xem Tướng — mỗi ống kính trả lời một câu hỏi khác về cùng
+              Tự, Big Five, Xem Tướng — mỗi lăng kính trả lời một câu hỏi khác về cùng
               một con người. AI Mentor đối chiếu cả năm để gợi ý hành động cụ thể, chứ
               không chỉ đọc nhãn.
             </p>
@@ -354,7 +354,7 @@ export default function MbtiHubPage() {
             </div>
 
             <p className="mt-6 max-w-marketing-text font-sans text-sm italic leading-relaxed text-muted-foreground/70">
-              Cả hai đều là ống kính — không phải đáp án. hieu.asia ghép chúng lại để
+              Cả hai đều là lăng kính — không phải đáp án. hieu.asia ghép chúng lại để
               bạn nhìn mình từ nhiều phía, rồi tự quyết định.
             </p>
           </div>

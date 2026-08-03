@@ -17,10 +17,15 @@ import { LENSES } from '@/lib/catalog/lenses';
 // 2026-06-22: chuyển 3 màu CẤU TRÚC sang biến theme để hero render đúng cả
 // light lẫn dark. Light KHÔNG đổi: token light = đúng các hex cũ
 // (--foreground=Ink #171411, --background=Paper #F3ECDD, --muted-foreground≈#6A6258).
-// Dark: tự đổi sang Charcoal/Bone. OCHRE/OCHRE_DEEP (gold brand) giữ nguyên.
+// Dark: tự đổi sang Charcoal/Bone.
+// Wave 65.01 — OCHRE/OCHRE_DEEP hết hard-code hex: trước đây dark mode giữ
+// nguyên ochre ban ngày trên nền charcoal (~2.7:1, fail AA rõ ở .mh-gift và
+// .mh-soi-n). Giờ trỏ biến --mh-* khai trong CSS bên dưới: light = đúng hex cũ
+// (không đổi một pixel), dark = night gold #E0AE62 / gold-soft #D4B373 (đồng bộ
+// .dark --primary + quy ước small-gold của globals.css).
 const INK = 'hsl(var(--foreground))';
-const OCHRE = '#A47532';
-const OCHRE_DEEP = '#7A5420'; // AA-dark ochre for SMALL labels on PAPER (≥5:1); OCHRE stays for the large h1 line (passes large-text 3:1)
+const OCHRE = 'var(--mh-ochre)';
+const OCHRE_DEEP = 'var(--mh-ochre-deep)'; // AA-dark ochre for SMALL labels on PAPER (≥5:1); OCHRE stays for the large h1 line (passes large-text 3:1)
 const PAPER = 'hsl(var(--background))';
 const SOFT = 'hsl(var(--muted-foreground))';
 
@@ -84,7 +89,10 @@ export function MultiHero(): React.JSX.Element {
 
       <div className="mh-wrap">
         <div className="mh-copy">
-          <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />LÁ SỐ THẬT · KHÔNG BÓI MÙ</p>
+          {/* Wave 65.01 — "KHÔNG BÓI MÙ" lệch tông editorial (rủi ro đọc thành
+              miệt thị người xem bói) → "KHÔNG PHÁN MỆNH" giữ đúng lập trường
+              mà điềm tĩnh hơn (finding P2 vòng 1). */}
+          <p className="mh-eyebrow"><span className="mh-livedot" aria-hidden="true" />LÁ SỐ THẬT · KHÔNG PHÁN MỆNH</p>
           <h2 className="mh-h1">
             <span className="mh-line mh-l1">Hiểu mình rõ hơn,</span>
             <span className="mh-line mh-l2">rồi quyết định cho{' '}
@@ -106,7 +114,11 @@ export function MultiHero(): React.JSX.Element {
           {/* Khung "quà" — reciprocity THẬT: lá số đầy đủ (114 sao, tính thật) là
               quà giữ được, KHÔNG phải teaser. Cố ý KHÔNG hứa "luận giải sâu miễn
               phí" (phần đó trả phí) → trung thực, không over-claim. */}
-          <p className="mh-gift"><span className="mh-gift-mk" aria-hidden="true">✦</span> Quà mở đầu: <strong>lá số Tử Vi 12 cung, 14 chính tinh</strong>, miễn phí, của bạn để giữ.</p>
+          {/* Wave 65.01 SEO — "lá số Tử Vi 12 cung" thành link body đầu tiên tới
+              /la-so-tu-vi (trang bán chính trước đây chỉ được link từ nav/footer,
+              body homepage 0 link — finding P2 vòng 5). Anchor text = đúng cụm
+              từ khoá tự nhiên. */}
+          <p className="mh-gift"><span className="mh-gift-mk" aria-hidden="true">✦</span> Quà mở đầu: <Link className="mh-gift-link" href="/la-so-tu-vi"><strong>lá số Tử Vi 12 cung, 14 chính tinh</strong></Link>, miễn phí, của bạn để giữ.</p>
           <div className="mh-cta-row">
             <a className="mh-cta mh-cta-primary" href="/onboarding?intent=decision"><span className="mh-cta-num">①</span>Lập lá số miễn phí</a>
             <Link className="mh-cta mh-cta-ghost" href="/tu-vi-2026"><span className="mh-cta-num">②</span>Xem Tử Vi 2026<span className="mh-cta-sub">&amp; hợp tuổi của tôi</span></Link>
@@ -130,6 +142,11 @@ const NOISE =
 
 const CSS = `
 .mh { font-family: var(--font-newsreader), Georgia, serif; overflow-x: hidden; }
+/* Wave 65.01 — cặp giá trị theme cho gold brand của hero (light giữ NGUYÊN hex
+ * cũ; dark = night gold, xem chú thích cạnh const OCHRE phía trên).
+ * --mh-gold-rgb nuôi các border/glow rgba; --mh-cta-rgb nuôi nền CTA primary. */
+.mh { --mh-ochre: #A47532; --mh-ochre-deep: #7A5420; --mh-gold-rgb: 164,117,50; --mh-cta-rgb: 138,97,40; }
+.dark .mh { --mh-ochre: #E0AE62; --mh-ochre-deep: #D4B373; --mh-gold-rgb: 224,174,98; --mh-cta-rgb: 224,174,98; }
 .mh-grain { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .05; mix-blend-mode: multiply; background-image: ${NOISE}; }
 
 /* ===== BASE = MOBILE ===== */
@@ -156,17 +173,20 @@ const CSS = `
 
 .mh-act { display: flex; flex-direction: column; gap: 14px; }
 .mh-cta-row { display: flex; flex-direction: column; gap: 10px; }
-.mh-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; padding: 15px 22px; font-size: 1.02rem; text-decoration: none; }
+/* Wave 65.04 — radius 3px → 2px: đồng bộ "paper corner" chữ ký với recipe CTA chuẩn. */
+.mh-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; border-radius: 2px; padding: 15px 22px; font-size: 1.02rem; text-decoration: none; }
 .mh-cta::before { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, hsl(var(--foreground) / .4), hsl(var(--foreground) / 0) 70%); transform: translate(-50%,-50%) scale(0); transition: transform .55s cubic-bezier(.2,.7,.2,1); }
-.mh-cta-primary { background: rgba(138,97,40,.10); color: ${INK}; border: 1px solid rgba(164,117,50,.45); box-shadow: 0 6px 20px -6px rgba(164,117,50,.45), 0 0 0 1px rgba(164,117,50,.30); }
-.mh-cta-ghost { border: 1px solid rgba(164,117,50,.35); color: ${INK}; }
-.mh-cta-ghost::before { background: radial-gradient(circle, rgba(164,117,50,.5), rgba(164,117,50,0) 70%); }
+.mh-cta-primary { background: rgba(var(--mh-cta-rgb),.10); color: ${INK}; border: 1px solid rgba(var(--mh-gold-rgb),.45); box-shadow: 0 6px 20px -6px rgba(var(--mh-gold-rgb),.45), 0 0 0 1px rgba(var(--mh-gold-rgb),.30); }
+.mh-cta-ghost { border: 1px solid rgba(var(--mh-gold-rgb),.35); color: ${INK}; }
+.mh-cta-ghost::before { background: radial-gradient(circle, rgba(var(--mh-gold-rgb),.5), rgba(var(--mh-gold-rgb),0) 70%); }
 .mh-cta > * { position: relative; z-index: 1; }
 .mh-cta-num { font-family: var(--font-be-vietnam), system-ui, sans-serif; margin-right: .6em; opacity: .85; }
 .mh-cta-sub { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 12px; opacity: .68; margin-left: .5em; } /* T-TAP — was 11px */
 .mh-micro { font-family: var(--font-be-vietnam), system-ui, sans-serif; font-size: 12px; letter-spacing: .14em; color: ${SOFT}; margin: 0; text-align: center; } /* T-TAP — was 11px */
 .mh-gift { font-family: var(--font-newsreader), Georgia, serif; font-size: .94rem; line-height: 1.4; color: ${OCHRE_DEEP}; margin: 0; text-align: center; font-style: italic; }
 .mh-gift strong { font-weight: 600; font-style: normal; }
+.mh-gift-link { color: inherit; text-decoration: underline; text-decoration-color: rgba(var(--mh-gold-rgb),.5); text-underline-offset: .2em; }
+.mh-gift-link:hover { text-decoration-color: rgba(var(--mh-gold-rgb),.9); }
 .mh-gift-mk { color: ${OCHRE}; font-style: normal; margin-right: .2em; }
 
 .mh-l1, .mh-l2 { opacity: 1; }
