@@ -179,14 +179,23 @@ export default function ContentListPage() {
       },
       {
         onSuccess: (res) => {
-          if (res.ok) {
+          if (res.ok && res.queued) {
+            // Worker queues generate+judge+persist in the background and
+            // returns immediately — there's no judge_pick yet. (#47 fix)
+            toast.info('Đang sinh nội dung', {
+              description: res.note ?? 'Tải lại danh sách sau ~1-2 phút để xem kết quả.',
+            });
+            setCreateOpen(false);
+            setCreateTopic('');
+            setCreateSlug('');
+          } else if (res.ok) {
             toast.success('Đã tạo draft', { description: `Judge pick: ${JUDGE_LABEL[res.judge_pick ?? 'claude']}` });
             setCreateOpen(false);
             setCreateTopic('');
             setCreateSlug('');
           } else if (res.timedOut) {
-            // #47 — generation outran the 25s edge proxy. Not a failure; the
-            // worker keeps generating. Point the user to reload the list.
+            // #47 — client-observed proxy timeout. Now a rare defensive
+            // fallback since the worker responds well under 25s.
             toast.info('Đang sinh nội dung', { description: res.error });
             setCreateOpen(false);
             setCreateTopic('');

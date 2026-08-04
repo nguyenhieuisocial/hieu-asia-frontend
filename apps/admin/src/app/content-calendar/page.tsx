@@ -72,11 +72,18 @@ export default function ContentCalendarPage() {
       { type: 'newsletter', topic: t },
       {
         onSuccess: (res) => {
-          if (res.ok) {
+          if (res.ok && res.queued) {
+            // Worker queues generate+judge+persist in the background and
+            // returns immediately. (#47 fix)
+            toast.info('Đang tạo bản nháp', {
+              description: res.note ?? 'Xem & duyệt ở trang Nội dung (/content) sau ~1-2 phút.',
+            });
+            setTopic(null);
+          } else if (res.ok) {
             toast.success('Đã tạo bản nháp', { description: 'Xem & duyệt ở trang Nội dung (/content).' });
             setTopic(null);
           } else if (res.timedOut) {
-            // #47 — generation outran the edge proxy; the worker keeps going.
+            // #47 — client-observed proxy timeout, now a rare fallback.
             toast.info('Đang tạo bản nháp', { description: res.error });
             setTopic(null);
           } else {
