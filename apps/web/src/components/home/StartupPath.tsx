@@ -84,20 +84,22 @@ export function StartupPath() {
   return (
     <RevealOnScroll>
     <section aria-labelledby="startup-path-h" className="bg-background">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
         <div className="mb-8 max-w-2xl">
           <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
             Lộ trình khởi đầu
           </span>
           <h2
             id="startup-path-h"
-            className="mt-2 font-editorial-display text-3xl leading-tight text-foreground sm:text-4xl"
+            className="mt-2 font-editorial-display text-2xl leading-tight text-foreground sm:text-3xl"
           >
             Bắt đầu miễn phí — <span className="italic">mỗi bước mở thêm một chút</span>.
           </h2>
         </div>
 
-        <ol className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        {/* Wave 65.06 — mobile 1 cột (2 cột trên máy 320-375px làm cột nội dung
+            chỉ ~96-123px, chữ wrap vụn — finding P3 vòng 8). */}
+        <ol className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
           {STEPS.map((s, i) => {
             const done = s.n === 1 && step1Done;
             return (

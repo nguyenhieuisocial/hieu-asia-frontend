@@ -61,7 +61,16 @@ export function MultiHero(): React.JSX.Element {
     let a = 0, w = 0, s = 0;
     const start = window.setTimeout(() => {
       a = window.setInterval(() => { if (hoverRef.current == null) setAutoActive((x) => (x + 1) % (LENS_N + 1)); }, 2400);
-      w = window.setInterval(() => setWordIdx((x) => (x + 1) % WORDS.length), 3400);
+      // Wave 65.05b a11y — word-rotation trong <h1> dừng HẲN sau 2 vòng đầy đủ
+      // (8 lần đổi, kết thúc đúng ở từ đầu tiên): chữ nhấp nháy vô hạn ngay
+      // cạnh headline gây khó đọc/mất tập trung (WCAG 2.2.2 hướng tới). Đếm
+      // số lần đổi rồi clearInterval khi đạt; reduce-motion check giữ nguyên.
+      let wTicks = 0;
+      w = window.setInterval(() => {
+        setWordIdx((x) => (x + 1) % WORDS.length);
+        wTicks += 1;
+        if (wTicks >= WORDS.length * 2) window.clearInterval(w);
+      }, 3400);
       s = window.setInterval(() => setSample((x) => (x + 1) % SAMPLES.length), 3600);
     }, 3000);
     return () => {
@@ -105,7 +114,10 @@ export function MultiHero(): React.JSX.Element {
               </span>
             </span>
           </h2>
-          <p className="mh-deck">Năm hệ soi cùng một người: Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng. Lá số tính thật từ ngày giờ sinh của bạn, AI đọc đúng những gì lá số ghi — chỗ nào chưa khớp cũng nói thẳng. Không hù dọa, không bán giải hạn.</p>
+          {/* Founder 04/08 — "trang ngắn gọn hơn, ít text hơn": rút 3 câu còn 2,
+              gộp mệnh đề "tính thật" + "đọc đúng" (trùng ý), GIỮ đủ 3 luận điểm
+              gốc (5 hệ · tính thật/trung thực · không hù dọa) — không mất claim. */}
+          <p className="mh-deck">Năm hệ soi cùng một người: Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng — tính thật từ ngày giờ sinh, đọc đúng những gì lá số ghi, kể cả chỗ chưa khớp. Không hù dọa, không bán giải hạn.</p>
         </div>
 
         {/* mobile-first: CTA TRƯỚC la bàn → user bấm được ngay màn 1 (above-fold).
@@ -154,7 +166,7 @@ const CSS = `
 
 .mh-eyebrow { display: flex; align-items: center; font-family: var(--font-be-vietnam), system-ui, sans-serif; letter-spacing: .16em; font-size: 11px; color: ${SOFT}; margin: 0; }
 .mh-livedot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: ${OCHRE}; margin-right: 9px; flex: none; }
-.mh-h1 { font-size: clamp(3.4rem, 16vw, 4.7rem); line-height: 1.08; margin: .42em 0 .34em; font-weight: 400; letter-spacing: -.028em; }
+.mh-h1 { font-size: clamp(2.3rem, 10vw, 3rem); line-height: 1.12; margin: .42em 0 .34em; font-weight: 400; letter-spacing: -.028em; }
 .mh-line { display: block; }
 .mh-l2 { color: ${OCHRE}; font-style: italic; }
 .mh-rot-slot { display: inline-grid; vertical-align: bottom; }
@@ -213,7 +225,7 @@ const CSS = `
   .mh-copy { grid-area: copy; align-self: end; }
   .mh-vis { grid-area: vis; }
   .mh-act { grid-area: act; align-self: start; }
-  .mh-h1 { font-size: clamp(3.8rem, 7.2vw, 6.2rem); line-height: .94; }
+  .mh-h1 { font-size: clamp(2.75rem, 5vw, 4.25rem); line-height: 1.02; }
   .mh-deck { font-size: .96rem; max-width: 30em; }
   .mh-soi { min-height: 3em; }
   .mh-cta-row { flex-direction: row; flex-wrap: wrap; }

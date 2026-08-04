@@ -162,7 +162,7 @@ export function SampleOutputShowcase() {
     // disclaimer duy nhất của cả dải nằm ở cuối section này.
     <section
       aria-label="Báo cáo mẫu (minh hoạ)"
-      className="bg-background pt-4 pb-12 md:pt-6 md:pb-14"
+      className="bg-background pt-4 pb-8 md:pt-6 md:pb-10"
     >
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {/* Header */}

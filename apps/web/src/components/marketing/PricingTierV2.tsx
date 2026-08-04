@@ -170,7 +170,7 @@ export function PricingTierV2({
   };
 
   return (
-    <section className="bg-background py-16 md:py-20">
+    <section className="bg-background py-12 md:py-16">
       <div className="mx-auto max-w-marketing px-6">
         {/* Header */}
         <div className="text-center">
@@ -296,7 +296,10 @@ export function PricingTierV2({
                 // "always REVEALED for reduced-motion" intent noted above, which
                 // the unconditional `opacity-0` previously broke. Reduced-motion
                 // then never sees the sub-contrast mid-fade either.
-                className={`scroll-mt-24 ${baseCard} ${cardBorder} motion-safe:translate-y-3 motion-safe:opacity-0 motion-safe:[transition-duration:600ms] motion-safe:data-[in-view=true]:translate-y-0 motion-safe:data-[in-view=true]:opacity-100`}
+                // Wave 65.06 — mobile: thẻ KHUYÊN DÙNG lên ĐẦU stack (trước đây
+                // đứng thứ 2, khách phải cuộn qua trọn thẻ Miễn phí ~500px mới
+                // thấy — finding P3 vòng 8). Desktop giữ nguyên thứ tự ladder.
+                className={`scroll-mt-24 ${baseCard} ${cardBorder} ${tier.recommended ? 'max-md:order-first max-md:mt-3' : ''} motion-safe:translate-y-3 motion-safe:opacity-0 motion-safe:[transition-duration:600ms] motion-safe:data-[in-view=true]:translate-y-0 motion-safe:data-[in-view=true]:opacity-100`}
               >
                 {tier.recommended && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-[hsl(var(--primary-cta))] px-4 py-1 font-mono text-xs uppercase tracking-wider text-primary-foreground">

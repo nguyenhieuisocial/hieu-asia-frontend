@@ -18,7 +18,7 @@
  * data stays on this origin until explicitly forwarded by PostHog / Worker.
  */
 
-import { getPostHog } from "./posthog";
+import { whenPostHogReady } from "./posthog";
 
 const STORAGE_KEY = "hieu.attr";
 const COOKIE_NAME = "hieu_attr";
@@ -229,8 +229,11 @@ export function captureAttribution(): AttributionState | null {
   // attribution out of the box. `$initial_referring_domain` is the canonical
   // first-touch field PostHog already knows; we extend with our own.
   try {
-    const ph = getPostHog();
-    if (ph) {
+    // Wave 65.05b — posthog init hoãn tới tương tác/idle: đăng ký super-props
+    // qua whenPostHogReady để lần capture đầu (mount, TRƯỚC init) không mất
+    // attribution — thunk chạy ngay sau init, TRƯỚC khi queue event được flush
+    // (FIFO: captureAttribution chạy ở effect trước pageview effect).
+    whenPostHogReady((ph) => {
       const personProps: Record<string, unknown> = {};
       const setOnceProps: Record<string, unknown> = {};
 
@@ -286,7 +289,7 @@ export function captureAttribution(): AttributionState | null {
       } catch {
         /* ignore — people API not present in v1.x autocapture builds */
       }
-    }
+    });
   } catch {
     /* ignore */
   }

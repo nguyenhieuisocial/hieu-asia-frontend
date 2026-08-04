@@ -140,9 +140,9 @@ const FAQ_JSONLD = {
 // TÊN DUY NHẤT trong file. Khi tiêu đề nằm inline, chốt phải dò `title:` và
 // vớ ngay thẻ giao diện đầu tiên — đã xảy ra thật, phép đo thành vô nghĩa
 // suốt một lượt merge. `MBTI_META_TITLE` là cách giữ cho chốt đo đúng chỗ.
-const MBTI_META_TITLE = 'MBTI — 16 kiểu tâm trí, 4 trục';
+const MBTI_META_TITLE = 'Trắc nghiệm MBTI tiếng Việt miễn phí — 16 kiểu';
 const MBTI_META_DESC =
-  'MBTI tại hieu.asia: 4 trục, 16 kiểu — làm bài test 24 câu ra kiểu của bạn, rồi đối chiếu cùng Tử Vi, Bát Tự, Big Five, Xem Tướng. Không phán số mệnh.';
+  'Trắc nghiệm MBTI tiếng Việt miễn phí: 24 câu ra 1 trong 16 kiểu, 4 trục — đối chiếu cùng Tử Vi, Bát Tự, Big Five, Xem Tướng. Không phán số mệnh.';
 
 // Link chia sẻ kết quả (?r=EI-SN-TF-JP) → ảnh OG ĐỘNG hiện "Tôi là INTJ ·
 // Nhà Chiến Lược" (preview FB/Zalo cá-nhân-hoá, click nhiều hơn ảnh generic).

@@ -8,7 +8,7 @@
  * `EVENTS.md` for prose definitions and PostHog interpretation guidance.
  */
 
-import { getPostHog } from './posthog';
+import { capturePostHog } from './posthog';
 import type { EventName, EventPropertyMap } from './event-taxonomy';
 
 export type { EventName } from './event-taxonomy';
@@ -128,7 +128,7 @@ export function track(event: string, properties?: Record<string, unknown>): void
   const mirror = canonicalMirror(event, properties);
   if (mirror) {
     try {
-      getPostHog()?.capture(mirror.name, mirror.props);
+      capturePostHog(mirror.name, mirror.props);
     } catch {
       /* ignore */
     }
@@ -143,12 +143,11 @@ export function track(event: string, properties?: Record<string, unknown>): void
     /* ignore */
   }
 
-  // 2. PostHog — silent no-op when key missing or user opted out
+  // 2. PostHog — silent no-op when key missing or user opted out.
+  //    Wave 65.05b: SDK init hoãn tới tương tác/idle → capturePostHog tự
+  //    QUEUE event bắn trước lúc đó và flush ngay sau init (không drop).
   try {
-    const ph = getPostHog();
-    if (ph) {
-      ph.capture(event, properties);
-    }
+    capturePostHog(event, properties);
   } catch {
     /* ignore */
   }

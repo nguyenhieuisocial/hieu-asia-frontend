@@ -391,15 +391,17 @@ export default function LandingPage() {
         {/* Wave 64 (declutter) — gieo giá sớm ngay sau trust: hạ rào cản, cho
             thấy "miễn phí" + mức vào trước khi cuộn sâu tới bảng giá. Cố ý KHÔNG
             nhắc "hoàn tiền" ở đây (giữ ở bảng giá cạnh điều khoản — review #2). */}
-        <div className="mx-auto flex max-w-marketing-tight flex-col items-center gap-1.5 px-6 pt-8 text-center sm:flex-row sm:justify-center sm:gap-3">
+        <div className="mx-auto flex max-w-marketing-tight flex-col items-center gap-1.5 px-6 pt-6 text-center sm:flex-row sm:justify-center sm:gap-3">
           <p className="text-editorial-caption text-muted-foreground">
             Lá số &amp; 5 lăng kính cơ bản{' '}
             <strong className="font-medium text-foreground">miễn phí mãi mãi</strong> · đọc sâu từ{' '}
             {formatVND(PRICING.premium.vnd)}.
           </p>
+          {/* Wave 65.06 T-TAP — inline-flex min-h-11: vùng chạm 44px (link text
+              trần trước đây ~18px — finding P3 vòng 6). */}
           <a
             href="#pricing"
-            className="whitespace-nowrap font-mono text-editorial-mono uppercase tracking-[0.12em] text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+            className="inline-flex min-h-11 items-center whitespace-nowrap font-mono text-editorial-mono uppercase tracking-[0.12em] text-primary underline underline-offset-4 transition-colors hover:text-primary/80 touch-manipulation"
           >
             Xem các gói →
           </a>
@@ -648,7 +650,7 @@ export default function LandingPage() {
             single source of truth. (b) the refund policy was told 3× in 3
             wordings (hero + FAQ) → one calm "thẻ bảo đảm" line beside pricing;
             the 24h-instant nuance stays in FAQ as a detail. */}
-        <div className="mx-auto mt-6 flex max-w-marketing-tight flex-col items-center gap-3 px-6 text-center">
+        <div className="mx-auto mt-4 flex max-w-marketing-tight flex-col items-center gap-2 px-6 text-center">
           <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
             Hoàn 100% trong 24h nếu chưa tạo báo cáo · bảo hành 14 ngày
           </p>
@@ -682,7 +684,7 @@ export default function LandingPage() {
             newsletter rồi footer, KHÔNG còn lời mời chuyển đổi nào sau khi FAQ
             đã đóng hết objection (finding P2 vòng 3). Một dòng + một nút, đúng
             hành động chính của trang. */}
-        <div className="mx-auto flex max-w-marketing-tight flex-col items-center gap-4 px-6 py-12 text-center sm:py-14">
+        <div className="mx-auto flex max-w-marketing-tight flex-col items-center gap-3 px-6 py-10 text-center sm:py-12">
           <p className="font-editorial-display text-2xl leading-snug text-foreground sm:text-3xl">
             Sẵn sàng? Lá số của bạn <em className="italic text-primary">tính xong trong 30 giây</em>.
           </p>

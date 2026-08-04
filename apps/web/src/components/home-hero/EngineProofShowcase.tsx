@@ -20,14 +20,14 @@ export function EngineProofShowcase(): React.JSX.Element {
     // dưới: nền đồng bộ bg-background, đáy thu hẹp (pb-4/6), disclaimer
     // "Persona demo" gộp về MỘT dòng ở cuối SampleOutputShowcase — hai khối đọc
     // như một section "lá số tính ra → báo cáo đọc được".
-    <section aria-label="Ví dụ lá số được tính ra" className="bg-background pt-12 pb-4 sm:pt-16 sm:pb-6">
+    <section aria-label="Ví dụ lá số được tính ra" className="bg-background pt-8 pb-4 sm:pt-10 sm:pb-6">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
         <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           TÍNH THẬT, KHÔNG TRA BẢNG
         </p>
         {/* Wave 65.01 SEO — thêm "Tử Vi" vào H2 (heading duy nhất phù hợp để
             mang từ khoá này một cách tự nhiên: section trưng đúng lá số Tử Vi). */}
-        <h2 className="mt-3 font-editorial-display text-3xl leading-tight text-foreground sm:text-4xl">
+        <h2 className="mt-3 font-editorial-display text-2xl leading-tight text-foreground sm:text-3xl">
           Lá số Tử Vi được <em className="italic text-primary">tính ra</em>, không chép sẵn.
         </h2>
         <p className="mt-3 max-w-[36em] leading-relaxed text-muted-foreground">

@@ -16,14 +16,14 @@ const META: Record<HopTuoiType, {
   icon: string;
 }> = {
   wedding: {
-    title: 'Hợp tuổi vợ chồng (cưới hỏi)',
+    title: 'Xem hợp tuổi vợ chồng theo năm sinh (cưới hỏi)',
     description:
       'Xem tương hợp giữa nam và nữ trước khi cưới theo Thiên Can, Địa Chi và Cung Phi 8 trạch — hiểu rõ điểm hợp, điểm cần dung hoà.',
     eyebrow: 'Hợp tuổi · Cưới hỏi',
     icon: '💍',
   },
   business: {
-    title: 'Hợp tuổi đối tác kinh doanh',
+    title: 'Hợp tuổi làm ăn — xem tuổi hợp tác kinh doanh',
     description:
       'Đánh giá tương hợp hai tuổi khi hợp tác kinh doanh, chú trọng cung Tài – cung Quan và quan hệ tam hợp, tương sinh của Ngũ Hành.',
     eyebrow: 'Hợp tuổi · Hợp tác',

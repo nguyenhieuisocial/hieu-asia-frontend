@@ -85,23 +85,23 @@ const config: Config = {
         //   body-large: 320px→17px · 1280px+→19px
         // h1 ergonomics: ~30 chars/line at lg, ~14 at sm (unchanged from prior).
         'hero-display': [
-          'clamp(2.75rem, 5.5vw, 4.5rem)',
+          'clamp(2.25rem, 4.2vw, 3.5rem)',
           { lineHeight: '1.08', letterSpacing: '-0.02em' },
         ],
         'section-display': [
-          'clamp(30px, 3vw, 40px)',
+          'clamp(26px, 2.5vw, 33px)',
           { lineHeight: '1.18', letterSpacing: '-0.01em' },
         ],
         'body-large': [
-          'clamp(17px, 1.2vw, 19px)',
+          'clamp(16px, 1.1vw, 18px)',
           { lineHeight: '1.65', letterSpacing: '0' },
         ],
         eyebrow: [
           '12px',
           { lineHeight: '1.4', letterSpacing: '0.12em' },
         ],
-        'price-amount': ['40px', { lineHeight: '1.2' }],
-        'tier-name': ['28px', { lineHeight: '1.3' }],
+        'price-amount': ['34px', { lineHeight: '1.2' }],
+        'tier-name': ['24px', { lineHeight: '1.3' }],
 
         // Wave 62.03 — 9-bậc editorial type scale per "Như giấy cũ" spec.
         // Use these for new editorial surfaces; legacy hero/section-display
@@ -122,30 +122,30 @@ const config: Config = {
         // on mobile. Body + Mono are intentionally fixed (don't fluid-shrink
         // legibility-critical sizes).
         'editorial-display': [
-          'clamp(3rem, 6vw, 5.5rem)', // 48→88px
+          'clamp(2.375rem, 4.5vw, 4.25rem)', // 38→68px (compact 2026-08: was 48→88)
           // VN-FIX 2026-06-29: 0.95 → 1.1. 0.95 is a Latin-display value; VN's
           // two-level diacritic stack (Hiểu / Quyết / định) clips/collides on
           // wrap (esp. mobile) below ~1.1.
           { lineHeight: '1.1', letterSpacing: '-0.02em' },
         ],
         'editorial-h1': [
-          'clamp(2.5rem, 4.5vw, 4rem)', // 40→64px
+          'clamp(2.125rem, 3.5vw, 3.25rem)', // 34→52px (compact 2026-08: was 40→64)
           // VN-FIX 2026-06-29: 1.0 → 1.1 (wrapping VN headings need leading room).
           { lineHeight: '1.1', letterSpacing: '-0.02em' },
         ],
         'editorial-h2': [
-          'clamp(2rem, 3.5vw, 3rem)', // 32→48px
+          'clamp(1.75rem, 2.8vw, 2.5rem)', // 28→40px (compact 2026-08: was 32→48)
           // VN-FIX 2026-06-29: 1.05 → 1.15. editorial-h2 is the most-used
           // wrapping heading token (marketing + tool sections); 1.05 clipped
           // VN diacritics on wrapped multi-word titles.
           { lineHeight: '1.15', letterSpacing: '-0.02em' },
         ],
         'editorial-h3': [
-          'clamp(1.625rem, 2.5vw, 2rem)', // 26→32px
+          'clamp(1.5rem, 2.1vw, 1.75rem)', // 24→28px (compact 2026-08: was 26→32)
           { lineHeight: '1.15', letterSpacing: '-0.01em' },
         ],
         'editorial-h4': [
-          '1.5rem', // 24px
+          '1.375rem', // 22px (compact 2026-08: was 24px)
           { lineHeight: '1.2', letterSpacing: '0' },
         ],
         'editorial-lede': [

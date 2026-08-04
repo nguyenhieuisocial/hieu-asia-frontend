@@ -9,12 +9,12 @@ import type { Metadata } from 'next';
  * same trap caught in Wave 60.95.k cho /pricing, /sample-report, /methodology.
  */
 export const metadata: Metadata = {
-  title: 'Thần Số Học: tính số chủ đạo & vận mệnh',
+  title: 'Thần Số Học online miễn phí theo ngày sinh, tên',
   description:
-    'Tính số chủ đạo, số vận mệnh, số linh hồn và năm cá nhân 2026 miễn phí — phân tích AI dựa trên ngày sinh và họ tên đầy đủ.',
+    'Tính số chủ đạo, số vận mệnh, số linh hồn và năm cá nhân 2026 online miễn phí — phân tích AI theo ngày sinh và họ tên đầy đủ. Không phán số mệnh.',
   alternates: { canonical: 'https://hieu.asia/than-so-hoc' },
   openGraph: {
-    title: 'Thần Số Học miễn phí',
+    title: 'Thần Số Học online miễn phí',
     description: 'Số chủ đạo, vận mệnh, linh hồn, năm cá nhân — phân tích AI miễn phí.',
     url: 'https://hieu.asia/than-so-hoc',
     type: 'website',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Thần Số Học miễn phí',
+    title: 'Thần Số Học online miễn phí',
     description: 'Số chủ đạo, vận mệnh, linh hồn, năm cá nhân — phân tích AI miễn phí.',
     images: [
       {

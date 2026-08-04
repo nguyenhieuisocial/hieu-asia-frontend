@@ -13,14 +13,14 @@ import { TimeFlowChecker } from '@/components/time-flow/TimeFlowChecker';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 
 export const metadata: Metadata = {
-  title: 'Tử Vi 2026 cá nhân hoá theo ngày sinh (Bính Ngọ)',
+  title: 'Tử Vi năm Bính Ngọ 2026 — xem theo ngày sinh',
   description:
-    'Tử Vi 2026 (năm Bính Ngọ): chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số Tử Vi Đẩu Số và đại vận hiện tại.',
+    'Tử Vi năm Bính Ngọ 2026: chủ đề năm, sự nghiệp, tài chính, tình cảm, sức khoẻ — cá nhân hoá theo lá số Tử Vi Đẩu Số và đại vận hiện tại.',
   alternates: { canonical: 'https://hieu.asia/tu-vi-2026' },
   // Wave 60.96.2 — route-level openGraph REPLACES root-layout openGraph; must
   // re-declare `images` or Zalo/FB/Telegram/Slack previews render blank.
   openGraph: {
-    title: 'Tử Vi năm 2026',
+    title: 'Tử Vi năm Bính Ngọ 2026',
     description: 'Năm Bính Ngọ — chủ đề năm + 12 tháng + 3 quyết định nên cân nhắc.',
     url: 'https://hieu.asia/tu-vi-2026',
     type: 'article',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tử Vi năm 2026',
+    title: 'Tử Vi năm Bính Ngọ 2026',
     description: 'Năm Bính Ngọ hành Hỏa — chủ đề năm + 12 tháng + 3 quyết định cân nhắc.',
     images: [
       {

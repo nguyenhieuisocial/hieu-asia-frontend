@@ -58,8 +58,8 @@ export async function generateMetadata({
   const cg = getConGiap(tuoi);
   if (!cg) return { title: 'Sao hạn theo tuổi' };
   const year = currentViewYear();
-  const title = `Sao hạn tuổi ${cg.ten} ${year} — sao chiếu mệnh nam & nữ`;
-  const description = `Tra sao hạn (sao chiếu mệnh) năm ${year} cho tuổi ${cg.ten} (con ${cg.con}) theo từng năm sinh, cả nam và nữ. Tham khảo theo phong tục, không bói toán.`;
+  const title = `Sao hạn tuổi ${cg.ten} ${year} — nữ mạng & nam mạng`;
+  const description = `Tra sao hạn (sao chiếu mệnh) năm ${year} cho tuổi ${cg.ten} (con ${cg.con}) theo từng năm sinh, nữ mạng & nam mạng. Tham khảo theo phong tục, không bói toán.`;
   const url = `https://hieu.asia/sao-han/${tuoi}`;
   return {
     title,
@@ -119,7 +119,7 @@ export default async function SaoHanConGiapPage({
         data={[
           webPage({
             name: title,
-            description: `Sao hạn ${year} cho tuổi ${cg.ten} theo năm sinh, nam & nữ.`,
+            description: `Sao hạn ${year} cho tuổi ${cg.ten} theo năm sinh, nữ mạng & nam mạng.`,
             url: `/sao-han/${tuoi}`,
           }),
           breadcrumb([

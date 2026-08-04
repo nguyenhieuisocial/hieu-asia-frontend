@@ -19,12 +19,12 @@ const LENSES = CATALOG.map((l, i) => ({
 
 export function Methodology(): React.JSX.Element {
   return (
-    <section aria-label="Cách hieu.asia giải mã bạn" className="bg-muted/30 py-12 sm:py-14">
+    <section aria-label="Cách hieu.asia giải mã bạn" className="bg-muted/30 py-10 sm:py-12">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
         <p className="rv-fade font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           CÁCH HIEU.ASIA GIẢI MÃ
         </p>
-        <h2 className="rv-up mt-3 font-editorial-display text-3xl leading-tight text-foreground sm:text-4xl" style={{ animationDelay: '80ms' }}>
+        <h2 className="rv-up mt-3 font-editorial-display text-2xl leading-tight text-foreground sm:text-3xl" style={{ animationDelay: '80ms' }}>
           Năm lăng kính, <em className="italic text-primary">một bức tranh</em>.
         </h2>
         <p className="rv-up mt-3 max-w-[34em] leading-relaxed text-muted-foreground" style={{ animationDelay: '160ms' }}>
@@ -54,7 +54,7 @@ export function Methodology(): React.JSX.Element {
           ))}
         </ol>
 
-        <p className="rv-up mt-8 max-w-[32em] font-editorial-display text-2xl leading-snug text-foreground sm:text-3xl">
+        <p className="rv-up mt-8 max-w-[32em] font-editorial-display text-xl leading-snug text-foreground sm:text-2xl">
           <span className="text-primary">→</span> AI hợp nhất năm lớp thành{' '}
           <em className="italic text-primary">một lời khuyên thực tế</em>, có thể hành động.
         </p>

@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Đừng tin mù — bài tự kiểm 1 phút',
+  title: 'Đừng tin mù — trắc nghiệm tự kiểm miễn phí',
   description:
-    'Trước khi tin bất kỳ lời giải nào, thử bài 1 phút: vì sao lời bói luôn thấy "đúng ghê" và cách không bị lừa. Dựa trên hiệu ứng Forer (Barnum).',
+    'Trắc nghiệm tự kiểm miễn phí 1 phút: vì sao lời bói luôn thấy "đúng ghê" và cách không bị lừa. Dựa trên hiệu ứng Forer (Barnum).',
   alternates: { canonical: 'https://hieu.asia/tu-kiem' },
   openGraph: {
-    title: 'Đừng tin mù — bài tự kiểm 1 phút',
+    title: 'Đừng tin mù — trắc nghiệm tự kiểm miễn phí',
     description: 'Vì sao lời bói luôn thấy "đúng ghê" — và cách không bị lừa. Bài tự kiểm 1 phút.',
     url: 'https://hieu.asia/tu-kiem',
     type: 'website',
