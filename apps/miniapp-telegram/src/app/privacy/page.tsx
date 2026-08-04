@@ -85,8 +85,10 @@ export default function MiniappPrivacyPage() {
             </div>
             <ul className="list-disc space-y-1.5 pl-5">
               <li>Báo cáo + metadata: vô thời hạn (có thể yêu cầu xóa).</li>
-              <li>Mentor chat: 90 ngày, tự xóa sau.</li>
+              {/* Kiểm 04/08/2026 — xem chú thích dài ở apps/web/src/app/privacy/page.tsx. */}
+              <li>Mentor chat: giữ đến khi bạn xoá tài khoản (không tự xoá theo thời hạn).</li>
               <li>Audit log: 12 tháng.</li>
+              <li>Nhật ký chi phí AI: vô thời hạn (có gắn mã người dùng, không chứa nội dung chat).</li>
             </ul>
           </CardContent>
         </Card>

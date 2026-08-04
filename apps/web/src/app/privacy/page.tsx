@@ -400,10 +400,38 @@ export default function PrivacyPage() {
                 chỉ là không được giữ lại.
               </p>
             </div>
+            {/*
+              KIỂM CHỨNG 04/08/2026 — đối chiếu từng dòng với backend:
+              • Mentor chat: câu cũ ghi "lưu 90 ngày, sau đó tự xóa". SAI — không có
+                cron nào, không có TTL nào, không có DELETE nào trên
+                hieu_asia.mentor_conversations/mentor_messages ngoài user-erase.
+                Chat chỉ mất khi người dùng xoá tài khoản.
+              • Audit log 12 tháng: ĐÚNG, đừng "sửa" xuống 90 ngày. Có HAI nhật ký
+                khác nhau — bản KV audit:user:* có expirationTtl 365 ngày và đây
+                chính là bản mà /user/export trả cho người dùng (gdpr/export.ts đọc
+                listAuditEntries từ KV); bản Postgres hieu_asia.audit_log là log an
+                ninh nội bộ, bị purgeOldAuditLog dọn sau 90 ngày.
+              • Nhật ký chi phí AI: trước đây KHÔNG hề được công bố. hieu_asia.llm_traces
+                có cột user_id + reading_session_id, không cron nào xoá, và user-erase
+                cũng không đụng tới. Hằng số RETENTION_DEFAULT_DAYS=90 và INTERVAL
+                '90 days' trong repo chỉ là config đọc-ghi và filter của VIEW, không
+                xoá dòng nào.
+            */}
             <ul className="list-disc space-y-2 pl-5">
               <li>Báo cáo và metadata: lưu vô thời hạn (bạn có thể yêu cầu xóa bất cứ lúc nào).</li>
-              <li>Conversation Mentor chat: lưu 90 ngày, sau đó tự xóa.</li>
-              <li>Audit log truy cập dữ liệu: lưu 12 tháng cho mục đích bảo mật.</li>
+              <li>
+                Conversation Mentor chat: giữ đến khi bạn xoá tài khoản. Chúng tôi không tự động xoá
+                lịch sử chat theo thời hạn — bạn có thể tự xoá bất cứ lúc nào trong trang Tài khoản.
+              </li>
+              <li>
+                Audit log truy cập dữ liệu: 12 tháng cho mục đích bảo mật (đây cũng là phần bạn tải
+                được khi xuất dữ liệu). Ngoài ra có một nhật ký an ninh nội bộ được dọn sau 90 ngày.
+              </li>
+              <li>
+                Nhật ký chi phí và vận hành mô hình AI: lưu vô thời hạn. Bản ghi này có gắn mã người
+                dùng và mã phiên đọc, dùng để đối soát chi phí và phát hiện lạm dụng; nội dung câu
+                hỏi/câu trả lời không nằm trong đó.
+              </li>
             </ul>
           </CardContent>
         </Card>
@@ -473,7 +501,10 @@ export default function PrivacyPage() {
               <Link href="/account" className="text-gold-700 underline">
                 Truy cập trang Tài khoản
               </Link>{' '}
-              để tải xuống bản sao dữ liệu hoặc xóa tài khoản tức thì. Hoặc gửi
+              {/* Bỏ chữ "tức thì": mâu thuẫn với chính câu "tối đa 30 ngày làm việc"
+                  ngay bên dưới, và với "trong vòng 30 ngày" ở /pricing + hộp thoại xoá
+                  tài khoản. Thao tác bấm là tức thì, việc xoá thì không. */}
+              để tải xuống bản sao dữ liệu hoặc yêu cầu xóa tài khoản. Hoặc gửi
               email tới{' '}
               <a className="text-gold-700 underline" href="mailto:privacy@hieu.asia">
                 privacy@hieu.asia
@@ -482,6 +513,74 @@ export default function PrivacyPage() {
               liệu hoặc xoá dữ liệu được hoàn tất trong tối đa 30 ngày làm việc, trừ khi pháp luật
               yêu cầu thời hạn khác.
             </p>
+
+            {/*
+              HAI KHỐI DƯỚI ĐÂY THÊM NGÀY 04/08/2026 sau khi truy toàn bộ đường xoá ở
+              backend (supabase/functions/user-erase/index.ts + worker src/gdpr/erase.ts).
+              Trước đó chính sách chỉ nói "xoá vĩnh viễn", trong khi thực tế xoá không
+              triệt để, và phần dữ liệu cố tình giữ lại thì KHÔNG hề được công bố —
+              dù chính user-erase/index.ts:12-26 ghi rõ chính sách bắt buộc phải nêu
+              trước khi người dùng đồng ý. Nếu sửa hành vi xoá ở backend thì phải cập
+              nhật hai danh sách này cùng lúc.
+            */}
+            <div className="mt-4 rounded-md border border-gold/20 bg-card/40 p-4">
+              <p className="font-semibold text-foreground">Xoá tài khoản thực sự xoá những gì</p>
+              <p className="mt-2 text-xs text-foreground/80">
+                Chúng tôi nói rõ thay vì hứa chung chung, để bạn quyết định dựa trên sự thật.
+              </p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-foreground/80">
+                <li>
+                  <strong className="text-foreground">Bị xoá hẳn:</strong> hồ sơ và dữ liệu sinh
+                  trắc, các phiên đọc và báo cáo, lịch sử hội thoại Mentor, file xuất dữ liệu đã
+                  tạo, và các bản ghi đăng nhập.
+                </li>
+                <li>
+                  <strong className="text-foreground">Chỉ được làm mờ danh tính:</strong> nhật ký
+                  truy cập dữ liệu và lịch sử giao dịch. Chúng tôi thay mã người dùng bằng một mã
+                  ẩn danh không thể lần ngược, nhưng bản ghi vẫn tồn tại vì nghĩa vụ đối soát và
+                  bảo mật.
+                </li>
+                <li>
+                  <strong className="text-foreground">Vẫn được giữ lại:</strong> nhật ký chi phí vận
+                  hành mô hình AI (có gắn mã người dùng, không chứa nội dung hội thoại), dữ liệu
+                  thống kê hành vi đã gộp, và trạng thái quyền đã mở của các tính năng trả phí.
+                </li>
+              </ul>
+              <p className="mt-2 text-xs text-foreground/80">
+                Nếu bạn muốn xoá cả những mục ở hai nhóm sau, hãy gửi yêu cầu riêng tới{' '}
+                <a className="text-gold-700 underline" href="mailto:privacy@hieu.asia">
+                  privacy@hieu.asia
+                </a>{' '}
+                để chúng tôi xử lý thủ công.
+              </p>
+            </div>
+
+            <div className="mt-4 rounded-md border border-gold/20 bg-card/40 p-4">
+              <p className="font-semibold text-foreground">
+                Dữ liệu chúng tôi không thể xoá theo yêu cầu
+              </p>
+              <p className="mt-2 text-xs text-foreground/80">
+                Một số bản ghi bắt buộc phải giữ theo quy định pháp luật, kể cả khi bạn yêu cầu xoá
+                tài khoản. Chúng tôi nêu ở đây để bạn biết trước khi đồng ý:
+              </p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-foreground/80">
+                <li>
+                  Hồ sơ thuế và chứng từ chi trả hoa hồng cộng tác viên — giữ 10 năm theo quy định
+                  về kế toán và thuế.
+                </li>
+                <li>
+                  Nhật ký đồng ý (bạn đã đồng ý điều gì, vào lúc nào) — là bằng chứng pháp lý cho
+                  chính việc xử lý dữ liệu của bạn.
+                </li>
+                <li>
+                  Nhật ký truy cập dữ liệu cá nhân — bắt buộc theo Luật Bảo vệ dữ liệu cá nhân
+                  91/2025/QH15.
+                </li>
+              </ul>
+              <p className="mt-2 text-xs text-foreground/80">
+                Các bản ghi này có thời hạn lưu riêng và sẽ được xoá tự động khi hết hạn.
+              </p>
+            </div>
           </CardContent>
         </Card>
 

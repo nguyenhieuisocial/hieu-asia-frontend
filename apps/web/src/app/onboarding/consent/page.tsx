@@ -80,8 +80,10 @@ const OPTIONAL_ITEMS: OptionalItem[] = [
   },
   {
     key: 'mentor',
-    label: 'Lưu chat Mentor để tiếp tục cuộc trò chuyện (90 ngày)',
-    hint: 'Lịch sử chat lưu 90 ngày để bạn quay lại tiếp tục. Bạn có thể xoá bất kỳ lúc nào.',
+    // Kiểm 04/08/2026: không có cron/TTL/DELETE nào dọn mentor_conversations ngoài
+    // user-erase → "90 ngày" là lời hứa không có thật. Xem chú thích ở app/privacy.
+    label: 'Lưu chat Mentor để tiếp tục cuộc trò chuyện',
+    hint: 'Lịch sử chat được giữ đến khi bạn xoá tài khoản, để bạn quay lại tiếp tục. Bạn có thể tự xoá bất kỳ lúc nào.',
   },
   {
     key: 'training',
