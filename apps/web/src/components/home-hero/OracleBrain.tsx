@@ -1,13 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { TOOLKIT_GROUPS } from '@/lib/site-registry';
 import { ShimmerText } from '@/components/fx/ShimmerText';
 import { Marquee } from '@/components/fx/Marquee';
-import type { BanMenhData } from '@/lib/ban-menh-data';
 import { Time24 } from '@/components/Time24';
-// Diễn giải Bát Tự đời thường (data tĩnh nhỏ, dùng chung — engine vẫn lazy-import).
-import { CAN_PLAIN, TEN_GOD_PLAIN, NGU_HANH_PLAIN } from '@/lib/bat-tu-plain';
 // Wave 65.02 — form "Soi thử" đọc hồ sơ ngày sinh dùng chung (khách vừa nhập ở
 // InstantChartHero đầu trang) thay vì bắt gõ lại từ đầu (finding P1, 5/8 vòng).
 import {
@@ -15,6 +11,11 @@ import {
   birthProfileToDateTime,
   BIRTH_PROFILE_EVENT,
 } from '@/lib/birth-profile';
+import type { Reveal } from './oracle-brain/types';
+import { ALL_TOOLS, HUBS } from './oracle-brain/graph-layout';
+import { computeReveal } from './oracle-brain/compute-reveal';
+import { OracleGraph } from './oracle-brain/OracleGraph';
+import { BaziRevealPanel } from './oracle-brain/BaziRevealPanel';
 
 /**
  * OracleBrain — the signature "night-sky" section: the whole toolkit (Eastern
@@ -38,99 +39,6 @@ import {
  * số đầy đủ. Số chủ đạo (thần số) tính ở máy chủ nên KHÔNG đưa vào teaser để
  * tránh lệch với công cụ thật. Gated bởi prefers-reduced-motion.
  */
-
-type Lens = {
-  name: string;
-  symbol: string;
-  tagline: string;
-  element: string;
-  quality: string;
-  rulingPlanet: string;
-  strengths: string[];
-  growthEdge: string | null;
-  love: string;
-  work: string;
-  opposite: string;
-};
-type Bazi = {
-  dayCan: string;
-  dayEl: string;
-  dayYang: boolean;
-  yearPillar: string;
-  monthPillar: string;
-  dayPillar: string;
-  monthTenGod: string;
-  hourPillar: string | null;
-  strongest: string | null;
-  missing: string[];
-  // FULL — chỉ mở khi nhập ĐỦ giờ sinh (4 trụ thật; không giờ = trụ giờ giả định
-  // nên các tầng dưới đây sẽ sai → gate hasTime, trung thực):
-  hourTenGod: string | null;
-  elementCount: Record<string, number> | null;
-  thanSat: { name: string; meaning: string }[];
-  relations: { type: string; chi: string; detail: string }[];
-  namNay: { label: string; tenGod: string } | null;
-};
-type Reveal = {
-  dong: BanMenhData;
-  conVat: string;
-  /** Tính cách tuổi (con giáp) — engine con-giap-data, cùng nguồn trang /con-giap. */
-  cg: { tagline: string; strengths: string[]; growthEdge: string | null; love: string } | null;
-  /** Hướng tốt + vật phẩm + 1 lời khuyên hành động theo hành bản mệnh (ngu-hanh-remedy). */
-  huongTot: string[];
-  vatPham: string[];
-  loiKhuyen: string | null;
-  tay: Lens | null;
-  nearCusp: boolean;
-  bazi: Bazi;
-  /** true = sinh TRƯỚC Lập Xuân → đã quy về năm âm liền trước (chuẩn mệnh học). */
-  lunarAdjusted: boolean;
-};
-
-const ALL_TOOLS = TOOLKIT_GROUPS.flatMap((g) => g.tools.map((t) => t.n));
-
-const RADIUS = 33; // hub distance from center (% of box)
-const SAT_R = 6.5; // satellite cluster radius around a hub (% of box)
-
-const HUBS = TOOLKIT_GROUPS.map((g, i, arr) => {
-  const a = ((-90 + (360 / arr.length) * i) * Math.PI) / 180;
-  const left = 50 + Math.cos(a) * RADIUS;
-  const top = 50 + Math.sin(a) * RADIUS;
-  const nSat = Math.max(3, Math.min(5, Math.round(g.tools.length / 3)));
-  const sats = Array.from({ length: nSat }, (_, k) => {
-    const sa = a + (k - (nSat - 1) / 2) * 0.42;
-    return { left: left + Math.cos(sa) * SAT_R, top: top + Math.sin(sa) * SAT_R };
-  });
-  return {
-    label: g.label,
-    count: g.tools.length,
-    // Giữ cả href để tên công cụ trong lăng kính là LINK bấm được (cross-link).
-    tools: g.tools.map((t) => ({ n: t.n, href: t.href })),
-    left,
-    top,
-    sats,
-  };
-});
-
-// Đợt 2 "chạm nhóm ra ý nghĩa": mô tả ngắn mỗi lăng kính (khớp NHÃN hub). Chỉ Cổ
-// học + Chiêm tinh có kết quả tính được ở client — còn lại chỉ giới thiệu + dẫn
-// tới công cụ (KHÔNG bịa kết quả, giữ đúng tinh thần teaser).
-const LENS_ABOUT: Record<string, string> = {
-  'Cổ học Á Đông': 'Từ ngày sinh: can chi, con giáp, mệnh nạp âm, màu & hướng nghề hợp.',
-  'Tâm lý hiện đại': 'Tính cách qua MBTI, Big Five, DISC, Enneagram — cần làm bài trắc nghiệm ngắn.',
-  'Chiêm tinh phương Tây': 'Cung hoàng đạo tính từ vị trí Mặt Trời lúc bạn sinh.',
-  'Trực giác': 'Tarot — lăng kính trực giác; bạn rút bài để soi một câu hỏi.',
-  'Khám phá & so sánh': 'So sánh nhiều lăng kính & hợp tuổi — ghép các mảnh thành bức tranh chung.',
-};
-const DONG_IDX = HUBS.findIndex((h) => h.label === 'Cổ học Á Đông');
-const TAY_IDX = HUBS.findIndex((h) => h.label === 'Chiêm tinh phương Tây');
-
-// Deterministic starfield (SSR-stable).
-const STARS = Array.from({ length: 24 }, (_, i) => ({
-  left: (i * 53 + 7) % 100,
-  top: (i * 31 + 11) % 100,
-  delay: (i % 6) * 0.5,
-}));
 
 export function OracleBrain(): React.JSX.Element {
   const [hover, setHover] = React.useState<number | null>(null);
@@ -236,125 +144,21 @@ export function OracleBrain(): React.JSX.Element {
       setErr('Chọn ngày sinh dương lịch của bạn.');
       return;
     }
-    const y = Number(m[1]);
-    const mo = Number(m[2]);
-    const d = Number(m[3]);
     setErr(null);
     setReading(true);
-    try {
-      const [banMenh, cung, conGiap, baziMod, conGiapData, nguHanh] = await Promise.all([
-        import('@/lib/ban-menh-data'),
-        import('@/lib/cung-hoang-dao-data'),
-        import('@/lib/con-giap-animal'),
-        import('@/lib/bazi'),
-        import('@/lib/con-giap-data'),
-        import('@/lib/ngu-hanh-remedy'),
-      ]);
-      const hm = birthTime.match(/^(\d{1,2}):(\d{2})$/);
-      const hour = hm ? Number(hm[1]) : 12;
-      const hasTime = hm != null && hour >= 0 && hour <= 23;
-      // Tính Bát Tự TRƯỚC — engine đã xử lý ranh giới LẬP XUÂN (meta.solarYearForPillar
-      // = năm âm chuẩn mệnh học). Lăng kính Cổ học tra 60 Giáp Tý theo ĐÚNG năm này
-      // → người sinh tháng 1–đầu tháng 2 (trước Lập Xuân) không còn bị gán nhầm
-      // con giáp/can chi/mệnh, và 2 lăng kính Đông + Bát Tự luôn khớp nhau.
-      // asOf = hôm nay (tính tại thời điểm bấm — event handler, không đụng SSR)
-      // để engine trả LƯU NIÊN (vận năm nay). Đại vận cần giới tính → teaser bỏ qua.
-      const now = new Date();
-      const asOf = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(
-        now.getDate(),
-      ).padStart(2, '0')}`;
-      const chart = baziMod.calculateBazi({
-        birthSolarDate: birthDate,
-        birthHour: hasTime ? hour : 12,
-        asOf,
-      });
-      const lunarYear = chart.meta.solarYearForPillar;
-      const dong = banMenh.buildBanMenh(lunarYear);
-      if (!dong) {
-        setReading(false);
-        setErr('Năm sinh cần trong khoảng 1950–2026.');
-        return;
-      }
-      // Tầng chiều sâu — TOÀN dữ liệu chuẩn từ engine sẵn có (không bịa):
-      // tính cách tuổi (con-giap-data), hướng tốt + lời khuyên (ngu-hanh-remedy),
-      // chi tiết cung (buildCung: chủ quản/điểm mạnh/công việc/cung đối).
-      const cgd = conGiapData.buildConGiap(dong.zodiac.slug);
-      const remedy = nguHanh.getNguHanhRemedy(dong.elementName);
-      const sun = cung.sunSignFromDate(y, mo, d);
-      const found = cung.listCung().find((c) => c.slug === sun.slug);
-      const detail = cung.buildCung(sun.slug);
-      const tay: Lens | null =
-        found && detail
-          ? {
-              name: found.name,
-              symbol: found.symbol,
-              tagline: found.tagline,
-              element: found.element,
-              quality: found.quality,
-              rulingPlanet: detail.extra.rulingPlanet,
-              strengths: detail.extra.strengths.slice(0, 2),
-              growthEdge: detail.extra.growthEdges[0] ?? null,
-              love: detail.extra.love,
-              work: detail.extra.work,
-              opposite: detail.opposite.name,
-            }
-          : null;
-      const bazi: Bazi = {
-        dayCan: chart.dayMaster.can,
-        dayEl: chart.dayMaster.element,
-        dayYang: chart.dayMaster.yang,
-        yearPillar: `${chart.year.can} ${chart.year.chi}`,
-        monthPillar: `${chart.month.can} ${chart.month.chi}`,
-        dayPillar: `${chart.day.can} ${chart.day.chi}`,
-        monthTenGod: chart.month.tenGod,
-        hourPillar: hasTime ? `${chart.hour.can} ${chart.hour.chi}` : null,
-        strongest: hasTime ? chart.strongest : null,
-        missing: hasTime ? chart.missing : [],
-        hourTenGod: hasTime ? chart.hour.tenGod : null,
-        elementCount: hasTime ? chart.elementCount : null,
-        thanSat: hasTime
-          ? chart.thanSat.slice(0, 2).map((t) => ({ name: t.name, meaning: t.meaning }))
-          : [],
-        relations: hasTime
-          ? chart.relations.slice(0, 2).map((r) => ({ type: r.type, chi: r.chi, detail: r.detail }))
-          : [],
-        namNay:
-          hasTime && chart.luuNien
-            ? {
-                label: `${chart.luuNien.year} (${chart.luuNien.can} ${chart.luuNien.chi})`,
-                tenGod: chart.luuNien.tenGod,
-              }
-            : null,
-      };
-      const result: Reveal = {
-        dong,
-        conVat: conGiap.conVatOf(dong.zodiac.ten),
-        cg: cgd
-          ? {
-              tagline: cgd.extra.tagline,
-              strengths: cgd.extra.strengths.slice(0, 2),
-              growthEdge: cgd.extra.growthEdges[0] ?? null,
-              love: cgd.extra.love,
-            }
-          : null,
-        huongTot: remedy?.huongTot ?? [],
-        vatPham: remedy?.vatPham?.slice(0, 2) ?? [],
-        loiKhuyen: remedy?.loiKhuyen?.[0] ?? null,
-        tay,
-        nearCusp: sun.nearCusp,
-        bazi,
-        lunarAdjusted: lunarYear !== y,
-      };
-      const show = (): void => {
-        setReveal(result);
-        setReading(false);
-      };
-      if (reducedRef.current) show();
-      else timerRef.current = window.setTimeout(show, 700);
-    } catch {
+    const outcome = await computeReveal({ birthDate, birthTime });
+    if ('error' in outcome) {
       setReading(false);
-      setErr('Chưa soi được, thử lại nhé.');
+      setErr(outcome.error);
+      return;
     }
+    const { result } = outcome;
+    const show = (): void => {
+      setReveal(result);
+      setReading(false);
+    };
+    if (reducedRef.current) show();
+    else timerRef.current = window.setTimeout(show, 700);
   };
 
   const resetReveal = (): void => {
@@ -363,86 +167,6 @@ export function OracleBrain(): React.JSX.Element {
     setErr(null);
     setSelected(null);
   };
-
-  const isOn = (i: number) => hover === i || selected === i;
-  const sel = selected !== null ? HUBS[selected] : null;
-  const hopColors = reveal
-    ? Array.from(new Set([...reveal.dong.banMenhColors, ...reveal.dong.hopColors])).slice(0, 4)
-    : [];
-
-  // Đợt 2 — 1 nguồn cho lăng kính Cổ học & Chiêm tinh, dùng chung ở bảng tổng
-  // ("Lát cắt về bạn") lẫn bảng chạm-từng-nhóm sao. Trả null khi chưa soi.
-  const renderDongLens = (): React.JSX.Element | null =>
-    reveal ? (
-      <div className="ob-lens">
-        <span className="ob-lens-tag">Cổ học Á Đông</span>
-        <p className="ob-lens-line">
-          <strong>
-            Tuổi {reveal.dong.canChi} · con {reveal.conVat}
-          </strong>{' '}
-          — mệnh {reveal.dong.elementName} ({reveal.dong.napAmName}).
-        </p>
-        {reveal.cg && (
-          <p className="ob-lens-sub">
-            Tuổi {reveal.conVat}: {reveal.cg.tagline}
-            {reveal.cg.strengths.length > 0 && (
-              <> Nổi bật: {reveal.cg.strengths.join(' · ')}.</>
-            )}
-            {reveal.cg.growthEdge && <> Nên luyện: {reveal.cg.growthEdge}</>}
-          </p>
-        )}
-        {reveal.cg?.love && <p className="ob-lens-sub">Tình cảm: {reveal.cg.love}</p>}
-        <p className="ob-lens-sub">
-          {reveal.dong.sinhElementName} sinh {reveal.dong.elementName} (tương sinh) ·{' '}
-          {reveal.dong.khacElementName} khắc {reveal.dong.elementName} (nên tiết chế).{' '}
-          {hopColors.length > 0 && <>Hợp màu {hopColors.join(', ')}. </>}
-          {reveal.dong.avoidColors.length > 0 && (
-            <>Nên tiết chế màu {reveal.dong.avoidColors.join(', ')}. </>
-          )}
-          {reveal.dong.careers.length > 0 && (
-            <>Hợp hướng nghề {reveal.dong.careers.slice(0, 2).join(', ')}.</>
-          )}
-        </p>
-        {(reveal.huongTot.length > 0 || reveal.vatPham.length > 0 || reveal.loiKhuyen) && (
-          <p className="ob-lens-sub">
-            {reveal.huongTot.length > 0 && <>Hướng tốt: {reveal.huongTot.join(', ')}. </>}
-            {reveal.vatPham.length > 0 && <>Vật phẩm hợp: {reveal.vatPham.join('; ')}. </>}
-            {reveal.loiKhuyen && <>Gợi ý: {reveal.loiKhuyen}</>}
-          </p>
-        )}
-        {reveal.lunarAdjusted && (
-          <p className="ob-lens-sub">
-            Bạn sinh trước Lập Xuân — tuổi âm tính theo năm {reveal.dong.year} (chuẩn mệnh
-            học, khớp trụ năm Bát Tự).
-          </p>
-        )}
-      </div>
-    ) : null;
-
-  const renderTayLens = (): React.JSX.Element | null =>
-    reveal?.tay ? (
-      <div className="ob-lens">
-        <span className="ob-lens-tag">Chiêm tinh phương Tây</span>
-        <p className="ob-lens-line">
-          <strong>
-            Cung {reveal.tay.name} {reveal.tay.symbol}
-          </strong>
-        </p>
-        <p className="ob-lens-sub">
-          Nhóm {reveal.tay.element} · {reveal.tay.quality} · chủ quản {reveal.tay.rulingPlanet}.{' '}
-          {reveal.tay.tagline}
-          {reveal.nearCusp && ' (sinh sát ranh giới cung — cần giờ sinh để chắc chắn).'}
-        </p>
-        {reveal.tay.strengths.length > 0 && (
-          <p className="ob-lens-sub">
-            Nổi bật: {reveal.tay.strengths.join(' · ')}. {reveal.tay.work}
-            {reveal.tay.growthEdge && <> Nên luyện: {reveal.tay.growthEdge}</>}
-          </p>
-        )}
-        {reveal.tay.love && <p className="ob-lens-sub">Tình cảm: {reveal.tay.love}</p>}
-        <p className="ob-lens-sub">Cung đối: {reveal.tay.opposite} — vừa hút vừa thử thách.</p>
-      </div>
-    ) : null;
 
   return (
     <section
@@ -514,170 +238,17 @@ export function OracleBrain(): React.JSX.Element {
           </form>
         )}
 
-        <div
-          ref={graphRef}
-          data-in={inView || undefined}
-          data-sel={selected !== null || undefined}
-          data-reading={reading || undefined}
-          data-revealed={reveal ? true : undefined}
-          data-lensopen={selected !== null || undefined}
-          className="ob-graph"
-          // role="group" (not "img"): this container holds the interactive lens-hub
-          // buttons, and role="img" must not have focusable descendants (axe
-          // nested-interactive). "group" labels the set of related controls. (T28)
-          role="group"
-          aria-label="Năm nhóm công cụ hội tụ về Bạn"
-          draggable={false}
-          onDragStart={(e) => e.preventDefault()}
-        >
-          <div className="ob-plx ob-plx-neb" aria-hidden="true">
-            <div className="ob-plx-in ob-neb-glow" />
-          </div>
-
-          <svg className="ob-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            {HUBS.map((h, i) => (
-              <line
-                key={`l${i}`}
-                x1="50"
-                y1="50"
-                x2={h.left}
-                y2={h.top}
-                pathLength={1}
-                vectorEffect="non-scaling-stroke"
-                className={`ob-line${isOn(i) ? ' ob-line-on' : ''}`}
-              />
-            ))}
-            {HUBS.map((h, i) =>
-              h.sats.map((s, k) => (
-                <line
-                  key={`b${i}-${k}`}
-                  x1={h.left}
-                  y1={h.top}
-                  x2={s.left}
-                  y2={s.top}
-                  vectorEffect="non-scaling-stroke"
-                  className={`ob-branch${isOn(i) ? ' ob-branch-on' : ''}`}
-                />
-              )),
-            )}
-          </svg>
-
-          <div className="ob-plx ob-plx-stars" aria-hidden="true">
-            <div className="ob-plx-in">
-              {STARS.map((s, i) => (
-                <span
-                  key={i}
-                  className="ob-star"
-                  style={{ left: `${s.left}%`, top: `${s.top}%`, animationDelay: `${s.delay}s` }}
-                  aria-hidden="true"
-                />
-              ))}
-            </div>
-          </div>
-
-          {HUBS.map((h, i) => (
-            <span
-              key={`p${i}`}
-              className="ob-pulse"
-              aria-hidden="true"
-              style={
-                {
-                  '--sx': `${h.left}%`,
-                  '--sy': `${h.top}%`,
-                  animationDelay: `${i * 0.6}s`,
-                } as React.CSSProperties
-              }
-            />
-          ))}
-
-          {HUBS.map((h, i) =>
-            h.sats.map((s, k) => (
-              <span
-                key={`s${i}-${k}`}
-                className={`ob-sat${isOn(i) ? ' ob-sat-on' : ''}`}
-                style={{ left: `${s.left}%`, top: `${s.top}%` }}
-                aria-hidden="true"
-              />
-            )),
-          )}
-
-          <div className="ob-center" style={{ left: '50%', top: '50%' }}>
-            <span className="ob-center-glow" aria-hidden="true" />
-            <span className="ob-center-dot" aria-hidden="true" />
-            <span className="ob-center-label">BẠN</span>
-            <span className="ob-center-sub">
-              {reveal ? `${reveal.conVat} · mệnh ${reveal.dong.elementName}` : 'hiểu mình sâu'}
-            </span>
-          </div>
-
-          {/* "Tâm điểm BẠN kể" — chạm 1 nhóm sao → ý nghĩa hiện NGAY GIỮA chòm sao
-              (quanh BẠN), tuyệt đối trong khung .ob-graph nên KHÔNG đẩy layout. */}
-          {sel && (
-            <div
-              className="ob-read"
-              id="ob-read"
-              role="region"
-              aria-live="polite"
-              aria-label={`Lăng kính ${sel.label}`}
-            >
-              <button
-                type="button"
-                className="ob-read-close"
-                onClick={() => setSelected(null)}
-                aria-label="Đóng"
-              >
-                ×
-              </button>
-              <div className="ob-read-body">
-                {selected === DONG_IDX && reveal ? (
-                  renderDongLens()
-                ) : selected === TAY_IDX && reveal ? (
-                  renderTayLens()
-                ) : (
-                  <div className="ob-lens ob-lens-about">
-                    <span className="ob-lens-tag">{sel.label}</span>
-                    <p className="ob-lens-sub">{LENS_ABOUT[sel.label] ?? ''}</p>
-                    {!reveal && (
-                      <p className="ob-read-cta">Nhập ngày sinh ở trên để soi lăng kính này.</p>
-                    )}
-                  </div>
-                )}
-                <div className="ob-read-tools">
-                  {sel.tools.map((t) => (
-                    <a key={t.n} href={t.href} draggable={false} className="ob-read-tool">
-                      {t.n}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {HUBS.map((h, i) => (
-            <button
-              key={h.label}
-              type="button"
-              aria-pressed={selected === i}
-              aria-expanded={selected === i}
-              aria-controls={selected === i ? 'ob-read' : undefined}
-              className={`ob-hub${isOn(i) ? ' ob-hub-on' : ''}${selected === i ? ' ob-hub-sel' : ''}`}
-              style={{ left: `${h.left}%`, top: `${h.top}%` }}
-              onMouseEnter={() => setHover(i)}
-              onMouseLeave={() => setHover(null)}
-              onFocus={() => setHover(i)}
-              onBlur={() => setHover(null)}
-              // Wave 65.02 — bấm LẠI cùng nhóm KHÔNG đóng panel nữa. PostHog đo
-              // được 31 rageclick/30 ngày tập trung đúng các nút nhóm này: tap
-              // nhanh 2-3 lần = mở/đóng/mở nhấp nháy, người dùng tưởng nút hỏng.
-              // Đóng vẫn còn 3 đường: nút ×, phím Esc, chạm ngoài panel.
-              onClick={() => setSelected(i)}
-            >
-              <span className="ob-hub-dot" aria-hidden="true" />
-              <span className="ob-hub-label">{h.label}</span>
-              <span className="ob-hub-count">{h.count} công cụ</span>
-            </button>
-          ))}
-        </div>
+        <OracleGraph
+          hubs={HUBS}
+          hover={hover}
+          setHover={setHover}
+          selected={selected}
+          setSelected={setSelected}
+          inView={inView}
+          reading={reading}
+          reveal={reveal}
+          graphRef={graphRef}
+        />
 
         <p className="ob-tap-hint">Chạm mỗi nhóm sao để xem riêng lăng kính đó.</p>
 
@@ -688,141 +259,7 @@ export function OracleBrain(): React.JSX.Element {
             với nội dung thì không được đọc. */}
         <div aria-live="polite">
           {reveal && (
-          <div className="ob-detail-wrap">
-            <div
-              ref={revealRef}
-              tabIndex={-1}
-              className="ob-reveal"
-              role="region"
-              aria-label="Lát cắt về bạn"
-            >
-              <div className="ob-reveal-head">
-                <span className="ob-reveal-emoji" aria-hidden="true">
-                  {reveal.dong.zodiac.emoji}
-                </span>
-                <span className="ob-reveal-heading">
-                  <span className="ob-reveal-title">Lát cắt về bạn</span>
-                  <span className="ob-reveal-menh">Nhiều lăng kính — một bức tranh</span>
-                </span>
-                <button
-                  type="button"
-                  className="ob-detail-close"
-                  onClick={resetReveal}
-                  aria-label="Thử ngày khác"
-                >
-                  ×
-                </button>
-              </div>
-
-              {renderDongLens()}
-
-              {renderTayLens()}
-
-              <div className="ob-lens">
-                <span className="ob-lens-tag">Bát Tự — Tứ Trụ</span>
-                <p className="ob-lens-line">
-                  <strong>
-                    "Chất gốc" của bạn: {reveal.bazi.dayCan} — hình tượng{' '}
-                    {CAN_PLAIN[reveal.bazi.dayCan]?.hinh ?? reveal.bazi.dayEl}
-                  </strong>
-                </p>
-                {CAN_PLAIN[reveal.bazi.dayCan] && (
-                  <p className="ob-lens-sub">{CAN_PLAIN[reveal.bazi.dayCan]!.blurb}</p>
-                )}
-                {TEN_GOD_PLAIN[reveal.bazi.monthTenGod] && (
-                  <p className="ob-lens-sub">
-                    Nền công việc & trưởng thành (trụ tháng {reveal.bazi.monthTenGod}):{' '}
-                    {TEN_GOD_PLAIN[reveal.bazi.monthTenGod]}
-                  </p>
-                )}
-                <p className="ob-lens-sub">
-                  "Mã thời gian" của bạn — Tứ Trụ: năm {reveal.bazi.yearPillar} · tháng{' '}
-                  {reveal.bazi.monthPillar} · ngày {reveal.bazi.dayPillar}
-                  {reveal.bazi.hourPillar && <> · giờ {reveal.bazi.hourPillar}</>}.
-                </p>
-                <p className="ob-lens-sub">
-                  {reveal.bazi.hourPillar ? (
-                    <>
-                      {reveal.bazi.strongest && (
-                        <>
-                          Trong bạn, chất {reveal.bazi.strongest} đang trội —{' '}
-                          {NGU_HANH_PLAIN[reveal.bazi.strongest]?.vuong}.
-                        </>
-                      )}
-                      {reveal.bazi.missing.length > 0 && (
-                        <>
-                          {' '}
-                          Hơi thiếu chất {reveal.bazi.missing.join(', ')} —{' '}
-                          {NGU_HANH_PLAIN[reveal.bazi.missing[0]!]?.thieu}.
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <>Thêm giờ sinh (không bắt buộc) để mở FULL: trụ giờ, bản đồ ngũ hành, sao đáng chú ý, kết nối các trụ và vận năm nay.</>
-                  )}
-                </p>
-                {/* FULL — chỉ khi nhập đủ giờ (4 trụ thật, không suy diễn từ giờ giả định). */}
-                {reveal.bazi.elementCount && (
-                  <p className="ob-lens-sub">
-                    Bản đồ ngũ hành (8 chữ):{' '}
-                    {['Mộc', 'Hỏa', 'Thổ', 'Kim', 'Thủy']
-                      .map((el) => `${el} ${reveal.bazi.elementCount![el] ?? 0}`)
-                      .join(' · ')}
-                    .
-                  </p>
-                )}
-                {reveal.bazi.hourTenGod && TEN_GOD_PLAIN[reveal.bazi.hourTenGod] && (
-                  <p className="ob-lens-sub">
-                    Trụ giờ — hậu vận &amp; đời sau ({reveal.bazi.hourTenGod}):{' '}
-                    {TEN_GOD_PLAIN[reveal.bazi.hourTenGod]}
-                  </p>
-                )}
-                {reveal.bazi.relations.length > 0 && (
-                  <p className="ob-lens-sub">
-                    Kết nối giữa các trụ:{' '}
-                    {reveal.bazi.relations
-                      .map((r) => `${r.type} ${r.chi} — ${r.detail}`)
-                      .join(' · ')}
-                  </p>
-                )}
-                {reveal.bazi.thanSat.length > 0 && (
-                  <p className="ob-lens-sub">
-                    Sao đáng chú ý:{' '}
-                    {reveal.bazi.thanSat.map((t) => `${t.name} — ${t.meaning}`).join(' · ')}
-                  </p>
-                )}
-                {reveal.bazi.namNay && TEN_GOD_PLAIN[reveal.bazi.namNay.tenGod] && (
-                  <p className="ob-lens-sub">
-                    Năm nay {reveal.bazi.namNay.label} với bạn mang năng lượng{' '}
-                    {reveal.bazi.namNay.tenGod}: {TEN_GOD_PLAIN[reveal.bazi.namNay.tenGod]}
-                  </p>
-                )}
-              </div>
-
-              {/* Cầu nối sang sản phẩm chính: Bát Tự = "chất" → Tử Vi = bản đồ 12
-                  lĩnh vực đời (đủ 12 cung, dịch đời thường, khớp palace-readings). */}
-              <p className="ob-reveal-body">
-                Bát Tự vừa cho biết <strong>&ldquo;chất&rdquo;</strong> của bạn. Lá số{' '}
-                <strong>Tử Vi đầy đủ</strong> sẽ vẽ tiếp bản đồ{' '}
-                <strong>12 lĩnh vực đời</strong>: con người bạn (Mệnh) · cha mẹ · anh chị em ·
-                hôn nhân · con cái · tiền bạc · sự nghiệp · nhà đất · sức khỏe · đi xa &amp; cơ
-                hội bên ngoài · bạn bè quý nhân · phúc đức — kèm đại vận từng chặng 10 năm.
-                Cần giờ sinh chính xác để lập.
-              </p>
-              <div className="ob-reveal-actions">
-                <a
-                  href="/onboarding?intent=self"
-                  draggable={false}
-                  className="ob-reveal-cta font-mono text-editorial-mono uppercase tracking-[0.12em]"
-                >
-                  Xem bức tranh đầy đủ →
-                </a>
-                <button type="button" className="ob-reveal-again" onClick={resetReveal}>
-                  Thử ngày khác
-                </button>
-              </div>
-            </div>
-          </div>
+            <BaziRevealPanel reveal={reveal} revealRef={revealRef} onReset={resetReveal} />
           )}
         </div>
 
