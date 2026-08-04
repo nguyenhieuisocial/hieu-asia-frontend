@@ -53,9 +53,9 @@ const FAQ: { q: string; a: string }[] = [
 const PAGE_JSONLD = [
   webPage({
     url: '/than-so-hoc',
-    name: 'Thần Số Học — Số chủ đạo theo Pythagoras',
+    name: 'Thần Số Học online miễn phí theo ngày sinh, tên',
     description:
-      'Phân tích số chủ đạo, số vận mệnh, số linh hồn, năm cá nhân 2026 theo phương pháp Pythagoras — miễn phí, AI cá nhân hoá theo ngày sinh + họ tên.',
+      'Phân tích số chủ đạo, số vận mệnh, số linh hồn, năm cá nhân 2026 theo phương pháp Pythagoras — online miễn phí, AI cá nhân hoá theo ngày sinh + họ tên.',
   }),
   breadcrumb([
     { name: 'Trang chủ', url: '/' },
