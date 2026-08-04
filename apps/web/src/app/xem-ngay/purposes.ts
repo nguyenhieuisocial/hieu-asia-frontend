@@ -35,9 +35,9 @@ export const PURPOSES: XemNgayPurpose[] = [
     emoji: '💍',
     h1Suffix: 'cưới hỏi',
     eyebrow: 'Xem ngày · Cưới hỏi',
-    seoTitle: 'Xem ngày cưới hỏi tốt — Hoàng đạo, Kim Lâu',
+    seoTitle: 'Xem ngày cưới theo tuổi cô dâu chú rể 2026–2027',
     seoDescription:
-      'Chọn ngày cưới hỏi đẹp theo lịch vạn niên: chấm điểm 0–100 theo Hoàng/Hắc đạo, trực ngày, sao tốt xấu và cảnh báo Tam Tai, Kim Lâu. Cá nhân hoá theo tuổi.',
+      'Xem ngày cưới hỏi 2026–2027 theo tuổi cô dâu chú rể: chấm điểm 0–100 theo Hoàng/Hắc đạo, trực ngày, sao tốt xấu, Tam Tai, Kim Lâu. Cá nhân hoá theo tuổi.',
     intro:
       'Nhập ngày dự định cưới và năm sinh để xem ngày đó có thuận cho việc cưới hỏi không. Đây là tham khảo theo lịch pháp truyền thống, giúp bạn cân nhắc — không phải lời phán số mệnh.',
     considerations: [
