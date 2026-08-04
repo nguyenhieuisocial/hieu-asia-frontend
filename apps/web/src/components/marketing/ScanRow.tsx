@@ -77,7 +77,7 @@ export function ScanRow({
         : 'md:grid-cols-3';
 
   return (
-    <section className={`${bgClass} py-12 md:py-24`}>
+    <section className={`${bgClass} py-10 md:py-16`}>
       <div className="mx-auto max-w-marketing px-6 lg:px-12">
         {eyebrow && (
           <p className="mb-4 font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">

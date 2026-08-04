@@ -170,7 +170,7 @@ export function PricingTierV2({
   };
 
   return (
-    <section className="bg-background py-16 md:py-20">
+    <section className="bg-background py-12 md:py-16">
       <div className="mx-auto max-w-marketing px-6">
         {/* Header */}
         <div className="text-center">
