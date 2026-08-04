@@ -26,7 +26,7 @@ export async function generateMetadata({
   // SEO-FIX: hậu tố ': khác nhau thế nào, nên chọn cái nào?' (38) + tên cặp +
   // ' · hieu.asia' (12) đẩy CẢ 6 trang so sánh lên 62–71 ký tự → Google cắt hết.
   // Rút hậu tố còn 25 ký tự: cặp dài nhất (Enneagram vs Big Five) ra 57.
-  const title = `${c.title}: khác gì, chọn cái nào?`;
+  const title = c.seoTitle ?? `${c.title}: khác gì, chọn cái nào?`;
   // SEO-FIX: .slice(0, 200) vừa vượt hạn 160 vừa có thể cắt ngang giữa từ.
   // clampDescription cắt ở biên từ trong 160 ký tự.
   const description = clampDescription(c.intro);
