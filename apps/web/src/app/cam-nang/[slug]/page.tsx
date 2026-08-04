@@ -54,6 +54,18 @@ async function fetchPillar(slug: string): Promise<PillarRow | null> {
   }
 }
 
+// SEO override theo slug (plan 2026-08-03 mục #5): topic bài nằm trong DB
+// (fetch qua API) nên title mặc định không khớp cụm người dùng gõ. Override
+// tại frontend cho các bài trọng điểm. Ràng buộc seo-guard: title ≤ 48 ký tự
+// (hậu tố ' · hieu.asia' 12 ký tự, trần 60), description ≤ 160.
+const SLUG_SEO: Record<string, { title: string; description: string }> = {
+  'dang-sao-giai-han-co-can-khong': {
+    title: 'Dâng sao giải hạn là gì, có cần cúng sao?',
+    description:
+      'Cúng sao giải hạn có cần không? Nguồn gốc sao hạn La Hầu, Kế Đô, Thái Bạch và một góc nhìn bình tĩnh — không hù doạ, không bán lễ.',
+  },
+};
+
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
@@ -64,9 +76,12 @@ export async function generateMetadata(
   }
   const url = `https://hieu.asia/cam-nang/${pillar.slug}`;
   const topicShort = pillar.topic.slice(0, 37).trim();
+  const seo = SLUG_SEO[pillar.slug];
   return {
-    title: `${topicShort} — Cẩm nang`,
-    description: pillar.content.replace(/\s+/g, ' ').trim().slice(0, 157).replace(/\s\S*$/, '') + '…',
+    title: seo?.title ?? `${topicShort} — Cẩm nang`,
+    description:
+      seo?.description ??
+      pillar.content.replace(/\s+/g, ' ').trim().slice(0, 157).replace(/\s\S*$/, '') + '…',
     alternates: { canonical: url },
     openGraph: {
       title: pillar.topic,

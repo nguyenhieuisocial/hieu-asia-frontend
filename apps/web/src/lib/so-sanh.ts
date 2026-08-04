@@ -28,6 +28,12 @@ export interface Comparison {
   slug: string;
   /** Tiêu đề ngắn "MBTI vs Big Five". */
   title: string;
+  /**
+   * Title SEO trọn câu (nếu có) — thay hẳn công thức `${title}: khác gì, chọn
+   * cái nào?` để khớp đúng cụm người dùng gõ. PHẢI ≤ 48 ký tự (seo-guard đo
+   * title render + hậu tố ' · hieu.asia' 12 ký tự, trần 60).
+   */
+  seoTitle?: string;
   a: ToolRef;
   b: ToolRef;
   /** Tổng quan 1-2 câu. */
@@ -100,6 +106,9 @@ export const COMPARISONS: readonly Comparison[] = [
   {
     slug: 'tu-vi-vs-bat-tu',
     title: 'Tử Vi vs Bát Tự',
+    // Suggest: "bát tự và tử vi cái nào đúng hơn" — trang so sánh sinh ra để
+    // trả lời đúng câu này (plan SEO 2026-08-03, mục #10).
+    seoTitle: 'Bát Tự và Tử Vi: cái nào đúng hơn, khác gì?',
     a: { ten: 'Tử Vi', href: '/tu-vi', tag: 'Đẩu Số · 12 cung' },
     b: { ten: 'Bát Tự', href: '/bat-tu', tag: 'Tứ Trụ · Can Chi' },
     intro:

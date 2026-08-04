@@ -10,14 +10,14 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 const DESC =
-  'Lập & xem lá số Tử Vi Đẩu Số miễn phí từ ngày giờ sinh — 12 cung, 114 sao, độ sáng, Tứ Hóa, cách cục, bằng engine chuẩn. Luận giải để hiểu mình, không bói toán.';
+  'Lập lá số Tử Vi online miễn phí từ ngày giờ sinh — 12 cung, 114 sao, độ sáng, Tứ Hóa, cách cục, engine chuẩn. Luận giải để hiểu mình, không bói toán.';
 
 const BASE_META: Metadata = {
-  title: 'Xem lá số Tử Vi miễn phí — 12 cung, 114 sao',
+  title: 'Lá số Tử Vi online miễn phí — lập lá số 12 cung',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/la-so-tu-vi' },
   openGraph: {
-    title: 'Xem lá số Tử Vi miễn phí — 12 cung, 114 sao, cách cục',
+    title: 'Lá số Tử Vi online miễn phí — lập lá số 12 cung, 114 sao',
     description: DESC,
     url: 'https://hieu.asia/la-so-tu-vi',
     type: 'website',
@@ -110,7 +110,7 @@ export default async function LaSoTuViPage({
       <JsonLd
         data={[
           webPage({
-            name: 'Xem lá số Tử Vi miễn phí — 12 cung, 114 sao, cách cục',
+            name: 'Lá số Tử Vi online miễn phí — lập lá số 12 cung, 114 sao',
             description: DESC,
             url: '/la-so-tu-vi',
           }),

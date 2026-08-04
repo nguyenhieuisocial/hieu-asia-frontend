@@ -21,9 +21,9 @@ import { expiredSeasonalTarget } from '@/lib/seasonal';
 // nên khoảng lệch là thật chứ không phải lý thuyết.
 export const revalidate = 86400;
 export const metadata: Metadata = {
-  title: 'Tháng cô hồn 2026 — lịch âm & cách nhìn',
+  title: 'Tháng cô hồn 2026 kiêng gì? Lịch âm & cách nhìn',
   description:
-    'Tháng cô hồn 2026 (tháng 7 âm lịch): từ 13/8 đến 10/9, Rằm Vu Lan 27/8. Nguồn gốc, điều thường kiêng và góc nhìn không mê tín — hiểu để chủ động.',
+    'Tháng cô hồn 2026 (tháng 7 âm): 13/8–10/9, Vu Lan 27/8. Kiêng gì, nguồn gốc và góc nhìn không mê tín — hiểu để chủ động, không phải để sợ.',
   alternates: { canonical: 'https://hieu.asia/thang-co-hon-2026' },
   openGraph: {
     title: 'Tháng cô hồn 2026 — tháng nào, kiêng gì, nên hiểu thế nào',
