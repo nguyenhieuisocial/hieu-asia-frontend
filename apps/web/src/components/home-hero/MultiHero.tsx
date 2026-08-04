@@ -114,7 +114,10 @@ export function MultiHero(): React.JSX.Element {
               </span>
             </span>
           </h2>
-          <p className="mh-deck">Năm hệ soi cùng một người: Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng. Lá số tính thật từ ngày giờ sinh của bạn, AI đọc đúng những gì lá số ghi — chỗ nào chưa khớp cũng nói thẳng. Không hù dọa, không bán giải hạn.</p>
+          {/* Founder 04/08 — "trang ngắn gọn hơn, ít text hơn": rút 3 câu còn 2,
+              gộp mệnh đề "tính thật" + "đọc đúng" (trùng ý), GIỮ đủ 3 luận điểm
+              gốc (5 hệ · tính thật/trung thực · không hù dọa) — không mất claim. */}
+          <p className="mh-deck">Năm hệ soi cùng một người: Tử Vi, Bát Tự, MBTI, Big Five, Xem Tướng — tính thật từ ngày giờ sinh, đọc đúng những gì lá số ghi, kể cả chỗ chưa khớp. Không hù dọa, không bán giải hạn.</p>
         </div>
 
         {/* mobile-first: CTA TRƯỚC la bàn → user bấm được ngay màn 1 (above-fold).
