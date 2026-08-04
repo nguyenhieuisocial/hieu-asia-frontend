@@ -84,7 +84,7 @@ Bảo đảm hoàn tiền 14 ngày cho gói trả phí: hoàn 100% trong 24h n�
 
 ## Privacy
 
-- Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền
+- Dữ liệu truyền qua TLS; báo cáo và file xuất được lưu trên hạ tầng có mã hoá at-rest (Cloudflare R2 / Supabase Storage)
 - Không bán dữ liệu cá nhân; không dùng dữ liệu cá nhân để huấn luyện model. Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt (có thể tắt trong trang Tài khoản)
 - Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP của Việt Nam (hiệu lực 01/01/2026, thay thế Nghị định 13/2023/NĐ-CP)
 - Xoá tài khoản và toàn bộ dữ liệu trong trang Tài khoản

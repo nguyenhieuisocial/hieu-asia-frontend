@@ -46,8 +46,15 @@ export function DataDeletionDialog({
       >
         <DialogTitle className="text-gold">Xác nhận xoá dữ liệu</DialogTitle>
         <DialogDescription className="text-foreground/80">
-          Hành động này không thể hoàn tác. Tất cả báo cáo và lịch sử chat sẽ bị
-          xoá vĩnh viễn.
+          {/* Kiểm 04/08/2026: đồng bộ với DeleteAccountSection.tsx + /privacy mục 5 —
+              không xoá tức thì (hoàn tất trong tối đa 30 ngày), và một phần dữ liệu
+              chỉ được ẩn danh chứ không xoá. Sửa cả ba chỗ nếu đổi hành vi backend. */}
+          Hành động này không thể hoàn tác. Báo cáo và lịch sử chat sẽ bị xoá vĩnh viễn trong vòng
+          30 ngày; một phần dữ liệu khác chỉ được ẩn danh theo quy định. Xem chi tiết ở{' '}
+          <a className="underline" href="/privacy">
+            Chính sách bảo mật
+          </a>
+          .
         </DialogDescription>
         <label className="block">
           <span className="text-xs text-muted-foreground">

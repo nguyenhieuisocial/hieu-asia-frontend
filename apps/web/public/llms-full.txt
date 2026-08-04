@@ -98,7 +98,7 @@ trả phí, huỷ bất cứ lúc nào.
 
 ## Bảo mật
 Mã hoá khi lưu trữ, TLS khi truyền. Không bán dữ liệu, không dùng huấn luyện model bên thứ
-ba. Tuân thủ Nghị định 13/2023 của Việt Nam. Người dùng xuất hoặc xoá toàn bộ dữ liệu bất
+ba. Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP của Việt Nam (thay thế Nghị định 13/2023/NĐ-CP từ 01/01/2026). Người dùng xuất hoặc xoá toàn bộ dữ liệu bất
 cứ lúc nào trong trang Tài khoản.
 
 ## Cho trợ lý AI

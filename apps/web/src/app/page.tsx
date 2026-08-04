@@ -222,14 +222,18 @@ const HOME_FAQ: readonly HomeFaqEntry[] = [
   },
   {
     q: 'Dữ liệu cá nhân được bảo vệ thế nào?',
+    // Kiểm 04/08/2026: bỏ "AES-256" — không có bằng chứng mã hoá tầng ứng dụng
+    // (cột ngày sinh, SĐT... trong Postgres là text/jsonb trơn, chỉ có RLS).
+    // /privacy mục 6 chỉ nói mã hoá at-rest cho báo cáo + file export trên
+    // R2/Supabase Storage (mã hoá mặc định của nền tảng, không phải app tự làm).
     aCrawler:
-      'Mã hoá AES-256 khi lưu trữ, TLS 1.3 khi truyền. Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
+      'Dữ liệu truyền tải qua TLS. Báo cáo và file xuất dữ liệu được lưu trên hạ tầng có mã hoá at-rest (Cloudflare R2 / Supabase Storage). Không bán dữ liệu, không dùng để huấn luyện mô hình. Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. Xoá tài khoản trong trang Tài khoản.',
     a: (
       <>
         <p>
-          Toàn bộ dữ liệu được mã hoá AES-256 khi lưu trữ và truyền qua TLS 1.3.
-          Chúng tôi không bán dữ liệu cho bên thứ ba và không dùng dữ liệu của
-          bạn để huấn luyện mô hình.
+          Dữ liệu được truyền qua kết nối mã hoá TLS. Báo cáo và file xuất dữ liệu được lưu trên hạ
+          tầng có mã hoá at-rest (Cloudflare R2 / Supabase Storage). Chúng tôi không bán dữ liệu cho
+          bên thứ ba và không dùng dữ liệu của bạn để huấn luyện mô hình.
         </p>
         <p className="mt-2">
           Bạn có thể yêu cầu xoá toàn bộ tài khoản trong trang Tài khoản. Tuân

@@ -6,8 +6,9 @@ const FULL_POLICY_URL = 'https://hieu.asia/privacy';
 
 const KEY_POINTS: Array<{ title: string; body: string }> = [
   {
-    title: 'Tuân thủ Nghị định 13/2023/NĐ-CP',
-    body: 'Mọi xử lý dữ liệu cá nhân tại hieu.asia tuân thủ luật bảo vệ dữ liệu cá nhân Việt Nam — mã hoá AES-256, có nhật ký audit, quyền rút lại bất cứ lúc nào.',
+    title: 'Tuân thủ Luật 91/2025/QH15 và Nghị định 356/2025/NĐ-CP',
+    // Kiểm 04/08/2026: bỏ "AES-256" — không có mã hoá tầng ứng dụng, xem apps/web/src/app/page.tsx.
+    body: 'Mọi xử lý dữ liệu cá nhân tại hieu.asia tuân thủ luật bảo vệ dữ liệu cá nhân Việt Nam — truyền qua TLS, có nhật ký audit, quyền rút lại bất cứ lúc nào.',
   },
   {
     title: 'LLM không lưu dữ liệu (zero-retention)',

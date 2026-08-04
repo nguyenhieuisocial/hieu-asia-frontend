@@ -25,10 +25,16 @@ import { JsonLd } from '@/components/seo/JsonLd';
 
 export const dynamic = 'force-dynamic';
 
+// Kiểm 04/08/2026: trang này KHÔNG đọc lá số đã lưu — toàn bộ nội dung (QUARTERS
+// bên dưới + JSX) là hằng số tĩnh, giống nhau cho mọi người xem, đúng như chính
+// trang tự nói ("Nội dung minh hoạ — chưa kết nối lá số của bạn"). Metadata cũ
+// hứa "cá nhân hoá dựa trên lá số của bạn" — không khớp. Nếu sau này nối trang
+// này với LoTrinhChart (đã có sẵn cơ chế đọc localStorage, dùng ở /tu-vi-hom-nay)
+// thì sửa lại metadata cho khớp lúc đó.
 export const metadata: Metadata = {
-  title: 'Bản đồ cá nhân — gợi ý theo tuần/tháng/năm',
+  title: 'Bản đồ đồng hành — mẫu gợi ý theo tuần/tháng/năm',
   description:
-    'Gợi ý cá nhân hoá theo ngày, tuần, tháng và năm dựa trên lá số Tử Vi của bạn. Gói đồng hành cập nhật mỗi tuần, nhắc việc nên làm.',
+    'Xem trước mẫu bản đồ đồng hành theo ngày, tuần, tháng và năm. Lập lá số Tử Vi để nhận gợi ý cập nhật mỗi tuần theo đúng lá số của bạn.',
   alternates: { canonical: 'https://hieu.asia/ban-do' },
 };
 

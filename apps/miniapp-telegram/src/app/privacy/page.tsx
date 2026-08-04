@@ -21,8 +21,8 @@ export default function MiniappPrivacyPage() {
         </p>
         <p className="mt-3 text-sm leading-relaxed text-cream/80">
           Chính sách này mô tả cách hieu.asia thu thập, lưu trữ và sử dụng dữ liệu cá nhân của bạn,
-          tuân thủ <strong className="text-gold">Nghị định 13/2023/NĐ-CP</strong> về bảo vệ dữ liệu
-          cá nhân.
+          tuân thủ <strong className="text-gold">Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị
+          định 356/2025/NĐ-CP</strong> về bảo vệ dữ liệu cá nhân.
         </p>
 
         <Card className="mt-5">
@@ -96,7 +96,7 @@ export default function MiniappPrivacyPage() {
         <Card className="mt-4">
           <CardHeader>
             <CardTitle className="text-base">5. Quyền của bạn</CardTitle>
-            <CardDescription>Theo Nghị định 13/2023/NĐ-CP.</CardDescription>
+            <CardDescription>Theo Luật 91/2025/QH15 và Nghị định 356/2025/NĐ-CP.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-cream/85">
             <ul className="list-disc space-y-1.5 pl-5">

@@ -15,6 +15,7 @@ import {
   type TuViScope,
 } from '@/lib/tuvi-client';
 import { useScrollToResult } from '@/lib/use-scroll-to-result';
+import { ageFromDate } from '@/lib/age';
 
 /**
  * Shared "lập lá số → vận thật" island for the planning pages. One form, one
@@ -50,18 +51,6 @@ function mutagenText(mutagen?: string[]): string {
 function parseHour(t: string): number {
   const h = Number((t ?? '').split(':')[0]);
   return Number.isFinite(h) && h >= 0 && h <= 23 ? h : 12;
-}
-
-function ageFromDate(dateStr: string, now: Date = new Date()): number | null {
-  const m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec((dateStr ?? '').trim());
-  if (!m) return null;
-  const by = Number(m[1]);
-  const bm = Number(m[2]);
-  const bd = Number(m[3]);
-  let age = now.getFullYear() - by;
-  const mo = now.getMonth() + 1;
-  if (mo < bm || (mo === bm && now.getDate() < bd)) age -= 1;
-  return age >= 0 && age < 140 ? age : null;
 }
 
 type DaiVanSegment = { cung: string; start: number; end: number };
