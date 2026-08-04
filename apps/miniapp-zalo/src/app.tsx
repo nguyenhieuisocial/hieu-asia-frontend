@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router';
 import { initZalo } from './lib/zalo-init';
 import { WelcomePage } from './pages/index';
 import { ConsentPage } from './pages/consent';

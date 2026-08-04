@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Button, Card, CardContent } from '@hieu-asia/ui';
 import { Sparkles, ScanLine, ClipboardList, CalendarDays } from 'lucide-react';
 

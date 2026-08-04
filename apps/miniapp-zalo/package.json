@@ -20,9 +20,8 @@
     "posthog-js": "^1.374.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.18.0",
-    "zmp-sdk": "^2.0.0",
-    "zmp-ui": "^1.0.0"
+    "react-router": "^8.3.0",
+    "zmp-sdk": "^2.0.0"
   },
   "devDependencies": {
     "@hieu-asia/config": "workspace:*",

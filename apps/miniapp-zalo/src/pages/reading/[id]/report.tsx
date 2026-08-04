@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { Button } from '@hieu-asia/ui';
 import { ZaloHeader } from '../../../components/zalo-header';
 import { InsightCard } from '../../../components/insight-card';
