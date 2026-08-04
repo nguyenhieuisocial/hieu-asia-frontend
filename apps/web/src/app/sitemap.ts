@@ -27,6 +27,7 @@ import { MBTI_SLUGS } from '@/lib/mbti-type-data';
 import { DISC_SLUGS } from '@/lib/disc-type-data';
 import { BIG_FIVE_SLUGS } from '@/lib/big-five-trait-data';
 import { CON_GIAP_SLUGS } from '@/lib/con-giap-data';
+import { BATCH_1_HOA_GIAP, hoaGiapParamSlug } from './tu-vi-2026/hoa-giap-data';
 import { TAI_LIEU } from '@/lib/tai-lieu/registry';
 import { LEARN_TOPICS } from '@/lib/learn/related';
 import { liveMonths, monthSlug } from '@/lib/tu-vi-thang-data';
@@ -443,6 +444,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // Tử Vi 2026 theo hoa giáp × giới tính — batch 1 (30 hoa giáp × 2 giới = 60
+  // trang; batch 2 sẽ thêm 30 hoa giáp còn lại của vòng 60 sau khi theo dõi).
+  const tuVi2026HoaGiap: MetadataRoute.Sitemap = BATCH_1_HOA_GIAP.flatMap((h) =>
+    (['nam', 'nu'] as const).map((g) => ({
+      url: `${BASE_URL}/tu-vi-2026/${h.zodiac.slug}/${hoaGiapParamSlug(h.slug, g)}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
+  );
+
   // Cung hoàng đạo (chiêm tinh phương Tây) — hub + 12 cung. Deterministic SSG.
   const cungHoangDaoUrls: MetadataRoute.Sitemap = [
     {
@@ -708,7 +720,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   ];
 
-  const allRoutes = [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...taiLieu, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2027ConGiap, ...tuViThang, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...huongBanUrls, ...cungHopUrls, ...enneagramTypeUrls, ...conGiapUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
+  const allRoutes = [...core, ...tuviHub, ...palaceUrls, ...starUrls, ...decisionSystem, ...retentionTools, ...wave7, ...wave9, ...waveAdditions, ...zodiacDailyUrls, ...wave13, ...wave38Additions, ...wave60_96Additions, ...learnPalaceUrls, ...dot0Tools, ...taiLieu, ...xemNgay, ...saoHanTuoi, ...ngayKiengKy, ...gioHoangDao, ...datTenNguHanh, ...xemTuoiCuoi, ...sinhCon, ...lamNha, ...xongDat, ...khaiTruong, ...huongNha, ...tuVi2026ConGiap, ...tuVi2026HoaGiap, ...tuVi2027ConGiap, ...tuViThang, ...pillarUrls, ...hopTuoiPairUrls, ...soSanhUrls, ...cungHoangDaoUrls, ...banMenhUrls, ...tamTaiUrls, ...kimLauUrls, ...mauXeUrls, ...huongBanUrls, ...cungHopUrls, ...enneagramTypeUrls, ...conGiapUrls, ...mbtiTypeUrls, ...discTypeUrls, ...bigFiveTraitUrls];
   // S10 mùa vụ: rụng trang thời-điểm đã hết hạn khỏi sitemap (vẫn giữ file).
   return allRoutes.filter((e) => expiredSeasonalTarget(e.url.replace(BASE_URL, '')) === null);
 }

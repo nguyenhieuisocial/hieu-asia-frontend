@@ -46,7 +46,7 @@ interface YearRelationCopy {
   line: (ten: string) => string;
 }
 
-const YEAR_RELATION: Record<RelationKind, YearRelationCopy> = {
+export const YEAR_RELATION: Record<RelationKind, YearRelationCopy> = {
   'tam-hop': {
     label: 'Tam Hợp với năm',
     line: (t) =>
@@ -83,7 +83,7 @@ const YEAR_RELATION: Record<RelationKind, YearRelationCopy> = {
 // Năm Ngọ = hành Hỏa. Vòng sinh: Mộc→Hỏa→Thổ→Kim→Thủy→Mộc. Vòng khắc:
 // Thủy→Hỏa→Kim. Diễn đạt năm-framed, không hù doạ.
 
-function nguHanhVsYear(e: NguHanh): string {
+export function nguHanhVsYear(e: NguHanh): string {
   switch (e) {
     case 'Hỏa':
       return 'Con giáp của bạn cùng hành Hỏa với năm, năng lượng cộng hưởng mạnh: làm việc hăng và dễ có khí thế, nhưng cũng dễ nóng vội — giữ nhịp là chìa khoá.';
