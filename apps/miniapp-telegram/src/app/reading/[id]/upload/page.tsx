@@ -113,7 +113,7 @@ export default function MiniAppUploadPage() {
           />
         </div>
 
-        <p className="mt-4 text-center text-xs text-cream/50">Ảnh được mã hoá khi lưu, chỉ dùng cho phiên này.</p>
+        <p className="mt-4 text-center text-xs text-cream/50">Ảnh chỉ nằm trong trình duyệt cho phiên này, không gửi lên máy chủ.</p>
       </div>
 
       <TgMainButton text="Tiếp tục" onClick={onContinue} disabled={!file} />

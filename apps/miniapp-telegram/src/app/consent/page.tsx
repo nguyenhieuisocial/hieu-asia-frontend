@@ -17,7 +17,7 @@ const REQUIRED_ITEMS: ConsentItem[] = [
 ];
 
 const OPTIONAL_ITEMS: ConsentItem[] = [
-  { id: 'palm_image', label: 'Ảnh bàn tay (tuỳ chọn)', purpose: 'Vision AI phân tích đường chỉ tay. Ảnh tự xoá sau 7 ngày.' },
+  { id: 'palm_image', label: 'Ảnh bàn tay (tuỳ chọn)', purpose: 'Vision AI phân tích đường chỉ tay. Ảnh không lưu trên máy chủ.' },
   { id: 'survey', label: 'Câu trả lời khảo sát MBTI (tuỳ chọn)', purpose: 'Đối chiếu MBTI với lá số để chỉ ra điểm trùng và điểm lệch.' },
   { id: 'context', label: 'Bối cảnh nghề nghiệp (tuỳ chọn)', purpose: 'Cá nhân hoá khuyến nghị 30-60-90 ngày.' },
 ];

@@ -124,13 +124,15 @@ export function DeleteAccountSection({ userId }: DeleteAccountSectionProps) {
         </CardTitle>
         <CardDescription className="text-foreground/75">
           Hành động này <strong className="text-red-200">KHÔNG thể hoàn tác</strong>.
-          Toàn bộ phiên đọc, ảnh palm, báo cáo, giao dịch sẽ bị xóa vĩnh viễn
+          Toàn bộ phiên đọc, báo cáo, giao dịch sẽ bị xóa vĩnh viễn
           trong vòng 30 ngày.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 text-sm text-foreground/85">
         <ul className="list-disc space-y-1 pl-5 text-foreground/75">
-          <li>Xóa PII: ảnh palm/face, dữ liệu sinh, kết quả MBTI.</li>
+          {/* Kiểm 04/08/2026: bỏ "ảnh palm/face" — không luồng người dùng nào gửi ảnh
+              lên kho nên không có ảnh để xoá (xem chú thích dài ở app/privacy/page.tsx). */}
+          <li>Xóa PII: dữ liệu sinh, kết quả MBTI.</li>
           <li>Ẩn danh hóa các bản ghi phân tích (không thể tái định danh).</li>
           <li>Xóa OAuth tokens, sessions, lịch sử giao dịch.</li>
           <li>Ghi 1 mục audit "user_erased" — lưu 12 tháng.</li>

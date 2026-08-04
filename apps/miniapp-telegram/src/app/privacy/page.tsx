@@ -77,8 +77,10 @@ export default function MiniappPrivacyPage() {
           <CardContent className="space-y-3 text-sm text-cream/85">
             <div className="rounded-md border border-jade/30 bg-jade/10 p-3">
               <p>
+                {/* Kiểm 04/08/2026 — xem chú thích dài ở apps/web/src/app/privacy/page.tsx:
+                    không luồng nào gửi ảnh lên kho, nên "xoá sau 7 ngày" là mô tả sai. */}
                 <strong className="text-jade">Ảnh bàn tay & chân dung:</strong>{' '}
-                <strong>TỰ ĐỘNG XÓA SAU 7 NGÀY</strong> kể từ khi xử lý xong.
+                <strong>KHÔNG lưu trên máy chủ</strong> — gửi kèm yêu cầu phân tích rồi thôi.
               </p>
             </div>
             <ul className="list-disc space-y-1.5 pl-5">

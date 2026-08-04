@@ -48,7 +48,7 @@ Năm chiều tính cách có cơ sở khoa học vững nhất: Cởi mở (Open
 
 ### 5. Xem Tướng (AI thị giác)
 Đọc chỉ tay và tướng mặt qua ảnh người dùng tải lên, bằng AI đa phương thức. Ảnh là tuỳ
-chọn, tự xoá sau 7 ngày. Mang tính tham khảo văn hoá, không phán định.
+chọn và không được lưu trên máy chủ. Mang tính tham khảo văn hoá, không phán định.
 
 ## Bộ công cụ rộng hơn (/cong-cu)
 Thần Số Học, Tarot, Kinh Dịch (gieo quẻ 64 quẻ), DISC, Enneagram, Chiêm tinh Tây (bản đồ

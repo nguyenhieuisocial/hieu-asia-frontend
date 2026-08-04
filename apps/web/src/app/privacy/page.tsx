@@ -375,11 +375,29 @@ export default function PrivacyPage() {
             <CardDescription>Chúng tôi xóa dữ liệu nhạy cảm sớm nhất có thể.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
+            {/*
+              KIỂM CHỨNG 04/08/2026 — câu cũ ở đây ghi "TỰ ĐỘNG XÓA SAU 7 NGÀY", tức
+              ngụ ý ảnh CÓ được lưu. Đã truy cả hai repo và điều đó KHÔNG đúng:
+                • /xem-tuong nén ảnh trong trình duyệt rồi gửi thẳng trong thân yêu cầu
+                  tới handler /tools/vision-read; handler chuyển tiếp cho mô hình và
+                  không gọi R2 / Supabase Storage / DB nào (backend src/index.ts).
+                • Ba luồng upload ảnh tay (web /reading/[id]/upload, mini-app Telegram,
+                  mini-app Zalo) đều gọi /v1/uploads/hand-image-url — route KHÔNG tồn
+                  tại trong worker (không có route /v1/* nào), nên luôn rơi vào nhánh
+                  dự phòng URL.createObjectURL: ảnh không rời khỏi trình duyệt.
+              Đường ghi ảnh POST /upload (key palm/, face/) và cron dọn 7 ngày VẪN là
+              mã sống — chỉ là chưa client nào gọi. Vì vậy câu chữ dưới đây nói "hiện
+              không có luồng nào gửi ảnh lên lưu trữ", KHÔNG nói "hệ thống không thể
+              lưu ảnh". Nếu sau này nối lại luồng upload thì phải sửa mục này TRƯỚC.
+            */}
             <div className="rounded-md border border-jade/30 bg-jade/10 p-4">
               <p>
                 <strong className="text-foreground">Ảnh bàn tay và ảnh chân dung:</strong>{' '}
-                <strong className="text-foreground">TỰ ĐỘNG XÓA SAU 7 NGÀY</strong> kể từ khi báo cáo
-                được xử lý xong. Sau khi vision AI trích xuất đặc điểm, ảnh gốc sẽ bị xóa vĩnh viễn.
+                <strong className="text-foreground">KHÔNG được lưu trên máy chủ.</strong> Ảnh được
+                nén ngay trên máy bạn rồi gửi kèm yêu cầu phân tích; hệ thống không ghi ảnh vào bất
+                kỳ kho lưu trữ nào, nên về sau không tồn tại bản sao nào để xóa. Ảnh vẫn được truyền
+                qua máy chủ để tới nhà cung cấp mô hình AI đọc ảnh — nghĩa là ảnh có rời máy bạn,
+                chỉ là không được giữ lại.
               </p>
             </div>
             <ul className="list-disc space-y-2 pl-5">
@@ -475,7 +493,14 @@ export default function PrivacyPage() {
           <CardContent className="space-y-3 text-sm leading-relaxed text-foreground/85">
             <ul className="list-disc space-y-2 pl-5">
               <li>Mã hóa TLS 1.3 cho toàn bộ dữ liệu truyền tải in-transit.</li>
-              <li>Mã hóa at-rest cho ảnh và báo cáo trên Cloudflare R2 / Supabase Storage.</li>
+              {/*
+                Bỏ chữ "ảnh" khỏi dòng này: kiểm 04/08/2026 cho thấy không luồng người
+                dùng nào gửi ảnh lên kho, nên nói "mã hoá at-rest cho ảnh" là mô tả một
+                thứ không tồn tại. Thứ THẬT SỰ nằm trong kho là bản PDF báo cáo trả phí
+                (route /reading/:id/export-pdf ghi key other/<uid>/*.pdf với retention
+                "permanent") và file xuất dữ liệu theo yêu cầu GDPR.
+              */}
+              <li>Mã hóa at-rest cho báo cáo và file xuất dữ liệu trên Cloudflare R2 / Supabase Storage.</li>
               <li>Truy cập dữ liệu nội bộ được kiểm soát bằng RBAC và audit log đầy đủ.</li>
             </ul>
             <div className="mt-4 rounded-md border border-gold/15 bg-card/40 p-4">
