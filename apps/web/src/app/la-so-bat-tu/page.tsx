@@ -8,14 +8,14 @@ import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
 
 // SEO S7: rút gọn 269 → ~157 ký tự (Google cắt mô tả ~170).
 const DESC =
-  'Lập & xem lá số Bát Tự (Tứ Trụ) miễn phí từ ngày giờ sinh — 4 trụ, ngũ hành, Nhật Chủ, Thập Thần, đại vận; trụ tính theo tiết khí đúng chuẩn, không bói toán.';
+  'Lập & luận giải lá số Bát Tự (Tứ Trụ) online miễn phí — 4 trụ, ngũ hành, Nhật Chủ, Thập Thần, đại vận; trụ tính theo tiết khí chuẩn, không bói toán.';
 
 const BASE_META: Metadata = {
-  title: 'Xem lá số Bát Tự (Tứ Trụ) miễn phí',
+  title: 'Xem lá số Bát Tự online miễn phí (Tứ Trụ)',
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/la-so-bat-tu' },
   openGraph: {
-    title: 'Xem lá số Bát Tự (Tứ Trụ) miễn phí — 8 chữ, ngũ hành, Thập Thần',
+    title: 'Xem lá số Bát Tự online miễn phí — 8 chữ, ngũ hành, Thập Thần',
     description: DESC,
     url: 'https://hieu.asia/la-so-bat-tu',
     type: 'website',
@@ -105,7 +105,7 @@ export default function LaSoBatTuPage() {
       <JsonLd
         data={[
           webPage({
-            name: 'Xem lá số Bát Tự (Tứ Trụ) miễn phí — 8 chữ, ngũ hành, Thập Thần',
+            name: 'Xem lá số Bát Tự online miễn phí — 8 chữ, ngũ hành, Thập Thần',
             description: DESC,
             url: '/la-so-bat-tu',
           }),

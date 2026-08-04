@@ -13,13 +13,13 @@ import type { Metadata } from 'next';
  * Beta-engine page is still indexed (matches /methodology/bat-tu policy).
  */
 export const metadata: Metadata = {
-  title: 'Bát Tự — Tám chữ định hình bạn',
+  title: 'Bát Tự — luận giải tám chữ định hình bạn',
   description:
-    'Bát Tự (Tứ Trụ) đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ sinh. Engine chính xác + AI đối chiếu cùng Tử Vi, MBTI, Big Five, DISC, Enneagram… Miễn phí.',
+    'Bát Tự (Tứ Trụ) đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ sinh. Luận giải Bát Tự online miễn phí — engine chuẩn + AI đối chiếu Tử Vi, MBTI, Big Five.',
   alternates: { canonical: 'https://hieu.asia/bat-tu' },
   robots: { index: true, follow: true },
   openGraph: {
-    title: 'Bát Tự — Tám chữ định hình bạn',
+    title: 'Bát Tự — luận giải tám chữ định hình bạn',
     description:
       'Đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ. Engine tính 4 trụ, AI đối chiếu Tử Vi.',
     url: 'https://hieu.asia/bat-tu',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bát Tự — Tám chữ định hình bạn',
+    title: 'Bát Tự — luận giải tám chữ định hình bạn',
     description:
       'Đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ. Engine + AI đối chiếu 4 trường phái.',
     images: [

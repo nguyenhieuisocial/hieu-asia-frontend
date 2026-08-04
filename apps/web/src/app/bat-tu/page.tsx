@@ -36,7 +36,7 @@ const WEBPAGE_JSONLD = {
   '@type': 'WebPage',
   '@id': 'https://hieu.asia/bat-tu',
   url: 'https://hieu.asia/bat-tu',
-  name: 'Bát Tự — Tám chữ định hình bạn',
+  name: 'Bát Tự — luận giải tám chữ định hình bạn',
   description:
     'Bát Tự (Tứ Trụ) đọc bản đồ ngũ hành từ 8 chữ năm-tháng-ngày-giờ. hieu.asia kết hợp engine deterministic và AI để đối chiếu 4 trường phái.',
   inLanguage: 'vi-VN',
