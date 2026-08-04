@@ -5,17 +5,20 @@ import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { OccasionLeadCapture } from '@/components/occasion/OccasionLeadCapture';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage, faqPage } from '@/lib/seo/jsonld';
-import { SAO_ORDER, SAO_INFO, TYPE_LABEL, type SaoType } from '@/lib/sao-han';
+import { SAO_ORDER, SAO_INFO, TYPE_LABEL, currentViewYear, type SaoType } from '@/lib/sao-han';
 
-const DESC =
-  'Xem sao hạn (Cửu Diệu) theo tuổi và giới tính: La Hầu, Kế Đô, Thái Bạch, Thái Dương, Thái Âm, Mộc Đức, Thổ Tú, Thủy Diệu, Vân Hớn. Tham khảo theo phong tục.';
+// Năm xem tính bằng currentViewYear() (cùng nguồn với /sao-han/[tuoi]) để
+// title tự cập nhật theo build, không kẹt số năm cũ.
+const YEAR = currentViewYear();
+const TITLE = `Sao hạn ${YEAR} các tuổi — sao chiếu mệnh nam & nữ`;
+const DESC = `Sao hạn ${YEAR} các tuổi theo năm sinh, nữ mạng & nam mạng: La Hầu, Kế Đô, Thái Bạch, Thái Dương, Thái Âm, Mộc Đức, Thổ Tú, Thủy Diệu, Vân Hớn. Theo phong tục.`;
 
 export const metadata: Metadata = {
-  title: 'Xem sao hạn — sao chiếu mệnh theo tuổi',
+  title: TITLE,
   description: DESC,
   alternates: { canonical: 'https://hieu.asia/sao-han' },
   openGraph: {
-    title: 'Xem sao hạn — sao chiếu mệnh theo tuổi',
+    title: TITLE,
     description: DESC,
     url: 'https://hieu.asia/sao-han',
     type: 'website',
@@ -56,7 +59,7 @@ export default function SaoHanPage() {
     <>
       <JsonLd
         data={[
-          webPage({ name: 'Xem sao hạn — sao chiếu mệnh theo tuổi', description: DESC, url: '/sao-han' }),
+          webPage({ name: TITLE, description: DESC, url: '/sao-han' }),
           breadcrumb([
             { name: 'Trang chủ', url: '/' },
             { name: 'Lịch Vạn Niên', url: '/lich-van-nien' },
@@ -70,7 +73,7 @@ export default function SaoHanPage() {
         icon={<span aria-hidden="true">⭐</span>}
         title={
           <>
-            Xem <GoldAccent>sao hạn</GoldAccent>
+            Xem <GoldAccent>sao hạn</GoldAccent> các tuổi
           </>
         }
         description="Tra sao chiếu mệnh (Cửu Diệu) của bạn trong năm theo tuổi âm và giới tính. Đây là cách tra cứu theo phong tục dân gian để tham khảo — không phán số mệnh, không bán lễ giải hạn."
