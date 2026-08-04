@@ -117,19 +117,7 @@ export const EXEMPT_TOOLS: readonly string[] = ['/reading', '/hoi-dap'];
  * trình "mỗi công cụ một bài Học riêng".
  */
 export const PENDING: readonly string[] = [
-  '/learn/doc-mot-tuoi',
-  '/learn/nhat-van',
-  '/learn/that-tich',
-  '/learn/ngay-tinh-yeu',
-  '/learn/nhip-song',
-  '/learn/hop-doi',
-  '/learn/dong-nhom',
-  '/learn/hieu-nguoi-than',
-  '/learn/sinh-con',
-  '/learn/so-sanh-lang-kinh',
-  '/learn/ra-quyet-dinh',
-  '/learn/nghe-nghiep',
-  '/learn/tuong-mat',
+  // RỖNG — chương trình "mỗi công cụ một bài Học riêng" đã hoàn tất.
 ];
 
 /** Bài Học phụ (không phải `learn` chính) — công cụ có thể trỏ thêm. */

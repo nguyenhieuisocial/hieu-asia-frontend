@@ -17,7 +17,15 @@ export function SavedBirthInfoHint({
   if (!show) return null;
   return (
     <p className="text-xs leading-relaxed text-muted-foreground">
-      Đã tự điền từ thông tin bạn nhập trước (lưu trên máy này, không gửi đi đâu).{' '}
+      {/*
+        Kiểm 04/08/2026: câu cũ ghi "không gửi đi đâu" — SAI với người đã đăng nhập.
+        lib/birth-profile.ts đồng bộ hồ sơ này lên tài khoản qua /api/user/preferences,
+        và /privacy + /tra-cuu-tuoi đều đã nói đúng điều đó. Component này không biết
+        trạng thái đăng nhập nên câu chữ phải đúng cho CẢ HAI trường hợp — đừng rút
+        gọn lại thành "không gửi đi đâu".
+      */}
+      Đã tự điền từ thông tin bạn nhập trước (lưu trên máy này; nếu bạn đã đăng nhập thì cũng được
+      lưu vào tài khoản).{' '}
       <button
         type="button"
         onClick={() => {

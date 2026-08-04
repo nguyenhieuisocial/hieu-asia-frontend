@@ -16,11 +16,19 @@
  *     "cùng hành" hoặc "lệch một bước tương sinh" (sweep 2304 cặp trụ liền kề,
  *     0 ngoại lệ). 9 trụ = 9 can liên tiếp bỏ chính can tháng → 9 Thập Thần khác
  *     nhau, thiếu đúng Thập Thần của trụ tháng (kiểm bằng sweep).
- *   • src/app/dai-van-hien-tai/form.tsx — tuổi = năm hiện tại trừ năm sinh.
+ *   • src/lib/age.ts — ageFromDate(): tuổi dương, trừ thêm 1 nếu chưa qua sinh
+ *     nhật. TRƯỚC 04/08/2026, src/app/dai-van-hien-tai/form.tsx dùng công thức
+ *     KHÁC (chỉ năm hiện tại trừ năm sinh, thiếu điều chỉnh sinh nhật) trong khi
+ *     src/components/time-flow/TimeFlowChecker.tsx (dùng ở /timeline) đã tính
+ *     đúng — hai trang lệch nhau đúng 1 tuổi ở quãng đầu năm tới trước sinh
+ *     nhật, có thể ra hai chặng khác nhau cho cùng một người. Đã gộp về CHUNG
+ *     một hàm ageFromDate(); Ví dụ 2 + FAQ liên quan dưới đây TÁI HIỆN lỗi đó
+ *     làm case study lịch sử — ĐỪNG viết lại thành "hai công cụ ĐANG dùng hai
+ *     cách khác nhau" ở thì hiện tại, vì từ nay chúng dùng chung một hàm.
  *   • src/components/time-flow/TimeFlowChecker.tsx (island của /timeline) —
- *     ageFromDate() TRỪ THÊM 1 nếu chưa qua sinh nhật; DecadalResult render CẢ
- *     CHUỖI đại vận với chặng hiện tại tô sáng, PDF ghi "đọc theo trình tự
- *     tuổi… khung tham khảo để soi nhịp dài hạn, không phải dự đoán may rủi".
+ *     DecadalResult render CẢ CHUỖI đại vận với chặng hiện tại tô sáng, PDF ghi
+ *     "đọc theo trình tự tuổi… khung tham khảo để soi nhịp dài hạn, không phải
+ *     dự đoán may rủi".
  *   • src/app/timeline/page.tsx — đại vận = 10 năm, lưu niên = năm, lưu nguyệt
  *     = tháng; mốc tuổi thật phụ thuộc ngày giờ sinh.
  *
@@ -81,9 +89,11 @@ interface Person {
   forward: boolean;
   startAge: number;
   pillars: DaiVanPillar[];
-  /** Tuổi theo quy ước của /dai-van-hien-tai: năm tham chiếu trừ năm sinh. */
+  /** Quy ước "năm trừ năm" — /dai-van-hien-tai dùng CÔNG THỨC NÀY tới 04/08/2026,
+   * nay đã sửa. Giữ lại để tái hiện lỗi cũ làm ví dụ. */
   ageYearOnly: number;
-  /** Tuổi theo quy ước của /timeline: trừ thêm 1 nếu chưa qua sinh nhật. */
+  /** Quy ước có điều chỉnh sinh nhật — /timeline luôn dùng, và nay cũng là cách
+   * /dai-van-hien-tai dùng (qua src/lib/age.ts dùng chung). */
   ageBirthday: number;
 }
 
@@ -202,8 +212,8 @@ const FAQS = [
     a: `Vì tuổi khởi vận là số ngày tới mốc tiết khí chia ba rồi làm tròn, nên cứ khoảng ${RUN_DAYS} ngày sinh lệch là con số ấy đổi một đơn vị — và cả bộ mốc dịch theo nguyên một năm. Ví dụ chạy bằng engine của site: sinh ${SHIFT_EARLY.birthLabel} lúc ${SHIFT_EARLY.hourLabel} thì khởi vận ${SHIFT_EARLY.startAge} tuổi, còn sinh ${SHIFT_LATE.birthLabel} cùng giờ, cùng giới thì khởi vận ${SHIFT_LATE.startAge} tuổi. Nhãn ${N_CHANG} chặng của hai người giống hệt nhau, chỉ mọi mốc lệch một năm. Đó là dấu hiệu rõ nhất cho thấy mốc là kết quả của cách chia, không phải một thời điểm được đo.`,
   },
   {
-    q: 'Cùng một người mà hai công cụ trên hieu.asia báo hai chặng khác nhau thì sai ở đâu?',
-    a: `Không bên nào sai phép tính — hai bên dùng hai quy ước tuổi khác nhau. Trang đại vận hiện tại lấy năm hiện tại trừ năm sinh. Trang timeline thì trừ thêm một nếu bạn chưa qua sinh nhật trong năm. Trong quãng từ đầu năm dương lịch tới trước sinh nhật của bạn, hai cách này lệch nhau đúng một tuổi; qua sinh nhật rồi thì chúng trùng nhau; nếu tuổi của bạn lại đang nằm sát mốc chuyển thì hai công cụ chỉ vào hai chặng. Cách xử lý: xem con số tuổi mà công cụ đang dùng trước khi tin vào cái chặng nó trả về.`,
+    q: 'Cùng một người mà hai công cụ trên hieu.asia từng báo hai chặng khác nhau — chuyện đó là sao?',
+    a: `Đây từng là một lỗi thật trên site, tới 04/08/2026: trang đại vận hiện tại lấy năm hiện tại trừ năm sinh, còn trang timeline trừ thêm một nếu bạn chưa qua sinh nhật trong năm. Trong quãng từ đầu năm dương lịch tới trước sinh nhật, hai cách này lệch nhau đúng một tuổi — nếu tuổi đó rơi sát mốc chuyển thì hai công cụ chỉ vào hai chặng khác nhau. Lỗi đã được gộp về một công thức dùng chung (có điều chỉnh sinh nhật) cho cả hai trang, nên giờ chúng luôn khớp nhau. Ví dụ vẫn giữ trong bài vì đây là cạm bẫy rất phổ biến khi tính tuổi ở bất kỳ hệ thống nào, không riêng gì Tử Vi hay Bát Tự.`,
   },
   {
     q: 'Năm giao vận có nên tránh việc lớn không?',
@@ -211,7 +221,7 @@ const FAQS = [
   },
   {
     q: 'Nhìn lại thấy đúng mốc giao vận là có biến — vậy chẳng phải đã kiểm chứng rồi sao?',
-    a: `Chưa. Nhìn lại quá khứ thì gần như ai cũng thấy "đúng lúc giao vận có biến", vì ba lý do cộng lại: vùng được coi là giao vận rất rộng (nới hai năm mỗi bên đã phủ khoảng ${pctOfSpan(WIDE)} phần trăm số năm của chặng), bản thân mốc đã nhoè một năm vì làm tròn và vì hai quy ước tuổi, và chuỗi ${N_CHANG} chặng quét tới ${N_TEN_GOD} trong 10 nhãn của hệ nên gần như chuyện gì cũng tìm được nhãn khớp. Thêm nữa, ta chỉ nhớ những lần trùng và không đếm những mốc trôi qua trong yên ắng. Đó là cách bộ não gán nghĩa cho một dãy số, không phải bằng chứng.`,
+    a: `Chưa. Nhìn lại quá khứ thì gần như ai cũng thấy "đúng lúc giao vận có biến", vì ba lý do cộng lại: vùng được coi là giao vận rất rộng (nới hai năm mỗi bên đã phủ khoảng ${pctOfSpan(WIDE)} phần trăm số năm của chặng), bản thân mốc đã nhoè một năm vì làm tròn (và từng nhoè thêm vì hai công cụ trên site dùng hai quy ước tuổi khác nhau — nay đã gộp về một, xem câu hỏi ở trên), và chuỗi ${N_CHANG} chặng quét tới ${N_TEN_GOD} trong 10 nhãn của hệ nên gần như chuyện gì cũng tìm được nhãn khớp. Thêm nữa, ta chỉ nhớ những lần trùng và không đếm những mốc trôi qua trong yên ắng. Đó là cách bộ não gán nghĩa cho một dãy số, không phải bằng chứng.`,
   },
   {
     q: 'Chặng liền sau có phải luôn trái ngược với chặng đang ở không?',
@@ -452,12 +462,12 @@ export default function LearnGiaoVanPage() {
                 ngoài vào.
               </p>
               <h3 className="pt-2 text-lg font-semibold text-foreground">
-                Ví dụ 2 — cùng một người, hai quy ước tuổi, hai chặng
+                Ví dụ 2 — cùng một người, hai quy ước tuổi, hai chặng (lỗi thật, đã sửa)
               </h3>
               <p>
                 Mốc là một con số tuổi, nên nó chỉ sắc nét khi <em>tuổi</em> sắc nét. Mà tuổi
-                thì có hai cách tính, và hai công cụ trên chính hieu.asia đang dùng hai cách
-                khác nhau: trang{' '}
+                thì có hai cách tính phổ biến — và đây từng là một lỗi thật trên chính hieu.asia,
+                tới 04/08/2026: trang{' '}
                 <Link href="/dai-van-hien-tai" className={LINK}>
                   đại vận hiện tại
                 </Link>{' '}
@@ -465,7 +475,10 @@ export default function LearnGiaoVanPage() {
                 <Link href="/timeline" className={LINK}>
                   timeline
                 </Link>{' '}
-                trừ thêm một nếu bạn chưa qua sinh nhật trong năm.
+                trừ thêm một nếu bạn chưa qua sinh nhật trong năm. Hai trang đã được gộp về dùng
+                chung một công thức (có điều chỉnh sinh nhật), nên giờ luôn khớp nhau — ví dụ dưới
+                đây tái hiện đúng cơ chế từng gây lệch, để bạn thấy một khác biệt nhỏ trong cách
+                đếm tuổi có thể đẩy cùng một người sang hai chặng khác nhau.
               </p>
               <p>
                 Lấy một người sinh <strong>{MAIN.birthLabel}</strong> lúc{' '}
@@ -497,9 +510,10 @@ export default function LearnGiaoVanPage() {
               </ul>
               <p>
                 Cùng một người, cùng một ngày tra, hai con số tuổi đều hợp lệ —{' '}
-                <strong>hai chặng khác nhau</strong>. Đây không phải lỗi của công cụ nào; đây là
-                bằng chứng rằng ranh giới đã <strong>nhoè sẵn một năm</strong> trước khi có ai
-                diễn giải rộng thêm.
+                <strong>hai chặng khác nhau</strong>. Đó chính xác là lỗi từng xảy ra thật trên
+                hieu.asia, và nó cho thấy ranh giới đã <strong>nhoè sẵn một năm</strong> trước khi
+                có ai diễn giải rộng thêm — không cần ai cố tình hiểu sai, chỉ cần hai công thức
+                tính tuổi khác nhau một chút là đủ.
               </p>
               <p>
                 Và nếu bạn nghĩ hai chặng hai bên mốc phải rất khác nhau thì nhìn kỹ cặp này:{' '}
@@ -616,9 +630,9 @@ export default function LearnGiaoVanPage() {
                   xếp vào loại “gần mốc”.
                 </li>
                 <li>
-                  <strong>Bản thân mốc đã nhoè.</strong> Làm tròn trong phép tính cộng với hai
-                  quy ước tuổi khác nhau, như hai ví dụ ở trên, đủ để “đúng năm” xê dịch mà
-                  không ai thấy sai.
+                  <strong>Bản thân mốc đã nhoè.</strong> Làm tròn trong phép tính, cộng thêm nguy
+                  cơ trộn hai quy ước tuổi khác nhau (từng xảy ra thật trên chính site — xem ví dụ
+                  2), đủ để “đúng năm” xê dịch mà không ai thấy sai.
                 </li>
                 <li>
                   <strong>Bộ nhãn gần như đầy đủ.</strong> Chuỗi quét {N_TEN_GOD} trong 10 nhãn
@@ -665,8 +679,9 @@ export default function LearnGiaoVanPage() {
                 <li>
                   <strong>Mốc là vết dao, không phải vạch có sẵn.</strong> Ba dấu hiệu kiểm
                   được, cả ba đều có trong bài: phép tính làm tròn về năm nguyên; sinh lệch vài
-                  ngày là cả bộ mốc dịch một năm trong khi nhãn chặng không đổi; và hai công cụ
-                  của cùng một site cho hai chặng khác nhau vì hai quy ước tuổi.
+                  ngày là cả bộ mốc dịch một năm trong khi nhãn chặng không đổi; và (từng xảy ra
+                  thật trên chính site, tới 04/08/2026 — nay đã sửa) hai công cụ dùng hai quy ước
+                  tuổi khác nhau từng cho ra hai chặng khác nhau cho cùng một người.
                 </li>
                 <li>
                   <strong>Hai bên mốc không phải hai thái cực.</strong> Mỗi chặng chỉ bước một

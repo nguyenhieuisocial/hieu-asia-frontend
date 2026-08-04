@@ -12,6 +12,7 @@ import { ShareResultButton } from '@/components/tools/ShareResultButton';
 import { ReferralCard } from '@/components/account/ReferralCard';
 import { PRICING, formatVND } from '@/lib/pricing';
 import { useScrollToResult } from '@/lib/use-scroll-to-result';
+import { ageFromDate } from '@/lib/age';
 import {
   readBirthProfile,
   birthProfileToDateTime,
@@ -67,17 +68,6 @@ function parseHour(t: string): number {
 // Đại vận hiện tại — computed purely from the chart's per-palace decadal ranges
 // (already present, no extra fetch) + Western age. Mirrors the backend
 // currentDaiVan logic (verified === iztro decadal). [start, end] age inclusive.
-function ageFromDate(dateStr: string, now: Date = new Date()): number | null {
-  const m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec((dateStr ?? '').trim());
-  if (!m) return null;
-  const by = Number(m[1]);
-  const bm = Number(m[2]);
-  const bd = Number(m[3]);
-  let age = now.getFullYear() - by;
-  const mo = now.getMonth() + 1;
-  if (mo < bm || (mo === bm && now.getDate() < bd)) age -= 1;
-  return age >= 0 && age < 140 ? age : null;
-}
 
 function currentDaiVan(chart: TuViChart, age: number | null): TuViPalace | null {
   if (age == null) return null;

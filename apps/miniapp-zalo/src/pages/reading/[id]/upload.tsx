@@ -136,7 +136,7 @@ export function UploadPage() {
           </p>
         ) : null}
         <p className="px-1 text-center text-[11px] text-cream/40">
-          Ảnh được mã hoá khi lưu trữ và chỉ dùng cho phiên này.
+          Ảnh chỉ nằm trong trình duyệt cho phiên này, không gửi lên máy chủ.
         </p>
       </section>
 

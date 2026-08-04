@@ -7,8 +7,9 @@ import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Lập lá số miễn phí',
+  // Kiểm 04/08/2026: bỏ "AES-256" — không có mã hoá tầng ứng dụng, xem app/page.tsx.
   description:
-    'Bắt đầu lá số cá nhân hoá trong 4 bước. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại đồng ý bất cứ lúc nào.',
+    'Bắt đầu lá số cá nhân hoá trong 4 bước. Truyền dữ liệu qua TLS, không bán dữ liệu, có quyền rút lại đồng ý bất cứ lúc nào.',
   alternates: { canonical: 'https://hieu.asia/onboarding' },
   // Wave 60.95.k P1-SEO — route-level openGraph REPLACES root-layout
   // openGraph (Next.js merge semantics), so we must re-declare `images` here
@@ -156,8 +157,9 @@ export default async function OnboardingPage({
             </Link>
           </div>
 
+          {/* Kiểm 04/08/2026: bỏ "AES-256" — không có mã hoá tầng ứng dụng, xem app/page.tsx. */}
           <p className="mt-8 mx-auto max-w-prose text-center text-xs text-muted-foreground">
-            Mã hoá AES-256 · TLS 1.3 · Không dùng dữ liệu cá nhân để huấn luyện
+            Truyền dữ liệu qua TLS · Không dùng dữ liệu cá nhân để huấn luyện
             mô hình. Chỉ dùng dữ liệu đã ẩn danh để cải thiện prompt — bạn có
             thể tắt tùy chọn này bất cứ lúc nào.
           </p>
@@ -171,7 +173,7 @@ export default async function OnboardingPage({
                 Bảo mật
               </p>
               <p className="mt-1 font-heading text-lg font-bold text-foreground">
-                Mã hoá AES-256
+                Mã hoá TLS
               </p>
             </div>
             <div className="rounded-xl border border-border bg-card/40 px-4 py-3 text-center">

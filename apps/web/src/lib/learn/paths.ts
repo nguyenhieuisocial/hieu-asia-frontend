@@ -52,7 +52,7 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     id: 'tuong-hoc-dan-gian',
     name: 'Tướng học dân gian',
     tagline: 'Chỉ tay và cân xương — đọc như tập tục quan sát lâu đời, biết rõ giới hạn.',
-    slugs: ['palm', 'can-xuong'],
+    slugs: ['palm', 'tuong-mat', 'can-xuong'],
   },
   // Hai lộ trình dưới ra đời cùng đợt 1 của chương trình "mỗi công cụ một bài
   // Học riêng": trước đó cả cụm ngày–giờ và cụm xem tuổi việc lớn đều không có
@@ -70,7 +70,7 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     name: 'Xem tuổi việc lớn',
     tagline:
       'Ba hạn tuổi hay bị hỏi nhất khi cưới hỏi và làm nhà — biết cách tính để bớt sợ, không phải để sợ thêm.',
-    slugs: ['kim-lau', 'tam-tai', 'hoang-oc', 'cuoi-hoi', 'khai-truong', 'xong-dat'],
+    slugs: ['doc-mot-tuoi', 'kim-lau', 'tam-tai', 'hoang-oc', 'cuoi-hoi', 'khai-truong', 'xong-dat'],
   },
   // Đợt 2. `bat-trach` chuyển từ "Ứng dụng đời sống" sang đây: khi đã có đủ 5 bài
   // chuyên sâu thì Bát Trạch là bài MỞ ĐẦU đúng nghĩa của cụm (phải biết cung phi
@@ -109,7 +109,7 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     name: 'Vận theo thời gian',
     tagline:
       'Các lớp thời gian chồng lên lá số: chặng 10 năm và lớp từng năm — đọc để thấy nhịp, không phải để chờ vận.',
-    slugs: ['dai-van', 'giao-van', 'thai-tue', 'luu-nien'],
+    slugs: ['dai-van', 'giao-van', 'thai-tue', 'luu-nien', 'nhat-van'],
   },
   // Đợt 8. Lộ trình "tư duy phản biện" — công cụ đặt câu hỏi cho CHÍNH những
   // lăng kính ở các lộ trình trên, không thuộc riêng lăng kính nào. Sẽ dài
@@ -120,7 +120,25 @@ export const LEARN_PATHS: readonly LearnPath[] = [
     name: 'Tư duy phản biện',
     tagline:
       'Vì sao một lời mô tả chung chung luôn thấy đúng, và cách kiểm một lời tiên đoán trước khi tin — kể cả lời của chính hieu.asia.',
-    slugs: ['barnum', 'kiem-chung'],
+    slugs: ['barnum', 'kiem-chung', 'so-sanh-lang-kinh', 'ra-quyet-dinh', 'nghe-nghiep'],
+  },
+  // Đợt 9 (cuối). Ba bài về ngày lễ và nhịp thời gian — phần văn hoá thuần tuý,
+  // tách khỏi cụm thiên văn vì chúng nói về TỤC LỆ chứ không nói về hiện tượng.
+  {
+    id: 'van-hoa-nhip-song',
+    name: 'Văn hoá & nhịp sống',
+    tagline:
+      'Những ngày người ta chọn để đánh dấu điều gì đó, và cách chia nhịp thời gian để sống chủ động thay vì chờ vận.',
+    slugs: ['that-tich', 'ngay-tinh-yeu', 'nhip-song'],
+  },
+  // Đợt 8. Ba bài về việc đọc lăng kính cho NGƯỜI KHÁC — phần đạo đức mà chưa
+  // bài nào của khu Học đụng tới trước đây.
+  {
+    id: 'quan-he-gia-dinh',
+    name: 'Quan hệ & gia đình',
+    tagline:
+      'Đọc lăng kính cho hai người, cho một nhóm, và cho người thân — kèm ranh giới đạo đức khi nói về người khác.',
+    slugs: ['hop-doi', 'dong-nhom', 'hieu-nguoi-than', 'sinh-con'],
   },
 ];
 

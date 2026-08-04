@@ -12,17 +12,19 @@
  *     → hai trụ vận liền nhau (bước ±1) hoặc cùng hành can, hoặc lệch đúng một
  *     bước trên vòng tương sinh. 9 trụ = 9 can liên tiếp (bỏ chính can tháng)
  *     → 9 Thập Thần khác nhau, thiếu đúng Thập Thần của trụ tháng.
- *   • src/app/dai-van-hien-tai/form.tsx — tuổi hiện tại = `new Date()
- *     .getFullYear() - birthYear` (chỉ trừ năm); nếu tuổi rơi ngoài mọi chặng
- *     thì báo không xác định được.
- *   • src/components/time-flow/TimeFlowChecker.tsx (dùng ở /timeline) —
- *     `ageFromDate()` TRỪ THÊM 1 nếu chưa qua sinh nhật trong năm. Hai công cụ
- *     của cùng site dùng hai quy ước tuổi khác nhau → lệch nhau đúng 1 năm ở
- *     quãng từ đầu năm tới TRƯỚC sinh nhật (không phải nửa cuối năm — TimeFlowChecker
- *     trừ 1 khi CHƯA qua sinh nhật). Cũng chính component này render CẢ CHUỖI đại vận
- *     (mọi chặng, chặng hiện tại được tô sáng), kèm câu "đọc theo trình tự
- *     tuổi… đây là khung tham khảo để soi nhịp dài hạn, không phải dự đoán may
- *     rủi".
+ *   • src/lib/age.ts — `ageFromDate()`: tuổi dương, TRỪ THÊM 1 nếu chưa qua
+ *     sinh nhật trong năm. TRƯỚC 04/08/2026, src/app/dai-van-hien-tai/form.tsx
+ *     dùng công thức KHÁC (`new Date().getFullYear() - birthYear`, chỉ trừ
+ *     năm) trong khi src/components/time-flow/TimeFlowChecker.tsx (dùng ở
+ *     /timeline) đã tính đúng — hai công cụ lệch nhau đúng 1 năm ở quãng từ
+ *     đầu năm tới TRƯỚC sinh nhật. Đã gộp về DÙNG CHUNG `ageFromDate()`. Phần
+ *     "hai công cụ dùng hai quy ước" trong bài giờ kể lại như CASE STUDY LỊCH
+ *     SỬ (đã sửa), KHÔNG còn mô tả hành vi hiện tại — đừng viết lại thành thì
+ *     hiện tại nếu sửa file này.
+ *   • src/components/time-flow/TimeFlowChecker.tsx (dùng ở /timeline) — render
+ *     CẢ CHUỖI đại vận (mọi chặng, chặng hiện tại được tô sáng), kèm câu "đọc
+ *     theo trình tự tuổi… đây là khung tham khảo để soi nhịp dài hạn, không
+ *     phải dự đoán may rủi".
  *   • src/app/timeline/page.tsx — đại vận = giai đoạn 10 năm, lưu niên = năm,
  *     lưu nguyệt = tháng.
  *
@@ -141,10 +143,10 @@ export function GiaoVanDepth() {
                 </p>
                 <p>
                   Và con số tuổi dùng để chiếu vào bảng cũng có hai quy ước: lấy năm trừ năm, hay
-                  tính đã qua sinh nhật chưa. Hai công cụ trên chính hieu.asia đang dùng hai
-                  quy ước khác nhau, nên trong quãng từ đầu năm tới trước sinh nhật chúng lệch nhau đúng một
-                  tuổi. Cộng lại: {strong('ranh giới nhoè ít nhất một năm')} ngay từ trong cách
-                  tính, chưa cần ai diễn giải rộng ra.
+                  tính đã qua sinh nhật chưa. Hai công cụ trên chính hieu.asia từng dùng hai quy
+                  ước khác nhau (lỗi thật, đã sửa) — trong quãng từ đầu năm tới trước sinh nhật,
+                  chúng từng lệch nhau đúng một tuổi. Cộng lại: {strong('ranh giới nhoè ít nhất một năm')}{' '}
+                  ngay từ trong cách tính, chưa cần ai diễn giải rộng ra.
                 </p>
               </>
             ),
@@ -312,16 +314,16 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
     id: 'q3',
     type: 'mcq',
     prompt:
-      'Cùng một người, cùng một ngày tra, mà hai công cụ trên hieu.asia báo hai chặng khác nhau. Nguyên nhân khả dĩ nhất?',
+      'Cùng một người, cùng một ngày tra, mà hai công cụ trên hieu.asia từng báo hai chặng khác nhau (lỗi thật, tới 04/08/2026). Nguyên nhân là gì?',
     choices: [
       {
-        text: 'Một trong hai công cụ có lỗi tính toán',
-        note: 'Chưa chắc — cả hai đều chạy đúng phép tính của mình.',
+        text: 'Một trong hai công cụ tính sai phép chia đại vận',
+        note: 'Không — phép chia chặng của cả hai đều đúng. Chỗ lệch nằm ở một bước khác: cách quy đổi năm sinh thành tuổi.',
       },
       {
         text: 'Hai công cụ dùng hai quy ước tuổi khác nhau (lấy năm trừ năm, hay tính đã qua sinh nhật chưa), lệch nhau một tuổi trong quãng từ đầu năm tới trước sinh nhật — nếu tuổi đó rơi sát mốc thì ra hai chặng',
         correct: true,
-        note: 'Đúng. Chính vì vậy ranh giới đã nhoè sẵn một năm trước khi ai diễn giải rộng thêm.',
+        note: 'Đúng — và đây chính xác là lỗi đã xảy ra trên site. Đã gộp về dùng chung một công thức để hai công cụ luôn khớp nhau.',
       },
       {
         text: 'Do giờ sinh nhập khác nhau',
@@ -380,10 +382,11 @@ const RECALL_QUESTIONS: RecallQuestion[] = [
         Ba chỗ hổng. Một: {strong('cửa sổ quá rộng')} — nếu vùng giao vận được nới cộng trừ hai
         năm thì nó phủ một nửa số năm của chặng, mà biến cố trong đời thì rải đều, nên trúng là
         chuyện xác suất chứ không phải chuyện linh nghiệm. Hai:{' '}
-        {strong('bản thân mốc đã nhoè')} — làm tròn trong phép tính, cộng hai quy ước tuổi khác
-        nhau, đủ để "đúng năm" xê dịch. Ba: {strong('chỉ đếm lần trúng')} — không ai đếm những
-        mốc giao vận trôi qua mà chẳng có gì xảy ra, cũng không đếm những biến cố lớn rơi vào
-        giữa chặng. Muốn thành bằng chứng thì phải nói TRƯỚC, nói cụ thể, và đếm cả lần trật.
+        {strong('bản thân mốc đã nhoè')} — làm tròn trong phép tính đủ để "đúng năm" xê dịch, và
+        từng nhoè thêm vì hai công cụ trên site dùng hai quy ước tuổi khác nhau (lỗi thật, nay đã
+        sửa). Ba: {strong('chỉ đếm lần trúng')} — không ai đếm những mốc giao vận trôi qua mà
+        chẳng có gì xảy ra, cũng không đếm những biến cố lớn rơi vào giữa chặng. Muốn thành bằng
+        chứng thì phải nói TRƯỚC, nói cụ thể, và đếm cả lần trật.
       </>
     ),
   },

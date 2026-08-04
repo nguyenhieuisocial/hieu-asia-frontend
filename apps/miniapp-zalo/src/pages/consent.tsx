@@ -148,7 +148,7 @@ export function ConsentPage() {
               Tôi đồng ý cho hieu.asia xử lý ngày sinh + giờ sinh để tạo lá số
             </Label>
             <p className="mt-1 text-[11px] text-cream/75">
-              Theo Nghị định 13/2023/NĐ-CP. Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất
+              Theo Luật 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. Truyền qua TLS, không bán dữ liệu, có quyền rút lại bất
               cứ lúc nào.
             </p>
           </div>

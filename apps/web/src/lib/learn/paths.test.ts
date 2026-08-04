@@ -46,7 +46,9 @@ describe('pathForTopic', () => {
 
   it('bài cuối lộ trình có next = null', () => {
     const pos = pathForTopic('can-xuong');
-    expect(pos!.prevSlug).toBe('palm');
+    // Lộ trình tướng học nay là palm → tuong-mat → can-xuong: bài tướng mặt xen
+    // vào giữa vì nó cùng công cụ /xem-tuong với chỉ tay, nên đọc liền nhau.
+    expect(pos!.prevSlug).toBe('tuong-mat');
     expect(pos!.nextSlug).toBeNull();
   });
 

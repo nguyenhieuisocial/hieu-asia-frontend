@@ -102,7 +102,8 @@ export function ConsentForm() {
               Tôi đồng ý cho hieu.asia xử lý ngày sinh + giờ sinh để tạo lá số
             </span>
             <span className="mt-1 block text-xs text-foreground/75">
-              Theo Nghị định 356/2025/NĐ-CP (thay thế 13/2023). Mã hoá AES-256, không bán dữ liệu, có quyền rút lại bất cứ lúc nào tại{' '}
+              {/* Kiểm 04/08/2026: bỏ "AES-256" — không có mã hoá tầng ứng dụng, xem app/page.tsx. */}
+              Theo Nghị định 356/2025/NĐ-CP (thay thế 13/2023). Truyền qua TLS, không bán dữ liệu, có quyền rút lại bất cứ lúc nào tại{' '}
               <a href="/account" className="text-gold underline underline-offset-4 hover:opacity-80">trang Tài khoản</a>.
             </span>
           </span>

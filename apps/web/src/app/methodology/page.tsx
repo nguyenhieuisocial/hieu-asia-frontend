@@ -101,7 +101,9 @@ const PRINCIPLES = [
     n: 4,
     icon: Lock,
     title: 'Dữ liệu cá nhân được tối thiểu hoá và có thể xoá',
-    body: 'Chỉ thu thập đủ để tạo báo cáo. Ảnh palm tự xoá sau 7 ngày. User có quyền xuất hoặc xoá dữ liệu bất cứ lúc nào.',
+    // "Ảnh palm tự xoá sau 7 ngày" là SAI — xác minh 03/08/2026: ảnh không hề
+    // được lưu nên không có gì để xoá. Xem chú thích dài ở mục lens Xem Tướng.
+    body: 'Chỉ thu thập đủ để tạo báo cáo. Ảnh xem tướng không lưu trên máy chủ — gửi kèm yêu cầu phân tích rồi thôi. User có quyền xuất hoặc xoá dữ liệu bất cứ lúc nào.',
   },
   {
     n: 5,
@@ -143,7 +145,18 @@ const LENSES = [
     icon: Eye,
     name: 'Xem Tướng',
     how: 'AI thị giác · beta',
-    body: 'Đọc nét chỉ tay và tướng mặt qua ảnh bạn chủ động tải lên. Ảnh tự xoá sau 7 ngày.',
+    // SỰ THẬT ĐÃ XÁC MINH 03/08/2026 (đây là claim quyền riêng tư, đừng sửa mà
+    // không kiểm lại backend). Trang /xem-tuong nén ảnh NGAY TRÊN MÁY người dùng
+    // (canvas.toDataURL) rồi gửi thẳng dạng data URI trong body request tới
+    // `/tools/vision-read`. Handler đó ở backend api-gateway/src/index.ts chuyển
+    // ảnh sang mô hình đa phương thức rồi trả kết quả — KHÔNG ghi vào R2/KV/DB,
+    // và bản ghi chi phí (writeTrace) cố ý để `content: ""`.
+    // Luồng upload cũ `/v1/uploads/hand-image-url` → MinIO đã CHẾT: worker hiện
+    // tại không còn bất kỳ route `/v1/` nào, nên `uploadHandImage` luôn rơi vào
+    // nhánh dự phòng tạo object URL trong trình duyệt. Câu cũ "Ảnh tự xoá sau 7
+    // ngày" là tàn dư của luồng đó và MÂU THUẪN với /xem-tuong (trang đó nói
+    // đúng: không lưu trữ) — mà /xem-tuong phát câu này trong FAQPage JSON-LD.
+    body: 'Đọc nét chỉ tay và tướng mặt qua ảnh bạn chủ động tải lên. Ảnh gửi kèm yêu cầu phân tích, không lưu trên máy chủ.',
   },
 ] as const;
 
@@ -348,7 +361,7 @@ const REVIEW_TRIGGERS = [
 
 const PRIVACY_BULLETS = [
   'Chỉ thu thập dữ liệu cần để tạo báo cáo',
-  'Ảnh palm là tuỳ chọn, tự xoá sau 7 ngày',
+  'Ảnh xem tướng là tuỳ chọn, không lưu trên máy chủ',
   'Chat Mentor được giữ đến khi bạn xoá tài khoản',
   'User có thể xuất/xoá dữ liệu bất cứ lúc nào',
   'Dữ liệu gửi vendor được tối thiểu hoá',

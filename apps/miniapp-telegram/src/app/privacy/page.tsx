@@ -21,8 +21,8 @@ export default function MiniappPrivacyPage() {
         </p>
         <p className="mt-3 text-sm leading-relaxed text-cream/80">
           Chính sách này mô tả cách hieu.asia thu thập, lưu trữ và sử dụng dữ liệu cá nhân của bạn,
-          tuân thủ <strong className="text-gold">Nghị định 13/2023/NĐ-CP</strong> về bảo vệ dữ liệu
-          cá nhân.
+          tuân thủ <strong className="text-gold">Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 và Nghị
+          định 356/2025/NĐ-CP</strong> về bảo vệ dữ liệu cá nhân.
         </p>
 
         <Card className="mt-5">
@@ -77,14 +77,18 @@ export default function MiniappPrivacyPage() {
           <CardContent className="space-y-3 text-sm text-cream/85">
             <div className="rounded-md border border-jade/30 bg-jade/10 p-3">
               <p>
+                {/* Kiểm 04/08/2026 — xem chú thích dài ở apps/web/src/app/privacy/page.tsx:
+                    không luồng nào gửi ảnh lên kho, nên "xoá sau 7 ngày" là mô tả sai. */}
                 <strong className="text-jade">Ảnh bàn tay & chân dung:</strong>{' '}
-                <strong>TỰ ĐỘNG XÓA SAU 7 NGÀY</strong> kể từ khi xử lý xong.
+                <strong>KHÔNG lưu trên máy chủ</strong> — gửi kèm yêu cầu phân tích rồi thôi.
               </p>
             </div>
             <ul className="list-disc space-y-1.5 pl-5">
               <li>Báo cáo + metadata: vô thời hạn (có thể yêu cầu xóa).</li>
-              <li>Mentor chat: 90 ngày, tự xóa sau.</li>
+              {/* Kiểm 04/08/2026 — xem chú thích dài ở apps/web/src/app/privacy/page.tsx. */}
+              <li>Mentor chat: giữ đến khi bạn xoá tài khoản (không tự xoá theo thời hạn).</li>
               <li>Audit log: 12 tháng.</li>
+              <li>Nhật ký chi phí AI: vô thời hạn (có gắn mã người dùng, không chứa nội dung chat).</li>
             </ul>
           </CardContent>
         </Card>
@@ -92,7 +96,7 @@ export default function MiniappPrivacyPage() {
         <Card className="mt-4">
           <CardHeader>
             <CardTitle className="text-base">5. Quyền của bạn</CardTitle>
-            <CardDescription>Theo Nghị định 13/2023/NĐ-CP.</CardDescription>
+            <CardDescription>Theo Luật 91/2025/QH15 và Nghị định 356/2025/NĐ-CP.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-cream/85">
             <ul className="list-disc space-y-1.5 pl-5">

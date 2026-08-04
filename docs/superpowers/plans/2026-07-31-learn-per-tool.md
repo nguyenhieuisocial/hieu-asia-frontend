@@ -13,6 +13,37 @@ không có bài Học nào nên chỉ trỏ về hub `/learn`.
 **Đích đến.** `PENDING` rỗng: mọi công cụ công khai có đúng một bài Học của riêng
 nó, và không bài nào bị hai công cụ dùng chung.
 
+## ✅ ĐÃ ĐẠT ĐÍCH (03/08/2026)
+
+`PENDING` **rỗng**. Khu Học đi từ **18 → 61 chủ đề**; 43 bài viết mới qua 9 đợt.
+Ba bất biến do `tool-coverage.test.ts` canh nay đúng trọn vẹn, và chúng là thứ
+giữ cho tình trạng cũ không tái diễn khi thêm công cụ mới sau này.
+
+**Việc còn lại — không phải phủ sóng mà là CHẤT LƯỢNG:**
+
+- 6 bài của đợt cuối (`doc-mot-tuoi`, `nhat-van`, `tuong-mat`, `that-tich`,
+  `ngay-tinh-yeu`, `sinh-con`) đã xuất bản nhưng vòng kiểm đối nghịch của chúng
+  chết vì hết hạn token. Đang chạy lại. **Đừng coi là xong cho tới khi có kết
+  quả kiểm** — 8 đợt trước, đợt nào vòng kiểm cũng tìm ra lỗi thật.
+- Hai việc phát sinh đã ghi trong các mục bên dưới: rà lại `/ban-do` (metadata
+  hứa "gợi ý cá nhân hoá theo lá số" trong khi trang render nội dung tĩnh), và
+  hai trang `/dai-van-hien-tai` vs `/timeline` đang dùng hai quy ước tuổi khác
+  nhau nên có thể xếp cùng một người vào hai chặng vận khác nhau.
+
+**Bài học vận hành rút ra sau 9 đợt (giữ lại cho chương trình sau):**
+
+1. **Vòng kiểm đối nghịch là thứ đáng giá nhất.** Không đợt nào sạch. Lỗi nặng
+   nhất đều thuộc loại đọc lướt không thấy: một câu hình học sai trong FAQ của
+   đúng bài "khoa học", `11.862` in dấu chấm nên tiếng Việt đọc thành mười một
+   nghìn, một quy tắc mà cả ba ví dụ minh hoạ đều không kích hoạt được, và một
+   kịch bản dựng trên con số mà engine không bao giờ sinh ra.
+2. **Dùng `pipeline()` chứ đừng `parallel()` cho lô nhiều bài.** Một agent kẹt
+   51 phút đã chặn vòng kiểm của 5 bài đã viết xong.
+3. **Commit + push sau MỖI đợt.** Phiên khác chạy song song trên cùng thư mục đã
+   `git checkout` hai lần, mỗi lần làm toàn bộ file chưa commit biến mất.
+4. **Cấm agent sửa registry.** Đăng ký tập trung sau mỗi đợt; nếu không, các
+   agent song song ghi đè nhau.
+
 ---
 
 ## Nguồn sự thật & bất biến

@@ -21,6 +21,7 @@ import { RelatedTools } from '@/components/tools/RelatedTools';
 import { DownloadToolPdfButton } from '@/components/tools/DownloadToolPdfButton';
 import { castTuViChart, type TuViChart, type TuViPalace } from '@/lib/tuvi-client';
 import { describeApiError } from '@/lib/api-error';
+import { ageFromDate } from '@/lib/age';
 import { JsonLd } from '@/components/seo/JsonLd';
 
 type Gender = 'male' | 'female';
@@ -121,8 +122,12 @@ export function DaiVanHienTaiForm() {
         birthHour: hour,
         gender,
       });
-      const birthYear = Number(birthDate.split('-')[0]);
-      const ageNow = new Date().getFullYear() - birthYear;
+      // Kiểm 04/08/2026: trước đây tính "new Date().getFullYear() - birthYear"
+      // (chỉ trừ năm, không trừ thêm 1 nếu chưa qua sinh nhật) — lệch 1 tuổi so
+      // với /timeline, /la-so-tu-vi, /la-so-bat-tu (đều dùng ageFromDate) trong
+      // khoảng đầu năm tới trước sinh nhật, có thể khiến cùng một người rơi vào
+      // hai chặng đại vận khác nhau tuỳ trang. Dùng chung hàm ở lib/age.ts.
+      const ageNow = ageFromDate(birthDate) ?? 0;
       const palace = findCurrentDecadalPalace(chart, ageNow);
       setResult({ chart, palace, ageNow });
     } catch (e) {

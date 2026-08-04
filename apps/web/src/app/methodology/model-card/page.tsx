@@ -100,7 +100,12 @@ const EVALUATION = [
 
 const DATA_HANDLING = [
   'Minimization: chỉ thu input bắt buộc.',
-  'Retention: ảnh palm 7 ngày, mentor chat 90 ngày, audit log 12 tháng.',
+  // Ảnh xem tướng KHÔNG có retention vì không hề được lưu — xác minh 03/08/2026:
+  // /tools/vision-read nhận data URI trong body, chuyển sang mô hình, không ghi
+  // R2/KV/DB. Bản cũ ghi "ảnh palm 7 ngày" (luồng MinIO đã ngừng hoạt động).
+  // Kiểm 04/08/2026: "mentor chat 90 ngày" là sai — không có job nào dọn. Audit log
+  // 12 tháng thì ĐÚNG (bản KV audit:user:* TTL 365 ngày, cũng là bản export cho user).
+  'Retention: ảnh xem tướng KHÔNG lưu (gửi kèm request rồi thôi), mentor chat giữ đến khi xoá tài khoản, audit log 12 tháng, nhật ký chi phí AI lưu vô thời hạn.',
   'Vendor processors: xem /privacy.',
   'User export/delete bất cứ lúc nào tại /account.',
 ];

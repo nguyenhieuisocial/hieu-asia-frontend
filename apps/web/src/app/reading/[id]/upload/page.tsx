@@ -131,7 +131,13 @@ export default function PalmUploadPage() {
         </Button>
 
         <p className="text-center text-xs text-muted-foreground">
-          Ảnh được mã hoá khi lưu trữ và chỉ dùng để phân tích cho phiên này.
+          {/*
+            Kiểm 04/08/2026: câu cũ ("mã hoá khi lưu trữ") mô tả sai. uploadHandImage
+            gọi /v1/uploads/hand-image-url — worker không có route /v1/* nào, nên lời
+            gọi luôn 404 và rơi vào nhánh catch URL.createObjectURL. Ảnh không rời
+            trình duyệt. Nếu nối lại luồng upload thật thì sửa câu này TRƯỚC khi bật.
+          */}
+          Ảnh chỉ nằm trong trình duyệt của bạn cho phiên này, không được gửi lên máy chủ.
         </p>
       </section>
       </main>

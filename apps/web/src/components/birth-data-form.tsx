@@ -615,7 +615,8 @@ export function BirthDataForm() {
               >
                 Chính sách bảo mật
               </Link>
-              . <span className="text-muted-foreground text-xs">(Dữ liệu được mã hoá AES-256, không bán/chia sẻ, dễ dàng rút lại bất kỳ lúc nào tại trang Tài khoản)</span>.
+              {/* Kiểm 04/08/2026: bỏ "AES-256" — không có mã hoá tầng ứng dụng, xem app/page.tsx. */}
+              . <span className="text-muted-foreground text-xs">(Dữ liệu được truyền qua TLS, không bán/chia sẻ, dễ dàng rút lại bất kỳ lúc nào tại trang Tài khoản)</span>.
             </span>
           </label>
 
