@@ -195,7 +195,7 @@ export function NewsletterSignup({
   if (variant === 'inline') return <div id={id}>{card}</div>;
 
   return (
-    <section id={id} aria-labelledby={`${id}-heading`} className="relative bg-background py-20 sm:py-24 scroll-mt-24">
+    <section id={id} aria-labelledby={`${id}-heading`} className="relative bg-background py-14 sm:py-16 scroll-mt-24">
       <h2 id={`${id}-heading`} className="sr-only">
         Đăng ký newsletter hieu.asia
       </h2>

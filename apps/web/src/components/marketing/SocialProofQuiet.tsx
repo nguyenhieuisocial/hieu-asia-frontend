@@ -51,7 +51,7 @@ export function SocialProofQuiet() {
   return (
     <section
       aria-labelledby="social-proof-quiet-heading"
-      className="bg-background py-14 md:py-16"
+      className="bg-background py-10 md:py-12"
     >
       <div className="mx-auto max-w-marketing-tight px-6 lg:px-12">
         <header className="mb-10">

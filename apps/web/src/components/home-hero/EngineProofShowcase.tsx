@@ -20,7 +20,7 @@ export function EngineProofShowcase(): React.JSX.Element {
     // dưới: nền đồng bộ bg-background, đáy thu hẹp (pb-4/6), disclaimer
     // "Persona demo" gộp về MỘT dòng ở cuối SampleOutputShowcase — hai khối đọc
     // như một section "lá số tính ra → báo cáo đọc được".
-    <section aria-label="Ví dụ lá số được tính ra" className="bg-background pt-12 pb-4 sm:pt-16 sm:pb-6">
+    <section aria-label="Ví dụ lá số được tính ra" className="bg-background pt-8 pb-4 sm:pt-10 sm:pb-6">
       <div className="mx-auto max-w-marketing-tight px-6 sm:px-8">
         <p className="font-mono text-editorial-mono uppercase tracking-[0.12em] text-muted-foreground">
           TÍNH THẬT, KHÔNG TRA BẢNG

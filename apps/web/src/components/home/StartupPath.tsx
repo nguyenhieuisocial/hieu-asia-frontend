@@ -84,7 +84,7 @@ export function StartupPath() {
   return (
     <RevealOnScroll>
     <section aria-labelledby="startup-path-h" className="bg-background">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
         <div className="mb-8 max-w-2xl">
           <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
             Lộ trình khởi đầu
