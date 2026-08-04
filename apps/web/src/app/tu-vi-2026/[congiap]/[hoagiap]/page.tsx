@@ -13,7 +13,7 @@ import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/D
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { CON_GIAP_SLUGS, YEAR_RANGE } from '../../con-giap-data';
 import {
-  BATCH_1_HOA_GIAP,
+  ALL_LIVE_HOA_GIAP,
   buildHoaGiap2026,
   hoaGiapParamSlug,
   parseHoaGiapParam,
@@ -22,7 +22,7 @@ import {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return BATCH_1_HOA_GIAP.flatMap((h) =>
+  return ALL_LIVE_HOA_GIAP.flatMap((h) =>
     (['nam', 'nu'] as const).map((g) => ({
       congiap: h.zodiac.slug,
       hoagiap: hoaGiapParamSlug(h.slug, g),

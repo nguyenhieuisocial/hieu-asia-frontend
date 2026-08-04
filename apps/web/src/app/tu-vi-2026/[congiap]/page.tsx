@@ -13,7 +13,7 @@ import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/D
 import { article, breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { ZODIAC } from '@/lib/hop-tuoi-pairs';
 import { buildConGiap2026, CON_GIAP_SLUGS, YEAR_RANGE } from '../con-giap-data';
-import { BATCH_1_SLUGS, hoaGiapForChi, hoaGiapParamSlug } from '../hoa-giap-data';
+import { ALL_LIVE_SLUGS, hoaGiapForChi, hoaGiapParamSlug } from '../hoa-giap-data';
 
 export const dynamicParams = false;
 
@@ -70,7 +70,7 @@ export default async function TuVi2026ConGiapPage({
   if (!d) notFound();
 
   const others = ZODIAC.filter((z) => z.slug !== congiap);
-  const hoaGiapChildren = hoaGiapForChi(congiap).filter((h) => BATCH_1_SLUGS.has(h.slug));
+  const hoaGiapChildren = hoaGiapForChi(congiap).filter((h) => ALL_LIVE_SLUGS.has(h.slug));
 
   const JSONLD = [
     article({
@@ -283,7 +283,7 @@ export default async function TuVi2026ConGiapPage({
           </p>
         </section>
 
-        {/* Hoa giáp con thuộc tuổi này (batch 1) */}
+        {/* Hoa giáp con thuộc tuổi này (trọn vòng 60, batch 1 + batch 2) */}
         {hoaGiapChildren.length > 0 && (
           <section className="relative mx-auto max-w-3xl px-6 pb-10">
             <h2 className="mb-2 font-heading text-2xl font-semibold text-foreground sm:text-3xl">
