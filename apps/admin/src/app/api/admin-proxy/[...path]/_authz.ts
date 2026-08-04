@@ -28,9 +28,10 @@ export const OWNER_PATH_PREFIXES = [
 // GET tốn tiền (gọi LLM tính phí) hoặc đắt — cần ÍT NHẤT admin, dù trả dữ liệu.
 // Bất cứ endpoint nào tốn tiền/request phải nằm ở đây, bất kể method.
 export const AI_SPEND_PATH_PREFIXES = [
-  'admin/cockpit/attention', // GET → gom tín hiệu + tóm tắt qua AI gateway
-  'admin/copilot/ask',       // POST (đã admin) — liệt kê cho tường minh
-  'admin/llm/probe',         // GET → gọi thẳng 3 vendor LLM để đo (thêm 2026-07-22)
+  'admin/cockpit/attention',  // GET → gom tín hiệu + tóm tắt qua AI gateway
+  'admin/copilot/ask',        // POST (đã admin) — liệt kê cho tường minh
+  'admin/llm/probe',          // GET → gọi thẳng 3 vendor LLM để đo (thêm 2026-07-22)
+  'admin/content/generate',   // POST (đã admin) — 3-4 lượt gọi LLM/request, liệt kê cho tường minh (thêm 2026-08-05)
 ] as const;
 
 /** True khi `path` bằng `prefix` hoặc là sub-path của nó (tôn trọng ranh giới '/'). */

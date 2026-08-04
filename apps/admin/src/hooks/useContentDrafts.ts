@@ -73,10 +73,20 @@ export interface GenerateResponse {
   generation_errors?: Partial<Record<DraftKey, string>>;
   error?: string;
   /**
-   * Generation runs synchronously through a ~25s-bounded edge proxy and can
-   * outlive it. A timeout is NOT a hard failure — the worker keeps generating
-   * in the background — so callers should tell the user to reload the list
-   * rather than show an error. (#47)
+   * Worker now queues generate+judge+persist in `ctx.waitUntil` and returns
+   * 202 immediately (backend fix for #47's root cause — single-generate had
+   * no `waitUntil`, so it was silently losing every draft that outlived the
+   * ~25s edge proxy, which was every draft). `ok` is true but there's no
+   * `judge_pick` yet — tell the user to reload the list in ~1-2 min.
+   */
+  queued?: boolean;
+  /** Human-readable hint from the worker, shown alongside `queued`. */
+  note?: string;
+  /**
+   * Client-observed proxy timeout (fetch rejected, or a 502/504/408 with a
+   * non-JSON body) — now mostly a defensive fallback since the backend
+   * responds in well under 25s, but keep handling it the same way `queued`
+   * is handled. (#47)
    */
   timedOut?: boolean;
 }
