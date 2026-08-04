@@ -27,7 +27,7 @@ import { MBTI_SLUGS } from '@/lib/mbti-type-data';
 import { DISC_SLUGS } from '@/lib/disc-type-data';
 import { BIG_FIVE_SLUGS } from '@/lib/big-five-trait-data';
 import { CON_GIAP_SLUGS } from '@/lib/con-giap-data';
-import { BATCH_1_HOA_GIAP, hoaGiapParamSlug } from './tu-vi-2026/hoa-giap-data';
+import { ALL_LIVE_HOA_GIAP, hoaGiapParamSlug } from './tu-vi-2026/hoa-giap-data';
 import { TAI_LIEU } from '@/lib/tai-lieu/registry';
 import { LEARN_TOPICS } from '@/lib/learn/related';
 import { liveMonths, monthSlug } from '@/lib/tu-vi-thang-data';
@@ -444,9 +444,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Tử Vi 2026 theo hoa giáp × giới tính — batch 1 (30 hoa giáp × 2 giới = 60
-  // trang; batch 2 sẽ thêm 30 hoa giáp còn lại của vòng 60 sau khi theo dõi).
-  const tuVi2026HoaGiap: MetadataRoute.Sitemap = BATCH_1_HOA_GIAP.flatMap((h) =>
+  // Tử Vi 2026 theo hoa giáp × giới tính — trọn vòng 60 hoa giáp × 2 giới =
+  // 120 trang (batch 1 + batch 2).
+  const tuVi2026HoaGiap: MetadataRoute.Sitemap = ALL_LIVE_HOA_GIAP.flatMap((h) =>
     (['nam', 'nu'] as const).map((g) => ({
       url: `${BASE_URL}/tu-vi-2026/${h.zodiac.slug}/${hoaGiapParamSlug(h.slug, g)}`,
       lastModified: now,

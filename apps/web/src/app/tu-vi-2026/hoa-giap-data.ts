@@ -18,10 +18,9 @@
  * Vòng Lục Thập Hoa Giáp: 1984 = Giáp Tý (đầu vòng), 60 năm liên tiếp phủ đủ 60
  * Can Chi. Chỉ số hoa giáp `i` (0..59) → năm đại diện `1984+i`.
  *
- * BATCH 1 (đợt này) = 30 hoa giáp đầu (chỉ số 0..29) × 2 giới = 60 trang. 30
- * hoa giáp còn lại (chỉ số 30..59) CHƯA dựng trang trong đợt này — cổng
- * `dynamicParams = false` ở route khiến chúng 404 thay vì render rỗng, để
- * theo dõi rồi mới mở đợt 2.
+ * BATCH 1 = 30 hoa giáp đầu (chỉ số 0..29) × 2 giới = 60 trang. BATCH 2 = 30
+ * hoa giáp còn lại (chỉ số 30..59) × 2 giới = 60 trang. Cả hai batch nay đã
+ * dựng trang (ALL_LIVE_HOA_GIAP = union), đủ 60 hoa giáp × 2 giới = 120 trang.
  *
  * GIỌNG ON-BRAND: tra cứu phong tục Can Chi để THAM KHẢO, không phán số mệnh,
  * không hù doạ, không bán lễ giải hạn.
@@ -89,6 +88,15 @@ export const HOA_GIAP_CYCLE: HoaGiapEntry[] = Array.from({ length: 60 }, (_, i) 
 export const BATCH_1_INDICES: number[] = Array.from({ length: 30 }, (_, i) => i);
 export const BATCH_1_HOA_GIAP: HoaGiapEntry[] = BATCH_1_INDICES.map((i) => HOA_GIAP_CYCLE[i]!);
 export const BATCH_1_SLUGS: ReadonlySet<string> = new Set(BATCH_1_HOA_GIAP.map((h) => h.slug));
+
+/** Batch 2 = 30 hoa giáp còn lại vòng (chỉ số 30..59). */
+export const BATCH_2_INDICES: number[] = Array.from({ length: 30 }, (_, i) => i + 30);
+export const BATCH_2_HOA_GIAP: HoaGiapEntry[] = BATCH_2_INDICES.map((i) => HOA_GIAP_CYCLE[i]!);
+export const BATCH_2_SLUGS: ReadonlySet<string> = new Set(BATCH_2_HOA_GIAP.map((h) => h.slug));
+
+/** Union batch 1 + batch 2 = trọn vòng 60 hoa giáp đã dựng trang. */
+export const ALL_LIVE_HOA_GIAP: HoaGiapEntry[] = [...BATCH_1_HOA_GIAP, ...BATCH_2_HOA_GIAP];
+export const ALL_LIVE_SLUGS: ReadonlySet<string> = new Set([...BATCH_1_SLUGS, ...BATCH_2_SLUGS]);
 
 /** 5 hoa giáp (trọn vòng 60) của một con giáp, theo đúng thứ tự vòng. */
 export function hoaGiapForChi(chiSlug: string): HoaGiapEntry[] {
@@ -173,7 +181,7 @@ export function buildHoaGiap2026(
   hoaGiapSlug: string,
   gioiTinh: Gender,
 ): HoaGiap2026Detail | null {
-  const hoaGiap = BATCH_1_HOA_GIAP.find((h) => h.slug === hoaGiapSlug && h.zodiac.slug === chiSlug);
+  const hoaGiap = ALL_LIVE_HOA_GIAP.find((h) => h.slug === hoaGiapSlug && h.zodiac.slug === chiSlug);
   if (!hoaGiap) return null;
 
   const genderLabel = gioiTinh === 'nam' ? 'Nam' : 'Nữ';
