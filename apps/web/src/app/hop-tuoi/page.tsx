@@ -10,12 +10,12 @@ import { breadcrumb, faqPage } from '@/lib/seo/jsonld';
 import { OG_DEFAULT_IMAGES } from '@/lib/seo/constants';
 
 export const metadata: Metadata = {
-  title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con',
+  title: 'Xem hợp tuổi vợ chồng, làm ăn theo năm sinh',
   description:
-    'Xem hợp tuổi cho cưới hỏi, hợp tác kinh doanh, sinh con, xông đất. Hiểu Tam Hợp, Lục Hợp, Lục Xung, Lục Hại và ngũ hành — minh bạch từng quy tắc, không phán mù.',
+    'Xem hợp tuổi vợ chồng theo năm sinh, hợp tuổi làm ăn, sinh con, xông đất. Hiểu Tam Hợp, Lục Hợp, Lục Xung và ngũ hành — minh bạch quy tắc, không phán mù.',
   alternates: { canonical: 'https://hieu.asia/hop-tuoi' },
   openGraph: {
-    title: 'Hợp tuổi cưới hỏi, làm ăn, sinh con',
+    title: 'Xem hợp tuổi vợ chồng, làm ăn theo năm sinh',
     description:
       'Tương hợp Can Chi theo từng việc cụ thể — Tam Hợp, Lục Hợp, Tứ Hành Xung. Minh bạch từng quy tắc, tức thì.',
     url: 'https://hieu.asia/hop-tuoi',
