@@ -66,57 +66,86 @@ import { execFileSync } from 'node:child_process';
  *   kết luận — v8 ĐỔI TÊN GÓI: `react-router-dom` gộp vào `react-router@8`.
  *   Tra một cái tên gói rồi kết luận "hết đường" là chưa đủ; phải hỏi cả xem
  *   gói có đổi tên / gộp ở major kế tiếp không.
+ *
+ * ⚠️ THÊM 2026-08-10 — ba mục MỚI (1 jszip + 2 image-size). Cả ba đều dev-only,
+ * mỗi cái đúng MỘT đường phụ thuộc (đã đếm bằng `pnpm why … -r`, không suy đoán).
+ *
+ * ⚠️ DỌN 2026-08-10 — cả BA mục react-router (`GHSA-wrjc-x8rr-h8h6`,
+ * `GHSA-337j-9hxr-rhxg`, `GHSA-jjmj-jmhj-qwj2`) đã rời khỏi đây: cổng báo chúng
+ * "thừa" và kiểm lại thì đúng — `zmp-ui` KHÔNG còn trong cây phụ thuộc (`pnpm why
+ * zmp-ui -r` rỗng; nó rời đi ở #1052), mà zmp-ui chính là thứ duy nhất ghim nhánh
+ * 6.x. Nay `pnpm why react-router -r` chỉ còn 8.3.0 và lockfile không còn dòng
+ * react-router 6/7 nào. Mã nguồn mini-app cũng không import zmp-ui (chỉ còn 2 câu
+ * chú thích nhắc tên). Ba lý do dài viết ngày 01/08 nay chỉ còn giá trị lịch sử.
+ *
+ * → Ghi lại vì đây là lần chiều "THỪA" của cổng thực sự bắt được việc: lỗ hổng
+ *   biến mất KHÔNG phải do ai đi vá nó, mà do một gói khác rời khỏi cây kéo theo.
+ *   Không có chiều này thì ba mục kia nằm lại vĩnh viễn, đọc như "vẫn đang dính".
+ *
+ * → Cái bẫy của đợt này, ghi lại để không mắc lần nữa: `jszip` TRÔNG NHƯ đã vá
+ *   vì `pnpm.overrides` có `jszip: ^3.10.1`. Nhưng ngay dưới nó còn dòng HẸP HƠN
+ *   `zip-local>jszip: ^2.6.1`, mà pnpm ưu tiên dòng hẹp hơn ⇒ đúng cái đường
+ *   dính vẫn ở 2.7.0. Một override phạm vi rộng KHÔNG chứng minh được gì khi có
+ *   override hẹp hơn cùng gói nằm cạnh — phải đọc `pnpm why`, đừng đọc
+ *   `package.json` rồi kết luận. Dòng hẹp ấy là CỐ Ý (#1057) và load-bearing:
+ *   xoá nó đi thì `zmp build` vỡ ngay, không phải rác để dọn.
  */
 export const DA_XET = {
-  // ── 3 advisory react-router còn lại — TẤT CẢ đều là nhánh 6.x của `zmp-ui` ──
-  // Từ 03/08 (#1043) mini-app chạy `react-router@8.3.0`, nên KHÔNG còn advisory
-  // nào thuộc phần code ta tự chọn phiên bản. Ba mục dưới đây dính bản 6.30.4 mà
-  // `zmp-ui@1.11.14` (bản zmp-ui MỚI NHẤT) ghim cứng — ta không đổi được.
-  //
-  // Nửa câu hỏi quan trọng hơn "có nâng được không" là "mã dính lỗ hổng có nằm
-  // trên đường chạy của ta không". Đo ngày 01/08/2026 trên `apps/miniapp-zalo`
-  // (nơi DUY NHẤT dùng react-router), phần đo vẫn đúng sau khi lên v8:
-  //
-  //   • `src/app.tsx` dùng `HashRouter`; `src/main.tsx` render bằng `createRoot`.
-  //     Đếm trong `src`: 0 lần `renderToString` / `renderToPipeableStream` /
-  //     `createStaticHandler` / `StaticRouter` / `hydrateRoot` / RSC ⇒ KHÔNG SSR,
-  //     KHÔNG RSC.
-  //   • 12 lời gọi `navigate()`: mọi đích đều là chuỗi HẰNG, biến chỉ là id chèn
-  //     vào giữa (`/reading/${readingId}/...`). Tham số động duy nhất là `backTo`
-  //     ở `components/zalo-header.tsx`, và cả 8 nơi truyền vào đều là hằng.
-  //     `useSearchParams` chỉ đọc `session_id` để gọi API, không dùng làm đích.
-  //   • Nhánh 6.x chỉ tồn tại BÊN TRONG `zmp-ui`; không file nào của app import
-  //     react-router 6.
-  //
-  // XÉT LẠI NGAY nếu một trong các điều sau đổi: mini-app bật SSR/RSC, đổi sang
-  // `BrowserRouter`, điều hướng tới URL lấy từ query param / dữ liệu API, hoặc
-  // `zmp-ui` ra bản mới bỏ được react-router 6.
-  'GHSA-wrjc-x8rr-h8h6': {
-    goi: 'react-router',
+  // ── jszip 2.7.0 — dev-only, MỘT đường, nằm trong CLI của Zalo Mini App ──
+  // `pnpm why jszip -r` (10/08): đúng 1 đường, dev only —
+  //   @hieu-asia/miniapp-zalo → zmp-cli@2.1.0 → zip-local@0.3.5 → jszip@2.7.0
+  // Không app nào khác chạm tới; gói này không bao giờ vào bundle khách xem.
+  'GHSA-36fh-84j7-cv5h': {
+    goi: 'jszip',
     lyDo:
-      'Open redirect qua dấu gạch ngược trong `<Link>`/`useNavigate`. ĐÃ ĐẾM 12 ' +
-      'lời gọi navigate: đích đều là chuỗi hằng, không đích nào lấy từ input ' +
-      'người dùng ⇒ không có gì để bẻ. Thêm nữa HashRouter giữ điều hướng trong ' +
-      'fragment của chính trang, không đổi origin. Bản vá cần 7.18.0; nhánh 6.x ' +
-      'dính là do `zmp-ui@1.11.14` ghim, mà đó ĐÚNG LÀ bản zmp-ui mới nhất.',
-    xetNgay: '2026-08-01',
+      'Path traversal xảy ra khi GIẢI NÉN: `loadAsync` chấp nhận tên file chứa ' +
+      '`../` nên archive độc hại ghi được ra ngoài thư mục đích. Đường dùng duy ' +
+      'nhất ở kho này chạy NGƯỢC LẠI — `zmp-cli` gọi `zip-local` để NÉN thư mục ' +
+      'build trước khi upload (#1057 ghi rõ mục đích), không đọc archive nào từ ' +
+      'bên ngoài ⇒ không có đầu vào cho kẻ tấn công đưa tên file vào. Đã ĐẾM ' +
+      '`pnpm why jszip -r`: đúng 1 đường, dev-only, chỉ mini-app Zalo. ' +
+      'KHÔNG có đường nâng: bản vá cần jszip >=3.8.0, nhưng zip-local@0.3.5 (bản ' +
+      'MỚI NHẤT trên registry, thượng nguồn đã bỏ bê) gọi `new JSZip(buffer)` — ' +
+      'constructor bị xoá ở 3.x. #1057 đã thử ép 3.10.1 và VỠ build, nên mới có ' +
+      'override hẹp `zip-local>jszip: ^2.6.1`; dòng đó là cố ý, không phải rác. ' +
+      'Đã hỏi lại registry 10/08: zmp-cli@4.0.3 (mới nhất) VẪN dep `zip-local ^0.3.4`, ' +
+      'tức nâng zmp-cli cũng không thoát. XÉT LẠI khi: zmp-cli bỏ zip-local, ' +
+      'zip-local ra bản chạy jszip 3, hoặc mini-app bắt đầu giải nén archive ngoài.',
+    xetNgay: '2026-08-10',
   },
-  'GHSA-337j-9hxr-rhxg': {
-    goi: 'react-router',
+
+  // ── image-size 2.0.2 — dev-only, MỘT đường, nằm trong Storybook của apps/web ──
+  // `pnpm why image-size -r` (10/08): đúng 1 đường, dev only —
+  //   apps/web → @storybook/nextjs-vite@10.4.1 → vite-plugin-storybook-nextjs@3.3.0
+  //   → image-size@2.0.2
+  // Không phải dep trực tiếp ở bất kỳ package.json nào (grep: 0 kết quả) và
+  // không vào bundle production — `next/image` xử lý ảnh bằng sharp, không gọi
+  // gói này. Hai advisory dưới cùng gói, cùng đường, cùng dạng lỗi nên lý do
+  // song song nhau; tách hai mục vì `pnpm audit` báo hai mã riêng.
+  'GHSA-w3rx-r6r6-pgpr': {
+    goi: 'image-size',
     lyDo:
-      'Constructor injection qua `deserializeErrors()` khi HYDRATE SSR. Mini-app ' +
-      'không SSR và không gọi `hydrateRoot` (đếm: 0) ⇒ hàm này không bao giờ ' +
-      'chạy. Cùng gốc kẹt với GHSA-wrjc: zmp-ui@1.11.14 (mới nhất) ghim 6.x.',
-    xetNgay: '2026-08-01',
+      'Vòng lặp vô hạn khi đọc file ICNS dị dạng ⇒ treo tiến trình (DoS). Chỉ ' +
+      'Storybook gọi, tức chỉ chạy trên máy lập trình viên lúc `storybook dev` / ' +
+      '`build-storybook`, trên ảnh nằm sẵn trong repo do chính ta đặt vào — không ' +
+      'có ảnh nào từ người lạ đi qua đây, và tiến trình có treo cũng không ảnh ' +
+      'hưởng khách. Đã ĐẾM: 1 đường, dev-only, không vào bundle. KHÔNG có bản vá — ' +
+      'hỏi registry 10/08: bản mới nhất của image-size LÀ 2.0.2, mà dải dính là ' +
+      '`<=2.0.2` (pnpm audit trả `patched_versions: <0.0.0`, tức chưa tồn tại bản ' +
+      'sạch nào). vite-plugin-storybook-nextjs@3.3.2 (mới nhất) vẫn đòi `^2.0.0`. ' +
+      'XÉT LẠI khi image-size ra 2.0.3+ hoặc Storybook đổi sang gói đọc ảnh khác.',
+    xetNgay: '2026-08-10',
   },
-  'GHSA-jjmj-jmhj-qwj2': {
-    goi: 'react-router-dom',
+  'GHSA-5p2g-fcmc-qvqq': {
+    goi: 'image-size',
     lyDo:
-      '`first_patched_version` là **null** — KHÔNG tồn tại bản vá nào cả, không ' +
-      'phải "chưa nâng". Cũng do zmp-ui ghim 6.x. Cùng lớp open-redirect với ' +
-      'GHSA-wrjc nên cùng kết luận: app không điều hướng tới URL do người dùng ' +
-      'kiểm soát, và nhánh 6.x chỉ chạy bên trong zmp-ui chứ app không gọi.',
-    xetNgay: '2026-08-01',
+      'Cùng gói, cùng đường và cùng dạng lỗi với GHSA-w3rx-r6r6-pgpr, chỉ khác ' +
+      'định dạng ảnh: vòng lặp vô hạn ở bộ đọc JXL và HEIF ⇒ treo tiến trình. ' +
+      'Kết luận y hệt: 1 đường duy nhất đã đếm, dev-only qua Storybook của ' +
+      'apps/web, ảnh đầu vào là ảnh trong repo chứ không từ người lạ, không vào ' +
+      'bundle khách xem. KHÔNG có bản vá tồn tại (image-size mới nhất 2.0.2 nằm ' +
+      'trọn trong dải dính `<=2.0.2`). Xét lại cùng lúc với mục ICNS ở trên.',
+    xetNgay: '2026-08-10',
   },
 };
 
@@ -138,16 +167,16 @@ export function bocAdvisory(json) {
  * Mục đã xét QUÁ HẠN, phải xem lại.
  *
  * ⚠️ CHIỀU THỨ BA, thiếu nó thì cổng vĩnh viễn không đỏ ở đúng ca quan trọng
- * nhất. Cả 5 mục hiện tại đều có lý do dạng "thượng nguồn chưa với tới được" —
- * loại lý do MỤC NHANH NHẤT theo thời gian. Nếu mai `zmp-ui` nâng react-router,
- * hoặc `react-router-dom@8` ra, thì advisory VẪN xuất hiện (ta vẫn ở bản cũ),
- * VẪN nằm trong DA_XET ⇒ exit 0 mãi mãi và không ai biết là đã nâng được.
+ * nhất. Cả 3 mục hiện tại đều có lý do dạng "thượng nguồn chưa vá / chưa với tới
+ * được" — loại lý do MỤC NHANH NHẤT theo thời gian. Nếu mai `image-size` ra
+ * 2.0.3, hoặc `zmp-cli` bỏ `zip-local`, thì advisory VẪN xuất hiện (ta vẫn ở bản
+ * cũ), VẪN nằm trong DA_XET ⇒ exit 0 mãi mãi và không ai biết là đã vá được.
  *
- * ĐÃ CÂN NHẮC VÀ BỎ cách "so `patched_versions`": 4/5 mục hiện tại ĐÃ CÓ bản vá
- * ở thượng nguồn (`>=7.18.0`, `>=8.3.0`, `>=5.0.8`) mà vẫn không với tới được —
- * nên phép so đó sẽ đỏ ngay hôm nay cho cả 4, tức báo động sai. Thứ thật sự mục
- * là LÝ DO, và thứ đo được nó là THỜI GIAN. Vẫn in `patched_versions` ra để
- * người xem tự đối chiếu.
+ * ĐÃ CÂN NHẮC VÀ BỎ cách "so `patched_versions`": ca jszip có bản vá ở thượng
+ * nguồn (`>=3.8.0`) mà vẫn không với tới được (zip-local kẹt ở API 2.x) — nên
+ * phép so đó sẽ đỏ ngay hôm nay, tức báo động sai. Thứ thật sự mục là LÝ DO, và
+ * thứ đo được nó là THỜI GIAN. Vẫn in `patched_versions` ra để người xem tự
+ * đối chiếu.
  */
 export const HAN_XET_LAI_NGAY = 90;
 export function quaHanXetLai(daXet, homNay) {
