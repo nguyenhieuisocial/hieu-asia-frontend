@@ -188,7 +188,7 @@ export function UnderstandingChecklist({ topicId, facets }: UnderstandingCheckli
                   onChange={() => toggle(f.id)}
                 />
                 <span className="min-w-0">
-                  <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                  <span className="font-mono text-eyebrow uppercase text-gold-700">
                     {f.facet}
                   </span>
                   <span
