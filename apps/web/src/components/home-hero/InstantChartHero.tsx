@@ -116,7 +116,7 @@ export function InstantChartHero(): React.JSX.Element {
         {/* Wave 65 — lời hứa thương hiệu lên đầu (page 1) theo yêu cầu founder;
             GIỮ nguyên H1 hành động + form ngay dưới (không phá mối nối chuyển đổi). */}
         <p
-          className="hero-enter font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80"
+          className="hero-enter font-mono text-eyebrow uppercase text-gold/80"
           style={{ animationDelay: '150ms' }}
         >
           Lá số Bát Tự thật · tính ngay · miễn phí
@@ -150,7 +150,7 @@ export function InstantChartHero(): React.JSX.Element {
             <div className="space-y-1">
               <label
                 htmlFor="ich-date"
-                className="block font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground"
+                className="block font-mono text-eyebrow uppercase text-muted-foreground"
               >
                 Ngày sinh (dương lịch)
               </label>
@@ -174,7 +174,7 @@ export function InstantChartHero(): React.JSX.Element {
             <div className="space-y-1">
               <label
                 htmlFor="ich-time"
-                className="block font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground"
+                className="block font-mono text-eyebrow uppercase text-muted-foreground"
               >
                 Giờ sinh
               </label>
@@ -192,7 +192,7 @@ export function InstantChartHero(): React.JSX.Element {
             <div className="space-y-1">
               <label
                 htmlFor="ich-gender"
-                className="block font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground"
+                className="block font-mono text-eyebrow uppercase text-muted-foreground"
               >
                 Giới tính
               </label>

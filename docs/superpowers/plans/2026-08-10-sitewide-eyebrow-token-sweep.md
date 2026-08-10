@@ -74,6 +74,36 @@ Each batch = its own worktree + branch + PR, same discipline as SEO đợt 2 (sm
 5. Screenshot 2–3 representative pages per batch (light + dark mode) via the real Cent Browser session — confirm the label reads as a clean 1px-smaller/consistent eyebrow, not a layout shift or truncation.
 6. Merge-poll to MERGED (not just "auto-merge enabled") before starting the next batch.
 
+## Cạm bẫy đã gặp thật ở đợt 1 (đọc trước khi chạy đợt sau)
+
+`ui-guard.mjs` (note 167 §C.6) chặn PR khi một **dòng vừa thay đổi** chứa
+`group-hover:` mà **cả file** không có `group-focus-within:`. Codemod ghi lại
+nguyên dòng class, nên mọi nhãn eyebrow nằm chung dòng với `group-hover:` đều
+bị tính là "group-hover mới" dù logic không đổi. Đợt 1 dính 2 file
+(`StartupPath`, `TrustBand`).
+
+Cách xử lý đúng: **thêm bản tương đương cho bàn phím**, không né guard. Ở cả 2
+chỗ, phần tử mang class `group` chính là thẻ `<Link>` nên `:focus-within` khớp
+ngay khi thẻ được focus:
+
+```
+group-hover:text-foreground        → + group-focus-within:text-foreground
+group-hover:translate-x-0.5        → + group-focus-within:translate-x-0.5
+```
+
+**23 file** trong 399 chỗ còn lại có `group-hover:` mà thiếu
+`group-focus-within:` — không phải tất cả sẽ bị chặn (chỉ khi hai thứ nằm chung
+dòng), nên đừng sửa trước hàng loạt. Quy trình: chạy codemod → `node
+apps/web/scripts/ui-guard.mjs origin/main` **tại máy** → chỉ sửa đúng file bị
+báo → commit riêng khoản a11y đó tách khỏi commit đổi token.
+
+Lưu ý: ui-guard đọc nội dung file từ git chứ không đọc thư mục làm việc — phải
+commit rồi mới chạy lại guard, sửa xong mà chưa commit thì vẫn báo đỏ.
+
+Ngoài ra 6 chỗ có `sm:text-xs` đứng cạnh nhãn eyebrow. Không cần đụng: từ 640px
+trở lên `text-xs` vẫn ghi đè cỡ chữ đúng như trước, chỉ khác ở chỗ giờ nó thành
+thừa. Gỡ là chuyện dọn riêng, không thuộc phạm vi quét token.
+
 ## The 32 "needs review" instances — handle separately, do not sweep with the rest
 
 These use a tracking value other than `0.12em` on an otherwise eyebrow-shaped label. Before touching any of them: read the surrounding component to judge whether the wider/narrower tracking is a deliberate accent (e.g. a hero eyebrow meant to read louder than a body-adjacent tag) or genuinely a copy-paste drift. Do this as its own small pass *after* the 419 safe ones ship and the tooling/verification rhythm is proven — don't block Batch 1 on it.

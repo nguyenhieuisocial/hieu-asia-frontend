@@ -156,7 +156,7 @@ function FooterCol({
     // distinct navigation region for screen readers (/ultrareview pass 2 P1).
     <nav className={className} aria-label={title}>
       <div className="border-t-2 border-primary/30 pt-3">
-        <h3 className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-primary">
+        <h3 className="font-mono text-eyebrow font-semibold uppercase text-primary">
           {title}
         </h3>
       </div>
@@ -202,7 +202,7 @@ function FooterColLegal({
   return (
     <nav aria-label="Pháp lý">
       <div className="border-t-2 border-primary/30 pt-3">
-        <h3 className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-primary">
+        <h3 className="font-mono text-eyebrow font-semibold uppercase text-primary">
           Pháp lý
         </h3>
       </div>

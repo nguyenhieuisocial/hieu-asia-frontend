@@ -86,7 +86,7 @@ export function StartupPath() {
     <section aria-labelledby="startup-path-h" className="bg-background">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
         <div className="mb-8 max-w-2xl">
-          <span className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
+          <span className="font-mono text-eyebrow uppercase text-primary">
             Lộ trình khởi đầu
           </span>
           <h2
@@ -137,9 +137,9 @@ export function StartupPath() {
                   {s.reward && (
                     <p className="text-xs font-medium text-primary">{s.reward}</p>
                   )}
-                  <span className="mt-auto flex items-center gap-1.5 pt-1 font-mono text-[13px] uppercase tracking-[0.12em] text-primary transition-colors group-hover:text-foreground">
+                  <span className="mt-auto flex items-center gap-1.5 pt-1 font-mono text-eyebrow uppercase text-primary transition-colors group-hover:text-foreground group-focus-within:text-foreground">
                     {done ? 'Xong — xem lại' : s.cta}
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-focus-within:translate-x-0.5" />
                   </span>
                 </Link>
               </li>

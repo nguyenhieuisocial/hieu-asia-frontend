@@ -367,7 +367,7 @@ function DrawerGroup({
         {sections
           ? sections.map((s) => (
               <div key={s.label} className="mt-1.5 flex flex-col gap-0.5 first:mt-0">
-                <p className="px-3 pt-1 font-mono text-[12px] uppercase tracking-[0.12em] text-primary">
+                <p className="px-3 pt-1 font-mono text-eyebrow uppercase text-primary">
                   {s.label}
                 </p>
                 {s.links.map((l) => (
