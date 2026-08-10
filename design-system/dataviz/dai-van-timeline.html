@@ -1,0 +1,125 @@
+<!-- @dsCard group="Data-viz" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Đại vận — timeline 8 chặng</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.tag{font-size:11px;letter-spacing:.1em;color:var(--accent);vertical-align:middle}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+.tl{overflow-x:auto;padding:10px 2px 4px}
+.row{display:flex;gap:8px;min-width:640px}
+.seg{flex:1;position:relative;border:1px solid var(--border);border-radius:2px;padding:12px 10px 10px;cursor:pointer;transition:transform .3s var(--ease-soft),box-shadow .3s var(--ease-soft),border-color .3s var(--ease-soft)}
+.seg:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.10)}
+.cc{display:block;font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:17px;line-height:1.2;margin-bottom:3px}
+.age{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.now{border-color:var(--accent)}
+.now::after{content:"";position:absolute;top:-4px;left:50%;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--accent)}
+.now .age{color:var(--accent)}
+.leg{font-size:13px;line-height:1.6;color:var(--muted);margin:20px 0 0;padding-left:18px}
+.leg li{margin-bottom:6px}
+.leg b{color:var(--fg)}
+.tok{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.tok span{font-size:12px;border:1px solid var(--border);border-radius:2px;padding:5px 10px;color:var(--muted)}
+.note{margin-top:20px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}.seg:hover{transform:none;box-shadow:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Đại vận — tám chặng mười năm <span class="tag">· ĐỀ XUẤT MỚI — trục trực quan</span></h2>
+  <p class="sub">Ngày · nam mệnh Canh Kim, khởi vận 3 tuổi — rê chuột từng chặng</p>
+  <div class="tl">
+    <div class="row">
+      <div class="seg">
+        <b class="cc">Mậu Thìn</b>
+        <span class="age">3–12</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Kỷ Tỵ</b>
+        <span class="age">13–22</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Canh Ngọ</b>
+        <span class="age">23–32</span>
+      </div>
+      <div class="seg now">
+        <b class="cc">Tân Mùi</b>
+        <span class="age">33–42 · nay</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Nhâm Thân</b>
+        <span class="age">43–52</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Quý Dậu</b>
+        <span class="age">53–62</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Giáp Tuất</b>
+        <span class="age">63–72</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Ất Hợi</b>
+        <span class="age">73–82</span>
+      </div>
+    </div>
+  </div>
+  <ul class="leg">
+    <li><b>Chặng hiện tại</b> viền accent + chấm đầu ô + tuổi màu nhấn — mắt tìm thấy “mình đang ở đâu” trước tiên.</li>
+    <li><b>Hover nổi 3px</b> — mời bấm xem chi tiết chặng; chỉ là lời mời, không nhảy nhót.</li>
+    <li><b>Tuổi 11px HOA</b> giãn .1em · can–chi serif 17px — cùng ngữ pháp với thẻ bốn trụ.</li>
+    <li><b>Hẹp thì cuộn ngang trong khung</b> — không bao giờ tràn trang trên mobile.</li>
+  </ul>
+  <div class="tok">
+    <span>hover nổi 3px · 300ms ease-soft</span>
+    <span>chấm hiện tại 8px</span>
+    <span>ô góc 2px · viền 1px</span>
+    <span>tuổi 11px HOA · can–chi serif 17px</span>
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — cùng một nhịp</h2>
+  <p class="sub">Viền và chữ tự đổi · accent thành gold-soft</p>
+  <div class="tl">
+    <div class="row">
+      <div class="seg">
+        <b class="cc">Mậu Thìn</b>
+        <span class="age">3–12</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Kỷ Tỵ</b>
+        <span class="age">13–22</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Canh Ngọ</b>
+        <span class="age">23–32</span>
+      </div>
+      <div class="seg now">
+        <b class="cc">Tân Mùi</b>
+        <span class="age">33–42 · nay</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Nhâm Thân</b>
+        <span class="age">43–52</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Quý Dậu</b>
+        <span class="age">53–62</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Giáp Tuất</b>
+        <span class="age">63–72</span>
+      </div>
+      <div class="seg">
+        <b class="cc">Ất Hợi</b>
+        <span class="age">73–82</span>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Luật:</b> một chặng — một ô — một đời số liệu; chỉ chặng hiện tại được nhấn accent, quá khứ và tương lai bình đẳng về màu. Hover thuần CSS, tắt hẳn khi người dùng bật “giảm chuyển động”. Không progress-bar sặc sỡ, không gradient.</div>
+</div>
+
+</body></html>

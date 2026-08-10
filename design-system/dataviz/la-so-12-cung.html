@@ -1,0 +1,121 @@
+<!-- @dsCard group="Data-viz" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lá số 12 cung — chuẩn hoá</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+.wrap{display:flex;gap:36px;align-items:flex-start;flex-wrap:wrap}
+.laso{width:300px;max-width:100%}
+.leg{font-size:13px;line-height:1.6;color:var(--muted);max-width:290px;margin:0;padding-left:18px}
+.leg li{margin-bottom:7px}
+.leg b{color:var(--fg)}
+.tok{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.tok span{font-size:12px;border:1px solid var(--border);border-radius:2px;padding:5px 10px;color:var(--muted)}
+.note{margin-top:20px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+
+<!-- Sơ đồ định nghĩa MỘT lần trong defs — hai panel tham chiếu, currentColor tự đổi theo chế độ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<g id="laso12">
+  <!-- LỚP CẤU TRÚC: khung, vách, hairline — đi theo màu chữ (mực ngày / xương đêm) -->
+  <g fill="none" stroke="currentColor">
+    <rect x="7" y="7" width="346" height="346" rx="2" stroke-opacity=".15" stroke-width=".5"/>
+    <rect x="12" y="12" width="336" height="336" rx="2" stroke-opacity=".7" stroke-width="1.75"/>
+    <rect x="96" y="96" width="168" height="168" stroke-opacity=".7" stroke-width="1.75"/>
+    <rect x="101" y="101" width="158" height="158" stroke-opacity=".15" stroke-width=".5"/>
+    <!-- vách chia vành ngoài 4×4 thành 12 ô quanh tâm -->
+    <g stroke-opacity=".55" stroke-width="1.25">
+      <line x1="96" y1="12" x2="96" y2="96"/>
+      <line x1="180" y1="12" x2="180" y2="96"/>
+      <line x1="264" y1="12" x2="264" y2="96"/>
+      <line x1="96" y1="264" x2="96" y2="348"/>
+      <line x1="180" y1="264" x2="180" y2="348"/>
+      <line x1="264" y1="264" x2="264" y2="348"/>
+      <line x1="12" y1="96" x2="96" y2="96"/>
+      <line x1="12" y1="180" x2="96" y2="180"/>
+      <line x1="12" y1="264" x2="96" y2="264"/>
+      <line x1="264" y1="96" x2="348" y2="96"/>
+      <line x1="264" y1="180" x2="348" y2="180"/>
+      <line x1="264" y1="264" x2="348" y2="264"/>
+    </g>
+  </g>
+  <!-- nhãn 11 cung theo vòng truyền thống (cung Mệnh nằm ở lớp nhấn bên dưới) -->
+  <g fill="currentColor" fill-opacity=".78" font-family="'Be Vietnam Pro',system-ui,sans-serif" font-size="10" letter-spacing=".05em" text-anchor="middle">
+    <text x="54" y="57">Huynh Đệ</text>
+    <text x="222" y="57">Phụ Mẫu</text>
+    <text x="306" y="57">Phúc Đức</text>
+    <text x="306" y="141">Điền Trạch</text>
+    <text x="306" y="225">Quan Lộc</text>
+    <text x="306" y="309">Nô Bộc</text>
+    <text x="222" y="309">Thiên Di</text>
+    <text x="138" y="309">Tật Ách</text>
+    <text x="54" y="309">Tài Bạch</text>
+    <text x="54" y="225">Tử Tức</text>
+    <text x="54" y="141">Phu Thê</text>
+  </g>
+  <!-- 12 chấm tim ô — gợi "12 gian phòng" như bản gốc -->
+  <g fill="currentColor" fill-opacity=".35">
+    <circle cx="54" cy="69" r="1.2"/><circle cx="138" cy="69" r="1.2"/><circle cx="222" cy="69" r="1.2"/>
+    <circle cx="306" cy="69" r="1.2"/><circle cx="306" cy="153" r="1.2"/><circle cx="306" cy="237" r="1.2"/>
+    <circle cx="306" cy="321" r="1.2"/><circle cx="222" cy="321" r="1.2"/><circle cx="138" cy="321" r="1.2"/>
+    <circle cx="54" cy="321" r="1.2"/><circle cx="54" cy="237" r="1.2"/><circle cx="54" cy="153" r="1.2"/>
+  </g>
+  <!-- LỚP NHẤN: cung Mệnh + sao chính + tâm — đi theo màu nhấn của chế độ -->
+  <g style="color:var(--accent)">
+    <rect x="96" y="12" width="84" height="84" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-opacity=".55" stroke-width="1.25"/>
+    <text x="138" y="57" fill="currentColor" fill-opacity=".95" font-family="'Be Vietnam Pro',system-ui,sans-serif" font-size="10" letter-spacing=".05em" text-anchor="middle">Mệnh</text>
+    <!-- sao chính rải như bản đồ sao — bán kính lệch nhau cho tự nhiên -->
+    <g fill="currentColor" fill-opacity=".8">
+      <circle cx="118" cy="36" r="2.5"/>
+      <circle cx="158" cy="76" r="1.8"/>
+      <circle cx="320" cy="38" r="2"/>
+      <circle cx="322" cy="206" r="2.2"/>
+      <circle cx="38" cy="294" r="2.2"/>
+      <circle cx="244" cy="330" r="1.8"/>
+      <circle cx="36" cy="118" r="1.8"/>
+    </g>
+    <circle cx="180" cy="164" r="3" fill="currentColor" fill-opacity=".85"/>
+    <text x="180" y="196" fill="currentColor" fill-opacity=".95" font-family="'Newsreader',Georgia,serif" font-size="21" letter-spacing=".18em" text-anchor="middle">MỆNH</text>
+    <text x="180" y="214" fill="currentColor" fill-opacity=".5" font-family="'Be Vietnam Pro',system-ui,sans-serif" font-size="8" letter-spacing=".14em" text-anchor="middle">AN TẠI TÂM SƠ ĐỒ</text>
+  </g>
+</g>
+</defs></svg>
+
+<div class="panel">
+  <h2>Lá số 12 cung — sơ đồ chuẩn hoá</h2>
+  <p class="sub">Ngày · neo thị giác “bản đồ đời người” cho người mới</p>
+  <div class="wrap">
+    <svg class="laso" viewBox="0 0 360 360" role="img" aria-label="Sơ đồ 12 cung, cung Mệnh được nhấn"><use href="#laso12"/></svg>
+    <ul class="leg">
+      <li><b>Vành ngoài 4×4</b> — 12 ô quanh tâm, đúng khung lá số truyền thống Việt.</li>
+      <li><b>Nét cấu trúc</b> dùng currentColor — mực trên giấy ngày, xương trên nền đêm, không đổi mã màu thủ công.</li>
+      <li><b>Cung Mệnh</b> tô accent 14% + nhãn accent — mỗi sơ đồ chỉ nhấn đúng một cung.</li>
+      <li><b>Sao chính</b> là chấm accent rải như bản đồ sao — không icon, không emoji.</li>
+      <li><b>Tâm serif</b> — MỆNH giãn chữ .18em, vai trò con dấu của cả sơ đồ.</li>
+    </ul>
+  </div>
+  <div class="tok">
+    <span>khung chính 1.75 / 70%</span>
+    <span>vách chia 1.25 / 55%</span>
+    <span>hairline 0.5 / 15%</span>
+    <span>nhãn cung 10px · góc 2px</span>
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — bề mặt trải nghiệm</h2>
+  <p class="sub">Cùng một SVG, không sửa dòng nào — currentColor tự đổi</p>
+  <svg class="laso" viewBox="0 0 360 360" role="img" aria-label="Sơ đồ 12 cung, chế độ đêm"><use href="#laso12"/></svg>
+  <div class="tok">
+    <span>chỗ dùng: hero · trang lá số · og-image</span>
+    <span>tĩnh trước — interactive để pha sau</span>
+  </div>
+  <div class="note"><b>Luật thi công:</b> cấu trúc (khung, vách, hairline) đi theo màu chữ — currentColor; dữ liệu (cung nhấn, sao chính) đi theo màu nhấn của chế độ. Tô phẳng, không gradient, không glow — bản đồ sao trên giấy, không phải “app bói”.</div>
+</div>
+
+</body></html>

@@ -1,0 +1,123 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Biểu mẫu — nhập liệu có lễ</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--err:#A44A36;--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 28px}
+.field{max-width:380px;margin-bottom:24px}
+.lab{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.in{width:100%;background:transparent;color:var(--fg);border:1px solid var(--border);border-radius:2px;padding:12px 14px;font:inherit;font-size:15px;transition:border-color .15s var(--ease-soft)}
+.in::placeholder{color:var(--muted)}
+.in:hover{border-color:var(--fg)}
+.in:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.selwrap{position:relative}
+.selwrap::after{content:"▾";position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted);font-size:12px}
+select.in{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:36px}
+.time{display:flex;align-items:center;gap:8px}
+.time .in{width:76px;text-align:center;font-variant-numeric:tabular-nums}
+.time b{font-family:'Newsreader',Georgia,serif;font-size:18px;color:var(--muted)}
+.hint{margin-top:6px;font-size:12px;line-height:1.5;color:var(--muted)}
+.opts{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}
+.opts label{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+input[type=radio],input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;margin:0;cursor:pointer}
+.err .lab{color:var(--err)}
+.err .in{border-color:var(--err)}
+.err .in:focus{outline-color:var(--err);border-color:var(--err)}
+.errmsg{margin-top:6px;font-size:12px;line-height:1.5;color:var(--err)}
+.note{margin-top:24px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){.in{transition:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — bộ ô nhập chuẩn</h2>
+  <p class="sub">Nhãn 11px HOA đứng trên ô · placeholder chỉ gợi ý, không thay nhãn</p>
+  <!-- ô chữ -->
+  <div class="field">
+    <label class="lab" for="hoten">Họ và tên</label>
+    <input class="in" id="hoten" type="text" placeholder="Nguyễn Thị Thu Hà">
+  </div>
+  <!-- ô chọn -->
+  <div class="field">
+    <label class="lab" for="noisinh">Nơi sinh</label>
+    <div class="selwrap">
+      <select class="in" id="noisinh">
+        <option>Hà Nội</option>
+        <option>Huế</option>
+        <option>TP. Hồ Chí Minh</option>
+        <option>Nơi khác…</option>
+      </select>
+    </div>
+  </div>
+  <!-- ô giờ kiểu Time24 -->
+  <div class="field">
+    <label class="lab" for="gio">Giờ sinh · 24 giờ</label>
+    <div class="time">
+      <input class="in" id="gio" type="text" inputmode="numeric" placeholder="21" aria-label="Giờ">
+      <b>:</b>
+      <input class="in" type="text" inputmode="numeric" placeholder="30" aria-label="Phút">
+    </div>
+    <p class="hint">Không nhớ chính xác? Chọn mốc gần nhất — lệch 15 phút hiếm khi đổi cung Mệnh.</p>
+  </div>
+  <div class="field">
+    <span class="lab">Giới tính · theo lịch pháp</span>
+    <div class="opts">
+      <label><input type="radio" name="gt" checked> Nam</label>
+      <label><input type="radio" name="gt"> Nữ</label>
+    </div>
+  </div>
+  <div class="field">
+    <span class="lab">Tuỳ chọn</span>
+    <div class="opts" style="flex-direction:column;gap:10px;align-items:flex-start">
+      <label><input type="checkbox" checked> Lưu lá số này vào hồ sơ của tôi</label>
+      <label><input type="checkbox"> Nhận thư đọc chậm mỗi tuần</label>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Trạng thái lỗi — nói rõ vì sao, sửa thế nào</h2>
+  <p class="sub">Đỏ Hoả #A44A36 · viền + nhãn + một câu, không chuông báo động</p>
+  <div class="field err">
+    <label class="lab" for="ngaysinh">Ngày sinh</label>
+    <input class="in" id="ngaysinh" type="text" value="31/02/1994" aria-invalid="true">
+    <p class="errmsg">Ngày này không tồn tại — tháng Hai chỉ có 28 hoặc 29 ngày.</p>
+  </div>
+  <div class="field err">
+    <label class="lab" for="giol">Giờ sinh · 24 giờ</label>
+    <input class="in" id="giol" type="text" value="25:70" style="width:120px" aria-invalid="true">
+    <p class="errmsg">Nhập theo 24 giờ, ví dụ 21:30.</p>
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — cùng bộ ô trên nền than</h2>
+  <p class="sub">Focus vẫn là vòng 2px màu nhấn — cùng ngôn ngữ với nút</p>
+  <div class="field">
+    <label class="lab" for="tenn">Họ và tên</label>
+    <input class="in" id="tenn" type="text" placeholder="Nguyễn Thị Thu Hà">
+  </div>
+  <div class="field err">
+    <label class="lab" for="ngayn">Ngày sinh</label>
+    <input class="in" id="ngayn" type="text" value="31/02/1994" aria-invalid="true">
+    <p class="errmsg">Ngày này không tồn tại — tháng Hai chỉ có 28 hoặc 29 ngày.</p>
+  </div>
+  <div class="field">
+    <span class="lab">Giới tính · theo lịch pháp</span>
+    <div class="opts">
+      <label><input type="radio" name="gtn"> Nam</label>
+      <label><input type="radio" name="gtn" checked> Nữ</label>
+    </div>
+  </div>
+  <div class="note">
+    <b>Ba luật nhập liệu:</b> nhãn không bao giờ biến mất (cấm dùng placeholder làm nhãn);
+    lỗi chỉ hiện sau khi người dùng rời ô — không đỏ ngay từ phím đầu; câu lỗi nói cách
+    sửa, không trách móc. Đỏ Hoả giữ nguyên 2 chế độ — cân nhắc bậc sáng hơn
+    cho nền đêm ở Giai đoạn 2.
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,139 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bảng — cuộn trong khung</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+.frame{max-width:540px;border:1px solid var(--border);border-radius:2px;overflow-x:auto;background:var(--bg)}
+table{border-collapse:collapse;min-width:660px;width:100%;font-size:14px}
+caption{caption-side:bottom;text-align:left;padding:10px 16px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+th{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--muted);text-align:left;padding:12px 16px;border-bottom:1px solid var(--fg);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top;white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr td{transition:background .15s var(--ease-soft)}
+tbody tr:hover td{background:rgba(164,117,50,.07)}
+.night tbody tr:hover td{background:rgba(212,162,97,.08)}
+th:first-child,td:first-child{position:sticky;left:0;background:var(--bg)}
+.num{font-variant-numeric:tabular-nums;color:var(--muted)}
+.hanh{display:inline-flex;align-items:center;gap:7px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.ghi{white-space:normal;min-width:210px;color:var(--muted);font-size:13px;line-height:1.5}
+.note{margin-top:24px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){tbody tr td{transition:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — bảng đại vận, kéo ngang trong khung</h2>
+  <p class="sub">Khung hẹp cố ý để thấy hành vi cuộn · cột đầu ghim tại chỗ</p>
+  <div class="frame">
+    <table>
+      <caption>Kéo ngang để xem hết · cột Đại vận đứng yên</caption>
+      <thead>
+        <tr>
+          <th>Đại vận</th>
+          <th>Tuổi</th>
+          <th>Can chi</th>
+          <th>Ngũ hành</th>
+          <th>Cung nhập hạn</th>
+          <th>Một dòng ghi chú</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vận 1</td>
+          <td class="num">4–13</td>
+          <td>Ất Mão</td>
+          <td><span class="hanh"><i class="dot" style="background:#6B8154"></i>Mộc</span></td>
+          <td>Phụ mẫu</td>
+          <td class="ghi">Nền nếp — học từ nhà mà ra.</td>
+        </tr>
+        <tr>
+          <td>Vận 2</td>
+          <td class="num">14–23</td>
+          <td>Bính Thìn</td>
+          <td><span class="hanh"><i class="dot" style="background:#A44A36"></i>Hoả</span></td>
+          <td>Phúc đức</td>
+          <td class="ghi">Bung sức sớm, giữ nhịp học đều tay.</td>
+        </tr>
+        <tr>
+          <td>Vận 3</td>
+          <td class="num">24–33</td>
+          <td>Đinh Tỵ</td>
+          <td><span class="hanh"><i class="dot" style="background:#A44A36"></i>Hoả</span></td>
+          <td>Điền trạch</td>
+          <td class="ghi">Tích luỹ — đất đai, chỗ đứng đầu tiên.</td>
+        </tr>
+        <tr>
+          <td>Vận 4</td>
+          <td class="num">34–43</td>
+          <td>Mậu Ngọ</td>
+          <td><span class="hanh"><i class="dot" style="background:#A07842"></i>Thổ</span></td>
+          <td>Quan lộc</td>
+          <td class="ghi">Đỉnh việc — danh theo việc mà tới.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <b>Luật bảng:</b> bảng KHÔNG bao giờ tràn trang — cuộn ngang bên trong khung 1px,
+    trang giữ nguyên bề ngang. Cột neo ghim trái bằng sticky; số dùng tabular-nums cho
+    thẳng cột; kẻ đầu bảng 1px mực đậm, kẻ dòng 1px viền nhạt — đúng bảng số liệu báo in.
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — cùng bảng trong màn đọc</h2>
+  <p class="sub">Hàng đang xem sáng nhẹ khi rê chuột · chấm ngũ hành giữ nguyên hex</p>
+  <div class="frame">
+    <table>
+      <caption>Kéo ngang để xem hết · cột Đại vận đứng yên</caption>
+      <thead>
+        <tr>
+          <th>Đại vận</th>
+          <th>Tuổi</th>
+          <th>Can chi</th>
+          <th>Ngũ hành</th>
+          <th>Cung nhập hạn</th>
+          <th>Một dòng ghi chú</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vận 4</td>
+          <td class="num">34–43</td>
+          <td>Mậu Ngọ</td>
+          <td><span class="hanh"><i class="dot" style="background:#A07842"></i>Thổ</span></td>
+          <td>Quan lộc</td>
+          <td class="ghi">Đỉnh việc — danh theo việc mà tới.</td>
+        </tr>
+        <tr>
+          <td>Vận 5</td>
+          <td class="num">44–53</td>
+          <td>Kỷ Mùi</td>
+          <td><span class="hanh"><i class="dot" style="background:#A07842"></i>Thổ</span></td>
+          <td>Nô bộc</td>
+          <td class="ghi">Người quanh mình — cho đi trước, nhận sau.</td>
+        </tr>
+        <tr>
+          <td>Vận 6</td>
+          <td class="num">54–63</td>
+          <td>Canh Thân</td>
+          <td><span class="hanh"><i class="dot" style="background:#7D8A98"></i>Kim</span></td>
+          <td>Thiên di</td>
+          <td class="ghi">Đổi chỗ đứng — đi xa hoặc đổi vai.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <b>Đêm không đổi kết cấu:</b> vẫn kẻ ngang, vẫn cột ghim — chỉ hàng hover sáng lên 8%
+    màu nhấn thay vì đổ bóng. Bảng dài quá 8 hàng thì tách trang hoặc thu gọn cột,
+    tuyệt đối không thu chữ nhỏ lại.
+  </div>
+</div>
+
+</body></html>

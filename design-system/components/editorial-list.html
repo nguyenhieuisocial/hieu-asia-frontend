@@ -1,0 +1,120 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Danh sách biên tập — số mono, tít nghiêng</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+.list{max-width:680px}
+.item{display:flex;gap:24px;align-items:flex-start;padding:22px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:transform .3s var(--ease-soft)}
+.item:hover{transform:translateX(6px)}
+.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.no{flex:none;width:34px;padding-top:7px;font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:13px;letter-spacing:.06em;color:var(--accent)}
+.item h3{font-family:'Newsreader',Georgia,serif;font-style:italic;font-weight:500;font-size:22px;line-height:1.25;margin:0 0 6px;transition:color .15s var(--ease-soft)}
+.item:hover h3{color:var(--accent)}
+.item p{margin:0;font-size:14px;line-height:1.6;color:var(--muted)}
+.go{flex:none;margin-left:auto;padding-top:7px;color:var(--accent);font-size:15px;transition:transform .3s var(--ease-soft)}
+.item:hover .go{transform:translateX(4px)}
+.note{margin-top:24px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){.item,.item h3,.go{transition:none}.item:hover{transform:none}.item:hover .go{transform:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — mục lục như trang báo</h2>
+  <p class="sub">Số thứ tự mono · tít nghiêng serif · kẻ ngang 1px giữa các dòng</p>
+  <div class="list">
+    <!-- mục 01 -->
+    <div class="item" tabindex="0">
+      <span class="no">01</span>
+      <span>
+        <h3>Giờ sinh quyết định cung Mệnh</h3>
+        <p>
+          Sai một canh giờ là dựng nhầm bộ khung — vì thế chúng tôi hỏi kỹ
+          ngay từ ô nhập đầu tiên.
+        </p>
+      </span>
+      <span class="go">→</span>
+    </div>
+    <!-- mục 02 -->
+    <div class="item" tabindex="0">
+      <span class="no">02</span>
+      <span>
+        <h3>Đại vận đổi mười năm một lần</h3>
+        <p>
+          Lá số là bản đồ tĩnh, đại vận là dòng chảy — đọc cả hai
+          mới thành câu chuyện.
+        </p>
+      </span>
+      <span class="go">→</span>
+    </div>
+    <!-- mục 03 -->
+    <div class="item" tabindex="0">
+      <span class="no">03</span>
+      <span>
+        <h3>Ngũ hành không có tốt xấu</h3>
+        <p>
+          Chỉ có cân bằng và lệch nhịp. Hoả vượng không phải án phạt —
+          là một kiểu năng lượng cần chỗ thoát.
+        </p>
+      </span>
+      <span class="go">→</span>
+    </div>
+    <!-- mục 04 -->
+    <div class="item" tabindex="0">
+      <span class="no">04</span>
+      <span>
+        <h3>Không có sao xấu, chỉ có sao đặt nhầm chỗ</h3>
+        <p>
+          Cùng một Thất Sát: ở Mệnh là khí phách,
+          ở Tật Ách là lời nhắc giữ mình.
+        </p>
+      </span>
+      <span class="go">→</span>
+    </div>
+  </div>
+  <div class="note">
+    <b>Recipe:</b> số mono lấy từ stack hệ thống (không thêm webfont thứ ba); tít nghiêng
+    serif là giọng thương hiệu — cả dòng nghiêng vì đây là tít, khác luật “một-từ-nhấn”
+    của heading thường. Rê chuột: cả dòng nhích 6px, mũi tên nhích thêm 4px.
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — cùng khuôn trong màn đọc</h2>
+  <p class="sub">Mục lục chương của báo cáo dài</p>
+  <div class="list">
+    <!-- mục 05 · số chạy tiếp, không đánh lại -->
+    <div class="item" tabindex="0">
+      <span class="no">05</span>
+      <span>
+        <h3>Tứ hoá — bốn cách một sao đổi giọng</h3>
+        <p>
+          Hoá Lộc, Hoá Quyền, Hoá Khoa, Hoá Kỵ: cùng một sao,
+          bốn hoàn cảnh phát ngôn.
+        </p>
+      </span>
+      <span class="go">→</span>
+    </div>
+    <!-- mục 06 -->
+    <div class="item" tabindex="0">
+      <span class="no">06</span>
+      <span>
+        <h3>Lưu niên — đọc năm nay thế nào</h3>
+        <p>
+          Chồng lá số năm lên lá số gốc, xem cung nào sáng đèn —
+          không đoán, chỉ so.
+        </p>
+      </span>
+      <span class="go">→</span>
+    </div>
+  </div>
+  <div class="note">
+    <b>Kỷ luật:</b> mô tả dưới tít tối đa 2 câu; số chạy liên tục qua các panel
+    như trang sách — đánh lại từ 01 ở mỗi mảng là gãy mạch đọc.
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,124 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FAQ — mở gấp tự nhiên</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+.faq{max-width:680px}
+details{border-bottom:1px solid var(--border)}
+summary{list-style:none;display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:18px 0;cursor:pointer;font-family:'Newsreader',Georgia,serif;font-size:19px;line-height:1.3;transition:color .15s var(--ease-soft)}
+summary::-webkit-details-marker{display:none}
+summary:hover{color:var(--accent)}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mk{flex:none;font-size:18px;color:var(--accent);transition:transform .3s var(--ease-soft)}
+details[open] .mk{transform:rotate(45deg)}
+.a{margin:0;padding:0 28px 20px 0;font-size:15px;line-height:1.6;color:var(--muted)}
+.note{margin-top:24px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){summary,.mk{transition:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — câu hỏi mở như gấp báo</h2>
+  <p class="sub">Native details/summary · không JS · câu đầu mở sẵn</p>
+  <div class="faq">
+    <!-- câu 1 · mở sẵn -->
+    <details open>
+      <summary>
+        Đây có phải bói toán không?
+        <span class="mk">+</span>
+      </summary>
+      <p class="a">
+        Không. Lá số tính bằng thuật toán lịch pháp từ ngày giờ sinh — cùng dữ liệu vào,
+        cùng kết quả ra. Chúng tôi mô tả cấu trúc, không phán tương lai, không doạ hạn.
+      </p>
+    </details>
+    <!-- câu 2 -->
+    <details>
+      <summary>
+        Không nhớ giờ sinh thì sao?
+        <span class="mk">+</span>
+      </summary>
+      <p class="a">
+        Vẫn lập được lá số ở mức ngày. Những cung phụ thuộc giờ sẽ được đánh dấu
+        “cần giờ sinh” thay vì đoán bừa cho đủ.
+      </p>
+    </details>
+    <!-- câu 3 -->
+    <details>
+      <summary>
+        Luận giải do ai viết?
+        <span class="mk">+</span>
+      </summary>
+      <p class="a">
+        Khung luận giải do người biên tập tay; máy chỉ ghép đúng dữ kiện lá số của bạn
+        vào khung đó. Chỗ nào máy viết, chúng tôi ghi rõ là máy viết.
+      </p>
+    </details>
+    <!-- câu 4 -->
+    <details>
+      <summary>
+        Dữ liệu ngày sinh được giữ thế nào?
+        <span class="mk">+</span>
+      </summary>
+      <p class="a">
+        Nằm trong hồ sơ của bạn, không bán cho ai, bấm xoá là mất thật.
+        Trang Quyền riêng tư ghi đủ từng dòng.
+      </p>
+    </details>
+  </div>
+  <div class="note">
+    <b>Vì sao native:</b> details/summary để trình duyệt tự lo — SEO đọc được, bàn phím
+    dùng được, không cần một dòng JS. Dấu “+” xoay 45° thành “×” trong 300ms; câu hỏi
+    đặt serif 19px như tít phụ, câu trả lời giữ một-cột-đọc 680px.
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — cùng khuôn trong màn đọc</h2>
+  <p class="sub">FAQ cuối báo cáo · nhịp thưa hơn để mắt nghỉ</p>
+  <div class="faq">
+    <!-- câu 1 · mở sẵn -->
+    <details open>
+      <summary>
+        Vì sao báo cáo đọc trên nền tối?
+        <span class="mk">+</span>
+      </summary>
+      <p class="a">
+        Màn đọc dài ưu tiên đêm: than với chữ xương giấy dịu mắt, hợp giờ đọc muộn —
+        như đèn bàn thay vì đèn phòng khám.
+      </p>
+    </details>
+    <!-- câu 2 -->
+    <details>
+      <summary>
+        Có tải báo cáo về được không?
+        <span class="mk">+</span>
+      </summary>
+      <p class="a">
+        Được. Bản PDF giữ đúng khuôn chữ và lá số của bạn, đọc ngoại tuyến
+        hay in ra kẹp sổ đều ổn.
+      </p>
+    </details>
+    <!-- câu 3 -->
+    <details>
+      <summary>
+        Đọc lại báo cáo cũ ở đâu?
+        <span class="mk">+</span>
+      </summary>
+      <p class="a">
+        Mục Hồ sơ giữ đủ mọi báo cáo đã lập, xếp theo thời gian —
+        như một ngăn kéo tài liệu của riêng bạn.
+      </p>
+    </details>
+  </div>
+  <div class="note">
+    <b>Kỷ luật nội dung:</b> mỗi cụm FAQ tối đa 6 câu; câu trả lời 2–3 câu là đủ —
+    dài hơn thì đó là bài cẩm nang, viết hẳn thành bài và dẫn link.
+  </div>
+</div>
+
+</body></html>

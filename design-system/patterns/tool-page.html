@@ -1,0 +1,183 @@
+<!-- @dsCard group="Page patterns" -->
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Khuôn trang công cụ — phủ ~1.200 trang</title>
+<style>
+:root{
+  --bg:#F3ECDD;
+  --fg:#171411;
+  --accent:#A47532;
+  --border:#CCC0A6;
+  --muted:rgba(23,20,17,.62);
+  --t-fast:150ms;
+  --t-base:300ms;
+  --t-slow:500ms;
+  --ease-soft:cubic-bezier(.25,.8,.4,1);
+  --ease-ed:cubic-bezier(.34,1.56,.64,1);
+}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;line-height:1.2;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 28px}
+.zl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+.wire{max-width:480px;border:1px solid var(--border);border-radius:2px;padding:32px;background:var(--bg)}
+.zone{margin:0 0 32px}
+.zone:last-child{margin:0}
+.crumb{font-size:11px;line-height:1.4;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+.crumb b{color:var(--fg);font-weight:600}
+.h1{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:32px;line-height:1.15;letter-spacing:-.01em;margin:0 0 10px}
+.lede{font-size:14px;line-height:1.55;color:var(--muted);margin:0;max-width:52ch}
+.input-card{border:2px solid var(--border);border-radius:2px;padding:24px}
+.f-label{font-size:11px;line-height:1.4;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.f-box{border:1px solid var(--border);border-radius:2px;padding:10px 12px;font-size:14px;margin:0 0 16px}
+.btn{font-family:'Newsreader',Georgia,serif;font-size:16px;line-height:1;border-radius:2px;padding:12px 22px;cursor:pointer;transition:filter var(--t-fast) var(--ease-soft),transform var(--t-fast) var(--ease-soft)}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--accent);color:var(--bg);border:1px solid var(--accent);width:100%}
+.btn-primary:hover{filter:brightness(1.08)}
+.result{border:1px solid var(--border);border-radius:2px;padding:24px;box-shadow:0 8px 22px rgba(0,0,0,.08)}
+.r-title{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;line-height:1.2;margin:0 0 12px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:2px;padding:4px 10px;font-size:11px;line-height:1.4;letter-spacing:.08em}
+.chip i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.r-text{font-size:14px;line-height:1.55;color:var(--muted);margin:0}
+.rel-item{display:flex;gap:14px;align-items:baseline;padding:12px 0;border-top:1px solid var(--border)}
+.rel-item:last-child{border-bottom:1px solid var(--border)}
+.rel-no{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:13px;color:var(--accent);flex:none}
+.rel-t{font-family:'Newsreader',Georgia,serif;font-style:italic;font-size:19px;line-height:1.45;margin:0}
+.rel-s{font-size:12px;color:var(--muted);margin:2px 0 0}
+.cta{border-top:1px solid var(--border);padding-top:28px;text-align:center}
+.cta h3{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;line-height:1.2;margin:0 0 6px}
+.cta p{font-size:13px;line-height:1.5;letter-spacing:.02em;color:var(--muted);margin:0 0 16px}
+.cta .btn-primary{width:auto}
+.note{margin-top:26px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.5;letter-spacing:.02em;color:var(--muted);max-width:480px}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){
+  .btn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h2>Khuôn trang công cụ chuẩn</h2>
+  <p class="sub">Một khuôn phủ ~1.200 trang SEO — đổi ruột, giữ xương</p>
+  <div class="wire">
+    <div class="zone">
+      <p class="zl">① Breadcrumb · 11 hoa</p>
+      <p class="crumb">Trang chủ / Tử vi / <b>Lá số trọn đời</b></p>
+    </div>
+    <div class="zone">
+      <p class="zl">② H1 serif · thật 48 — thu nhỏ 32 · kèm đoạn dẫn ngắn</p>
+      <h1 class="h1">Lập lá số tử vi trọn đời</h1>
+      <p class="lede">Nhập giờ sinh, nhận lá số an đủ 110 sao cùng lời giải từng cung — miễn phí, không cần tài khoản.</p>
+    </div>
+    <div class="zone">
+      <p class="zl">③ Khối nhập liệu · thẻ viền 2px · nút serif</p>
+      <div class="input-card">
+        <p class="f-label">Ngày sinh dương lịch</p>
+        <div class="f-box">15 / 08 / 1996</div>
+        <p class="f-label">Giờ sinh</p>
+        <div class="f-box">02:15 — giờ Sửu</div>
+        <button class="btn btn-primary">Lập lá số ngay</button>
+      </div>
+    </div>
+    <div class="zone">
+      <p class="zl">④ Khối kết quả · thẻ nổi nhẹ + chip ngũ hành</p>
+      <div class="result">
+        <h3 class="r-title">Mệnh Hoả — Sơn Hạ Hoả</h3>
+        <div class="chips">
+          <span class="chip"><i style="background:#A44A36"></i>Hoả · 3</span>
+          <span class="chip"><i style="background:#6B8154"></i>Mộc · 2</span>
+          <span class="chip"><i style="background:#3F5D6F"></i>Thuỷ · 1</span>
+          <span class="chip"><i style="background:#7D8A98"></i>Kim · 1</span>
+          <span class="chip"><i style="background:#A07842"></i>Thổ · 1</span>
+        </div>
+        <p class="r-text">Lửa dưới chân núi — ấm chậm mà bền. Mệnh cư Ngọ, Tử Vi độc toạ, đường công danh nửa sau đời tự tay mình dựng.</p>
+      </div>
+    </div>
+    <div class="zone">
+      <p class="zl">⑤ Liên quan · danh sách báo · số mono + tựa serif italic</p>
+      <div class="rel-item">
+        <span class="rel-no">01</span>
+        <div><p class="rel-t">Xem hạn năm Bính Ngọ 2026</p><p class="rel-s">Tiểu hạn · sao lưu niên · cách hoá giải</p></div>
+      </div>
+      <div class="rel-item">
+        <span class="rel-no">02</span>
+        <div><p class="rel-t">Bát tự — bốn trụ ngày sinh</p><p class="rel-s">Can chi · dụng thần · đại vận 10 năm</p></div>
+      </div>
+      <div class="rel-item">
+        <span class="rel-no">03</span>
+        <div><p class="rel-t">Cung Phu Thê nói gì về hôn nhân?</p><p class="rel-s">Chính tinh · tuổi hợp · thời điểm cưới</p></div>
+      </div>
+    </div>
+    <div class="zone">
+      <p class="zl">⑥ CTA cuối · chỉ mời sau khi đã cho giá trị thật</p>
+      <div class="cta">
+        <h3>Muốn đọc bản luận giải trọn đời?</h3>
+        <p>68 trang · viết riêng theo lá số của bạn</p>
+        <button class="btn btn-primary">Nhận báo giá</button>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Nhịp thật khi dựng trang:</b> giữa các vùng trong một mảng dùng breath 64px; trước CTA cuối dùng section 88px. <b>Luật chip:</b> 5 màu ngũ hành chỉ dùng cho chip và data-viz, không bao giờ làm nền hay chữ chạy dài. Khuôn áp cho ~1.200 trang: đổi H1, khối nhập và lời dẫn theo từ khoá — xương trang giữ nguyên.</div>
+</div>
+
+<div class="panel night">
+  <h2>Cùng khuôn — chế độ đêm</h2>
+  <p class="sub">Kết quả đọc ban đêm vẫn rõ vai: nhập · kết quả · liên quan · mời</p>
+  <div class="wire">
+    <div class="zone">
+      <p class="crumb">Trang chủ / Tử vi / <b>Lá số trọn đời</b></p>
+    </div>
+    <div class="zone">
+      <h1 class="h1">Lập lá số tử vi trọn đời</h1>
+      <p class="lede">Nhập giờ sinh, nhận lá số an đủ 110 sao cùng lời giải từng cung — miễn phí, không cần tài khoản.</p>
+    </div>
+    <div class="zone">
+      <div class="input-card">
+        <p class="f-label">Ngày sinh dương lịch</p>
+        <div class="f-box">15 / 08 / 1996</div>
+        <button class="btn btn-primary">Lập lá số ngay</button>
+      </div>
+    </div>
+    <div class="zone">
+      <div class="result">
+        <h3 class="r-title">Mệnh Hoả — Sơn Hạ Hoả</h3>
+        <div class="chips">
+          <span class="chip"><i style="background:#A44A36"></i>Hoả · 3</span>
+          <span class="chip"><i style="background:#6B8154"></i>Mộc · 2</span>
+          <span class="chip"><i style="background:#3F5D6F"></i>Thuỷ · 1</span>
+          <span class="chip"><i style="background:#7D8A98"></i>Kim · 1</span>
+          <span class="chip"><i style="background:#A07842"></i>Thổ · 1</span>
+        </div>
+        <p class="r-text">Lửa dưới chân núi — ấm chậm mà bền. Năm hành giữ nguyên hex hai chế độ, chỉ nền và mực đổi theo đêm.</p>
+      </div>
+    </div>
+    <div class="zone">
+      <div class="rel-item">
+        <span class="rel-no">01</span>
+        <div><p class="rel-t">Xem hạn năm Bính Ngọ 2026</p><p class="rel-s">Tiểu hạn · sao lưu niên · cách hoá giải</p></div>
+      </div>
+      <div class="rel-item">
+        <span class="rel-no">02</span>
+        <div><p class="rel-t">Bát tự — bốn trụ ngày sinh</p><p class="rel-s">Can chi · dụng thần · đại vận 10 năm</p></div>
+      </div>
+    </div>
+    <div class="zone">
+      <div class="cta">
+        <h3>Muốn đọc bản luận giải trọn đời?</h3>
+        <p>68 trang · viết riêng theo lá số của bạn</p>
+        <button class="btn btn-primary">Nhận báo giá</button>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Chip ngũ hành theme-stable:</b> Kim #7D8A98 · Mộc #6B8154 · Thuỷ #3F5D6F · Hoả #A44A36 · Thổ #A07842 — cùng một hex ở cả hai chế độ để người đọc nhớ màu theo hành, không phải học lại mỗi lần đổi giấy.</div>
+</div>
+
+</body>
+</html>
