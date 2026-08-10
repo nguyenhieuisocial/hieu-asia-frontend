@@ -175,7 +175,7 @@ export default function MonthlyPlanningPage() {
 
         <Card className="mb-10 border-gold/25 bg-gold/[0.05]">
           <CardHeader>
-            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+            <p className="font-mono text-eyebrow uppercase text-gold-700">
               Tháng đang lập kế hoạch
             </p>
             <CardTitle className="font-heading text-xl capitalize sm:text-2xl">
@@ -205,7 +205,7 @@ export default function MonthlyPlanningPage() {
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <Icon className="h-4 w-4 text-gold" aria-hidden="true" />
-                      <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+                      <p className="font-mono text-eyebrow uppercase text-gold-700">
                         {w.label}
                       </p>
                     </div>
@@ -260,7 +260,7 @@ export default function MonthlyPlanningPage() {
         <section className="rounded-xl border border-gold/25 bg-gold/[0.04] p-6 sm:p-8">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-gold" aria-hidden="true" />
-            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+            <p className="font-mono text-eyebrow uppercase text-gold-700">
               Tiếp theo
             </p>
           </div>

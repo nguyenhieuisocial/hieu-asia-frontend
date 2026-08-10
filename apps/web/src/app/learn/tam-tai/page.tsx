@@ -258,7 +258,7 @@ export default function LearnTamTaiPage() {
               </p>
 
               <div className="rounded-xl border border-gold/25 bg-card/40 p-4">
-                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                <p className="font-mono text-eyebrow uppercase text-gold-700">
                   Mẹo nhớ
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

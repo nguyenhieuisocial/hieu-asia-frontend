@@ -703,7 +703,7 @@ export default function LearnTietKhiPage() {
               <div className="space-y-4">
                 {BOUNDARY_CASES.map((c) => (
                   <div key={c.dateLabel} className="rounded-xl border border-border bg-card/40 p-4">
-                    <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                    <p className="font-mono text-eyebrow uppercase text-gold-700">
                       {c.termName} · {fmtDate(c.termAt)} lúc {fmtTime(c.termAt)} (giờ VN)
                     </p>
                     <ul className="mt-2.5 space-y-1.5 text-sm">

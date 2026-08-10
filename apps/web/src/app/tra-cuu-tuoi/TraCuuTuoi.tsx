@@ -283,7 +283,7 @@ export function TraCuuTuoi({
           <div className="space-y-1">
             <label
               htmlFor="tct-year"
-              className="block font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground"
+              className="block font-mono text-eyebrow uppercase text-muted-foreground"
             >
               Năm sinh (dương lịch)
             </label>
@@ -308,7 +308,7 @@ export function TraCuuTuoi({
           <div className="space-y-1">
             <label
               htmlFor="tct-gender"
-              className="block font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground"
+              className="block font-mono text-eyebrow uppercase text-muted-foreground"
             >
               Giới tính
             </label>

@@ -470,7 +470,7 @@ export default function LearnDongNhomPage() {
                 vọt lên {CASE_MIN.spreadLabel} và nhãn xuất hiện.
               </p>
               <div className="rounded-card-editorial border border-gold/25 bg-gold/5 p-5">
-                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                <p className="font-mono text-eyebrow uppercase text-gold-700">
                   Rút ra
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/90">

@@ -143,7 +143,7 @@ export function MentorTab() {
             </p>
           )}
           <div>
-            <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="font-mono text-eyebrow uppercase text-muted-foreground">
               Mục tiêu hiện tại
             </p>
             {memory && memory.currentGoals.length > 0 ? (
@@ -157,7 +157,7 @@ export function MentorTab() {
             )}
           </div>
           <div>
-            <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="font-mono text-eyebrow uppercase text-muted-foreground">
               Quyết định mở
             </p>
             {memory && memory.openDecisions.length > 0 ? (

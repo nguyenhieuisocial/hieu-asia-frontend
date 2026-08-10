@@ -51,7 +51,7 @@ export function LearnPathNav() {
     <nav aria-label="Lộ trình học" className="mx-auto max-w-6xl px-6 pb-12">
       <div className="flex flex-col gap-4 rounded-card-editorial border border-border bg-card/40 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="min-w-0">
-          <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+          <p className="font-mono text-eyebrow uppercase text-gold-700">
             Lộ trình · {pos.path.name}
           </p>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">

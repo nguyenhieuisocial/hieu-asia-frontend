@@ -148,7 +148,7 @@ export default function AnnualPlanningPage() {
 
         <Card className="mb-10 border-gold/25 bg-gold/[0.05]">
           <CardHeader>
-            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+            <p className="font-mono text-eyebrow uppercase text-gold-700">
               Chủ đề năm 2026
             </p>
             <CardTitle className="font-heading text-xl sm:text-2xl">
@@ -180,7 +180,7 @@ export default function AnnualPlanningPage() {
               <Card key={q.label} className="border-border bg-card/40">
                 <CardHeader>
                   <div className="flex items-center justify-between gap-3">
-                    <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+                    <p className="font-mono text-eyebrow uppercase text-gold-700">
                       {q.label} · {q.range}
                     </p>
                     <span
@@ -242,7 +242,7 @@ export default function AnnualPlanningPage() {
         <section className="rounded-xl border border-gold/25 bg-gold/[0.04] p-6 sm:p-8">
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-gold" aria-hidden="true" />
-            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+            <p className="font-mono text-eyebrow uppercase text-gold-700">
               Liên kết
             </p>
           </div>

@@ -536,7 +536,7 @@ export default function LearnXongDatPage() {
                       key={`${r.guest.year}-${r.host.year}`}
                       className="rounded-xl border border-border p-4 sm:p-5"
                     >
-                      <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                      <p className="font-mono text-eyebrow uppercase text-gold-700">
                         Ví dụ {i + 1}
                       </p>
                       <p className="mt-2 text-sm">

@@ -611,7 +611,7 @@ export default function LearnRaQuyetDinhPage() {
                     </p>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.chiTiet}</p>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                      <span className="font-mono text-eyebrow uppercase text-gold-700">
                         Vì sao{' '}
                       </span>
                       {s.viSao}

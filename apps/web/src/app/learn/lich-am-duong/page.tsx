@@ -629,7 +629,7 @@ export default function LearnLichAmDuongPage() {
               </p>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.04] p-4">
-                  <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-emerald-500">Lớp 1 · Đo được</p>
+                  <p className="font-mono text-eyebrow uppercase text-emerald-500">Lớp 1 · Đo được</p>
                   <p className="mt-1.5 font-heading text-base font-semibold text-foreground">Bản thân cuốn lịch</p>
                   <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
                     <li>Ngày dương ↔ ngày âm</li>
@@ -643,7 +643,7 @@ export default function LearnLichAmDuongPage() {
                   </p>
                 </div>
                 <div className="rounded-xl border border-amber-500/30 bg-amber-500/[0.04] p-4">
-                  <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-amber-500">Lớp 2 · Quy ước</p>
+                  <p className="font-mono text-eyebrow uppercase text-amber-500">Lớp 2 · Quy ước</p>
                   <p className="mt-1.5 font-heading text-base font-semibold text-foreground">Ý nghĩa gắn thêm lên lịch</p>
                   <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
                     <li>Ngày hoàng đạo / hắc đạo</li>

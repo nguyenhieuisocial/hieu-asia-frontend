@@ -175,7 +175,7 @@ export default function ThanSoHocLandingPage() {
         <aside className="lg:col-span-2" aria-labelledby="tsh-ban-se-nhan-duoc">
           <h2
             id="tsh-ban-se-nhan-duoc"
-            className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700"
+            className="mb-3 font-mono text-eyebrow uppercase text-gold-700"
           >
             Bạn sẽ nhận được
           </h2>

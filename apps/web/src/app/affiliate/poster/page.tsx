@@ -37,7 +37,7 @@ function PosterInner() {
       {/* Tấm poster — khung kem/vàng, chụp màn hình hoặc in trực tiếp */}
       <Card className="overflow-hidden border-gold/30 bg-cream text-ink shadow-xl">
         <CardContent className="flex flex-col items-center px-8 py-12 text-center">
-          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+          <p className="font-mono text-eyebrow uppercase text-gold-700">
             hieu.asia
           </p>
           <h1 className="mt-4 font-heading text-3xl font-bold leading-tight text-ink">

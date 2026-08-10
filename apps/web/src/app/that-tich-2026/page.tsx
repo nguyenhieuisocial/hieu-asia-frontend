@@ -108,7 +108,7 @@ export default function ThatTich2026Page() {
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Thất Tịch 2026</span>
           </nav>
-          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+          <p className="font-mono text-eyebrow uppercase text-gold-700">
             Dịp tình duyên · xem bằng lá số
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

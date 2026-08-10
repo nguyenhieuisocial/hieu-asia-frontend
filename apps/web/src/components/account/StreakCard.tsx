@@ -184,7 +184,7 @@ export function StreakCard({ variant = 'card' }: { variant?: 'card' | 'compact' 
             </span>
           )}
         </div>
-        <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
+        <span className="font-mono text-eyebrow uppercase text-muted-foreground">
           Điểm danh
         </span>
       </div>

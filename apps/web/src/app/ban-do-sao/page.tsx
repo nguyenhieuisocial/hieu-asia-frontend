@@ -106,7 +106,7 @@ export default async function BanDoSaoPage({
 
           {/* 12 cung hoàng đạo */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-eyebrow uppercase text-gold/80">
               12 cung hoàng đạo
             </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -128,7 +128,7 @@ export default async function BanDoSaoPage({
 
           {/* 4 nguyên tố */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-eyebrow uppercase text-gold/80">
               Bốn nguyên tố
             </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -144,7 +144,7 @@ export default async function BanDoSaoPage({
 
           {/* Lời nhắn */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">Một lời nhắn</h2>
+            <h2 className="font-mono text-eyebrow uppercase text-gold/80">Một lời nhắn</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Bản đồ sao là một <strong>tấm gương để hiểu mình</strong>, không phải bản án số mệnh. Vị trí
               hành tinh là khoa học thiên văn — phần diễn giải chỉ là một góc nhìn tham khảo. Bạn vẫn là người
@@ -154,7 +154,7 @@ export default async function BanDoSaoPage({
 
           {/* Tìm hiểu thêm */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-eyebrow uppercase text-gold/80">
               Tìm hiểu thêm
             </h2>
             <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
@@ -169,7 +169,7 @@ export default async function BanDoSaoPage({
 
           {/* FAQ */}
           <section className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-            <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
+            <h2 className="font-mono text-eyebrow uppercase text-gold/80">
               Câu hỏi thường gặp
             </h2>
             <dl className="mt-4 space-y-4">

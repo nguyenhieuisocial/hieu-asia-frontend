@@ -239,7 +239,7 @@ export default function ModelCardPage() {
               <span className="text-muted-foreground">Model card</span>
             </nav>
 
-            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+            <p className="font-mono text-eyebrow uppercase text-gold-700">
               Model Card
             </p>
             <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

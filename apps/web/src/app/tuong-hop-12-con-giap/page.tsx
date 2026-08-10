@@ -155,7 +155,7 @@ export default async function TuongHop12ConGiapPage({
 
         {/* Hero + công cụ chọn con giáp */}
         <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-6 sm:pt-8">
-          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-eyebrow uppercase text-gold/80">
             Tương hợp 12 con giáp · một bản đồ · miễn phí
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

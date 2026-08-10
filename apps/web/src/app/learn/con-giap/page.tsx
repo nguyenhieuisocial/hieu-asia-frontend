@@ -220,7 +220,7 @@ export default function LearnConGiapPage() {
           children: (
             <div className="space-y-4 text-foreground/85 leading-relaxed">
               <div className="rounded-card-editorial border border-border bg-card/40 p-5 sm:p-6">
-                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                <p className="font-mono text-eyebrow uppercase text-gold-700">
                   Truyền thuyết dân gian (nhiều dị bản)
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -233,7 +233,7 @@ export default function LearnConGiapPage() {
                 </p>
               </div>
               <div className="rounded-card-editorial border border-border bg-card/40 p-5 sm:p-6">
-                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-emerald-300">
+                <p className="font-mono text-eyebrow uppercase text-emerald-300">
                   Phần chắc chắn hơn: 12 Chi là một hệ lịch pháp
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -309,7 +309,7 @@ export default function LearnConGiapPage() {
           children: (
             <div className="space-y-6">
               <div className="rounded-card-editorial border border-emerald-500/20 bg-emerald-500/[0.04] p-5 sm:p-6">
-                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-emerald-300">
+                <p className="font-mono text-eyebrow uppercase text-emerald-300">
                   Tam Hợp — nhóm hợp nhịp
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -323,7 +323,7 @@ export default function LearnConGiapPage() {
                 </p>
               </div>
               <div className="rounded-card-editorial border border-amber-500/20 bg-amber-500/[0.04] p-5 sm:p-6">
-                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-amber-300">
+                <p className="font-mono text-eyebrow uppercase text-amber-300">
                   Tứ hành xung — nhóm bốn khác nhịp
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">

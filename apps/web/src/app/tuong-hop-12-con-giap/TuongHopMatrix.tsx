@@ -82,7 +82,7 @@ export function TuongHopMatrix({ initialSlug }: { initialSlug?: string } = {}): 
     <div>
       {/* Bộ chọn — 12 nút emoji, mobile-first */}
       <div className="rounded-2xl border border-gold/25 bg-card/60 p-4 backdrop-blur-sm sm:p-5">
-        <p className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-muted-foreground">
+        <p className="mb-3 font-mono text-eyebrow uppercase text-muted-foreground">
           Chọn con giáp của bạn
         </p>
         <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">

@@ -312,7 +312,7 @@ export default function LearnEnneagramPage() {
                     key={m.era}
                     className="border-t border-border/60 pt-3 first:border-0 first:pt-0"
                   >
-                    <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+                    <p className="font-mono text-eyebrow uppercase text-gold-700">
                       {m.era}
                     </p>
                     <p className="mt-1 text-sm leading-relaxed text-foreground/85">{m.text}</p>

@@ -217,7 +217,7 @@ export default function AlgorithmChangelogPage() {
             <span className="text-muted-foreground">Algorithm changelog</span>
           </nav>
 
-          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+          <p className="font-mono text-eyebrow uppercase text-gold-700">
             Methodology · Algorithm changelog
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
@@ -305,7 +305,7 @@ export default function AlgorithmChangelogPage() {
               href="/methodology/tu-vi"
               className="group rounded-xl border border-border bg-card/40 p-5 transition hover:border-gold/40"
             >
-              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+              <p className="font-mono text-eyebrow uppercase text-gold-700">
                 Đọc thêm
               </p>
               <h3 className="mt-2 font-heading text-lg text-foreground">
@@ -323,7 +323,7 @@ export default function AlgorithmChangelogPage() {
               href="mailto:engineering@hieu.asia"
               className="group rounded-xl border border-amber-700/40 bg-amber-900/15 p-5 transition hover:border-amber-500/60"
             >
-              <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-amber-200/80">
+              <p className="font-mono text-eyebrow uppercase text-amber-200/80">
                 Báo lỗi
               </p>
               <h3 className="mt-2 font-heading text-lg text-foreground">
