@@ -103,7 +103,10 @@ export function PreviewReadingCard({
 
       <Link
         href={ctaHref}
-        className="mt-8 inline-flex w-full items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft"
+        // Wave 65.04 follow-up — về recipe CTA chuẩn (rounded-[2px] +
+        // --primary-cta + font-editorial-display), khớp PricingTierV2 và
+        // StickyMobileCta. Trước đó vẫn còn kiểu pill/bg-gold cũ.
+        className="mt-8 inline-flex w-full items-center justify-center rounded-[2px] bg-[hsl(var(--primary-cta))] px-7 py-4 font-editorial-display text-base font-medium text-primary-foreground transition-all duration-300 ease-editorial hover:brightness-110"
       >
         {ctaLabel}
       </Link>
