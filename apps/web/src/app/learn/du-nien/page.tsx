@@ -266,7 +266,7 @@ export default function LearnDuNienPage() {
               </p>
 
               <div className="rounded-xl border border-gold/25 bg-gold/5 p-4 text-sm leading-relaxed">
-                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                <p className="font-mono text-eyebrow uppercase text-gold-700">
                   Cần có trước
                 </p>
                 <p className="mt-1.5 text-foreground/85">

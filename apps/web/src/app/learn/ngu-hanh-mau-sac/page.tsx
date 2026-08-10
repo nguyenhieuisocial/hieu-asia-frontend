@@ -354,7 +354,7 @@ export default function LearnNguHanhMauSacPage() {
               </div>
 
               <div className="rounded-xl border border-gold/25 bg-gold/5 p-4">
-                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                <p className="font-mono text-eyebrow uppercase text-gold-700">
                   Mẹo nhớ bằng một hình duy nhất
                 </p>
                 <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">

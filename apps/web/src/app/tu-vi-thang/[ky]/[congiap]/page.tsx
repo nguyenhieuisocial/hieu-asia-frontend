@@ -180,7 +180,7 @@ export default async function TuViThangConGiapPage({
             <span className="mx-1.5">/</span>
             <span>Tuổi {d.z.ten}</span>
           </nav>
-          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-eyebrow uppercase text-gold/80">
             Trụ tháng {m.main.label} · nạp âm {m.main.napAm.name} · năm {m.yearCanChi.name}
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

@@ -349,7 +349,7 @@ export default function XemHopNhomPage() {
 
             {/* Members + roles */}
             <div>
-              <h2 className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+              <h2 className="mb-3 font-mono text-eyebrow uppercase text-gold-700">
                 Vai trò trong nhóm
               </h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -371,7 +371,7 @@ export default function XemHopNhomPage() {
 
             {/* Pair matrix */}
             <div>
-              <h2 className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+              <h2 className="mb-3 font-mono text-eyebrow uppercase text-gold-700">
                 Mức hợp từng cặp
               </h2>
               <div className="space-y-3">
@@ -403,7 +403,7 @@ export default function XemHopNhomPage() {
             {/* Friction pairs + tips */}
             {report.friction.length > 0 && (
               <div>
-                <h2 className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+                <h2 className="mb-3 font-mono text-eyebrow uppercase text-gold-700">
                   Cặp nên chú ý
                 </h2>
                 <div className="grid gap-4 md:grid-cols-2">

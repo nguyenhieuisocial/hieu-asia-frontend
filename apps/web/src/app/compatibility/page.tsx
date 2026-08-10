@@ -321,7 +321,7 @@ export default function CompatibilityPage() {
             </div>
 
             <div>
-              <h2 className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+              <h2 className="mb-3 font-mono text-eyebrow uppercase text-gold-700">
                 5 chiều cộng hưởng
               </h2>
               <div className="space-y-4">
@@ -347,7 +347,7 @@ export default function CompatibilityPage() {
             </div>
 
             <div>
-              <h2 className="mb-3 font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+              <h2 className="mb-3 font-mono text-eyebrow uppercase text-gold-700">
                 Gợi ý giao tiếp
               </h2>
               <div className="grid gap-4 md:grid-cols-2">

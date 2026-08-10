@@ -165,7 +165,7 @@ export default function AffiliateTermsPage() {
           <AffiliateSubNav />
 
           <header>
-            <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold-700">
+            <p className="font-mono text-eyebrow uppercase text-gold-700">
               Affiliate · Terms
             </p>
             <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl">
@@ -185,7 +185,7 @@ export default function AffiliateTermsPage() {
             aria-label="Mục lục"
             className="mt-8 rounded-xl border border-border bg-card/40 p-4 backdrop-blur-sm"
           >
-            <div className="mb-2 font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+            <div className="mb-2 font-mono text-eyebrow uppercase text-gold-700">
               Mục lục
             </div>
             <ol className="list-decimal space-y-1 pl-5 text-sm text-foreground/80">

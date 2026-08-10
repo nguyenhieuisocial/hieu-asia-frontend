@@ -531,7 +531,7 @@ export default function LearnNgayKiengKyPage() {
                 tháng.
               </p>
               <div className="rounded-card-editorial border border-gold/25 bg-card/40 p-5 sm:p-6">
-                <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                <p className="font-mono text-eyebrow uppercase text-gold-700">
                   Con số cuối cùng
                 </p>
                 <p className="mt-2 text-base leading-relaxed text-foreground">

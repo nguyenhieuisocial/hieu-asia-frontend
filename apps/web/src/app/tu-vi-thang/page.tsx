@@ -100,7 +100,7 @@ export default function TuViThangHubPage() {
             <span className="mx-1.5">/</span>
             <span>Tử vi tháng</span>
           </nav>
-          <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-eyebrow uppercase text-gold/80">
             Tra cứu theo can chi · {months.length} tháng đang mở
           </p>
           <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">

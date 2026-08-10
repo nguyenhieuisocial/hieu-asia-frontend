@@ -166,7 +166,7 @@ export default function BigFivePage() {
             <div className="mx-auto max-w-2xl space-y-4">
               <Card className="border-gold/30 bg-gradient-to-br from-gold/10 to-transparent">
                 <CardContent className="p-6">
-                  <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <div className="font-mono text-eyebrow uppercase text-muted-foreground">
                     Hồ sơ Big Five của bạn
                   </div>
                   <p className="mt-2 text-sm text-foreground/80">
@@ -230,7 +230,7 @@ export default function BigFivePage() {
               {!paywall && (readingLoading || reading) && (
                 <Card className="relative overflow-hidden border border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
                   <CardContent className="p-6">
-                    <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
+                    <div className="font-mono text-eyebrow uppercase text-muted-foreground">
                       Luận giải sâu
                     </div>
                     {readingLoading && !reading ? (

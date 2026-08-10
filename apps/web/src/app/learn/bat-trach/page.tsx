@@ -424,7 +424,7 @@ export default function LearnBatTrachPage() {
               </p>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="rounded-xl border border-border bg-card/40 p-4">
-                  <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                  <p className="font-mono text-eyebrow uppercase text-gold-700">
                     Đông tứ mệnh
                   </p>
                   <p className="mt-1.5 font-heading text-base text-foreground">
@@ -435,7 +435,7 @@ export default function LearnBatTrachPage() {
                   </p>
                 </div>
                 <div className="rounded-xl border border-border bg-card/40 p-4">
-                  <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+                  <p className="font-mono text-eyebrow uppercase text-gold-700">
                     Tây tứ mệnh
                   </p>
                   <p className="mt-1.5 font-heading text-base text-foreground">

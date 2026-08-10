@@ -644,7 +644,7 @@ function Chapter1Content() {
                       {lens.name}
                     </h4>
                   </div>
-                  <p className="mt-1 font-mono text-[13px] uppercase tracking-[0.12em] text-primary/70">
+                  <p className="mt-1 font-mono text-eyebrow uppercase text-primary/70">
                     {lens.how}
                   </p>
                   <p className="mt-2 font-sans text-sm leading-relaxed text-muted-foreground">
@@ -820,19 +820,19 @@ function Chapter2Content() {
               </div>
               <dl className="mt-3 space-y-2 text-sm">
                 <div>
-                  <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary/80">
+                  <dt className="font-mono text-eyebrow uppercase text-primary/80">
                     Dữ liệu dùng
                   </dt>
                   <dd className="mt-0.5 text-muted-foreground">{row.data}</dd>
                 </div>
                 <div>
-                  <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary/80">
+                  <dt className="font-mono text-eyebrow uppercase text-primary/80">
                     Engine tính?
                   </dt>
                   <dd className="mt-0.5 text-muted-foreground">{row.engine}</dd>
                 </div>
                 <div>
-                  <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-primary/80">
+                  <dt className="font-mono text-eyebrow uppercase text-primary/80">
                     AI làm gì
                   </dt>
                   <dd className="mt-0.5 text-muted-foreground">{row.ai}</dd>
@@ -1490,13 +1490,13 @@ export default function MethodologyPage() {
                     </div>
                     <dl className="mt-3 space-y-2 text-sm">
                       <div>
-                        <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground/70">
+                        <dt className="font-mono text-eyebrow uppercase text-muted-foreground/70">
                           Input
                         </dt>
                         <dd className="mt-0.5 font-mono text-xs text-foreground">{c.input}</dd>
                       </div>
                       <div>
-                        <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground/70">
+                        <dt className="font-mono text-eyebrow uppercase text-muted-foreground/70">
                           Expected
                         </dt>
                         <dd className="mt-0.5 font-mono text-xs text-muted-foreground">{c.expected}</dd>

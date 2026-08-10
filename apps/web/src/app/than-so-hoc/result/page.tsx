@@ -226,7 +226,7 @@ function ThanSoHocResultPageInner() {
                   key={p.index}
                   className="rounded-xl border border-border bg-card/40 p-4 transition hover:border-gold/30 active:scale-[0.98]"
                 >
-                  <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <div className="font-mono text-eyebrow uppercase text-muted-foreground">
                     Đỉnh {p.index} · {p.age_range}
                   </div>
                   <div className="mt-2 font-heading text-3xl font-bold text-gold-700">{p.number}</div>
@@ -244,7 +244,7 @@ function ThanSoHocResultPageInner() {
                   key={c.index}
                   className="rounded-xl border border-border bg-card/40 p-4 transition hover:border-rose-400/30 active:scale-[0.98]"
                 >
-                  <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <div className="font-mono text-eyebrow uppercase text-muted-foreground">
                     Thử thách {c.index}
                   </div>
                   <div className="mt-2 font-heading text-3xl font-bold text-rose-300">
@@ -412,7 +412,7 @@ function HeroLifePath({ card, year }: { card: NumberCard; year: number }) {
       <CardContent className="relative p-6 sm:p-8">
         <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-col items-start">
-            <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+            <div className="font-mono text-eyebrow uppercase text-gold-700">
               Đường đời · Life Path
             </div>
             <div className="bg-gold-gradient bg-clip-text font-heading text-7xl font-extrabold leading-none text-transparent sm:text-8xl">
@@ -456,7 +456,7 @@ function NumberCardView({ card, highlight }: { card: NumberCard; highlight?: boo
       }
     >
       <CardHeader className="pb-2">
-        <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground">
+        <div className="font-mono text-eyebrow uppercase text-muted-foreground">
           {card.name}
         </div>
       </CardHeader>
@@ -682,7 +682,7 @@ function PremiumCta() {
       />
       <CardContent className="relative flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div className="max-w-xl">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2.5 py-0.5 font-mono text-[12px] uppercase tracking-[0.12em] text-gold-700">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2.5 py-0.5 font-mono text-eyebrow uppercase text-gold-700">
             <Crown className="h-3 w-3" aria-hidden="true" /> Premium
           </div>
           <h3 className="mt-2 font-heading text-xl font-semibold text-foreground sm:text-2xl">

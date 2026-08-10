@@ -90,7 +90,7 @@ const commandPanel = (
     aria-label="Bắt đầu miễn phí"
     className="rounded-2xl border border-gold/30 bg-card p-5 shadow-sm"
   >
-    <p className="font-mono text-[13px] uppercase tracking-[0.12em] text-primary">
+    <p className="font-mono text-eyebrow uppercase text-primary">
       Bắt đầu miễn phí · 30 giây
     </p>
     <p className="mt-2 font-heading text-base leading-snug text-foreground">

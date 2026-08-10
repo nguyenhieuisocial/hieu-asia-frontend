@@ -184,7 +184,7 @@ function Section({
 }) {
   return (
     <section className="mt-8 first:mt-0">
-      <h2 className="font-mono text-[13px] uppercase tracking-[0.12em] text-gold/80">
+      <h2 className="font-mono text-eyebrow uppercase text-gold/80">
         {title}
       </h2>
       <div className="mt-3 text-base leading-relaxed text-foreground/85">
