@@ -19,6 +19,7 @@ import { AhrefsAnalytics } from '@/components/analytics/AhrefsAnalytics';
 import { GoogleTags } from '@/components/analytics/GoogleTags';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ConsentBanner } from '@/components/cmp/ConsentBanner';
+import { LocaleSuggestionBanner } from '@/components/i18n/LocaleSuggestionBanner';
 import { BirthProfileSync } from '@/components/account/BirthProfileSync';
 import { FloatingMentor } from '@/components/marketing/FloatingMentor';
 import { BackToTop } from '@/components/BackToTop';
@@ -351,6 +352,11 @@ export default async function RootLayout({
                     on first visit (geo-aware: VN + EU always; auto-accept
                     legitimate-interest defaults elsewhere). */}
                 <ConsentBanner />
+                {/* Wave i18n-v1 — suggests the /en counterpart when the
+                    visitor's browser language isn't Vietnamese and the
+                    current page has a real English version. Client-only,
+                    dismissible, remembered — never forces a redirect. */}
+                <LocaleSuggestionBanner />
                 {/* Hồ sơ ngày sinh: đồng bộ với tài khoản khi ĐÃ đăng nhập.
                     Khách vãng lai → component này no-op hoàn toàn (không fetch),
                     giữ đúng cam kết "tính ngay trong trình duyệt" ở trang tra cứu. */}

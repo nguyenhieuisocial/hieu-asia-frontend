@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { usePathname } from 'next/navigation';
 import { Search, Check, ChevronDown } from 'lucide-react';
 
 /**
@@ -135,7 +136,15 @@ function setLangCookie(code: string): void {
   document.cookie = `googtrans=${val}; path=/; domain=.${host}`;
 }
 
-export function GoogleTranslate({ className = '' }: { className?: string }): React.JSX.Element {
+export function GoogleTranslate({ className = '' }: { className?: string }): React.JSX.Element | null {
+  // Offering to "translate" a page that's already in English (or another
+  // real, hand-translated locale) is nonsensical and can mistranslate it —
+  // hide the widget entirely on those routes. Extend this prefix list as
+  // more locale-specific routes ship. Read AFTER all hooks below (never
+  // early-return before a hook call — React's Rules of Hooks require every
+  // hook to run in the same order on every render).
+  const pathname = usePathname();
+
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState('');
   const [current, setCurrent] = React.useState('vi');
@@ -179,6 +188,10 @@ export function GoogleTranslate({ className = '' }: { className?: string }): Rea
   const filtered = nq
     ? LANGS.filter((l) => norm(`${l.name} ${l.q} ${l.cc} ${l.code}`).includes(nq))
     : LANGS;
+
+  // All hooks above have already run unconditionally — safe to bail on the
+  // render output only, now that hook order for this render is settled.
+  if (pathname?.startsWith('/en')) return null;
 
   return (
     <div ref={rootRef} translate="no" className={`gt-widget notranslate ${className}`}>

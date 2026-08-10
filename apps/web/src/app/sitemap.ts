@@ -138,7 +138,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const core: MetadataRoute.Sitemap = [
-    { url: BASE_URL, lastModified: now, changeFrequency: 'weekly', priority: 1 },
+    {
+      url: BASE_URL,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 1,
+      alternates: { languages: { vi: `${BASE_URL}/`, en: `${BASE_URL}/en` } },
+    },
+    {
+      url: `${BASE_URL}/en`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+      alternates: { languages: { vi: `${BASE_URL}/`, en: `${BASE_URL}/en` } },
+    },
     // NOTE: noindex pages are intentionally NOT listed here — /onboarding, /decisions/new,
     // /journal/new, /affiliate/assets all set `robots.index:false`, so listing them in the
     // sitemap is a conflicting signal (Google: "Submitted URL marked noindex"). Don't re-add.
