@@ -62,9 +62,16 @@ export const metadata: Metadata = {
     'Lá số Tử Vi, Bát Tự tính thật từ ngày giờ sinh — không bói chung chung, không hù dọa, không bán giải hạn. Có căn cứ cung và sao. Lá số của bạn là riêng tư.',
   // Wave 65.01 — languages chuyển từ root layout về đây: chỉ trang chủ mang
   // hreflang vi-VN tự trỏ mình (layout cũ làm MỌI trang con hreflang về '/').
+  // Wave i18n-v1 — added `en` now that a real (hand-translated) /en homepage
+  // exists. Scoped to THIS page's own metadata only — see PR #1027 for why a
+  // shared-layout `languages` block is wrong (it leaked to every child page).
   alternates: {
     canonical: 'https://hieu.asia/',
-    languages: { 'vi-VN': 'https://hieu.asia/' },
+    languages: {
+      'vi-VN': 'https://hieu.asia/',
+      en: 'https://hieu.asia/en',
+      'x-default': 'https://hieu.asia/',
+    },
   },
   openGraph: {
     title: 'hieu.asia — Hiểu mình. Quyết định mình.',
