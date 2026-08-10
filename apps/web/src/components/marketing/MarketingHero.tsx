@@ -137,14 +137,17 @@ export function MarketingHero({
               <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
                 <Link
                   href={primaryCta.href}
-                  className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  // Wave 65.04 follow-up — về recipe CTA chuẩn (rounded-[2px] +
+                  // --primary-cta + font-editorial-display), khớp PricingTierV2
+                  // và StickyMobileCta. Trước đó vẫn còn kiểu pill/bg-gold cũ.
+                  className="inline-flex items-center justify-center rounded-[2px] bg-[hsl(var(--primary-cta))] px-7 py-4 font-editorial-display text-base font-medium text-primary-foreground transition-all duration-300 ease-editorial hover:brightness-110 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   {primaryCta.label}
                 </Link>
                 {secondaryCta && (
                   <Link
                     href={secondaryCta.href}
-                    className="inline-flex items-center justify-center rounded-pill border border-border px-7 py-4 font-sans text-sm font-medium text-foreground transition-all duration-300 ease-editorial hover:border-border/80 hover:bg-card active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="inline-flex items-center justify-center rounded-[2px] border border-border px-7 py-4 font-editorial-display text-base font-medium text-foreground transition-all duration-300 ease-editorial hover:border-border/80 hover:bg-card active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {secondaryCta.label}
                   </Link>
@@ -170,14 +173,17 @@ export function MarketingHero({
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
               <Link
                 href={primaryCta.href}
-                className="inline-flex items-center justify-center rounded-pill bg-gold px-7 py-4 font-sans text-sm font-medium text-ink transition-all duration-300 ease-editorial hover:bg-gold-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                // Wave 65.04 follow-up — về recipe CTA chuẩn (rounded-[2px] +
+                // --primary-cta + font-editorial-display), khớp PricingTierV2
+                // và StickyMobileCta. Trước đó vẫn còn kiểu pill/bg-gold cũ.
+                className="inline-flex items-center justify-center rounded-[2px] bg-[hsl(var(--primary-cta))] px-7 py-4 font-editorial-display text-base font-medium text-primary-foreground transition-all duration-300 ease-editorial hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 {primaryCta.label}
               </Link>
               {secondaryCta && (
                 <Link
                   href={secondaryCta.href}
-                  className="inline-flex items-center justify-center rounded-pill border border-border px-7 py-4 font-sans text-sm font-medium text-foreground transition-all duration-300 ease-editorial hover:border-border/80 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex items-center justify-center rounded-[2px] border border-border px-7 py-4 font-editorial-display text-base font-medium text-foreground transition-all duration-300 ease-editorial hover:border-border/80 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   {secondaryCta.label}
                 </Link>
