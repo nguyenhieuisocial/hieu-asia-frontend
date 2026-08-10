@@ -168,7 +168,7 @@ export default async function TuViThangMonthPage({
                 Quan hệ địa chi của 12 con giáp với chi tháng {m.main.chi} và số ngày hợp / xung
                 trong tháng {k.month}/{k.year}
               </caption>
-              <thead className="bg-card/60 text-xs uppercase tracking-wider text-muted-foreground">
+              <thead className="bg-card/60 text-eyebrow uppercase text-muted-foreground">
                 <tr>
                   <th scope="col" className="px-3 py-2 font-medium">Tuổi</th>
                   <th scope="col" className="px-3 py-2 font-medium">Quan hệ với chi tháng</th>

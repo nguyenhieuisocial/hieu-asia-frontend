@@ -124,7 +124,7 @@ export default async function MbtiTypePage({
           <span className="mr-3 font-mono text-gold">{d.code}</span>
           {d.nick}
         </h1>
-        <p className="mt-2 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="mt-2 font-mono text-eyebrow uppercase text-muted-foreground">
           {d.letters}
         </p>
         <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">{d.tagline}</p>
@@ -285,7 +285,7 @@ export default async function MbtiTypePage({
               <div>
                 <div className="flex items-baseline gap-2">
                   <span className="font-mono text-base font-semibold text-foreground">{s.fn}</span>
-                  <span className="font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <span className="font-mono text-eyebrow uppercase text-muted-foreground">
                     {s.role}
                   </span>
                 </div>

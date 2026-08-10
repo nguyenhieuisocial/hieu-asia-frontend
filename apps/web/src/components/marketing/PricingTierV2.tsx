@@ -224,7 +224,7 @@ export function PricingTierV2({
                 </button>
               </div>
               {period === 'yearly' && (
-                <p className="mt-2 font-mono text-xs uppercase tracking-wider text-jade-300">
+                <p className="mt-2 font-mono text-eyebrow uppercase text-jade-300">
                   NĂM — TIẾT KIỆM 20%
                 </p>
               )}
@@ -302,7 +302,7 @@ export function PricingTierV2({
                 className={`scroll-mt-24 ${baseCard} ${cardBorder} ${tier.recommended ? 'max-md:order-first max-md:mt-3' : ''} motion-safe:translate-y-3 motion-safe:opacity-0 motion-safe:[transition-duration:600ms] motion-safe:data-[in-view=true]:translate-y-0 motion-safe:data-[in-view=true]:opacity-100`}
               >
                 {tier.recommended && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-[hsl(var(--primary-cta))] px-4 py-1 font-mono text-xs uppercase tracking-wider text-primary-foreground">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-pill bg-[hsl(var(--primary-cta))] px-4 py-1 font-mono text-eyebrow uppercase text-primary-foreground">
                     KHUYÊN DÙNG
                   </span>
                 )}
@@ -393,7 +393,7 @@ export function PricingTierV2({
                 )}
 
                 {tier.refundDays !== undefined && (
-                  <p className="mt-3 flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-wider text-jade-300">
+                  <p className="mt-3 flex items-center justify-center gap-2 font-mono text-eyebrow uppercase text-jade-300">
                     <span className="size-1.5 rounded-full bg-jade" aria-hidden />
                     {tier.refundDays} NGÀY HOÀN TIỀN
                   </p>

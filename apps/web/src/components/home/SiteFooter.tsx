@@ -175,7 +175,7 @@ function FooterCol({
             >
               {link.label}
               {link.tag === 'premium' && (
-                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-[12px] uppercase tracking-wider text-[hsl(var(--primary-cta))]">
+                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-eyebrow uppercase text-[hsl(var(--primary-cta))]">
                   Premium
                 </span>
               )}
@@ -215,7 +215,7 @@ function FooterColLegal({
             >
               {link.label}
               {link.tag === 'premium' && (
-                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-[12px] uppercase tracking-wider text-[hsl(var(--primary-cta))]">
+                <span className="shrink-0 rounded-full border border-[hsl(var(--primary-cta))]/40 px-1.5 py-0.5 font-mono text-eyebrow uppercase text-[hsl(var(--primary-cta))]">
                   Premium
                 </span>
               )}

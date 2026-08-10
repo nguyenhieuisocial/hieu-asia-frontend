@@ -32,7 +32,7 @@ export default function ReadingHubPage() {
 
       <main className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
         <header className="mb-12 max-w-3xl">
-          <p className="font-mono text-xs uppercase tracking-[0.12em] text-gold/80">
+          <p className="font-mono text-eyebrow uppercase text-gold/80">
             Lá số của bạn
           </p>
           <h1 className="mt-3 font-heading text-4xl font-bold leading-tight sm:text-5xl">
@@ -74,7 +74,7 @@ export default function ReadingHubPage() {
                 className="group flex flex-col border-gold/15 bg-card/60 backdrop-blur-sm transition hover:border-gold/40"
               >
                 <CardHeader>
-                  <p className="mb-1 font-mono text-xs uppercase tracking-[0.12em] text-gold/80">
+                  <p className="mb-1 font-mono text-eyebrow uppercase text-gold/80">
                     {lens.eyebrow}
                   </p>
                   <CardTitle className="text-lg">{lens.name}</CardTitle>

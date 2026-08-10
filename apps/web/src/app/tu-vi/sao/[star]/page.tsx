@@ -154,7 +154,7 @@ export default async function StarPage({
             {data.byPalace.map((p, i) => (
               <Card key={i} className="border-border bg-card/40">
                 <CardContent className="pt-5">
-                  <p className="font-mono text-[12px] uppercase tracking-widest text-gold-700">
+                  <p className="font-mono text-eyebrow uppercase text-gold-700">
                     Cung {p.palace}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
@@ -175,7 +175,7 @@ export default async function StarPage({
               {data.withMutagen.map((m, i) => (
                 <Card key={i} className="border-gold/20 bg-gold/[0.03]">
                   <CardContent className="pt-5">
-                    <p className="font-mono text-[12px] uppercase tracking-widest text-gold-700">
+                    <p className="font-mono text-eyebrow uppercase text-gold-700">
                       Hoá {m.type}
                     </p>
                     <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">

@@ -341,7 +341,7 @@ export default function LearnTrachCatPage() {
                       </span>
                       <span className="text-sm text-muted-foreground">{t.han}</span>
                     </div>
-                    <p className="mt-0.5 text-[13px] uppercase tracking-wide text-muted-foreground">
+                    <p className="mt-0.5 text-eyebrow uppercase text-muted-foreground">
                       {TRUC_LABEL[t.type]}
                     </p>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t.note}</p>

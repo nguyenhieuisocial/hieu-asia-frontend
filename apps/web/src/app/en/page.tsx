@@ -249,7 +249,7 @@ export default function EnglishLandingPage() {
               </a>
             </div>
           </div>
-          <p className="mt-6 text-center text-xs uppercase tracking-[0.12em] text-muted-foreground">
+          <p className="mt-6 text-center text-eyebrow uppercase text-muted-foreground">
             Full refund within 24h if your report hasn&apos;t been generated yet · 14-day guarantee
           </p>
         </section>

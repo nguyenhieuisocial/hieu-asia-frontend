@@ -68,7 +68,7 @@ export default function PalmUploadPage() {
             <span className="mx-1.5">/</span>
             <span className="text-muted-foreground">Tải ảnh tay</span>
           </nav>
-          <p className="font-mono text-xs uppercase tracking-widest text-gold">
+          <p className="font-mono text-eyebrow uppercase text-gold">
             Bước 2 / 3
           </p>
           <h1 className="mt-2 font-heading text-3xl font-semibold text-foreground sm:text-4xl">

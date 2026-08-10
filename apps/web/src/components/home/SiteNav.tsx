@@ -431,7 +431,7 @@ function MobileDrawer({
         >
           {isAuthed && userEmail && (
             <div className="mb-2 rounded-md border border-primary/15 bg-primary/5 px-3 py-2">
-              <p className="font-mono text-[12px] uppercase tracking-widest text-primary/85">
+              <p className="font-mono text-eyebrow uppercase text-primary/85">
                 Đã đăng nhập
               </p>
               <p className="mt-0.5 truncate text-xs text-foreground/85">{userEmail}</p>

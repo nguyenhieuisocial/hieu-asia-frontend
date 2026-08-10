@@ -197,23 +197,23 @@ export default function BanDoPage() {
             </CardHeader>
             <CardContent className="space-y-4 text-sm text-foreground/85">
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Chủ đề tuần</div>
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1">Chủ đề tuần</div>
                 <p>Sắp xếp lại ưu tiên — bớt nói có với việc không thuộc về mình.</p>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1">
                   Hành động chính
                 </div>
                 <p>Lên lịch 2 khối tập trung sâu 2 giờ, một việc khó mỗi khối.</p>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1">
                   Cuộc trò chuyện nên có
                 </div>
                 <p>Nói rõ với một người về kỳ vọng đang lệch — càng để lâu càng khó.</p>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1">
                   Rủi ro cần quản trị
                 </div>
                 <p>Quá tải buổi tối vì nhận thêm việc giữa tuần. Đặt giới hạn trước thứ Tư.</p>
@@ -230,29 +230,29 @@ export default function BanDoPage() {
             </CardHeader>
             <CardContent className="space-y-4 text-sm text-foreground/85">
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Mục tiêu tháng</div>
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1">Mục tiêu tháng</div>
                 <p>Kết thúc một dự án còn lửng — không khởi động thêm cái mới.</p>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1 inline-flex items-center gap-1.5">
                   <Briefcase className="h-3 w-3" aria-hidden="true" /> Năng lượng sự nghiệp
                 </div>
                 <p>Đều, không bùng nổ. Phù hợp việc cần kiên nhẫn hơn việc cần tốc độ.</p>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1 inline-flex items-center gap-1.5">
                   <TrendingUp className="h-3 w-3" aria-hidden="true" /> Năng lượng tài chính
                 </div>
                 <p>Ổn định, nên tránh quyết định đầu tư lớn dựa trên cảm xúc.</p>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1 inline-flex items-center gap-1.5">
                   <Heart className="h-3 w-3" aria-hidden="true" /> Quan hệ
                 </div>
                 <p>Thời điểm tốt để hàn gắn một mối quan hệ đang xa cách trong im lặng.</p>
               </div>
               <div className="pt-2 border-t border-border">
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1">
                   Review cuối tháng
                 </div>
                 <p className="text-muted-foreground">Đặt lịch nhìn lại tháng vào {monthReviewDate}.</p>
@@ -275,7 +275,7 @@ export default function BanDoPage() {
             </CardHeader>
             <CardContent className="space-y-6 text-foreground/85">
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                <div className="text-eyebrow text-muted-foreground uppercase mb-1">
                   Chủ đề lưu niên
                 </div>
                 <p>
@@ -308,7 +308,7 @@ export default function BanDoPage() {
               </div>
 
               <div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide mb-2">
+                <div className="text-eyebrow text-muted-foreground uppercase mb-2">
                   Các quyết định lớn nên chuẩn bị
                 </div>
                 <ul className="list-disc pl-5 space-y-1 text-sm text-foreground/85">

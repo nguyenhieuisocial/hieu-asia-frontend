@@ -107,7 +107,7 @@ export default function HuongNhaPage() {
             <div className="mt-2 overflow-x-auto sm:mt-4">
               <table className="w-full min-w-[560px] text-sm">
                 <thead>
-                  <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr className="border-b border-border text-left text-eyebrow uppercase text-muted-foreground">
                     <th className="py-2 pr-3 font-medium">Cung phi</th>
                     <th className="py-2 pr-3 font-medium">Nhóm</th>
                     <th className="py-2 pr-3 font-medium">4 hướng tốt</th>

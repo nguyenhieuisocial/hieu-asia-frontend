@@ -180,7 +180,7 @@ export default function BatTuLandingPage() {
               >
                 Phương pháp luận
               </Link>
-              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground/70 sm:ml-2">
+              <span className="font-mono text-eyebrow uppercase text-muted-foreground/70 sm:ml-2">
                 Đang hoàn thiện · đối chiếu chéo với Tử Vi
               </span>
             </div>

@@ -95,7 +95,7 @@ const EXAMPLE_PAIRS: { guest: number; host: number }[] = [
  */
 const HUMAN_STEP_INDEXES = new Set([0, 4]);
 
-const TAG = 'rounded-full border px-2 py-0.5 font-mono text-[11px] uppercase tracking-[0.1em]';
+const TAG = 'rounded-full border px-2 py-0.5 font-mono text-eyebrow uppercase';
 const TAG_HUMAN = `${TAG} border-gold/40 text-gold-700`;
 const TAG_CHART = `${TAG} border-border text-muted-foreground`;
 

@@ -316,7 +316,7 @@ export default function SampleReportPage() {
             <div className="mt-5 space-y-4">
               {TOC_VISIBLE.map((group) => (
                 <div key={group.part}>
-                  <p className="mb-2 font-mono text-[12px] uppercase tracking-widest text-gold-700">
+                  <p className="mb-2 font-mono text-eyebrow uppercase text-gold-700">
                     Phần {group.part} — {group.label}
                   </p>
                   <ul className="space-y-1.5">
@@ -442,7 +442,7 @@ export default function SampleReportPage() {
         <section className="relative mx-auto max-w-3xl px-6 pb-10">
           <Card className="border-dashed border-gold/30 bg-card/30">
             <CardHeader className="pb-3">
-              <p className="font-mono text-[12px] uppercase tracking-widest text-gold-700">
+              <p className="font-mono text-eyebrow uppercase text-gold-700">
                 Trong bản đầy đủ — lăng kính Bát Tự
               </p>
               <CardTitle className="font-heading text-base text-foreground sm:text-lg">
@@ -486,7 +486,7 @@ export default function SampleReportPage() {
               {/* Visible part */}
               <div className="mt-4 space-y-3">
                 <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                     Màu sắc hỗ trợ
                   </p>
                   <p className="mt-1 text-sm text-foreground/85">
@@ -496,7 +496,7 @@ export default function SampleReportPage() {
                   </p>
                 </div>
                 <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                     Hướng làm việc tốt
                   </p>
                   <p className="mt-1 text-sm text-foreground/85">
@@ -510,7 +510,7 @@ export default function SampleReportPage() {
               <div className="relative mt-3">
                 <div className="space-y-3 blur-[4px] select-none" aria-hidden="true">
                   <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                       Nghề hợp thiên mệnh
                     </p>
                     <p className="mt-1 text-sm text-foreground/60">
@@ -518,7 +518,7 @@ export default function SampleReportPage() {
                     </p>
                   </div>
                   <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                       3 ngày tốt tháng 7/2026
                     </p>
                     <p className="mt-1 text-sm text-foreground/60">
@@ -526,7 +526,7 @@ export default function SampleReportPage() {
                     </p>
                   </div>
                   <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                       Checklist 30 ngày cụ thể
                     </p>
                     <p className="mt-1 text-sm text-foreground/60">
@@ -573,7 +573,7 @@ export default function SampleReportPage() {
           <Card className="border-border bg-card/40">
             <CardContent className="space-y-4 pt-5 text-sm leading-relaxed sm:text-base">
               <div className="rounded-lg bg-muted/5 p-3">
-                <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
+                <p className="font-mono text-eyebrow uppercase text-muted-foreground">
                   User
                 </p>
                 <p className="mt-1 text-foreground/90">
@@ -582,7 +582,7 @@ export default function SampleReportPage() {
                 </p>
               </div>
               <div className="rounded-lg bg-gold/[0.06] p-3">
-                <p className="font-mono text-[12px] uppercase tracking-widest text-gold-700">
+                <p className="font-mono text-eyebrow uppercase text-gold-700">
                   Mentor
                 </p>
                 <p className="mt-1 text-foreground/85">
@@ -622,7 +622,7 @@ export default function SampleReportPage() {
             {PLAN_30_60_90.map((p, i) => (
               <Card key={i} className="border-border bg-card/40">
                 <CardHeader className="pb-3">
-                  <p className="font-mono text-[12px] uppercase tracking-widest text-gold-700">
+                  <p className="font-mono text-eyebrow uppercase text-gold-700">
                     {p.period}
                   </p>
                   <CardTitle className="mt-1 font-heading text-base text-foreground">
@@ -717,7 +717,7 @@ export default function SampleReportPage() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="font-mono text-eyebrow uppercase text-muted-foreground">{label}</p>
       <p className="mt-0.5 font-heading text-sm font-semibold text-foreground">{value}</p>
     </div>
   );

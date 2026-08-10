@@ -270,7 +270,7 @@ export default async function HopTuoiPairPage({
 
         {/* Banner cho người nhận link — CTA lan truyền */}
         <section className="mt-10 rounded-xl border border-gold/40 bg-gradient-to-br from-gold/[0.07] to-transparent p-5 sm:p-6">
-          <p className="text-xs font-mono uppercase tracking-widest text-gold/70">Nhận link này từ bạn bè?</p>
+          <p className="text-eyebrow font-mono uppercase text-gold/70">Nhận link này từ bạn bè?</p>
           <h2 className="mt-1 font-heading text-lg font-bold text-foreground sm:text-xl">
             Tự xem hợp tuổi của chính bạn — miễn phí
           </h2>

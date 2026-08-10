@@ -66,7 +66,7 @@ function PositionCard({
           {icon}
         </span>
         <div>
-          <p className="text-xs uppercase tracking-wider text-gold/80">{title}</p>
+          <p className="text-eyebrow uppercase text-gold/80">{title}</p>
           <p className="font-heading text-xl text-foreground">
             {pos.sign.symbol} {pos.sign.name}
           </p>
@@ -456,7 +456,7 @@ export function SunMoonChecker({ initialDate, initialTime }: SunMoonCheckerProps
                 <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
                   {chart.houses.map((h) => (
                     <div key={h.house} className="rounded-lg border border-border bg-background/40 p-2 text-center">
-                      <p className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">
+                      <p className="font-mono text-eyebrow uppercase text-muted-foreground">
                         Nhà {h.house}
                       </p>
                       <p className="text-sm text-foreground">

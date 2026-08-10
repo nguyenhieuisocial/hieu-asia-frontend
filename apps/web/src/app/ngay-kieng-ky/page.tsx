@@ -100,7 +100,7 @@ export default function NgayKiengKyPage() {
                     <div className="font-heading text-base font-semibold text-foreground">
                       {info.name}
                     </div>
-                    <p className="mt-0.5 text-[13px] uppercase tracking-wide text-muted-foreground">
+                    <p className="mt-0.5 text-eyebrow uppercase text-muted-foreground">
                       {info.days}
                     </p>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

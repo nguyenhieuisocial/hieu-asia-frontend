@@ -121,7 +121,7 @@ export default function KhaiTruongPage() {
             <div className="mt-4 overflow-x-auto">
               <table className="w-full min-w-[560px] text-sm">
                 <thead>
-                  <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr className="border-b border-border text-left text-eyebrow uppercase text-muted-foreground">
                     <th className="py-2 pr-3 font-medium">Năm sinh</th>
                     <th className="py-2 pr-3 font-medium">Can chi</th>
                     <th className="py-2 pr-3 font-medium">Tam Tai</th>

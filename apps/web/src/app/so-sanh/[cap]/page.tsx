@@ -117,7 +117,7 @@ export default async function ComparisonPage({
           </h2>
           <div className="mt-4 overflow-x-auto rounded-xl border border-border">
             <table className="w-full text-sm">
-              <thead className="bg-muted/30 text-left text-xs uppercase tracking-wider text-muted-foreground">
+              <thead className="bg-muted/30 text-left text-eyebrow uppercase text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-medium">Tiêu chí</th>
                   <th className="px-4 py-3 font-medium text-gold">{c.a.ten}</th>

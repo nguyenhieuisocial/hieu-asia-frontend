@@ -26,7 +26,7 @@ const BatTuChecker = dynamic(
         role="status"
         aria-live="polite"
       >
-        <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+        <span className="font-mono text-eyebrow uppercase text-muted-foreground">
           Đang lập lá số…
         </span>
       </div>

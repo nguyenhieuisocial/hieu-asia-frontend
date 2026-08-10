@@ -132,7 +132,7 @@ export default function LucThapHoaGiapPage() {
           <div className="overflow-x-auto scroll-fade-x rounded-xl border border-border bg-card/40">
             <table className="w-full min-w-[640px] text-sm">
               <thead>
-                <tr className="border-b border-border text-left font-mono text-[12px] uppercase tracking-[0.1em] text-primary/80">
+                <tr className="border-b border-border text-left font-mono text-eyebrow uppercase text-primary/80">
                   <th className="px-3 py-3 font-medium">#</th>
                   <th className="px-3 py-3 font-medium">Can Chi</th>
                   <th className="px-3 py-3 font-medium">Con giáp</th>

@@ -82,7 +82,7 @@ function PalaceCell({ ps, isSitting, isFacing }: { ps: PalaceStars; isSitting: b
       <div className="font-editorial-display text-2xl font-medium text-foreground" title="Vận tinh">
         {ps.van}
       </div>
-      <div className="mt-0.5 text-[12px] uppercase tracking-wide text-muted-foreground">
+      <div className="mt-0.5 text-eyebrow uppercase text-muted-foreground">
         {ps.palace.gua}
         {ps.palace.grid !== 4 ? ` · ${ps.palace.dir}` : ''}
       </div>
@@ -203,7 +203,7 @@ export function PhiTinhChecker() {
                 </ul>
               )}
               <div className="rounded-lg border border-border bg-background/40 p-3">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <p className="mb-2 text-eyebrow font-semibold uppercase text-muted-foreground">
                   Bản chất 9 sao (tham khảo)
                 </p>
                 <ul className="space-y-1 text-xs leading-relaxed text-muted-foreground">

@@ -77,7 +77,7 @@ export function SharedManualView({ manual }: { manual: OperatingManual }) {
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
             {id.birthDate && <span>Sinh {formatDateVN(id.birthDate)}</span>}
             {id.chartHash && (
-              <span className="font-mono text-[13px] uppercase tracking-wider text-gold/85">
+              <span className="font-mono text-eyebrow uppercase text-gold/85">
                 #{id.chartHash}
               </span>
             )}

@@ -207,7 +207,7 @@ function ManualHeader({
         {id.chartHash && (
           <Link
             href="/methodology/tu-vi"
-            className="font-mono text-[13px] uppercase tracking-wider text-gold/85 hover:underline"
+            className="font-mono text-eyebrow uppercase text-gold/85 hover:underline"
             title="Mã lá số — bấm để xem phương pháp đối chiếu"
           >
             #{id.chartHash}

@@ -73,7 +73,7 @@ function PalaceCell({ palace, selected, trigon, onClick }: PalaceCellProps) {
       )}
     >
       <div className="flex w-full items-center justify-between">
-        <span className="font-mono text-[12px] uppercase tracking-wider text-gold/80">
+        <span className="font-mono text-eyebrow uppercase text-gold/80">
           {palace.heavenlyStem} {palace.earthlyBranch}
         </span>
         {palace.isBodyPalace && (
@@ -127,7 +127,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         {palace.majorStars.length > 0 && (
           <div>
-            <p className="font-mono text-[12px] uppercase tracking-widest text-gold/85">
+            <p className="font-mono text-eyebrow uppercase text-gold/85">
               Chính tinh
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -139,7 +139,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
         )}
         {palace.minorStars.length > 0 && (
           <div>
-            <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
+            <p className="font-mono text-eyebrow uppercase text-muted-foreground">
               Phụ tinh
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -151,7 +151,7 @@ function PalaceDetail({ palace }: { palace: TuViPalace }) {
         )}
         {palace.adjectiveStars.length > 0 && (
           <div className="sm:col-span-2">
-            <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
+            <p className="font-mono text-eyebrow uppercase text-muted-foreground">
               Sao bổ trợ ({palace.adjectiveStars.length})
             </p>
             <div className="mt-2 flex flex-wrap gap-1">
@@ -265,7 +265,7 @@ export function TuViChart12Palaces({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">{label}</p>
+      <p className="font-mono text-eyebrow uppercase text-muted-foreground">{label}</p>
       <p className="mt-1 font-heading text-sm font-semibold text-foreground sm:text-base">{value}</p>
     </div>
   );

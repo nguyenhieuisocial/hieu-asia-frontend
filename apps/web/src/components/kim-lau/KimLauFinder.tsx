@@ -44,7 +44,7 @@ export function KimLauFinder() {
 
       <form onSubmit={onSubmit} className="mt-4 flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-1">
-          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <span className="text-eyebrow font-medium uppercase text-muted-foreground">
             Năm sinh cô dâu (dương lịch)
           </span>
           <input

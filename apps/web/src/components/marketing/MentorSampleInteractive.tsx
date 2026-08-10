@@ -63,7 +63,7 @@ type Template = {
 };
 
 const SIGN_OFF = (
-  <p className="mt-4 font-mono text-[13px] uppercase tracking-widest text-primary/80">
+  <p className="mt-4 font-mono text-eyebrow uppercase text-primary/80">
     Sẵn sàng lập lá số thật sự?{' '}
     <Link
       href="/onboarding"
@@ -625,7 +625,7 @@ export function MentorSampleInteractive() {
 
         {/* Persona card — fixed Chi Lan ENFP for demo */}
         <div className="mx-auto mt-10 max-w-marketing-tight">
-          <p className="mb-2 font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
+          <p className="mb-2 font-mono text-eyebrow uppercase text-muted-foreground">
             BƯỚC 01 · PERSONA MẪU
           </p>
           <div className="rounded-[2px] border border-border/30 bg-card p-5 md:p-6">
@@ -637,15 +637,15 @@ export function MentorSampleInteractive() {
                 29 tuổi
               </span>
               <span className="text-muted-foreground/40">·</span>
-              <span className="font-mono text-xs uppercase tracking-wider text-primary/80">
+              <span className="font-mono text-eyebrow uppercase text-primary/80">
                 ENFP
               </span>
               <span className="text-muted-foreground/40">·</span>
-              <span className="font-mono text-xs uppercase tracking-wider text-primary/80">
+              <span className="font-mono text-eyebrow uppercase text-primary/80">
                 Mệnh Hỏa
               </span>
               <span className="text-muted-foreground/40">·</span>
-              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              <span className="font-mono text-eyebrow uppercase text-muted-foreground">
                 Tử Vi mẫu
               </span>
             </div>
@@ -663,7 +663,7 @@ export function MentorSampleInteractive() {
             <form onSubmit={handleSubmit}>
               <label
                 htmlFor="mentor-demo-input"
-                className="mb-2 block font-mono text-[12px] uppercase tracking-widest text-muted-foreground"
+                className="mb-2 block font-mono text-eyebrow uppercase text-muted-foreground"
               >
                 BƯỚC 02 · CÂU HỎI CỦA BẠN
               </label>
@@ -710,7 +710,7 @@ export function MentorSampleInteractive() {
                     aria-hidden
                   />
                   <div>
-                    <p className="font-mono text-[12px] uppercase tracking-widest text-muted-foreground">
+                    <p className="font-mono text-eyebrow uppercase text-muted-foreground">
                       Bạn hỏi
                     </p>
                     <p className="mt-1 font-sans text-[15px] font-medium leading-snug text-foreground">
@@ -720,7 +720,7 @@ export function MentorSampleInteractive() {
                 </div>
                 {/* Mentor response */}
                 <div className="mt-5 border-t border-border/30 pt-5">
-                  <p className="font-mono text-[12px] uppercase tracking-widest text-primary/80">
+                  <p className="font-mono text-eyebrow uppercase text-primary/80">
                     Mentor · Chi Lan persona
                   </p>
                   <div className="mt-3 space-y-3 font-editorial-display text-[15px] leading-relaxed text-muted-foreground md:text-[16px]">

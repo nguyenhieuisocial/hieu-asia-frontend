@@ -82,7 +82,7 @@ export function PreviewReadingCard({
           {starList.map((star) => (
             <li
               key={star}
-              className="rounded-pill bg-muted px-3 py-1 font-mono text-xs uppercase tracking-wider text-muted-foreground"
+              className="rounded-pill bg-muted px-3 py-1 font-mono text-eyebrow uppercase text-muted-foreground"
             >
               {star}
             </li>
@@ -95,7 +95,7 @@ export function PreviewReadingCard({
           {insightQuote}
         </p>
         {insightAuthor && (
-          <footer className="mt-3 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+          <footer className="mt-3 font-mono text-eyebrow uppercase text-muted-foreground">
             — {insightAuthor}
           </footer>
         )}

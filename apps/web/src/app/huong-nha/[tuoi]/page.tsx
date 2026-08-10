@@ -37,7 +37,7 @@ function ResultBlock({ label, r }: { label: string; r: HuongNhaResult }) {
       </p>
       <div className="mt-2 grid gap-3 sm:grid-cols-2">
         <div>
-          <div className="text-xs font-medium uppercase tracking-wide text-emerald-700 dark:text-emerald-300">Hướng tốt</div>
+          <div className="text-eyebrow font-medium uppercase text-emerald-700 dark:text-emerald-300">Hướng tốt</div>
           <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
             {r.good.map((d) => (
               <li key={d.direction} className="mb-1.5">
@@ -50,7 +50,7 @@ function ResultBlock({ label, r }: { label: string; r: HuongNhaResult }) {
           </ul>
         </div>
         <div>
-          <div className="text-xs font-medium uppercase tracking-wide text-rose-700 dark:text-rose-300">Hướng tránh</div>
+          <div className="text-eyebrow font-medium uppercase text-rose-700 dark:text-rose-300">Hướng tránh</div>
           <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
             {r.bad.map((d) => (
               <li key={d.direction} className="mb-1.5">

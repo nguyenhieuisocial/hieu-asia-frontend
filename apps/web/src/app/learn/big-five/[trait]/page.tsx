@@ -111,7 +111,7 @@ export default async function BigFiveTraitPage({
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight text-foreground sm:text-5xl">
           {d.vi}
         </h1>
-        <p className="mt-2 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="mt-2 font-mono text-eyebrow uppercase text-muted-foreground">
           {d.en}
         </p>
         <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">{d.tagline}</p>

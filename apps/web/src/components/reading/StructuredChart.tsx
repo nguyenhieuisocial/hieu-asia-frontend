@@ -46,7 +46,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
     >
       <h2
         id="structured-chart-heading"
-        className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.12em] text-gold/80"
+        className="flex items-center gap-2 font-mono text-eyebrow uppercase text-gold/80"
       >
         <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
         Lá số tham chiếu
@@ -57,7 +57,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.palaces.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-eyebrow font-medium uppercase text-muted-foreground">
             12 cung ({chart.palaces.length})
           </p>
           <ul
@@ -78,7 +78,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.mainStars.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-eyebrow font-medium uppercase text-muted-foreground">
             Chính tinh ({chart.mainStars.length})
           </p>
           <ul role="list" className="mt-2 flex flex-wrap gap-1.5">
@@ -96,7 +96,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.auxStars.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-eyebrow font-medium uppercase text-muted-foreground">
             Phụ tinh ({chart.auxStars.length})
           </p>
           <ul role="list" className="mt-2 flex flex-wrap gap-1.5">
@@ -114,7 +114,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.transformations.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-eyebrow font-medium uppercase text-muted-foreground">
             Tứ hoá ({chart.transformations.length})
           </p>
           <ul role="list" className="mt-2 flex flex-wrap gap-1.5">

@@ -78,7 +78,7 @@ function CardFace({ card, orientation }: DrawnCard) {
     <div className="relative flex h-full w-full flex-col items-center justify-between overflow-hidden rounded-lg border-2 border-gold/45 bg-gradient-to-b from-gold/[0.10] to-background p-2 text-center shadow-sm">
       <span aria-hidden className="absolute left-1 top-1 text-gold/40">✦</span>
       <span aria-hidden className="absolute bottom-1 right-1 text-gold/40">✦</span>
-      <div className="font-mono text-[12px] uppercase tracking-[0.15em] text-gold/70">
+      <div className="font-mono text-eyebrow uppercase text-gold/70">
         {isMajor ? 'Ẩn chính' : card.suit ? SUIT_LABEL[card.suit] : ''}
       </div>
       <div className="flex flex-1 items-center justify-center" style={rev ? { transform: 'rotate(180deg)' } : undefined}>
@@ -134,7 +134,7 @@ export function TarotSpread({ drawn, positions }: { drawn: DrawnCard[]; position
       {drawn.map((d, i) => (
         <div key={i} className="flex flex-col items-center gap-1.5">
           <FlipCard d={d} delay={180 + i * 180} />
-          <span className="max-w-[100px] text-center font-mono text-[12px] uppercase leading-tight tracking-wider text-gold/70">
+          <span className="max-w-[100px] text-center font-mono text-eyebrow uppercase leading-tight text-gold/70">
             {positions[i] ?? ''}
           </span>
         </div>

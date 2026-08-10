@@ -192,7 +192,7 @@ function AdvancedOptions() {
             </span>
             <span
               aria-hidden
-              className="font-mono text-xs uppercase tracking-wider text-muted-foreground transition-transform duration-300 ease-editorial group-open:rotate-180"
+              className="font-mono text-eyebrow uppercase text-muted-foreground transition-transform duration-300 ease-editorial group-open:rotate-180"
             >
               ▾
             </span>

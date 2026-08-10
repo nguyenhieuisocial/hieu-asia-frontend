@@ -211,7 +211,7 @@ export default function LearnCanXuongPage() {
                       <span className="font-heading text-base font-semibold text-foreground">
                         {f.name}
                       </span>
-                      <span className="text-[13px] uppercase tracking-wide text-muted-foreground">
+                      <span className="text-eyebrow uppercase text-muted-foreground">
                         {f.unit}
                       </span>
                     </div>

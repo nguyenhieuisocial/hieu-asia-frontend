@@ -21,7 +21,7 @@ export default function MaintenancePage() {
       className="flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground"
     >
       <div className="mx-auto max-w-lg text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.16em] text-primary">
+        <p className="font-mono text-eyebrow uppercase text-primary">
           — Đang bảo trì
         </p>
         <h1 className="mt-4 font-heading text-3xl font-semibold sm:text-4xl">

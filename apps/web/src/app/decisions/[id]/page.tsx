@@ -220,7 +220,7 @@ export default function DecisionBriefPage() {
 
         <header className="mb-10">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 font-mono text-[12px] uppercase tracking-wider text-gold-700">
+            <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 font-mono text-eyebrow uppercase text-gold-700">
               {topicLabel}
             </span>
             <span className="text-xs text-muted-foreground">
@@ -245,7 +245,7 @@ export default function DecisionBriefPage() {
         <section aria-labelledby="real-problem" className="mb-12">
           <h2
             id="real-problem"
-            className="font-mono text-xs uppercase tracking-[0.12em] text-gold-700"
+            className="font-mono text-eyebrow uppercase text-gold-700"
           >
             Vấn đề thật sự
           </h2>
@@ -257,7 +257,7 @@ export default function DecisionBriefPage() {
         <section aria-labelledby="chart-signal" className="mb-12">
           <h2
             id="chart-signal"
-            className="font-mono text-xs uppercase tracking-[0.12em] text-gold-700"
+            className="font-mono text-eyebrow uppercase text-gold-700"
           >
             Lá số nói gì
           </h2>
@@ -295,7 +295,7 @@ export default function DecisionBriefPage() {
 
                   {opt.risks.length > 0 && (
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      <p className="text-eyebrow font-medium uppercase text-muted-foreground">
                         Rủi ro:
                       </p>
                       <ul className="mt-2 space-y-1.5">
@@ -316,7 +316,7 @@ export default function DecisionBriefPage() {
                   )}
 
                   <div className="inline-flex items-start gap-2 rounded-md border border-jade/30 bg-jade/[0.04] px-3 py-2 text-sm text-foreground/85">
-                    <span className="text-xs font-medium uppercase tracking-wider text-jade">
+                    <span className="text-eyebrow font-medium uppercase text-jade">
                       Nên chọn khi:
                     </span>
                     <span className="text-sm">{opt.bestWhen}</span>
@@ -389,7 +389,7 @@ export default function DecisionBriefPage() {
           <section aria-labelledby="caveats" className="mb-12">
             <h2
               id="caveats"
-              className="mb-3 font-mono text-xs uppercase tracking-[0.12em] text-amber-300"
+              className="mb-3 font-mono text-eyebrow uppercase text-amber-300"
             >
               Lưu ý
             </h2>

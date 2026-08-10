@@ -62,7 +62,7 @@ export function MauXeFinder() {
 
       <form onSubmit={onSubmit} className="mt-4 flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-1">
-          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <span className="text-eyebrow font-medium uppercase text-muted-foreground">
             Năm sinh (dương lịch)
           </span>
           <input
@@ -95,7 +95,7 @@ export function MauXeFinder() {
 
           <div className="space-y-3">
             <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
+              <p className="text-eyebrow font-semibold uppercase text-emerald-700 dark:text-emerald-300">
                 Màu xe hợp nhất
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -107,7 +107,7 @@ export function MauXeFinder() {
             </div>
 
             <div className="rounded-xl border border-border bg-background/40 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                 Màu xe trung tính (dùng tốt)
               </p>
               <div className="mt-2">
@@ -116,7 +116,7 @@ export function MauXeFinder() {
             </div>
 
             <div className="rounded-xl border border-amber-500/30 bg-amber-500/[0.06] p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
+              <p className="text-eyebrow font-semibold uppercase text-amber-700 dark:text-amber-300">
                 Màu xe nên cân nhắc
               </p>
               <p className="mt-1 text-xs text-muted-foreground">

@@ -143,7 +143,7 @@ export function Scrollyteller({
                 {activeChapter?.title}
               </h3>
               <div className="mt-10 flex items-center gap-3">
-                <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground/70">
+                <span className="font-mono text-eyebrow uppercase text-muted-foreground/70">
                   {String(activeIdx + 1).padStart(2, '0')} / {String(chapters.length).padStart(2, '0')}
                 </span>
                 <div className="h-px flex-1 bg-muted" />

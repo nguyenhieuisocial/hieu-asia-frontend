@@ -75,7 +75,7 @@ export function PhilosophyBlock({
         </div>
 
         {citation && (
-          <p className="mt-8 font-mono text-xs uppercase tracking-wider text-muted-foreground/70">
+          <p className="mt-8 font-mono text-eyebrow uppercase text-muted-foreground/70">
             {citation}
           </p>
         )}

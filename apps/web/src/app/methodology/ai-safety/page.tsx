@@ -344,7 +344,7 @@ export default function AiSafetyPage() {
           <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card/40">
             <table className="w-full min-w-[720px] text-sm">
               <thead>
-                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
+                <tr className="border-b border-border text-left text-eyebrow uppercase text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Rủi ro</th>
                   <th className="px-4 py-3 font-medium">Biện pháp</th>
                   <th className="px-4 py-3 font-medium">Trạng thái</th>
@@ -400,13 +400,13 @@ export default function AiSafetyPage() {
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm text-foreground/80">
                   <div>
-                    <p className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">
+                    <p className="font-mono text-eyebrow uppercase text-muted-foreground">
                       User prompt ví dụ
                     </p>
                     <p className="mt-1 italic text-muted-foreground">{c.example}</p>
                   </div>
                   <div>
-                    <p className="font-mono text-[12px] uppercase tracking-wider text-jade-300/80">
+                    <p className="font-mono text-eyebrow uppercase text-jade-300/80">
                       Reply mẫu
                     </p>
                     <p className="mt-1 leading-relaxed">{c.reply}</p>

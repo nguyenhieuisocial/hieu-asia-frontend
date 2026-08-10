@@ -86,7 +86,7 @@ export function ExplainPanel({
               <p className="mb-3 text-foreground/90">{summary}</p>
             )}
 
-            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <p className="text-eyebrow font-medium uppercase text-muted-foreground">
               Dựa trên:
             </p>
 
@@ -121,7 +121,7 @@ export function ExplainPanel({
 
             {userContext && (
               <div className="mt-4 border-t border-border pt-3">
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <p className="text-eyebrow font-medium uppercase text-muted-foreground">
                   Bối cảnh bạn đã cung cấp:
                 </p>
                 <p className="mt-1 italic text-foreground/80">{userContext}</p>
