@@ -138,7 +138,7 @@ export function AstroTickerLive() {
                     {state.currentHour.canChi}
                   </span>
                   <span
-                    className={`font-mono text-[13px] uppercase tracking-wide ${
+                    className={`font-mono text-eyebrow uppercase ${
                       state.isCurrentGood ? 'text-[color:var(--hanh-moc,#6B8154)]' : 'text-muted-foreground'
                     }`}
                   >

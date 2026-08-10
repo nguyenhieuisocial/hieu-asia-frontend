@@ -160,7 +160,7 @@ export default function BanMenhHubPage() {
           <div className="space-y-5">
             {decades.map((d) => (
               <div key={d.decade}>
-                <p className="mb-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                <p className="mb-2 font-mono text-eyebrow uppercase text-muted-foreground">
                   Thập niên {d.decade}
                 </p>
                 <div className="flex flex-wrap gap-1.5">

@@ -164,7 +164,7 @@ export function MbtiTool() {
                   <p className="font-heading text-xl text-foreground">
                     {meta.code} · {meta.nick}
                   </p>
-                  <p className="mt-0.5 font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <p className="mt-0.5 font-mono text-eyebrow uppercase text-muted-foreground">
                     {meta.groupMeta.name} · {meta.groupMeta.en}
                   </p>
                   <p className="mt-2 text-sm italic leading-relaxed text-muted-foreground">

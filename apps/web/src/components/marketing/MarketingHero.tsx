@@ -155,13 +155,13 @@ export function MarketingHero({
               </div>
               {trustLine && (
                 Array.isArray(trustLine) ? (
-                  <div className="flex flex-col gap-1 font-mono text-xs uppercase tracking-wider text-muted-foreground/70 sm:ml-2">
+                  <div className="flex flex-col gap-1 font-mono text-eyebrow uppercase text-muted-foreground/70 sm:ml-2">
                     {trustLine.map((line, i) => (
                       <span key={i}>{line}</span>
                     ))}
                   </div>
                 ) : (
-                  <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground/70 sm:ml-2">
+                  <span className="font-mono text-eyebrow uppercase text-muted-foreground/70 sm:ml-2">
                     {trustLine}
                   </span>
                 )
@@ -190,7 +190,7 @@ export function MarketingHero({
               )}
             </div>
             {trustLine && (
-              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground/70 sm:ml-2">
+              <span className="font-mono text-eyebrow uppercase text-muted-foreground/70 sm:ml-2">
                 {trustLine}
               </span>
             )}

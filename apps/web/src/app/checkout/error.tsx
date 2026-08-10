@@ -28,7 +28,7 @@ export default function CheckoutError({
       className="flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground"
     >
       <div className="mx-auto max-w-lg space-y-6 text-center">
-        <p className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-gold/80">
+        <p className="font-mono text-eyebrow font-medium uppercase text-gold/80">
           Lỗi · thanh toán
         </p>
         <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
@@ -45,7 +45,7 @@ export default function CheckoutError({
             </p>
           )}
           {error.digest && (
-            <p className="mt-2 font-mono text-[12px] uppercase tracking-widest opacity-70">
+            <p className="mt-2 font-mono text-eyebrow uppercase opacity-70">
               Mã lỗi: {error.digest}
             </p>
           )}

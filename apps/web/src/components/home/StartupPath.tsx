@@ -124,7 +124,7 @@ export function StartupPath() {
                       {done ? <Check className="h-4 w-4" /> : s.n}
                     </span>
                     {s.reward && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 font-mono text-[12px] uppercase tracking-wide text-primary">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 font-mono text-eyebrow uppercase text-primary">
                         <Gift className="h-3 w-3" />
                         Quà
                       </span>

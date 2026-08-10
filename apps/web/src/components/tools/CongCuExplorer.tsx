@@ -203,7 +203,7 @@ export function CongCuExplorer({
                 <a
                   key={c.id}
                   href={`#${c.id}`}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 font-mono text-[13px] uppercase tracking-wide text-muted-foreground transition-all active:scale-[0.98] hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 font-mono text-eyebrow uppercase text-muted-foreground transition-all active:scale-[0.98] hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
                 >
                   <span aria-hidden="true">{c.icon}</span>
                   {c.label}

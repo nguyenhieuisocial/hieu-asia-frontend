@@ -330,7 +330,7 @@ export function LearnArticleView({
                       href={lens.href}
                       className="group rounded-card-editorial border border-border bg-card/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/40"
                     >
-                      <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-gold-700">
+                      <p className="font-mono text-eyebrow uppercase text-gold-700">
                         {lens.eyebrow}
                       </p>
                       <p className="mt-1.5 font-heading text-base text-foreground group-hover:text-gold">

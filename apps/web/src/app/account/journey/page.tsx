@@ -208,7 +208,7 @@ function LensCard({ data }: { data: JourneyLens }) {
           <Check className="h-3 w-3" />
         </span>
       )}
-      <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-gold-700">
+      <p className="font-mono text-eyebrow uppercase text-gold-700">
         {lens.eyebrow}
       </p>
       <h3 className="mt-1.5 font-heading text-lg text-foreground">{lens.name}</h3>

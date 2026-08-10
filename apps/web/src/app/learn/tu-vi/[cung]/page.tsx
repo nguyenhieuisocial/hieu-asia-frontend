@@ -130,7 +130,7 @@ export default async function LearnPalacePage({
               <ul className="space-y-3 rounded-xl border border-border bg-card/40 p-5 sm:p-6">
                 {data.keyStars.map((s) => (
                   <li key={s.name} className="flex flex-col gap-1 sm:flex-row sm:gap-3">
-                    <span className="shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-gold-700 sm:w-28">
+                    <span className="shrink-0 font-mono text-eyebrow font-semibold uppercase text-gold-700 sm:w-28">
                       {s.name}
                     </span>
                     <span className="text-sm leading-relaxed text-foreground/80">{s.signal}</span>

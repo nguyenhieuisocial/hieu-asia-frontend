@@ -37,7 +37,7 @@ export default function CheckoutYearlyPage() {
           </header>
 
           <div className="mb-6">
-            <p className="font-mono text-xs uppercase tracking-wider text-primary">
+            <p className="font-mono text-eyebrow uppercase text-primary">
               CHECKOUT · MENTOR NĂM
             </p>
             <h1 className="mt-2 font-heading text-2xl text-foreground">

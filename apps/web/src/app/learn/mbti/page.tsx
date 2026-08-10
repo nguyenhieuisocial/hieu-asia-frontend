@@ -298,7 +298,7 @@ export default function LearnMBTIPage() {
                 <div key={grp.key}>
                   <div className="mb-2 flex items-baseline gap-2">
                     <span className="font-heading text-base text-foreground">{grp.meta.name}</span>
-                    <span className="font-mono text-[13px] uppercase tracking-[0.14em] text-muted-foreground">
+                    <span className="font-mono text-eyebrow uppercase text-muted-foreground">
                       {grp.meta.en}
                     </span>
                   </div>

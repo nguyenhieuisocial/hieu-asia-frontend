@@ -73,7 +73,7 @@ export default function TaiLieuHubPage() {
                 >
                   {doc.emoji}
                 </span>
-                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                <span className="font-mono text-eyebrow uppercase text-muted-foreground">
                   {doc.cadence}
                 </span>
               </div>

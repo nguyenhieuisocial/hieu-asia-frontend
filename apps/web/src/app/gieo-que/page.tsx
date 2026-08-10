@@ -370,13 +370,13 @@ export default function GieoQuePage() {
                       <CardContent>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="rounded-lg border border-border bg-card/40 p-3 text-center">
-                            <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">Thượng quái (ngoài)</div>
+                            <div className="text-eyebrow font-mono uppercase text-muted-foreground mb-1">Thượng quái (ngoài)</div>
                             <div className="text-2xl" aria-hidden>{upper.icon}</div>
                             <div className="font-semibold text-foreground mt-1">{upper.ten} · {upper.tuong}</div>
                             <div className="text-xs text-muted-foreground mt-0.5">Hành {upper.hanh}</div>
                           </div>
                           <div className="rounded-lg border border-border bg-card/40 p-3 text-center">
-                            <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-1">Hạ quái (trong)</div>
+                            <div className="text-eyebrow font-mono uppercase text-muted-foreground mb-1">Hạ quái (trong)</div>
                             <div className="text-2xl" aria-hidden>{lower.icon}</div>
                             <div className="font-semibold text-foreground mt-1">{lower.ten} · {lower.tuong}</div>
                             <div className="text-xs text-muted-foreground mt-0.5">Hành {lower.hanh}</div>

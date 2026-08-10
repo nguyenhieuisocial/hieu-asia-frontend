@@ -238,7 +238,7 @@ export default function EnneagramPage() {
                   </div>
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
-                      <div className="text-[12px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                      <div className="text-eyebrow font-mono uppercase text-emerald-600 dark:text-emerald-400">
                         Khi phát triển →
                       </div>
                       <p className="mt-1 text-sm text-foreground/90">
@@ -252,7 +252,7 @@ export default function EnneagramPage() {
                       </p>
                     </div>
                     <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
-                      <div className="text-[12px] font-mono uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                      <div className="text-eyebrow font-mono uppercase text-amber-600 dark:text-amber-400">
                         Khi áp lực →
                       </div>
                       <p className="mt-1 text-sm text-foreground/90">

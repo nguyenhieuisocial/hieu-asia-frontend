@@ -88,7 +88,7 @@ export function ProcessingStepper({ steps }: ProcessingStepperProps) {
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="mt-1 font-mono text-xs uppercase tracking-widest text-gold"
+                    className="mt-1 font-mono text-eyebrow uppercase text-gold"
                     aria-hidden="true"
                   >
                     Đang xử lý

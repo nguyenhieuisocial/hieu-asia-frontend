@@ -562,8 +562,8 @@ export default function LearnHopTuoiPage() {
                 <table className="w-full min-w-[560px] border-collapse text-sm">
                   <thead>
                     <tr className="border-b border-border text-left text-muted-foreground">
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Hành</th>
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Sáu nạp âm thuộc hành này</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Hành</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Sáu nạp âm thuộc hành này</th>
                     </tr>
                   </thead>
                   <tbody>

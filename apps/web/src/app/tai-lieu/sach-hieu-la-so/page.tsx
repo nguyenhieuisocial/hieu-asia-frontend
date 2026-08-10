@@ -128,7 +128,7 @@ export default function SachHieuLaSoPage() {
 
           {EBOOK_SECTIONS.map((s) => (
             <section key={s.label} id={slugOf(s.label)} className="mt-10 scroll-mt-24">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold">
+              <p className="font-mono text-eyebrow uppercase text-gold">
                 {s.label}
               </p>
               <h2 className="mt-2 font-editorial-display text-2xl font-normal text-foreground">

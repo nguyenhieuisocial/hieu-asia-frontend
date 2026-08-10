@@ -300,13 +300,13 @@ export default function TuViTinhYeuPage() {
               <Card key={i} className="border-border bg-card/40">
                 <CardContent className="grid gap-3 pt-5 sm:grid-cols-2">
                   <div>
-                    <p className="font-mono text-[12px] uppercase tracking-widest text-jade-50">
+                    <p className="font-mono text-eyebrow uppercase text-jade-50">
                       Nên
                     </p>
                     <p className="mt-1 text-sm leading-relaxed text-foreground/85">{d.do}</p>
                   </div>
                   <div>
-                    <p className="font-mono text-[12px] uppercase tracking-widest text-red-300">
+                    <p className="font-mono text-eyebrow uppercase text-red-300">
                       Không nên
                     </p>
                     <p className="mt-1 text-sm leading-relaxed text-foreground/85">{d.dont}</p>

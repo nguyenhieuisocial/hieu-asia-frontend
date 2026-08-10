@@ -263,14 +263,14 @@ export default function LearnConGiapPage() {
                 <table className="w-full min-w-[640px] border-collapse text-sm">
                   <thead>
                     <tr className="border-b border-border text-left text-muted-foreground">
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Chi</th>
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Con vật</th>
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Giờ</th>
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Tháng</th>
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Phương vị</th>
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Mùa</th>
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Âm/Dương</th>
-                      <th className="px-3 py-2 font-mono text-[12px] uppercase tracking-[0.1em]">Hành</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Chi</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Con vật</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Giờ</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Tháng</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Phương vị</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Mùa</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Âm/Dương</th>
+                      <th className="px-3 py-2 font-mono text-eyebrow uppercase">Hành</th>
                     </tr>
                   </thead>
                   <tbody>

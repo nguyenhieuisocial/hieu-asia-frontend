@@ -134,7 +134,7 @@ export default async function EnneagramTypePage({
           </span>
           {meta.name}
         </h1>
-        <p className="mt-2 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+        <p className="mt-2 font-mono text-eyebrow uppercase text-muted-foreground">
           {meta.nick}
         </p>
         <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">

@@ -232,7 +232,7 @@ export default function BatTuMethodologyPage() {
               <p className="font-mono text-eyebrow uppercase text-gold-700">
                 Methodology
               </p>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/15 px-3 py-1 font-mono text-[13px] font-semibold uppercase tracking-wider text-amber-300">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/15 px-3 py-1 font-mono text-eyebrow font-semibold uppercase text-amber-300">
                 <AlertTriangle className="h-3.5 w-3.5" aria-hidden />
                 Beta
               </span>

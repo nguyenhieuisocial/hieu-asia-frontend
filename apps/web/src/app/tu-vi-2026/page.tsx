@@ -190,7 +190,7 @@ export default function TuVi2026Page() {
           </p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <div className="rounded-lg border border-border bg-card/40 p-4">
-              <p className="font-mono text-[12px] uppercase tracking-widest text-gold/80">
+              <p className="font-mono text-eyebrow uppercase text-gold/80">
                 Năm tuổi (Thái Tuế)
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">
@@ -200,7 +200,7 @@ export default function TuVi2026Page() {
               </p>
             </div>
             <div className="rounded-lg border border-border bg-card/40 p-4">
-              <p className="font-mono text-[12px] uppercase tracking-widest text-gold/80">
+              <p className="font-mono text-eyebrow uppercase text-gold/80">
                 Tam Tai
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">
@@ -277,7 +277,7 @@ export default function TuVi2026Page() {
                 key={m.name}
                 className="rounded-lg border border-border bg-card/40 p-3"
               >
-                <p className="font-mono text-[12px] uppercase tracking-widest text-gold/80">
+                <p className="font-mono text-eyebrow uppercase text-gold/80">
                   {m.name}
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-foreground/80">{m.theme}</p>

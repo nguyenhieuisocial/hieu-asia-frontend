@@ -115,7 +115,7 @@ export default function BaCauHoiPage() {
 
           {BA_CAU_HOI.map((q) => (
             <section key={q.no} className="mt-8 rounded-2xl border border-border bg-card/30 p-5">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-gold">
+              <p className="font-mono text-eyebrow uppercase text-gold">
                 Câu hỏi {q.no}
               </p>
               <h2 className="mt-2 font-editorial-display text-2xl font-normal text-foreground">

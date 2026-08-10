@@ -67,7 +67,7 @@ export default function TarotTodayPage() {
       breadcrumb={[{ label: 'Trang chủ', href: '/' }, { label: 'Tarot', href: '/tarot' }, { label: 'Hôm nay' }]}
     >
       <div className="mx-auto max-w-2xl">
-        <p className="text-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+        <p className="text-center font-mono text-eyebrow uppercase text-muted-foreground">
           Ngày {dateLabel}
         </p>
 

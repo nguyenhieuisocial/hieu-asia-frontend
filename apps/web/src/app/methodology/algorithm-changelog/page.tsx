@@ -283,7 +283,7 @@ export default function AlgorithmChangelogPage() {
                         className="flex flex-col gap-2 rounded-lg border border-border bg-card/60 p-3 sm:flex-row sm:items-start"
                       >
                         <span
-                          className={`inline-flex w-fit shrink-0 items-center rounded-full border px-2 py-0.5 font-mono text-[12px] uppercase tracking-wider ${style.className}`}
+                          className={`inline-flex w-fit shrink-0 items-center rounded-full border px-2 py-0.5 font-mono text-eyebrow uppercase ${style.className}`}
                         >
                           {style.label}
                         </span>

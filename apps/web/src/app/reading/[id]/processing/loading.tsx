@@ -81,7 +81,7 @@ export default function ProcessingLoading() {
           </CardContent>
         </Card>
 
-        <p className="mt-6 text-center font-mono text-xs uppercase tracking-widest text-muted-foreground">
+        <p className="mt-6 text-center font-mono text-eyebrow uppercase text-muted-foreground">
           Khoảng 30 – 60 giây · Vui lòng giữ trang mở
         </p>
       </section>

@@ -36,7 +36,7 @@ export function LearnPathsSection() {
           >
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h3 className="font-heading text-lg font-bold text-foreground">{path.name}</h3>
-              <span className="font-mono text-[12px] uppercase tracking-[0.1em] text-gold-700">
+              <span className="font-mono text-eyebrow uppercase text-gold-700">
                 {path.slugs.length} bài
               </span>
             </div>

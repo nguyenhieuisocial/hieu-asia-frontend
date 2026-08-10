@@ -400,13 +400,13 @@ export default function AiSafetyPage() {
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm text-foreground/80">
                   <div>
-                    <p className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">
+                    <p className="font-mono text-eyebrow uppercase text-muted-foreground">
                       User prompt ví dụ
                     </p>
                     <p className="mt-1 italic text-muted-foreground">{c.example}</p>
                   </div>
                   <div>
-                    <p className="font-mono text-[12px] uppercase tracking-wider text-jade-300/80">
+                    <p className="font-mono text-eyebrow uppercase text-jade-300/80">
                       Reply mẫu
                     </p>
                     <p className="mt-1 leading-relaxed">{c.reply}</p>

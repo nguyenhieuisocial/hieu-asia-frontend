@@ -87,7 +87,7 @@ export function TuViChartSection({
               aria-hidden
               className="h-5 w-5 animate-spin rounded-full border-2 border-gold/30 border-t-gold"
             />
-            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            <p className="font-mono text-eyebrow uppercase text-muted-foreground">
               Đang dựng lá số 12 cung…
             </p>
           </div>

@@ -54,7 +54,7 @@ export function ContinueLearning() {
           onClick={() => track('learn_continue_clicked', { topic: target.slug })}
           className="inline-flex max-w-full items-center gap-2 rounded-full border border-gold/30 bg-card/40 px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-gold/60 hover:text-foreground"
         >
-          <span className="font-mono text-[12px] uppercase tracking-[0.1em] text-gold-700">
+          <span className="font-mono text-eyebrow uppercase text-gold-700">
             Học tiếp
           </span>
           <span className="truncate font-medium text-foreground">{target.name}</span>

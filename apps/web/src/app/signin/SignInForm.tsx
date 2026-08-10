@@ -256,7 +256,7 @@ export function SignInForm({ initialError: initialErrorProp, next: nextProp }: S
               disabled, instead of seeing four greyed-out buttons with
               no upfront explanation. Disappears once captcha resolves. */}
           {!captchaToken && (
-            <p className="text-center font-mono text-[13px] uppercase tracking-wider text-muted-foreground">
+            <p className="text-center font-mono text-eyebrow uppercase text-muted-foreground">
               Hoàn tất xác thực Cloudflare bên dưới để mở tuỳ chọn đăng nhập
             </p>
           )}

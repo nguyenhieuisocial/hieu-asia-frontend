@@ -647,7 +647,7 @@ export default function LearnTarotPage() {
               <div className="space-y-6">
                 {['Gậy', 'Cốc', 'Kiếm', 'Tiền'].map((suit) => (
                   <div key={suit}>
-                    <p className="mb-3 font-mono text-[13px] uppercase tracking-[0.14em] text-gold-700">
+                    <p className="mb-3 font-mono text-eyebrow uppercase text-gold-700">
                       Chất {suit}
                     </p>
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

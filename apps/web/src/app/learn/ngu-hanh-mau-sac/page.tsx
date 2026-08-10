@@ -528,7 +528,7 @@ export default function LearnNguHanhMauSacPage() {
                       {ex.elementName} (nên cân nhắc)
                     </p>
 
-                    <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-gold-700">
+                    <p className="mt-3 font-mono text-eyebrow uppercase text-gold-700">
                       Màu nên chọn
                     </p>
                     <p className="mt-1 flex flex-wrap items-center gap-2">
@@ -544,7 +544,7 @@ export default function LearnNguHanhMauSacPage() {
                       ))}
                     </p>
 
-                    <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                    <p className="mt-3 font-mono text-eyebrow uppercase text-muted-foreground">
                       Màu nên cân nhắc
                     </p>
                     <p className="mt-1 flex flex-wrap items-center gap-2">
