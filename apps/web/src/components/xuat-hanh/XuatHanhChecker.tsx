@@ -87,13 +87,13 @@ export function XuatHanhChecker() {
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-xl border border-gold/30 bg-gold/5 p-4">
-                <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                <div className="text-eyebrow uppercase text-muted-foreground">
                   Hướng Hỷ Thần — cầu may mắn
                 </div>
                 <div className="mt-1 font-heading text-2xl font-bold text-gold">{result.hyThan}</div>
               </div>
               <div className="rounded-xl border border-gold/30 bg-gold/5 p-4">
-                <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                <div className="text-eyebrow uppercase text-muted-foreground">
                   Hướng Tài Thần — cầu tài lộc
                 </div>
                 <div className="mt-1 font-heading text-2xl font-bold text-gold">{result.taiThan}</div>

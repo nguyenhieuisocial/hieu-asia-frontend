@@ -66,7 +66,7 @@ function PositionCard({
           {icon}
         </span>
         <div>
-          <p className="text-xs uppercase tracking-wider text-gold/80">{title}</p>
+          <p className="text-eyebrow uppercase text-gold/80">{title}</p>
           <p className="font-heading text-xl text-foreground">
             {pos.sign.symbol} {pos.sign.name}
           </p>

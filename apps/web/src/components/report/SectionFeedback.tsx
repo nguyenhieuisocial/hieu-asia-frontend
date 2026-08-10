@@ -170,7 +170,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
         </div>
       )}
 
-      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+      <p className="text-eyebrow font-medium uppercase text-muted-foreground">
         Đoạn này có đúng với bạn không?
       </p>
       <div className="mt-2 flex flex-wrap gap-2">
@@ -197,7 +197,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
       {rating !== null && (
         <div className="mt-4 space-y-3">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <p className="text-eyebrow font-medium uppercase text-muted-foreground">
               Bạn muốn điều chỉnh hướng nào?
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -217,7 +217,7 @@ export function SectionFeedback({ sectionId, onSubmit }: SectionFeedbackProps) {
           <div>
             <label
               htmlFor={commentId}
-              className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground"
+              className="flex items-center gap-1.5 text-eyebrow font-medium uppercase text-muted-foreground"
             >
               <MessageSquare className="h-3 w-3" aria-hidden="true" />
               Ghi chú (không bắt buộc)

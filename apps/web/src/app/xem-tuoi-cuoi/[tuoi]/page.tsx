@@ -120,7 +120,7 @@ export default async function XemTuoiCuoiYearPage({
                   verdict visible without scrolling; desktop has ample width. */}
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr className="border-b border-border text-left text-eyebrow uppercase text-muted-foreground">
                     <th className="py-2 pr-3 font-medium">Năm cưới</th>
                     <th className="py-2 pr-3 font-medium">Can chi</th>
                     <th className="py-2 pr-3 font-medium">Tuổi mụ</th>

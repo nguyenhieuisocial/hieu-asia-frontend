@@ -422,19 +422,19 @@ export default function XemHopNhomPage() {
                       </CardHeader>
                       <CardContent className="space-y-3">
                         <div>
-                          <div className="text-[12px] uppercase tracking-wider text-rose-300/80">
+                          <div className="text-eyebrow uppercase text-rose-300/80">
                             Dễ trục trặc
                           </div>
                           <p className="mt-1 text-sm text-foreground/85">{f.tip.vulnerability}</p>
                         </div>
                         <div>
-                          <div className="text-[12px] uppercase tracking-wider text-emerald-300/80">
+                          <div className="text-eyebrow uppercase text-emerald-300/80">
                             Cách nhìn lại
                           </div>
                           <p className="mt-1 text-sm text-foreground/85">{f.tip.reframe}</p>
                         </div>
                         <div>
-                          <div className="text-[12px] uppercase tracking-wider text-gold-700">
+                          <div className="text-eyebrow uppercase text-gold-700">
                             Thử nói
                           </div>
                           <p className="mt-1 rounded-md border border-gold/20 bg-gold/5 px-3 py-2 text-sm italic text-foreground/90">

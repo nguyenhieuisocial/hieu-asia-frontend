@@ -544,7 +544,7 @@ function FieldTextarea({
 function ReviewField({ label, body }: { label: string; body: string }) {
   return (
     <div>
-      <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+      <h3 className="text-eyebrow font-medium uppercase text-muted-foreground">
         {label}
       </h3>
       <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">

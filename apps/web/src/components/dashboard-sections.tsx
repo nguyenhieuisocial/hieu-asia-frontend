@@ -228,7 +228,7 @@ export function SettingsSection({
                   type="button"
                   onClick={() => setState((s) => ({ ...s, language: lang }))}
                   className={cn(
-                    'rounded-md border px-3 py-1.5 text-xs uppercase tracking-wider',
+                    'rounded-md border px-3 py-1.5 text-eyebrow uppercase',
                     state.language === lang
                       ? 'border-gold bg-gold/15 text-gold'
                       : 'border-gold/20 text-muted-foreground hover:border-gold/40',

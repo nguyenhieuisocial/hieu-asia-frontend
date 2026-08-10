@@ -476,7 +476,7 @@ export function BatTuChecker({
                   .filter((tg) => TEN_GOD_PLAIN[tg] && !seen.has(tg) && seen.add(tg));
                 return tenGods.length ? (
                   <div className="mt-3 space-y-1 border-t border-border/50 pt-3">
-                    <p className="text-[13px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                    <p className="text-eyebrow font-medium uppercase text-muted-foreground">
                       Thập Thần trong lá số bạn nghĩa là
                     </p>
                     {tenGods.map((tg) => (

@@ -158,7 +158,7 @@ export default function ChangelogPage() {
                       {tag && (
                         <span
                           className={[
-                            'inline-flex items-center rounded-full border px-2.5 py-0.5 text-[12px] font-medium uppercase tracking-wider',
+                            'inline-flex items-center rounded-full border px-2.5 py-0.5 text-eyebrow font-medium uppercase',
                             tag.cls,
                           ].join(' ')}
                         >

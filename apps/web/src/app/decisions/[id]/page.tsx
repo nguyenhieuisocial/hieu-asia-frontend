@@ -295,7 +295,7 @@ export default function DecisionBriefPage() {
 
                   {opt.risks.length > 0 && (
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      <p className="text-eyebrow font-medium uppercase text-muted-foreground">
                         Rủi ro:
                       </p>
                       <ul className="mt-2 space-y-1.5">
@@ -316,7 +316,7 @@ export default function DecisionBriefPage() {
                   )}
 
                   <div className="inline-flex items-start gap-2 rounded-md border border-jade/30 bg-jade/[0.04] px-3 py-2 text-sm text-foreground/85">
-                    <span className="text-xs font-medium uppercase tracking-wider text-jade">
+                    <span className="text-eyebrow font-medium uppercase text-jade">
                       Nên chọn khi:
                     </span>
                     <span className="text-sm">{opt.bestWhen}</span>

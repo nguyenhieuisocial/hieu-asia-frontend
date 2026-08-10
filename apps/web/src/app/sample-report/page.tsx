@@ -486,7 +486,7 @@ export default function SampleReportPage() {
               {/* Visible part */}
               <div className="mt-4 space-y-3">
                 <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                     Màu sắc hỗ trợ
                   </p>
                   <p className="mt-1 text-sm text-foreground/85">
@@ -496,7 +496,7 @@ export default function SampleReportPage() {
                   </p>
                 </div>
                 <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                     Hướng làm việc tốt
                   </p>
                   <p className="mt-1 text-sm text-foreground/85">
@@ -510,7 +510,7 @@ export default function SampleReportPage() {
               <div className="relative mt-3">
                 <div className="space-y-3 blur-[4px] select-none" aria-hidden="true">
                   <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                       Nghề hợp thiên mệnh
                     </p>
                     <p className="mt-1 text-sm text-foreground/60">
@@ -518,7 +518,7 @@ export default function SampleReportPage() {
                     </p>
                   </div>
                   <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                       3 ngày tốt tháng 7/2026
                     </p>
                     <p className="mt-1 text-sm text-foreground/60">
@@ -526,7 +526,7 @@ export default function SampleReportPage() {
                     </p>
                   </div>
                   <div className="rounded-lg border border-border/50 bg-card/40 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
                       Checklist 30 ngày cụ thể
                     </p>
                     <p className="mt-1 text-sm text-foreground/60">

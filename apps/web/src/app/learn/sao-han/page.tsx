@@ -212,7 +212,7 @@ export default function LearnSaoHanPage() {
                           {s.name}
                         </span>
                       </div>
-                      <p className="mt-0.5 text-[13px] uppercase tracking-wide text-muted-foreground">
+                      <p className="mt-0.5 text-eyebrow uppercase text-muted-foreground">
                         {TYPE_LABEL[s.type]}
                       </p>
                       <p className="mt-1.5 text-xs leading-relaxed text-foreground/60">

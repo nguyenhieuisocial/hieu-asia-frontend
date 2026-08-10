@@ -57,7 +57,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.palaces.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-eyebrow font-medium uppercase text-muted-foreground">
             12 cung ({chart.palaces.length})
           </p>
           <ul
@@ -78,7 +78,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.mainStars.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-eyebrow font-medium uppercase text-muted-foreground">
             Chính tinh ({chart.mainStars.length})
           </p>
           <ul role="list" className="mt-2 flex flex-wrap gap-1.5">
@@ -96,7 +96,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.auxStars.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-eyebrow font-medium uppercase text-muted-foreground">
             Phụ tinh ({chart.auxStars.length})
           </p>
           <ul role="list" className="mt-2 flex flex-wrap gap-1.5">
@@ -114,7 +114,7 @@ export function StructuredChart({ chart, className }: StructuredChartProps) {
 
       {chart.transformations.length > 0 && (
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-eyebrow font-medium uppercase text-muted-foreground">
             Tứ hoá ({chart.transformations.length})
           </p>
           <ul role="list" className="mt-2 flex flex-wrap gap-1.5">

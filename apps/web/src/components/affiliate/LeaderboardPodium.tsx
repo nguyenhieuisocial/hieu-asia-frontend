@@ -83,7 +83,7 @@ function PodiumCard({ row, rank }: { row: PodiumRow; rank: number }) {
         {row.affiliate_code || '—'}
       </div>
       {row.tier && (
-        <div className="mt-2 inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[12px] font-medium uppercase tracking-wider text-gold">
+        <div className="mt-2 inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-eyebrow font-medium uppercase text-gold">
           {row.tier}
         </div>
       )}

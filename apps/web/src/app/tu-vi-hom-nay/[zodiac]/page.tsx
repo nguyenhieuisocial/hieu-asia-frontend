@@ -317,7 +317,7 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-border bg-card/40 p-3">
-      <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="text-eyebrow uppercase text-muted-foreground">{label}</div>
       <div className="mt-1 text-base font-semibold text-foreground">{value || '—'}</div>
     </div>
   );

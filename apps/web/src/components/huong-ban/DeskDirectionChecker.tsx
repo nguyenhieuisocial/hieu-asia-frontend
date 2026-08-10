@@ -142,7 +142,7 @@ export function DeskDirectionChecker({
             {/* 2 gợi ý chính: làm việc & học */}
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
+                <p className="text-eyebrow font-semibold uppercase text-emerald-700 dark:text-emerald-300">
                   Ngồi làm việc — quay mặt về
                 </p>
                 <p className="mt-1 text-lg font-bold text-foreground">{result.workDir.direction}</p>
@@ -151,7 +151,7 @@ export function DeskDirectionChecker({
                 </p>
               </div>
               <div className="rounded-xl border border-sky-500/30 bg-sky-500/[0.06] p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-sky-700 dark:text-sky-300">
+                <p className="text-eyebrow font-semibold uppercase text-sky-700 dark:text-sky-300">
                   Ngồi học — quay mặt về
                 </p>
                 <p className="mt-1 text-lg font-bold text-foreground">{result.studyDir.direction}</p>

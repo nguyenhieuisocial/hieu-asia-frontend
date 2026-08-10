@@ -258,7 +258,7 @@ export function LaSoChecker({
                         <strong className="text-foreground">{c.name}</strong>
                         {c.nameHan && <span className="text-xs text-muted-foreground">{c.nameHan}</span>}
                         <span
-                          className={`rounded-full border px-2 py-0.5 text-[12px] uppercase tracking-wide ${
+                          className={`rounded-full border px-2 py-0.5 text-eyebrow uppercase ${
                             c.polarity === 'cát'
                               ? 'border-gold/40 text-gold'
                               : c.polarity === 'hung'

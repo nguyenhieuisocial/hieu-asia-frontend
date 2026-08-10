@@ -311,7 +311,7 @@ export default function BatTuMethodologyPage() {
           <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card/40">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
-                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
+                <tr className="border-b border-border text-left text-eyebrow uppercase text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Trụ</th>
                   <th className="px-4 py-3 font-medium">Đại diện</th>
                   <th className="px-4 py-3 font-medium">Quan hệ với chủ</th>
@@ -386,7 +386,7 @@ export default function BatTuMethodologyPage() {
           <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card/40">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
-                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
+                <tr className="border-b border-border text-left text-eyebrow uppercase text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Hành</th>
                   <th className="px-4 py-3 font-medium">Tương sinh</th>
                   <th className="px-4 py-3 font-medium">Tương khắc</th>

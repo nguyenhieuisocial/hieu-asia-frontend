@@ -262,7 +262,7 @@ export default function JournalEntryPage() {
                     <Card className="border-emerald-500/25 bg-emerald-900/[0.06]">
                       <CardContent className="space-y-5 p-5">
                         <div>
-                          <h3 className="text-xs font-medium uppercase tracking-wider text-emerald-300/80">
+                          <h3 className="text-eyebrow font-medium uppercase text-emerald-300/80">
                             Kết quả thực
                           </h3>
                           <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">
@@ -270,7 +270,7 @@ export default function JournalEntryPage() {
                           </p>
                         </div>
                         <div>
-                          <h3 className="text-xs font-medium uppercase tracking-wider text-emerald-300/80">
+                          <h3 className="text-eyebrow font-medium uppercase text-emerald-300/80">
                             Bài học
                           </h3>
                           <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">
@@ -381,7 +381,7 @@ export default function JournalEntryPage() {
                 className="space-y-4 sm:sticky sm:top-24"
               >
                 <div className="rounded-lg border border-gold/25 bg-gold/[0.04] p-4">
-                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-gold-700">
+                  <div className="flex items-center gap-2 text-eyebrow font-medium uppercase text-gold-700">
                     <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
                     Review sau
                   </div>

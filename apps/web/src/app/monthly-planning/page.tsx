@@ -154,7 +154,7 @@ export default function MonthlyPlanningPage() {
             <p className="font-mono text-eyebrow uppercase text-gold-700">
               Kế hoạch tháng
             </p>
-            <span className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/10 px-2.5 py-0.5 text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+            <span className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/10 px-2.5 py-0.5 text-eyebrow font-medium uppercase text-muted-foreground">
               Tham khảo chung
             </span>
           </div>

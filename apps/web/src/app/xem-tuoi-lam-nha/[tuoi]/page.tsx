@@ -118,7 +118,7 @@ export default async function XemTuoiLamNhaYearPage({
                   (was pushed behind an undiscovered horizontal scroll). */}
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr className="border-b border-border text-left text-eyebrow uppercase text-muted-foreground">
                     <th className="py-2 pr-3 font-medium">Năm khởi công</th>
                     <th className="py-2 pr-3 font-medium">Can chi</th>
                     <th className="py-2 pr-3 font-medium">Tuổi mụ</th>

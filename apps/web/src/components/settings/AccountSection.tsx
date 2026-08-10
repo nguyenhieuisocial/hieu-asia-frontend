@@ -58,7 +58,7 @@ export function AccountSection({ userId }: AccountSectionProps) {
       </div>
 
       <div className="border-t border-border pt-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+        <p className="text-eyebrow font-semibold uppercase text-muted-foreground">
           Quản lý tài khoản
         </p>
         <ul className="mt-3 space-y-2 text-sm">
@@ -85,7 +85,7 @@ export function AccountSection({ userId }: AccountSectionProps) {
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="rounded-lg border border-border bg-card/30 px-3 py-2">
-      <div className="text-[12px] font-semibold uppercase tracking-widest text-foreground/40">{label}</div>
+      <div className="text-eyebrow font-semibold uppercase text-foreground/40">{label}</div>
       <div className="mt-1 text-sm">{value}</div>
     </div>
   );

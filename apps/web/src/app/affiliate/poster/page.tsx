@@ -64,7 +64,7 @@ function PosterInner() {
             </div>
           )}
 
-          <p className="mt-6 text-xs uppercase tracking-[0.12em] text-ink/50">
+          <p className="mt-6 text-eyebrow uppercase text-ink/50">
             Quét để mở
           </p>
           <p className="mt-1 break-all font-mono text-base font-semibold text-gold-700">
@@ -74,7 +74,7 @@ function PosterInner() {
             <p className="mt-2 text-xs text-ink/60">Mã giới thiệu: {code}</p>
           ) : null}
 
-          <p className="mt-8 text-[13px] uppercase tracking-[0.12em] text-ink/45">
+          <p className="mt-8 text-eyebrow uppercase text-ink/45">
             hieu.asia · Hiểu mình. Quyết định mình.
           </p>
         </CardContent>

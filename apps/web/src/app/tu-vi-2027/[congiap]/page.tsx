@@ -297,7 +297,7 @@ export default async function TuVi2027ConGiapPage({
           {/* Desktop: bảng đầy đủ */}
           <div className="hidden overflow-x-auto rounded-lg border border-border sm:block">
             <table className="w-full text-left text-sm">
-              <thead className="bg-card/60 text-xs uppercase tracking-wider text-muted-foreground">
+              <thead className="bg-card/60 text-eyebrow uppercase text-muted-foreground">
                 <tr>
                   <th scope="col" className="px-3 py-2 font-medium">
                     Năm sinh
