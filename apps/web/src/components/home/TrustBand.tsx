@@ -61,9 +61,9 @@ export function TrustBand() {
               Nhập một chuyện đã xảy ra với bạn. Xem lá số năm đó nói gì, đúng tới đâu, và cả chỗ nó trật.
             </p>
           </div>
-          <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-eyebrow uppercase text-primary transition-colors group-hover:text-foreground">
+          <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-eyebrow uppercase text-primary transition-colors group-hover:text-foreground group-focus-within:text-foreground">
             Kiểm chứng lá số của tôi
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-focus-within:translate-x-0.5" />
           </span>
         </Link>
 
