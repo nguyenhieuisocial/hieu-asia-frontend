@@ -1,0 +1,59 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chuyển động — chuẩn mới</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-ed:cubic-bezier(.34,1.56,.64,1);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+.serif{font-family:'Newsreader',Georgia,serif}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+.grid{display:flex;gap:20px;flex-wrap:wrap}
+.demo{width:200px;border:1px solid var(--border);border-radius:2px;padding:18px}
+.demo h4{margin:0 0 2px;font-size:13px}
+.demo p{margin:0 0 14px;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+.btn{display:inline-block;background:var(--accent);color:var(--bg);border-radius:2px;padding:10px 18px;font-family:'Newsreader',Georgia,serif;font-size:15px;cursor:pointer;border:0;transition:filter .15s var(--ease-soft),transform .15s var(--ease-soft)}
+.btn:hover{filter:brightness(1.1)}.btn:active{transform:scale(.98)}
+.lift{border:1px solid var(--border);border-radius:2px;padding:14px;font-size:13px;transition:transform .3s var(--ease-soft),box-shadow .3s var(--ease-soft);cursor:pointer}
+.lift:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.10)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.reveal{animation:rise .5s var(--ease-soft) infinite alternate;font-size:14px}
+.uline{position:relative;font-size:14px;cursor:pointer;display:inline-block;padding-bottom:2px}
+.uline::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--accent);transition:width .3s var(--ease-soft)}
+.uline:hover::after{width:100%}
+.tok{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+.tok span{font-size:12px;border:1px solid var(--border);border-radius:2px;padding:5px 10px}
+.note{margin-top:20px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){.reveal{animation:none}.lift,.btn,.uline::after{transition:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Bộ token chuyển động <span style="font-size:11px;letter-spacing:.1em;color:var(--accent);vertical-align:middle">· MỚI — trục “sống động”</span></h2>
+  <p class="sub">Nhanh mà lễ độ: chuyển động phục vụ việc đọc, không trình diễn</p>
+  <div class="tok">
+    <span><b>fast</b> 150ms — hover, press</span>
+    <span><b>base</b> 300ms — reveal, mở/đóng</span>
+    <span><b>slow</b> 500ms — vào trang, chương</span>
+    <span><b>ease-soft</b> (.25,.8,.4,1) — mặc định</span>
+    <span><b>ease-editorial</b> (.34,1.56,.64,1) — nảy nhẹ, dùng tiết chế</span>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Primitive — rê chuột để thử</h2>
+  <p class="sub">4 mẫu duy nhất, dùng lại toàn site</p>
+  <div class="grid">
+    <div class="demo"><h4>Press</h4><p>nút · scale .98 + sáng 10%</p><button class="btn">Lập lá số</button></div>
+    <div class="demo"><h4>Hover-lift</h4><p>thẻ · nổi 3px + bóng mềm</p><div class="lift">Thẻ công cụ</div></div>
+    <div class="demo"><h4>Reveal</h4><p>vào màn · mờ→rõ + nhích 8px</p><div class="reveal serif" style="font-size:17px">Đoạn văn hiện dần</div></div>
+    <div class="demo"><h4>Ink-underline</h4><p>link · gạch chân chạy</p><span class="uline">Xem phương pháp</span></div>
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Cam kết kỹ thuật</h2>
+  <p class="sub">Đẹp nhưng không trả giá</p>
+  <div class="note"><b>CSS-first:</b> cả 4 primitive thuần CSS, không thêm JS — không làm nặng trang. <b>Tôn trọng người dùng:</b> bật “giảm chuyển động” trong máy là mọi hiệu ứng tắt (thẻ này cũng vậy — thử bật mà xem). <b>Kỷ luật:</b> mỗi màn tối đa 1 nhịp reveal; không parallax, không particle, không auto-play vô hạn.</div>
+</div>
+
+</body></html>

@@ -1,0 +1,120 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Thẻ giá — theo luật vault</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 28px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;align-items:stretch;max-width:1020px}
+.tier{position:relative;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:2px;background:var(--bg);padding:32px;transition:transform .3s var(--ease-soft),box-shadow .3s var(--ease-soft)}
+.tier:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.10)}
+.tier.best{border-color:var(--accent)}
+.badge{position:absolute;top:-10px;left:32px;background:var(--accent);color:var(--bg);border-radius:2px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px}
+.tname{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.tsub{font-size:12px;color:var(--muted);margin:0 0 18px}
+.price{margin:0 0 22px;font-size:14px;color:var(--muted)}
+.price b{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:28px;color:var(--fg);letter-spacing:-0.01em}
+.bullets{list-style:none;margin:0 0 24px;padding:0;font-size:14px;line-height:1.7}
+.bullets li::before{content:"·";color:var(--accent);font-weight:700;margin-right:10px}
+.fit{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);font-size:13px;font-style:italic;line-height:1.5;color:var(--muted)}
+.btn{margin-top:18px;border:1px solid transparent;border-radius:2px;padding:11px 20px;font-family:'Newsreader',Georgia,serif;font-size:15px;cursor:pointer;background:transparent;color:var(--fg);transition:filter .15s var(--ease-soft),transform .15s var(--ease-soft),background .15s var(--ease-soft),color .15s var(--ease-soft)}
+.btn.primary{background:var(--accent);color:var(--bg)}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn.secondary{border-color:var(--fg)}
+.btn.secondary:hover{background:var(--fg);color:var(--bg)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{margin-top:24px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){.tier,.btn{transition:none}.tier:hover{transform:none;box-shadow:none}.btn:active{transform:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — ba gói cạnh nhau</h2>
+  <p class="sub">Tên gói serif · giá viết thành cụm · gạch đầu dòng là dấu “·”</p>
+  <!-- ba gói · lưới tự co, thẻ cao bằng nhau -->
+  <div class="row">
+    <!-- gói miễn phí -->
+    <div class="tier">
+      <h3 class="tname">Tự khám phá</h3>
+      <p class="tsub">Bắt đầu từ tò mò</p>
+      <p class="price"><b>₫0</b> / mãi mãi</p>
+      <ul class="bullets">
+        <li>Lá số Tử Vi &amp; Bát tự đầy đủ</li>
+        <li>Luận giải nhập môn từng cung</li>
+        <li>Cẩm nang đọc miễn phí</li>
+        <li>Lưu một hồ sơ</li>
+      </ul>
+      <p class="fit">Hợp nếu bạn mới tò mò, muốn xem lá số nói gì trước đã.</p>
+      <button class="btn secondary">Bắt đầu miễn phí</button>
+    </div>
+    <!-- gói tháng · khuyên dùng -->
+    <div class="tier best">
+      <span class="badge">Khuyên dùng</span>
+      <h3 class="tname">Đồng hành</h3>
+      <p class="tsub">Đọc chậm có người cùng</p>
+      <p class="price"><b>₫199.000</b> / tháng</p>
+      <ul class="bullets">
+        <li>Báo cáo tháng theo lá số của bạn</li>
+        <li>Hỏi mentor 30 câu mỗi tháng</li>
+        <li>Đại vận &amp; lưu niên chi tiết</li>
+        <li>Không giới hạn hồ sơ người thân</li>
+      </ul>
+      <p class="fit">Hợp nếu bạn muốn có người đọc chậm cùng, mỗi tháng một nhịp.</p>
+      <button class="btn primary">Chọn Đồng hành</button>
+      <p class="tsub" style="margin:10px 0 0">Huỷ lúc nào cũng được — không khoá cửa.</p>
+    </div>
+    <!-- gói năm -->
+    <div class="tier">
+      <h3 class="tname">Tri kỷ</h3>
+      <p class="tsub">Một năm hiểu mình</p>
+      <p class="price"><b>₫1.990.000</b> / năm</p>
+      <ul class="bullets">
+        <li>Toàn bộ quyền lợi Đồng hành</li>
+        <li>Phiên đọc riêng cùng mentor mỗi quý</li>
+        <li>Báo cáo năm đóng bản PDF</li>
+        <li>Ưu tiên dùng tính năng mới</li>
+      </ul>
+      <p class="fit">Hợp nếu bạn coi đây là dự án hiểu mình cả năm.</p>
+      <button class="btn secondary">Chọn Tri kỷ</button>
+    </div>
+  </div>
+  <div class="note">
+    <b>Luật vault 138:</b> tên gói đặt bằng serif như tên chương sách; giá LUÔN viết thành
+    cụm “₫199.000 / tháng” — không tách số to đơn vị nhỏ kiểu siêu thị; gạch đầu dòng dùng
+    dấu “·” — tuyệt đối không dấu ✓; thẻ nào cũng có dòng “Hợp nếu…” để người đọc
+    tự nhận ra mình.
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — một gói trên nền than</h2>
+  <p class="sub">Cùng khuôn thẻ · badge tối đa một chiếc mỗi hàng</p>
+  <div class="row" style="max-width:360px">
+    <!-- gói năm · nhắc lại trên nền than -->
+    <div class="tier">
+      <h3 class="tname">Tri kỷ</h3>
+      <p class="tsub">Một năm hiểu mình</p>
+      <p class="price"><b>₫1.990.000</b> / năm</p>
+      <ul class="bullets">
+        <li>Toàn bộ quyền lợi Đồng hành</li>
+        <li>Phiên đọc riêng cùng mentor mỗi quý</li>
+        <li>Báo cáo năm đóng bản PDF</li>
+      </ul>
+      <p class="fit">
+        Hợp nếu bạn coi đây là dự án hiểu mình cả năm,
+        không phải trò xem chơi.
+      </p>
+      <button class="btn secondary">Chọn Tri kỷ</button>
+    </div>
+  </div>
+  <div class="note">
+    <b>Giọng bán hàng của nhà:</b> không đếm ngược, không “chỉ hôm nay”, không gạch giá ảo.
+    Gói đắt nhất cũng chỉ được một thẻ lặng lẽ — người đọc tự quyết,
+    mình chỉ nói thật gói nào hợp ai.
+  </div>
+</div>
+
+</body></html>

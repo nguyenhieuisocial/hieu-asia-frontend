@@ -1,0 +1,219 @@
+<!-- @dsCard group="Page patterns" -->
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Khuôn màn đọc báo cáo — “Khoảng lặng”</title>
+<style>
+:root{
+  --bg:#F3ECDD;
+  --fg:#171411;
+  --accent:#A47532;
+  --border:#CCC0A6;
+  --muted:rgba(23,20,17,.62);
+  --t-fast:150ms;
+  --t-base:300ms;
+  --t-slow:500ms;
+  --ease-soft:cubic-bezier(.25,.8,.4,1);
+  --ease-ed:cubic-bezier(.34,1.56,.64,1);
+}
+.night{
+  --bg:#15110C;
+  --fg:#E8DCC1;
+  --accent:#D4A261;
+  --border:#3A3122;
+  --muted:rgba(232,220,193,.62);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;line-height:1.2;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 28px}
+.zl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+.screen{
+  max-width:520px;
+  border:1px solid var(--border);
+  border-radius:2px;
+  background:var(--bg);
+  overflow:hidden;
+}
+.progress{height:2px;background:var(--border)}
+.progress i{
+  display:block;
+  height:2px;
+  width:38%;
+  background:var(--accent);
+  transition:width var(--t-base) var(--ease-soft);
+}
+.read{max-width:420px;margin:0 auto;padding:34px 30px 30px}
+.kicker{
+  font-size:11px;
+  line-height:1.4;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 20px;
+}
+.kicker b{color:var(--accent);font-weight:600}
+.body{
+  font-family:'Newsreader',Georgia,serif;
+  font-size:19px;
+  line-height:1.45;
+  margin:0 0 20px;
+}
+.quote{border-left:2px solid var(--accent);padding:6px 0 6px 18px;margin:26px 0}
+.quote p{
+  font-family:'Newsreader',Georgia,serif;
+  font-style:italic;
+  font-size:24px;
+  line-height:1.2;
+  margin:0;
+}
+.quote cite{
+  display:block;
+  font-style:normal;
+  font-size:11px;
+  line-height:1.4;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:8px;
+}
+.chap-gap{
+  position:relative;
+  height:88px;
+  border-top:1px dashed var(--border);
+  border-bottom:1px dashed var(--border);
+  margin:34px 0 22px;
+}
+.chap-gap span{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.ord{
+  font-family:'Newsreader',Georgia,serif;
+  font-size:88px;
+  line-height:.95;
+  letter-spacing:-.02em;
+  opacity:.16;
+  margin:0;
+}
+.chap-title{
+  font-family:'Newsreader',Georgia,serif;
+  font-weight:500;
+  font-size:32px;
+  line-height:1.15;
+  letter-spacing:-.01em;
+  margin:-30px 0 18px;
+}
+.cfoot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-top:1px solid var(--border);
+  margin-top:36px;
+  padding-top:18px;
+}
+.cfoot span{
+  font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;
+  font-size:11px;
+  line-height:1.4;
+  letter-spacing:.06em;
+  color:var(--muted);
+}
+.btn-line{
+  font-family:'Newsreader',Georgia,serif;
+  font-size:16px;
+  line-height:1;
+  background:transparent;
+  color:var(--fg);
+  border:1px solid var(--border);
+  border-radius:2px;
+  padding:10px 18px;
+  cursor:pointer;
+  transition:border-color var(--t-fast) var(--ease-soft),color var(--t-fast) var(--ease-soft),transform var(--t-fast) var(--ease-soft);
+}
+.btn-line:hover{border-color:var(--accent);color:var(--accent)}
+.btn-line:active{transform:scale(.98)}
+.note{
+  margin-top:26px;
+  padding:14px 16px;
+  border-left:2px solid var(--accent);
+  font-size:13px;
+  line-height:1.5;
+  letter-spacing:.02em;
+  color:var(--muted);
+  max-width:520px;
+}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){
+  .btn-line{transition:none}
+  .progress i{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="panel night">
+  <h2>Màn đọc báo cáo — mặc định nghiêng đêm “Khoảng lặng”</h2>
+  <p class="sub">Đọc dài là nghi thức: một cột, không sidebar, không banner</p>
+  <p class="zl">① Thanh tiến trình đọc · mảnh 2px sát mép trên · đầy theo cuộn</p>
+  <div class="screen">
+    <div class="progress"><i></i></div>
+    <div class="read">
+      <p class="zl">② Cột đọc · một cột · max 680px ≈ 68 ký tự/dòng · serif 19</p>
+      <p class="kicker"><b>Chương hai</b> · Mệnh và Thân · 12 phút đọc</p>
+      <p class="body">Người mệnh Sơn Hạ Hoả không cháy bùng như lửa đỉnh trời. Ngọn lửa dưới chân núi ấm chậm, giữ nhiệt lâu — gặp việc lớn không hoảng, gặp việc nhỏ không khinh suất.</p>
+      <p class="body">Tử Vi độc toạ tại Ngọ là cách người xưa gọi “vua ngồi đúng ngai”: chủ kiến mạnh, ghét bị sai khiến, hợp đường tự dựng cơ nghiệp hơn làm thuê lâu dài.</p>
+      <p class="zl">③ Trích dẫn · viền trái accent 2px · serif italic</p>
+      <div class="quote">
+        <p>“Thân cư Quan lộc — nửa sau đời người, tự tay mình dựng.”</p>
+        <cite>Cách cục · chương hai</cite>
+      </div>
+      <p class="zl">④ Ngắt chương · khoảng chapter 176px (vẽ ½) + ordinal serif mờ</p>
+      <div class="chap-gap"><span>khoảng chapter · 176px — thẻ vẽ ½ tỷ lệ</span></div>
+      <p class="ord">III</p>
+      <h3 class="chap-title">Đại vận 26 – 35</h3>
+      <p class="body">Bước vào vận Tân Mão, Hoá Lộc chiếu mệnh. Mười năm này nên dồn sức cho một nghề — cái mình giỏi nhất, không phải cái dễ nhất.</p>
+      <p class="zl">⑤ Footer chương · mono nhỏ + nút chương kế</p>
+      <div class="cfoot">
+        <span>hết chương ba · còn 4 chương</span>
+        <button class="btn-line">Chương kế →</button>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>“Khoảng lặng”:</b> màn đọc mặc định nền Charcoal #15110C, chữ Bone #E8DCC1 — đọc đêm không chói, đúng lúc người ta thường mở báo cáo của mình. Chuyển động duy nhất: vào chương mới ordinal + tiêu đề reveal một nhịp 500ms (slow) · ease-soft; thanh tiến trình chuyển width 300ms (base). Bật “giảm chuyển động” là tắt hết.</div>
+</div>
+
+<div class="panel">
+  <h2>Vẫn đọc tốt ban ngày</h2>
+  <p class="sub">Cùng khuôn trên giấy Paper — người đọc chọn, hệ không ép</p>
+  <div class="screen">
+    <div class="progress"><i style="width:72%"></i></div>
+    <div class="read">
+      <p class="kicker"><b>Chương năm</b> · Hôn nhân · 9 phút đọc</p>
+      <p class="body">Cung Phu Thê có Thiên Đồng, Thiên Lương — người bạn đời đến muộn mà đằm, càng về sau càng được nhờ.</p>
+      <div class="quote">
+        <p>“Duyên muộn không phải duyên thiếu — là duyên chín.”</p>
+        <cite>Cách cục · chương năm</cite>
+      </div>
+      <div class="cfoot">
+        <span>hết chương năm · còn 1 chương</span>
+        <button class="btn-line">Chương kế →</button>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Đổi chế độ:</b> nút ngày/đêm đặt đầu màn đọc, nhớ lựa chọn theo máy người dùng. Hai chế độ dùng chung một khuôn — chỉ đổi giấy và mực, không đổi bố cục; trích dẫn, ordinal, footer chương giữ nguyên vị trí để mắt không phải học lại.</div>
+</div>
+
+</body>
+</html>

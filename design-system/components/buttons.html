@@ -1,0 +1,126 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nút — 2px, nhãn serif</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 28px}
+.grid{display:grid;grid-template-columns:96px repeat(5,minmax(132px,max-content));gap:16px 18px;align-items:center;overflow-x:auto;padding-bottom:4px}
+.gh{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.gl{font-size:13px;color:var(--muted)}
+.btn{display:inline-block;border:1px solid transparent;border-radius:2px;padding:10px 20px;background:transparent;color:var(--fg);font-family:'Newsreader',Georgia,serif;font-size:15px;line-height:1.2;cursor:pointer;transition:filter .15s var(--ease-soft),transform .15s var(--ease-soft),background .15s var(--ease-soft),color .15s var(--ease-soft)}
+.primary{background:var(--accent);color:var(--bg)}
+.secondary{border-color:var(--fg)}
+.ghost{color:var(--accent);padding-left:8px;padding-right:8px;text-underline-offset:4px}
+.primary:hover,.primary.is-hover{filter:brightness(1.1)}
+.secondary:hover,.secondary.is-hover{background:var(--fg);color:var(--bg)}
+.ghost:hover,.ghost.is-hover{text-decoration:underline}
+.btn:active,.btn.is-press{transform:scale(.98)}
+.btn:focus-visible,.btn.is-focus{outline:2px solid var(--accent);outline-offset:2px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.pair{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.note{margin-top:24px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){.btn{transition:none}.btn:active,.btn.is-press{transform:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — 3 biến thể × 5 trạng thái</h2>
+  <p class="sub">Cột hover · nhấn · focus ép cứng để so cạnh nhau — nút nào cũng bấm thử được</p>
+  <div class="grid">
+    <span></span>
+    <span class="gh">Mặc định</span>
+    <span class="gh">Hover</span>
+    <span class="gh">Nhấn</span>
+    <span class="gh">Focus</span>
+    <span class="gh">Tắt</span>
+    <!-- hàng Primary -->
+    <span class="gl">Primary</span>
+    <span><button class="btn primary">Lập lá số</button></span>
+    <span><button class="btn primary is-hover">Lập lá số</button></span>
+    <span><button class="btn primary is-press">Lập lá số</button></span>
+    <span><button class="btn primary is-focus">Lập lá số</button></span>
+    <span><button class="btn primary" disabled>Lập lá số</button></span>
+    <!-- hàng Secondary -->
+    <span class="gl">Secondary</span>
+    <span><button class="btn secondary">Xem phương pháp</button></span>
+    <span><button class="btn secondary is-hover">Xem phương pháp</button></span>
+    <span><button class="btn secondary is-press">Xem phương pháp</button></span>
+    <span><button class="btn secondary is-focus">Xem phương pháp</button></span>
+    <span><button class="btn secondary" disabled>Xem phương pháp</button></span>
+    <!-- hàng Ghost -->
+    <span class="gl">Ghost</span>
+    <span><button class="btn ghost">Bỏ qua bước này</button></span>
+    <span><button class="btn ghost is-hover">Bỏ qua bước này</button></span>
+    <span><button class="btn ghost is-press">Bỏ qua bước này</button></span>
+    <span><button class="btn ghost is-focus">Bỏ qua bước này</button></span>
+    <span><button class="btn ghost" disabled>Bỏ qua bước này</button></span>
+  </div>
+  <div class="note">
+    <b>Recipe:</b> góc 2px — không pill, không bóng, không gradient. Nhãn đặt bằng serif
+    15px, như tít báo thu nhỏ. Hover đáp trong 150ms; nhấn co <b>scale(.98)</b>; focus là
+    vòng 2px màu nhấn cách nút 2px — người dùng bàn phím không bao giờ lạc.
+    Disabled mờ 45%, giữ nguyên chỗ đứng.
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — cùng hình khối, đổi vai màu</h2>
+  <p class="sub">Primary chuyển Gold-soft trên than · secondary đảo nền–chữ khi hover</p>
+  <div class="grid">
+    <span></span>
+    <span class="gh">Mặc định</span>
+    <span class="gh">Hover</span>
+    <span class="gh">Nhấn</span>
+    <span class="gh">Focus</span>
+    <span class="gh">Tắt</span>
+    <!-- hàng Primary -->
+    <span class="gl">Primary</span>
+    <span><button class="btn primary">Đọc báo cáo</button></span>
+    <span><button class="btn primary is-hover">Đọc báo cáo</button></span>
+    <span><button class="btn primary is-press">Đọc báo cáo</button></span>
+    <span><button class="btn primary is-focus">Đọc báo cáo</button></span>
+    <span><button class="btn primary" disabled>Đọc báo cáo</button></span>
+    <!-- hàng Secondary -->
+    <span class="gl">Secondary</span>
+    <span><button class="btn secondary">Hỏi mentor</button></span>
+    <span><button class="btn secondary is-hover">Hỏi mentor</button></span>
+    <span><button class="btn secondary is-press">Hỏi mentor</button></span>
+    <span><button class="btn secondary is-focus">Hỏi mentor</button></span>
+    <span><button class="btn secondary" disabled>Hỏi mentor</button></span>
+    <!-- hàng Ghost -->
+    <span class="gl">Ghost</span>
+    <span><button class="btn ghost">Để sau</button></span>
+    <span><button class="btn ghost is-hover">Để sau</button></span>
+    <span><button class="btn ghost is-press">Để sau</button></span>
+    <span><button class="btn ghost is-focus">Để sau</button></span>
+    <span><button class="btn ghost" disabled>Để sau</button></span>
+  </div>
+  <div class="note">
+    <b>Đêm đổi vai màu, không đổi hình khối:</b> primary chuyển Gold-soft trên than —
+    hover vẫn sáng thêm 10% thay vì đổi màu khác; secondary đảo nền–chữ.
+    Tương phản nhãn giữ mức AA ở cả năm trạng thái.
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Cặp nút — trật tự trên trang</h2>
+  <p class="sub">Một màn một primary · nút là câu kết, không phải tiếng rao</p>
+  <div class="pair">
+    <button class="btn primary">Lập lá số miễn phí</button>
+    <button class="btn ghost">Xem lá số mẫu</button>
+  </div>
+  <div class="pair">
+    <button class="btn secondary">Quay lại</button>
+    <button class="btn primary">Tiếp tục</button>
+  </div>
+  <div class="note">
+    <b>Luật xếp:</b> primary luôn đứng phía hành-động-tiến (phải hoặc đầu dòng đọc),
+    ghost làm lối thoát nhẹ. Hai primary cạnh nhau là hai tiếng rao — cấm.
+    Khoảng cách trong cặp: 12px, không hơn không kém.
+  </div>
+</div>
+
+</body></html>

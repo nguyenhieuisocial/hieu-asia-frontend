@@ -1,0 +1,125 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Điều hướng — nav &amp; footer</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+.cap{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.mock{border:1px solid var(--border);border-radius:2px;background:var(--bg);margin-bottom:28px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:14px 22px}
+.brand{font-family:'Newsreader',Georgia,serif;font-size:20px;font-weight:500}
+.brand b{color:var(--accent);font-weight:500}
+.links{display:flex;gap:22px;font-size:13px}
+.uline{position:relative;cursor:pointer;padding-bottom:2px}
+.uline::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--accent);transition:width .3s var(--ease-soft)}
+.uline:hover::after{width:100%}
+.cta{border:0;border-radius:2px;background:var(--accent);color:var(--bg);font-family:'Newsreader',Georgia,serif;font-size:14px;padding:8px 16px;cursor:pointer;transition:filter .15s var(--ease-soft),transform .15s var(--ease-soft)}
+.cta:hover{filter:brightness(1.1)}
+.cta:active{transform:scale(.98)}
+.cta:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.burger{font-size:18px;line-height:1;cursor:pointer;background:none;border:0;color:var(--fg);padding:4px 8px}
+.burger:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.drawer{width:300px}
+.dhead{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border)}
+.ditem{display:block;padding:16px 20px;border-bottom:1px solid var(--border);font-family:'Newsreader',Georgia,serif;font-size:19px;cursor:pointer;transition:padding-left .15s var(--ease-soft),color .15s var(--ease-soft)}
+.ditem:hover{padding-left:26px;color:var(--accent)}
+.dcta{padding:20px}
+.dcta .cta{width:100%;padding:12px;font-size:15px}
+.foot{padding:28px 22px 0;border-top:1px solid var(--border);display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:24px}
+.foot h5{margin:0 0 12px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.foot a{display:block;font-size:13px;color:var(--fg);text-decoration:none;margin-bottom:9px;width:fit-content}
+.tagline{font-family:'Newsreader',Georgia,serif;font-style:italic;font-size:15px;color:var(--muted);margin:10px 0 0;max-width:200px;line-height:1.5}
+.legal{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:18px 22px;margin-top:24px;border-top:1px solid var(--border);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.note{margin-top:4px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){.uline::after,.cta,.ditem{transition:none}.cta:active{transform:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — nav desktop &amp; drawer mobile</h2>
+  <p class="sub">Thu nhỏ tỷ lệ · rê chuột thử gạch chân chạy</p>
+  <!-- nav ngang · desktop -->
+  <p class="cap">Desktop ≥ 1024</p>
+  <div class="mock">
+    <div class="nav">
+      <span class="brand">hiểu<b>.</b>asia</span>
+      <span class="links">
+        <span class="uline">Công cụ</span>
+        <span class="uline">Học</span>
+        <span class="uline">Cẩm nang</span>
+        <span class="uline">Giá</span>
+      </span>
+      <button class="cta">Lập lá số</button>
+    </div>
+  </div>
+  <!-- drawer · mobile -->
+  <p class="cap">Mobile · drawer trượt từ phải</p>
+  <div class="mock drawer">
+    <div class="dhead">
+      <span class="brand">hiểu<b>.</b>asia</span>
+      <button class="burger" aria-label="Đóng menu">✕</button>
+    </div>
+    <span class="ditem">Công cụ</span>
+    <span class="ditem">Học</span>
+    <span class="ditem">Cẩm nang</span>
+    <span class="ditem">Giá</span>
+    <div class="dcta">
+      <button class="cta">Lập lá số</button>
+    </div>
+  </div>
+  <div class="note">
+    <b>Nav là dòng tít, không phải thanh công cụ:</b> chữ 13px thưa, gạch chân chạy khi
+    rê — không nền hover, không bo hộp. Drawer dùng serif 19px như mục lục sách;
+    mở/đóng 300ms ease-soft, trượt ngang 8px kèm mờ→rõ.
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — footer bốn cột</h2>
+  <p class="sub">Chân trang là trang cuối của tờ báo — có chữ ký, không có rác</p>
+  <div class="mock" style="border:0;background:transparent;margin-bottom:0">
+    <div class="foot">
+      <!-- cột thương hiệu -->
+      <div>
+        <span class="brand">hiểu<b>.</b>asia</span>
+        <p class="tagline">Như giấy cũ, không như app bói.</p>
+      </div>
+      <!-- cột công cụ -->
+      <div>
+        <h5>Công cụ</h5>
+        <a class="uline">Lá số Tử Vi</a>
+        <a class="uline">Bát tự bốn trụ</a>
+        <a class="uline">Đại vận</a>
+        <a class="uline">Đường đời</a>
+      </div>
+      <!-- cột học -->
+      <div>
+        <h5>Học</h5>
+        <a class="uline">Tử vi nhập môn</a>
+        <a class="uline">Cẩm nang</a>
+        <a class="uline">Phương pháp</a>
+      </div>
+      <!-- cột về chúng tôi -->
+      <div>
+        <h5>Về chúng tôi</h5>
+        <a class="uline">Tuyên ngôn</a>
+        <a class="uline">Giá</a>
+        <a class="uline">Quyền riêng tư</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 hiểu.asia</span>
+      <span>Không phán mệnh · Không bán giải hạn</span>
+    </div>
+  </div>
+  <div class="note">
+    <b>Luật chân trang:</b> tối đa 4 cột, mỗi cột tối đa 5 liên kết — footer không phải
+    sơ đồ site. Dòng pháp lý viết HOA 11px giãn .12em,
+    kèm đúng một câu cam kết thương hiệu.
+  </div>
+</div>
+
+</body></html>

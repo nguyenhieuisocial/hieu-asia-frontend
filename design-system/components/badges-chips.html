@@ -1,0 +1,121 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Huy hiệu &amp; chip</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+.g{margin-bottom:28px}
+.g:last-of-type{margin-bottom:0}
+.g b{display:block;font-size:13px;margin-bottom:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.badge{display:inline-block;border-radius:2px;background:var(--accent);color:var(--bg);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px}
+.badge.line{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:2px;padding:6px 12px;font-size:13px;background:transparent;color:var(--fg);cursor:pointer;transition:border-color .15s var(--ease-soft),transform .15s var(--ease-soft)}
+.chip:hover{border-color:var(--fg)}
+.chip:active{transform:scale(.98)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip.on{border-color:var(--accent);color:var(--accent)}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}
+.sdot{width:8px;height:8px;border-radius:50%;flex:none}
+.tag{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);border-radius:2px;padding:4px 10px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tag.soon{border-style:dashed}
+.ctx{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:2px;padding:16px 20px;margin-bottom:10px;max-width:340px}
+.note{margin-top:24px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){.chip{transition:none}.chip:active{transform:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — ba giọng nhãn</h2>
+  <p class="sub">Badge nói thay thương hiệu · chip cầm được · tag chỉ trạng thái</p>
+  <!-- nhóm badge -->
+  <div class="g">
+    <b>Badge — lời khuyên của nhà</b>
+    <div class="row">
+      <span class="badge">Khuyên dùng</span>
+      <span class="badge line">Mới</span>
+    </div>
+  </div>
+  <!-- nhóm chip ngũ hành -->
+  <div class="g">
+    <b>Chip ngũ hành — lọc &amp; gắn nhãn dữ liệu, bấm thử</b>
+    <div class="row">
+      <button class="chip on"><i class="dot" style="background:#7D8A98"></i>Kim</button>
+      <button class="chip"><i class="dot" style="background:#6B8154"></i>Mộc</button>
+      <button class="chip"><i class="dot" style="background:#3F5D6F"></i>Thuỷ</button>
+      <button class="chip"><i class="dot" style="background:#A44A36"></i>Hoả</button>
+      <button class="chip"><i class="dot" style="background:#A07842"></i>Thổ</button>
+    </div>
+  </div>
+  <!-- nhóm tag trạng thái -->
+  <div class="g">
+    <b>Tag trạng thái — thì thầm, không hô hào</b>
+    <div class="row">
+      <span class="tag"><i class="sdot" style="background:#6B8154"></i>Ổn định</span>
+      <span class="tag">Beta</span>
+      <span class="tag soon">Sắp có</span>
+      <span class="tag"><i class="sdot" style="background:#A44A36"></i>Gián đoạn</span>
+    </div>
+  </div>
+  <!-- nhóm ngữ cảnh thật -->
+  <div class="g">
+    <b>Đặt trong ngữ cảnh — đầu thẻ giá &amp; chú thích biểu đồ</b>
+    <div class="ctx">
+      <span class="serif" style="font-size:20px">Đồng hành</span>
+      <span class="badge">Khuyên dùng</span>
+    </div>
+    <div class="row">
+      <span class="tag"><i class="sdot" style="background:#3F5D6F"></i>Thuỷ vượng</span>
+      <span class="tag"><i class="sdot" style="background:#A07842"></i>Thổ nhược</span>
+    </div>
+  </div>
+  <div class="note">
+    <b>Phân vai:</b> badge là giọng chủ nhà — nền đặc màu nhấn, mỗi khung hình đúng MỘT
+    chiếc. Chip là vật cầm được: viền 1px, chọn thì viền chuyển màu nhấn. Tag chỉ ghi chú
+    trạng thái — chữ mờ, chấm ngũ hành khi cần, “sắp có” viền đứt như nét bút chì.
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — giữ nguyên hệ, đổi nền</h2>
+  <p class="sub">Ngũ hành giữ nguyên 5 hex cả hai chế độ</p>
+  <!-- nhóm badge -->
+  <div class="g">
+    <b>Badge</b>
+    <div class="row">
+      <span class="badge">Khuyên dùng</span>
+      <span class="badge line">Mới</span>
+    </div>
+  </div>
+  <!-- nhóm chip ngũ hành -->
+  <div class="g">
+    <b>Chip ngũ hành</b>
+    <div class="row">
+      <button class="chip"><i class="dot" style="background:#7D8A98"></i>Kim</button>
+      <button class="chip"><i class="dot" style="background:#6B8154"></i>Mộc</button>
+      <button class="chip on"><i class="dot" style="background:#3F5D6F"></i>Thuỷ</button>
+      <button class="chip"><i class="dot" style="background:#A44A36"></i>Hoả</button>
+      <button class="chip"><i class="dot" style="background:#A07842"></i>Thổ</button>
+    </div>
+  </div>
+  <!-- nhóm tag trạng thái -->
+  <div class="g">
+    <b>Tag trạng thái</b>
+    <div class="row">
+      <span class="tag"><i class="sdot" style="background:#6B8154"></i>Ổn định</span>
+      <span class="tag">Beta</span>
+      <span class="tag soon">Sắp có</span>
+      <span class="tag"><i class="sdot" style="background:#A44A36"></i>Gián đoạn</span>
+    </div>
+  </div>
+  <div class="note">
+    <b>Luật màu:</b> ngũ hành chỉ hiện ở chấm tròn — không bao giờ làm nền chip hay badge.
+    Nền đặc duy nhất trong hệ nhãn là badge màu nhấn. Nhiều màu nền cạnh nhau
+    là quầy xổ số, không phải tờ báo.
+  </div>
+</div>
+
+</body></html>

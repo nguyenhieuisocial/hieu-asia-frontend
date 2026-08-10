@@ -1,0 +1,42 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chữ — thang 9 bậc</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+.serif{font-family:'Newsreader',Georgia,serif}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 28px}
+.spec{display:flex;align-items:baseline;gap:20px;border-bottom:1px solid var(--border);padding:14px 0}
+.spec:last-child{border-bottom:0}
+.meta{width:170px;flex:none;font-size:11px;letter-spacing:.08em;color:var(--muted);line-height:1.5}
+.meta b{display:block;color:var(--fg);font-size:12px;letter-spacing:.02em}
+.sample{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.note{margin-top:22px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+</style></head><body>
+
+<div class="panel">
+  <h2>Cặp font — mỗi font một vai</h2>
+  <p class="sub">Newsreader (serif hiển thị) · Be Vietnam Pro (sans nội dung) — chỉ 2 font, không thêm</p>
+
+  <div class="spec"><div class="meta"><b>1 · Hero display</b>88 / 0.95 / −0.02em · serif</div><div class="sample serif" style="font-size:56px;font-weight:300;letter-spacing:-0.02em">Hiểu mình<i style="color:var(--accent)">.</i></div></div>
+  <div class="spec"><div class="meta"><b>2 · H1 section</b>64 / 1.0 / −0.02em · serif</div><div class="sample serif" style="font-size:44px;font-weight:400;letter-spacing:-0.02em">Lá số của bạn</div></div>
+  <div class="spec"><div class="meta"><b>3 · H2 block</b>48 / 1.05 / −0.02em · serif</div><div class="sample serif" style="font-size:34px;letter-spacing:-0.02em">Năm lăng kính, một bức tranh</div></div>
+  <div class="spec"><div class="meta"><b>4 · H3 sub-block</b>32 / 1.15 / −0.01em · serif</div><div class="sample serif" style="font-size:26px">Đại vận mười năm</div></div>
+  <div class="spec"><div class="meta"><b>5 · Card title</b>24 / 1.2 · serif</div><div class="sample serif" style="font-size:22px">Đối thoại</div></div>
+  <div class="spec"><div class="meta"><b>6 · Lede</b>19 / 1.45 · sans</div><div class="sample" style="font-size:19px">Không hù doạ, không bán giải hạn — chỉ dữ kiện thật.</div></div>
+  <div class="spec"><div class="meta"><b>7 · Body</b>16 / 1.55 · sans</div><div class="sample" style="font-size:16px">Lá số Tử Vi tính thật từ ngày giờ sinh của bạn.</div></div>
+  <div class="spec"><div class="meta"><b>8 · Caption</b>13 / 1.5 / .02em · sans</div><div class="sample" style="font-size:13px;color:var(--muted)">Cập nhật 10/08 · biên tập tay bởi founder</div></div>
+  <div class="spec"><div class="meta"><b>9 · Label</b>11 / 1.4 / .12em · sans</div><div class="sample" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)">Lá số thật · không phán mệnh</div></div>
+</div>
+
+<div class="panel night">
+  <h2 class="serif">Chế độ đêm — cùng thang, chữ Bone</h2>
+  <p class="sub">Kiểm tra tương phản AA ở mọi bậc</p>
+  <div class="spec"><div class="meta"><b>Display + italic accent</b></div><div class="sample serif" style="font-size:40px;font-weight:300">Đọc <i style="color:var(--accent)">chậm</i> lại một nhịp</div></div>
+  <div class="spec"><div class="meta"><b>Body + label</b></div><div class="sample"><span style="font-size:16px">Cung Mệnh của bạn tại Ngọ.</span>&nbsp;&nbsp;<span style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)">Bát tự · 4 trụ</span></div></div>
+  <div class="note"><b>Chữ nghiêng serif</b> là giọng đặc trưng thương hiệu — dùng cho MỘT từ nhấn trong tiêu đề, không nghiêng cả câu. Nhãn 11px luôn viết HOA + giãn .12em (token <b>text-eyebrow</b> — sẽ quét 419 chỗ viết tay về token này ở Giai đoạn 2).</div>
+</div>
+
+</body></html>

@@ -1,0 +1,120 @@
+<!-- @dsCard group="Data-viz" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ngũ hành — thanh &amp; radar</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+h3{font-size:13px;font-weight:600;margin:0 0 14px}
+.wrap{display:flex;gap:44px;flex-wrap:wrap;align-items:flex-start}
+.col{min-width:250px;flex:1}
+.brow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bname{width:44px;font-size:13px}
+.track{flex:1;height:12px;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.track i{display:block;height:100%}
+.bval{width:36px;font-size:11px;letter-spacing:.06em;color:var(--muted);text-align:right}
+.cap{font-size:11px;letter-spacing:.08em;color:var(--muted);margin-top:12px}
+.radar{width:230px;max-width:100%}
+.leg{font-size:13px;line-height:1.6;color:var(--muted);margin:20px 0 0;padding-left:18px}
+.leg li{margin-bottom:6px}
+.leg b{color:var(--fg)}
+.tok{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.tok span{font-size:12px;border:1px solid var(--border);border-radius:2px;padding:5px 10px;color:var(--muted)}
+.note{margin-top:20px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+
+<!-- Radar định nghĩa MỘT lần — hai panel tham chiếu; lưới currentColor, dữ liệu hex cố định -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<g id="radar5">
+  <!-- lưới 3 nấc + 5 trục: cấu trúc, đi theo màu chữ -->
+  <g fill="none" stroke="currentColor">
+    <polygon points="110,30 186.1,85.3 157,174.7 63,174.7 33.9,85.3" stroke-opacity=".45" stroke-width="1.25"/>
+    <polygon points="110,56.7 160.7,93.5 141.4,153.1 78.6,153.1 59.3,93.5" stroke-opacity=".18" stroke-width=".75"/>
+    <polygon points="110,83.3 135.4,101.8 125.7,131.6 94.3,131.6 84.6,101.8" stroke-opacity=".18" stroke-width=".75"/>
+    <g stroke-opacity=".15" stroke-width=".75">
+      <line x1="110" y1="110" x2="110" y2="30"/>
+      <line x1="110" y1="110" x2="186.1" y2="85.3"/>
+      <line x1="110" y1="110" x2="157" y2="174.7"/>
+      <line x1="110" y1="110" x2="63" y2="174.7"/>
+      <line x1="110" y1="110" x2="33.9" y2="85.3"/>
+    </g>
+  </g>
+  <!-- vùng dữ liệu: MỘT lớp accent, không tô 5 màu chồng nhau -->
+  <g style="color:var(--accent)">
+    <polygon points="110,38 148.5,97.5 143.1,155.5 96.8,128.2 77.9,99.6" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-opacity=".8" stroke-width="1.5"/>
+  </g>
+  <!-- đỉnh dữ liệu: mỗi hành đúng hex của nó, cố định cả 2 chế độ -->
+  <circle cx="110" cy="38" r="3.5" fill="#7D8A98"/>
+  <circle cx="148.5" cy="97.5" r="3.5" fill="#6B8154"/>
+  <circle cx="143.1" cy="155.5" r="3.5" fill="#3F5D6F"/>
+  <circle cx="96.8" cy="128.2" r="3.5" fill="#A44A36"/>
+  <circle cx="77.9" cy="99.6" r="3.5" fill="#A07842"/>
+  <g fill="currentColor" fill-opacity=".75" font-family="'Be Vietnam Pro',system-ui,sans-serif" font-size="10.5" letter-spacing=".06em">
+    <text x="110" y="18" text-anchor="middle">Kim</text>
+    <text x="191" y="84" text-anchor="start">Mộc</text>
+    <text x="160" y="190" text-anchor="start">Thuỷ</text>
+    <text x="60" y="190" text-anchor="end">Hoả</text>
+    <text x="29" y="84" text-anchor="end">Thổ</text>
+  </g>
+</g>
+</defs></svg>
+
+<div class="panel">
+  <h2>Ngũ hành — hai dạng chuẩn</h2>
+  <p class="sub">Ngày · cùng một bộ số: Kim 32 · Mộc 18 · Thuỷ 25 · Hoả 10 · Thổ 15</p>
+  <div class="wrap">
+    <div class="col">
+      <h3>Thanh ngang — đọc tỷ trọng chính xác</h3>
+      <div class="brow"><span class="bname">Kim</span><div class="track"><i style="width:32%;background:#7D8A98"></i></div><span class="bval">32%</span></div>
+      <div class="brow"><span class="bname">Mộc</span><div class="track"><i style="width:18%;background:#6B8154"></i></div><span class="bval">18%</span></div>
+      <div class="brow"><span class="bname">Thuỷ</span><div class="track"><i style="width:25%;background:#3F5D6F"></i></div><span class="bval">25%</span></div>
+      <div class="brow"><span class="bname">Hoả</span><div class="track"><i style="width:10%;background:#A44A36"></i></div><span class="bval">10%</span></div>
+      <div class="brow"><span class="bname">Thổ</span><div class="track"><i style="width:15%;background:#A07842"></i></div><span class="bval">15%</span></div>
+      <p class="cap">Tổng 100% — tính từ 4 trụ + tàng can</p>
+    </div>
+    <div class="col">
+      <h3>Radar — thấy thế cục trong một cái nhìn</h3>
+      <svg class="radar" viewBox="0 0 220 200" role="img" aria-label="Radar 5 hành, Kim vượng Hoả suy"><use href="#radar5"/></svg>
+    </div>
+  </div>
+  <ul class="leg">
+    <li><b>Hex cố định:</b> Kim #7D8A98 · Mộc #6B8154 · Thuỷ #3F5D6F · Hoả #A44A36 · Thổ #A07842 — giữ nguyên cả hai chế độ.</li>
+    <li><b>Phân vai:</b> thanh ngang cho báo cáo (đọc số), radar cho tổng quan đầu trang (đọc dáng).</li>
+    <li><b>Một lớp dữ liệu:</b> radar tô accent 12%, đỉnh mang màu hành — không tô 5 màu chồng nhau.</li>
+    <li><b>Không trục số trên radar:</b> lưới 3 nấc là đủ đọc dáng — con số chính xác đã có ở thanh ngang.</li>
+  </ul>
+  <div class="tok">
+    <span>track 12px · viền 1px</span>
+    <span>đỉnh r3.5 · nét vùng 1.5</span>
+    <span>nhãn trục 10.5px</span>
+    <span>lưới radar 3 nấc</span>
+    <span>góc 2px</span>
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — dữ liệu không đổi màu</h2>
+  <p class="sub">Lưới currentColor tự đổi · hex ngũ hành đứng yên</p>
+  <div class="wrap">
+    <div class="col">
+      <h3>Thanh ngang</h3>
+      <div class="brow"><span class="bname">Kim</span><div class="track"><i style="width:32%;background:#7D8A98"></i></div><span class="bval">32%</span></div>
+      <div class="brow"><span class="bname">Mộc</span><div class="track"><i style="width:18%;background:#6B8154"></i></div><span class="bval">18%</span></div>
+      <div class="brow"><span class="bname">Thuỷ</span><div class="track"><i style="width:25%;background:#3F5D6F"></i></div><span class="bval">25%</span></div>
+      <div class="brow"><span class="bname">Hoả</span><div class="track"><i style="width:10%;background:#A44A36"></i></div><span class="bval">10%</span></div>
+      <div class="brow"><span class="bname">Thổ</span><div class="track"><i style="width:15%;background:#A07842"></i></div><span class="bval">15%</span></div>
+      <p class="cap">Cùng bộ số — đối chiếu hai chế độ cạnh nhau</p>
+    </div>
+    <div class="col">
+      <h3>Radar</h3>
+      <svg class="radar" viewBox="0 0 220 200" role="img" aria-label="Radar 5 hành, chế độ đêm"><use href="#radar5"/></svg>
+    </div>
+  </div>
+  <div class="note"><b>Luật:</b> màu hành là danh tính dữ liệu — đổi theo theme là phá trí nhớ thị giác của người đọc. Nhãn trục đi theo màu chữ, chấm đỉnh mang hex hành. Tô phẳng, không gradient, không glow.</div>
+</div>
+
+</body></html>

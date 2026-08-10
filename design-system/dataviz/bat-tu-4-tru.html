@@ -1,0 +1,121 @@
+<!-- @dsCard group="Data-viz" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bát tự bốn trụ — viền ngũ hành</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.tag{font-size:11px;letter-spacing:.1em;color:var(--accent);vertical-align:middle}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+.cols{display:flex;gap:16px;flex-wrap:wrap}
+.tru{width:128px}
+.tlab{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.tlab i{font-style:normal;color:var(--accent)}
+.cell{border:1px solid var(--border);border-left:2px solid var(--border);border-radius:2px;padding:10px 12px;margin-bottom:8px}
+.cell b{display:block;font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:22px;line-height:1.15}
+.cell span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mini{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
+.mini span{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%}
+.note{margin-top:20px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Bốn trụ can – chi <span class="tag">· ĐỀ XUẤT MỚI — viền ngũ hành</span></h2>
+  <p class="sub">Ngày · ví dụ: nam mệnh sinh 08:30 — 14/03/1994</p>
+  <div class="cols">
+    <div class="tru">
+      <p class="tlab">Năm</p>
+      <div class="cell" style="border-left-color:#6B8154">
+        <b>Giáp</b><span>Mộc · dương</span>
+      </div>
+      <div class="cell" style="border-left-color:#A07842">
+        <b>Tuất</b><span>Thổ · dương</span>
+      </div>
+    </div>
+    <div class="tru">
+      <p class="tlab">Tháng</p>
+      <div class="cell" style="border-left-color:#A44A36">
+        <b>Đinh</b><span>Hoả · âm</span>
+      </div>
+      <div class="cell" style="border-left-color:#6B8154">
+        <b>Mão</b><span>Mộc · âm</span>
+      </div>
+    </div>
+    <div class="tru">
+      <p class="tlab">Ngày <i>· nhật chủ</i></p>
+      <div class="cell" style="border-left-color:#7D8A98">
+        <b>Canh</b><span>Kim · dương</span>
+      </div>
+      <div class="cell" style="border-left-color:#A07842">
+        <b>Thìn</b><span>Thổ · dương</span>
+      </div>
+    </div>
+    <div class="tru">
+      <p class="tlab">Giờ</p>
+      <div class="cell" style="border-left-color:#3F5D6F">
+        <b>Quý</b><span>Thuỷ · âm</span>
+      </div>
+      <div class="cell" style="border-left-color:#A07842">
+        <b>Mùi</b><span>Thổ · âm</span>
+      </div>
+    </div>
+  </div>
+  <div class="mini">
+    <span><i class="dot" style="background:#7D8A98"></i>Kim</span>
+    <span><i class="dot" style="background:#6B8154"></i>Mộc</span>
+    <span><i class="dot" style="background:#3F5D6F"></i>Thuỷ</span>
+    <span><i class="dot" style="background:#A44A36"></i>Hoả</span>
+    <span><i class="dot" style="background:#A07842"></i>Thổ</span>
+  </div>
+  <div class="note"><b>ĐỀ XUẤT MỚI:</b> mỗi ô viền trái 2px đúng màu ngũ hành của can/chi trong ô — lướt mắt một giây đã thấy thế cục (ở đây: Thổ dày, Kim nhật chủ có gốc) trước khi đọc chữ. Trụ Ngày gắn nhãn <b>nhật chủ</b> màu nhấn: gốc so chiếu của mọi luận đoán.</div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — cùng một mã màu hành</h2>
+  <p class="sub">Hex ngũ hành giữ nguyên · khung và chữ tự đổi theo chế độ</p>
+  <div class="cols">
+    <div class="tru">
+      <p class="tlab">Năm</p>
+      <div class="cell" style="border-left-color:#6B8154">
+        <b>Giáp</b><span>Mộc · dương</span>
+      </div>
+      <div class="cell" style="border-left-color:#A07842">
+        <b>Tuất</b><span>Thổ · dương</span>
+      </div>
+    </div>
+    <div class="tru">
+      <p class="tlab">Tháng</p>
+      <div class="cell" style="border-left-color:#A44A36">
+        <b>Đinh</b><span>Hoả · âm</span>
+      </div>
+      <div class="cell" style="border-left-color:#6B8154">
+        <b>Mão</b><span>Mộc · âm</span>
+      </div>
+    </div>
+    <div class="tru">
+      <p class="tlab">Ngày <i>· nhật chủ</i></p>
+      <div class="cell" style="border-left-color:#7D8A98">
+        <b>Canh</b><span>Kim · dương</span>
+      </div>
+      <div class="cell" style="border-left-color:#A07842">
+        <b>Thìn</b><span>Thổ · dương</span>
+      </div>
+    </div>
+    <div class="tru">
+      <p class="tlab">Giờ</p>
+      <div class="cell" style="border-left-color:#3F5D6F">
+        <b>Quý</b><span>Thuỷ · âm</span>
+      </div>
+      <div class="cell" style="border-left-color:#A07842">
+        <b>Mùi</b><span>Thổ · âm</span>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Luật:</b> 5 hex ngũ hành cố định ở cả hai chế độ — nhận diện hành là trí nhớ thị giác, không đổi theo theme, không bao giờ làm nền cả ô. Nhãn trụ 11px HOA giãn .12em · can–chi serif 22px · góc 2px, không pill.</div>
+</div>
+
+</body></html>

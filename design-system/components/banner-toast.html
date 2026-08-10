@@ -1,0 +1,121 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Băng thông báo &amp; toast</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--err:#A44A36;--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+.cap{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.vp{position:relative;height:210px;border:1px solid var(--border);border-radius:2px;background:var(--bg);overflow:hidden}
+.sk{height:8px;border-radius:2px;background:var(--border);opacity:.5;margin:12px 24px 0}
+.consent{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--bg);padding:12px 18px;font-size:12px;line-height:1.5}
+.consent p{margin:0;max-width:280px;color:var(--muted)}
+.acts{display:flex;gap:10px;align-items:center}
+.bs{border:1px solid transparent;border-radius:2px;padding:7px 14px;background:transparent;color:var(--fg);font-family:'Newsreader',Georgia,serif;font-size:13px;cursor:pointer;transition:filter .15s var(--ease-soft),transform .15s var(--ease-soft),background .15s var(--ease-soft),color .15s var(--ease-soft)}
+.bs.primary{background:var(--accent);color:var(--bg)}
+.bs.primary:hover{filter:brightness(1.1)}
+.bs.line{border-color:var(--fg)}
+.bs.line:hover{background:var(--fg);color:var(--bg)}
+.bs:active{transform:scale(.98)}
+.bs:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.locale{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:10px;border-bottom:1px solid var(--border);background:var(--bg);padding:9px 40px 9px 18px;font-size:12px;color:var(--muted)}
+.locale u{color:var(--accent);cursor:pointer;text-underline-offset:3px}
+.x{position:absolute;right:10px;top:6px;border:0;background:none;color:var(--muted);font-size:14px;cursor:pointer;padding:4px;transition:color .15s var(--ease-soft)}
+.x:hover{color:var(--fg)}
+.x:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.toast{position:absolute;right:16px;bottom:16px;width:250px;border:1px solid var(--border);border-left:2px solid var(--accent);border-radius:2px;background:var(--bg);padding:12px 30px 12px 14px;box-shadow:0 8px 22px rgba(0,0,0,.12);animation:rise .3s var(--ease-soft)}
+.toast.err{border-left-color:var(--err)}
+.toast b{display:block;font-size:13px;margin-bottom:3px}
+.toast p{margin:0;font-size:12px;line-height:1.5;color:var(--muted)}
+.toast .x{top:8px}
+.note{margin-top:24px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){.toast{animation:none}.bs,.x{transition:none}.bs:active{transform:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — hai băng thông báo</h2>
+  <p class="sub">Khung mô phỏng viewport · vạch mờ là nội dung trang</p>
+  <div class="wrap">
+    <!-- consent · ghim đáy -->
+    <div>
+      <p class="cap">Consent · ghim đáy</p>
+      <div class="vp">
+        <div class="sk" style="width:55%"></div>
+        <div class="sk" style="width:82%"></div>
+        <div class="sk" style="width:70%"></div>
+        <div class="consent">
+          <p>Trang dùng cookie để nhớ lá số bạn đang xem — không theo dõi quảng cáo.</p>
+          <span class="acts">
+            <button class="bs line">Chỉ cần thiết</button>
+            <button class="bs primary">Đồng ý</button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- locale · ghim đỉnh -->
+    <div>
+      <p class="cap">Locale · ghim đỉnh</p>
+      <div class="vp">
+        <div class="sk" style="width:60%;margin-top:52px"></div>
+        <div class="sk" style="width:85%"></div>
+        <div class="sk" style="width:74%"></div>
+        <div class="locale">
+          Bạn đang xem bản tiếng Việt — <u>read in English</u>
+          <button class="x" aria-label="Đóng">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <b>Luật lớp phủ:</b> consent ghim đáy, locale ghim đỉnh — không bao giờ che nội dung
+    giữa trang, không modal chặn đọc. Hai nút consent ngang vai: “Chỉ cần thiết” đứng
+    đàng hoàng cạnh “Đồng ý”, không bị giấu thành chữ mờ.
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — toast góc phải dưới</h2>
+  <p class="sub">Vào bằng reveal 8px · tự ẩn sau 5 giây · luôn có nút đóng</p>
+  <div class="wrap">
+    <!-- toast xác nhận -->
+    <div>
+      <p class="cap">Toast · xác nhận lặng lẽ</p>
+      <div class="vp">
+        <div class="sk" style="width:65%"></div>
+        <div class="sk" style="width:80%"></div>
+        <div class="sk" style="width:58%"></div>
+        <div class="toast">
+          <b>Đã lưu lá số</b>
+          <p>Tìm lại trong mục Hồ sơ của bạn.</p>
+          <button class="x" aria-label="Đóng">✕</button>
+        </div>
+      </div>
+    </div>
+    <!-- toast lỗi · viền trái đỏ Hoả -->
+    <div>
+      <p class="cap">Toast lỗi · đỏ Hoả</p>
+      <div class="vp">
+        <div class="sk" style="width:70%"></div>
+        <div class="sk" style="width:84%"></div>
+        <div class="sk" style="width:62%"></div>
+        <div class="toast err">
+          <b>Chưa lưu được lá số</b>
+          <p>Mạng gián đoạn — thử lại, dữ liệu bạn nhập vẫn còn nguyên.</p>
+          <button class="x" aria-label="Đóng">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <b>Kỷ luật thông báo:</b> mỗi thời điểm tối đa MỘT lớp phủ trên màn; toast chỉ nói việc
+    vừa xong, không rao khuyến mãi. Nét nhấn duy nhất là viền trái 2px — màu nhấn cho tin
+    lành, đỏ Hoả #A44A36 cho tin xấu; toast lỗi không tự ẩn, chờ người dùng đóng.
+  </div>
+</div>
+
+</body></html>

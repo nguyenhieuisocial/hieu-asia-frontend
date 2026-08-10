@@ -1,0 +1,122 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Thẻ — ba khuôn, một khung</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.serif{font-family:'Newsreader',Georgia,serif}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 28px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.card{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:2px;background:var(--bg);padding:32px;cursor:pointer;transition:transform .3s var(--ease-soft),box-shadow .3s var(--ease-soft)}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.10)}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+.card h3{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:22px;line-height:1.2;margin:0 0 10px}
+.card p{font-size:14px;line-height:1.6;color:var(--muted);margin:0}
+.cap{margin-top:18px;font-size:12px;color:var(--muted)}
+.result{border-top:2px solid var(--accent)}
+.big{font-size:30px;line-height:1.15}
+.kv{margin-top:14px;font-size:13px;color:var(--muted)}
+.uline{position:relative;display:inline-block;margin-top:16px;font-size:13px;color:var(--accent);padding-bottom:2px;width:fit-content}
+.uline::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--accent);transition:width .3s var(--ease-soft)}
+.card:hover .uline::after{width:100%}
+.tname{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 6px}
+.price{font-size:14px;color:var(--muted);margin:0 0 16px}
+.price b{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;color:var(--fg)}
+.bullets{list-style:none;margin:0;padding:0;font-size:14px;line-height:1.6}
+.bullets li::before{content:"·";color:var(--accent);font-weight:700;margin-right:10px}
+.fit{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);font-size:13px;font-style:italic;color:var(--muted)}
+.note{margin-top:24px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){.card,.uline::after{transition:none}.card:hover{transform:none;box-shadow:none}}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày — editorial · kết quả công cụ · gói</h2>
+  <p class="sub">Một khung 1px chung · khác nhau ở nhịp bên trong, không ở trang trí</p>
+  <div class="row">
+    <!-- thẻ editorial · dẫn vào bài đọc -->
+    <div class="card">
+      <p class="eyebrow">Cẩm nang · Bát tự</p>
+      <h3>Đọc trụ ngày trước, đừng đọc trụ năm</h3>
+      <p>
+        Trụ ngày là bạn — can ngày làm chủ lá số.
+        Trụ năm chỉ là bối cảnh gia đình thuở nhỏ.
+      </p>
+      <span class="uline">Đọc tiếp →</span>
+      <span class="cap">8 phút đọc · 10/08 · biên tập tay</span>
+    </div>
+    <!-- thẻ kết quả công cụ · viền trên 2px màu nhấn -->
+    <div class="card result">
+      <p class="eyebrow">Kết quả · Tử vi</p>
+      <h3 class="big">Mệnh tại Ngọ</h3>
+      <p>
+        Tử Vi toạ thủ — người cầm nhịp,
+        không thích bị cầm nhịp.
+      </p>
+      <div class="kv">Canh Ngọ · Hoả lục cục · giờ Tuất</div>
+      <span class="uline">Đọc luận giải đầy đủ →</span>
+    </div>
+    <!-- thẻ gói · bản rút, bản đầy đủ ở thẻ Thẻ giá -->
+    <div class="card">
+      <h3 class="tname">Đồng hành</h3>
+      <p class="price"><b>₫199.000</b> / tháng</p>
+      <ul class="bullets">
+        <li>Báo cáo tháng theo lá số của bạn</li>
+        <li>Hỏi mentor 30 câu mỗi tháng</li>
+      </ul>
+      <p class="fit">Hợp nếu bạn muốn có người đọc chậm cùng.</p>
+    </div>
+  </div>
+  <div class="note">
+    <b>Luật khung:</b> viền 1px, góc 2px, đệm trong 32px (token card), phẳng như giấy lúc
+    nghỉ — bóng chỉ xuất hiện khi rê chuột (nổi 3px, 300ms). Thẻ kết quả được thêm đúng
+    MỘT nét: viền trên 2px màu nhấn — dấu hiệu “đây là của bạn”.
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm — cùng ba khuôn trên nền than</h2>
+  <p class="sub">Bề mặt trải nghiệm: lá số · báo cáo · mentor</p>
+  <div class="row">
+    <!-- thẻ editorial -->
+    <div class="card">
+      <p class="eyebrow">Cẩm nang · Tử vi</p>
+      <h3>Tuần triệt không phải án tử</h3>
+      <p>
+        Tuần triệt chặn dòng khí một nhịp — như dấu phẩy trong câu,
+        không phải dấu chấm hết.
+      </p>
+      <span class="uline">Đọc tiếp →</span>
+      <span class="cap">6 phút đọc · 09/08 · biên tập tay</span>
+    </div>
+    <!-- thẻ kết quả công cụ -->
+    <div class="card result">
+      <p class="eyebrow">Kết quả · Bát tự</p>
+      <h3 class="big">Nhật chủ Giáp Mộc</h3>
+      <p>
+        Cây lớn đầu xuân — cần Thuỷ dưỡng,
+        ngại Kim vượng cắt tỉa quá tay.
+      </p>
+      <div class="kv">Giáp Tý · thân vượng · dụng thần Thuỷ</div>
+      <span class="uline">Đọc luận giải đầy đủ →</span>
+    </div>
+    <!-- thẻ gói -->
+    <div class="card">
+      <h3 class="tname">Tri kỷ</h3>
+      <p class="price"><b>₫1.990.000</b> / năm</p>
+      <ul class="bullets">
+        <li>Toàn bộ báo cáo chuyên sâu</li>
+        <li>Phiên đọc riêng cùng mentor</li>
+      </ul>
+      <p class="fit">Hợp nếu bạn coi đây là dự án hiểu mình cả năm.</p>
+    </div>
+  </div>
+  <div class="note">
+    <b>Đêm không đổi khuôn:</b> vẫn khung 1px, vẫn nhấn kiềm chế — chỉ giấy đổi thành
+    than, mực đổi thành xương. Người dùng chuyển chế độ
+    không phải học lại giao diện.
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,154 @@
+<!-- @dsCard group="Page patterns" -->
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Khuôn hero — thoáng · sang · sống động</title>
+<style>
+:root{
+  --bg:#F3ECDD;
+  --fg:#171411;
+  --accent:#A47532;
+  --border:#CCC0A6;
+  --muted:rgba(23,20,17,.62);
+  --t-fast:150ms;
+  --t-base:300ms;
+  --t-slow:500ms;
+  --ease-soft:cubic-bezier(.25,.8,.4,1);
+  --ease-ed:cubic-bezier(.34,1.56,.64,1);
+}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;line-height:1.2;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 28px}
+.zl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+.hero{display:flex;gap:44px;align-items:flex-start;flex-wrap:wrap}
+.copy{flex:1 1 300px;min-width:0}
+.eyebrow{font-size:11px;line-height:1.4;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 16px}
+.display{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:48px;line-height:1.05;letter-spacing:-.02em;margin:0 0 18px;max-width:14ch}
+.display em{font-weight:400;color:var(--accent)}
+.lede{font-size:16px;line-height:1.55;color:var(--muted);max-width:44ch;margin:0 0 26px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 22px}
+.btn{font-family:'Newsreader',Georgia,serif;font-size:16px;line-height:1;border-radius:2px;padding:12px 22px;cursor:pointer;transition:filter var(--t-fast) var(--ease-soft),transform var(--t-fast) var(--ease-soft),border-color var(--t-fast) var(--ease-soft),color var(--t-fast) var(--ease-soft)}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--accent);color:var(--bg);border:1px solid var(--accent)}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-line{background:transparent;color:var(--fg);border:1px solid var(--border)}
+.btn-line:hover{border-color:var(--accent);color:var(--accent)}
+.trust{font-family:ui-monospace,'Cascadia Mono',Consolas,monospace;font-size:11px;line-height:1.4;letter-spacing:.06em;color:var(--muted);margin:0}
+.art{flex:none;width:220px}
+.ls-frame{fill:none;stroke:var(--border);stroke-width:1}
+.ls-line{stroke:var(--border);stroke-width:1}
+.ls-center{fill:var(--bg);stroke:var(--border);stroke-width:1}
+.ls-menh{fill:var(--accent);opacity:.14}
+.ls-tag{font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:8px;letter-spacing:.12em;fill:var(--accent)}
+.ls-cell{font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:8px;letter-spacing:.1em;fill:var(--muted)}
+.ls-name{font-family:'Newsreader',Georgia,serif;font-style:italic;font-size:16px;fill:var(--fg)}
+.ls-meta{font-family:ui-monospace,Consolas,monospace;font-size:8px;fill:var(--muted)}
+.ls-dot{fill:var(--accent)}
+.gap-hero{position:relative;height:128px;border-top:1px dashed var(--border);border-bottom:1px dashed var(--border);margin-top:26px}
+.gap-hero span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stub{padding-top:22px}
+.stub h3{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;line-height:1.2;margin:0;opacity:.4}
+.note{margin-top:26px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.5;letter-spacing:.02em;color:var(--muted)}
+.note b{color:var(--fg)}
+@media (prefers-reduced-motion: reduce){
+  .btn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h2>Khuôn hero mới — trục “thoáng + sang + sống động”</h2>
+  <p class="sub">Số ① → ⑤ vừa là nhãn vùng, vừa là thứ tự reveal vào trang</p>
+  <div class="hero">
+    <div class="copy">
+      <p class="zl">① Eyebrow · 11 hoa · tracking .12em</p>
+      <p class="eyebrow">Tử vi chính phái · Đúng phép an sao</p>
+      <p class="zl">② Display serif · thật 88/64 — thẻ thu nhỏ 48 · một từ italic accent</p>
+      <h1 class="display">Đọc vận mệnh như đọc <em>một tờ báo cũ</em></h1>
+      <p class="zl">③ Lede · thật 19 · tối đa hai câu</p>
+      <p class="lede">Lá số lập đúng phép cổ truyền, lời giải viết bằng tiếng Việt tử tế — không dọa dẫm, không màu mè.</p>
+      <p class="zl">④ Hai nút · primary đặc + secondary viền · serif · góc 2px</p>
+      <div class="btns">
+        <button class="btn btn-primary">Lập lá số miễn phí</button>
+        <button class="btn btn-line">Xem phương pháp</button>
+      </div>
+      <p class="zl">Dòng tin cậy · mono 11</p>
+      <p class="trust">1.204.318 lá số đã lập · không cần tài khoản</p>
+    </div>
+    <div class="art">
+      <p class="zl">⑤ Mỏ neo thị giác · lá số mini SVG inline</p>
+      <svg viewBox="0 0 220 220" width="220" height="220" role="img" aria-label="Sơ đồ lá số 12 cung thu nhỏ">
+        <rect class="ls-frame" x="1" y="1" width="218" height="218" rx="2"/>
+        <line class="ls-line" x1="55.5" y1="1" x2="55.5" y2="219"/>
+        <line class="ls-line" x1="110.5" y1="1" x2="110.5" y2="219"/>
+        <line class="ls-line" x1="165.5" y1="1" x2="165.5" y2="219"/>
+        <line class="ls-line" x1="1" y1="55.5" x2="219" y2="55.5"/>
+        <line class="ls-line" x1="1" y1="110.5" x2="219" y2="110.5"/>
+        <line class="ls-line" x1="1" y1="165.5" x2="219" y2="165.5"/>
+        <rect class="ls-center" x="55.5" y="55.5" width="109" height="109"/>
+        <rect class="ls-menh" x="2" y="111" width="53" height="53"/>
+        <text class="ls-tag" x="28" y="141" text-anchor="middle">MỆNH</text>
+        <text class="ls-cell" x="138" y="31" text-anchor="middle">QUAN</text>
+        <text class="ls-cell" x="193" y="141" text-anchor="middle">TÀI</text>
+        <text class="ls-cell" x="83" y="196" text-anchor="middle">DI</text>
+        <circle class="ls-dot" cx="28" cy="120" r="1.5"/>
+        <circle class="ls-dot" cx="36" cy="120" r="1.5"/>
+        <circle class="ls-dot" cx="138" cy="40" r="1.5"/>
+        <text class="ls-name" x="110" y="102" text-anchor="middle">Nguyễn Thị An</text>
+        <text class="ls-meta" x="110" y="122" text-anchor="middle">02:15 · 15/08/1996 · BÍNH TÝ</text>
+      </svg>
+    </div>
+  </div>
+  <div class="gap-hero"><span>khoảng thở hero · 128px — hero ↔ mảng đầu tiên</span></div>
+  <div class="stub"><h3>Mảng kế tiếp bắt đầu từ đây…</h3></div>
+  <div class="note"><b>Nhịp reveal vào trang (chú thích — thẻ không chạy animation):</b> năm bước so le 80ms theo số ① → ⑤ — eyebrow, tiêu đề, lede, nút, lá số. Mỗi bước: mờ → rõ + nhích lên 8px, 500ms (slow) · ease-soft. Kỷ luật: mỗi màn đúng một nhịp reveal, không lặp khi cuộn lại; bật “giảm chuyển động” là mọi thứ hiện ngay, không hiệu ứng.</div>
+</div>
+
+<div class="panel night">
+  <h2>Cùng khuôn — chế độ đêm</h2>
+  <p class="sub">Không đổi bố cục, chỉ đổi giấy: Charcoal · Bone · Gold-soft</p>
+  <div class="hero">
+    <div class="copy">
+      <p class="eyebrow">Tử vi chính phái · Đúng phép an sao</p>
+      <h1 class="display">Đọc vận mệnh như đọc <em>một tờ báo cũ</em></h1>
+      <p class="lede">Lá số lập đúng phép cổ truyền, lời giải viết bằng tiếng Việt tử tế — không dọa dẫm, không màu mè.</p>
+      <div class="btns">
+        <button class="btn btn-primary">Lập lá số miễn phí</button>
+        <button class="btn btn-line">Xem phương pháp</button>
+      </div>
+      <p class="trust">1.204.318 lá số đã lập · không cần tài khoản</p>
+    </div>
+    <div class="art">
+      <svg viewBox="0 0 220 220" width="220" height="220" role="img" aria-label="Sơ đồ lá số 12 cung thu nhỏ, chế độ đêm">
+        <rect class="ls-frame" x="1" y="1" width="218" height="218" rx="2"/>
+        <line class="ls-line" x1="55.5" y1="1" x2="55.5" y2="219"/>
+        <line class="ls-line" x1="110.5" y1="1" x2="110.5" y2="219"/>
+        <line class="ls-line" x1="165.5" y1="1" x2="165.5" y2="219"/>
+        <line class="ls-line" x1="1" y1="55.5" x2="219" y2="55.5"/>
+        <line class="ls-line" x1="1" y1="110.5" x2="219" y2="110.5"/>
+        <line class="ls-line" x1="1" y1="165.5" x2="219" y2="165.5"/>
+        <rect class="ls-center" x="55.5" y="55.5" width="109" height="109"/>
+        <rect class="ls-menh" x="2" y="111" width="53" height="53"/>
+        <text class="ls-tag" x="28" y="141" text-anchor="middle">MỆNH</text>
+        <text class="ls-cell" x="138" y="31" text-anchor="middle">QUAN</text>
+        <text class="ls-cell" x="193" y="141" text-anchor="middle">TÀI</text>
+        <text class="ls-cell" x="83" y="196" text-anchor="middle">DI</text>
+        <circle class="ls-dot" cx="28" cy="120" r="1.5"/>
+        <circle class="ls-dot" cx="36" cy="120" r="1.5"/>
+        <circle class="ls-dot" cx="138" cy="40" r="1.5"/>
+        <text class="ls-name" x="110" y="102" text-anchor="middle">Nguyễn Thị An</text>
+        <text class="ls-meta" x="110" y="122" text-anchor="middle">02:15 · 15/08/1996 · BÍNH TÝ</text>
+      </svg>
+    </div>
+  </div>
+  <div class="note"><b>Đêm không phải “đảo màu”:</b> nền Charcoal #15110C, chữ Bone #E8DCC1, accent Gold-soft #D4A261 — vẫn là tờ báo ấy dưới đèn bàn. Lá số SVG ăn theo biến màu nên tự đổi theo chế độ, không cần vẽ hai bản.</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Khoảng thở — nhịp dọc</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+.bar{display:flex;align-items:center;gap:16px;margin:10px 0}
+.bar i{display:block;background:var(--accent);opacity:.35;border-radius:2px;height:18px}
+.bar b{font-size:13px;width:150px;flex:none}
+.bar span{font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.new{outline:1px dashed var(--accent);outline-offset:3px}
+.tag{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:2px;padding:1px 6px;margin-left:8px}
+.note{margin-top:20px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.note b{color:var(--fg)}
+</style></head><body>
+
+<div class="panel">
+  <h2>Nhịp hiện tại — 4 token</h2>
+  <p class="sub">Trang phải thở: không thêm chữ, chỉ tăng khoảng cách</p>
+  <div class="bar"><b>card · 32px</b><i style="width:32px"></i><span>đệm trong thẻ</span></div>
+  <div class="bar"><b>block · 48px</b><i style="width:48px"></i><span>tiêu đề khối → nội dung</span></div>
+  <div class="bar"><b>section · 88px</b><i style="width:88px"></i><span>nhịp dọc giữa các mảng</span></div>
+  <div class="bar"><b>hero · 128px</b><i style="width:128px"></i><span>hero ↔ mảng đầu tiên</span></div>
+</div>
+
+<div class="panel night">
+  <h2>Đề xuất mới — trục “thoáng + sang”</h2>
+  <p class="sub">2 bậc bổ sung + luật một-cột-đọc</p>
+  <div class="bar"><b>breath · 64px <span class="tag">mới</span></b><i class="new" style="width:64px"></i><span>giữa các cụm trong 1 mảng — thay cho 40-56px tuỳ hứng hiện nay</span></div>
+  <div class="bar"><b>chapter · 176px <span class="tag">mới</span></b><i class="new" style="width:176px"></i><span>ngắt “chương” lớn trên trang dài (báo cáo, cẩm nang)</span></div>
+  <div class="note"><b>Luật một-cột-đọc:</b> mọi khối chữ dài giới hạn ~68 ký tự/dòng (max-width 680px). <b>Luật lề rộng:</b> desktop dùng lề trái–phải tối thiểu 10% viewport cho bề mặt đọc — nội dung hẹp lại, cảm giác sang hơn, không rẻ tiền kiểu tràn màn hình. Đây là thay đổi CẢM NHẬN RÕ nhất của trục “thoáng”.</div>
+</div>
+
+</body></html>

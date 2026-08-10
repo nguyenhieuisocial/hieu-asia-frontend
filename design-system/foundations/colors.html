@@ -1,0 +1,56 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Màu — Như giấy cũ</title><style>
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+*{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
+.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
+.sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
+.row{display:flex;gap:16px;flex-wrap:wrap}
+.sw{width:132px}
+.chip{height:72px;border-radius:2px;border:1px solid var(--border)}
+.sw b{display:block;font-size:13px;margin-top:8px}
+.sw span{font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.hanh{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.hchip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:2px;padding:6px 12px;font-size:13px}
+.dot{width:12px;height:12px;border-radius:50%}
+.rule{margin-top:20px;padding:14px 16px;border-left:2px solid var(--accent);font-size:13px;line-height:1.6;color:var(--muted)}
+.rule b{color:var(--fg)}
+</style></head><body>
+
+<div class="panel">
+  <h2>Ngày · “Giấy thấm”</h2>
+  <p class="sub">Bề mặt lý trí — trang chủ · học · giá · cẩm nang</p>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#F3ECDD"></div><b>Paper</b><span>#F3ECDD · nền</span></div>
+    <div class="sw"><div class="chip" style="background:#171411"></div><b>Ink</b><span>#171411 · chữ</span></div>
+    <div class="sw"><div class="chip" style="background:#A47532"></div><b>Ochre</b><span>#A47532 · nhấn</span></div>
+    <div class="sw"><div class="chip" style="background:#CCC0A6"></div><b>Rule</b><span>#CCC0A6 · viền</span></div>
+  </div>
+</div>
+
+<div class="panel night">
+  <h2>Đêm · “Khoảng lặng”</h2>
+  <p class="sub">Bề mặt trải nghiệm — lá số · báo cáo · mentor</p>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#15110C"></div><b>Charcoal</b><span>#15110C · nền</span></div>
+    <div class="sw"><div class="chip" style="background:#E8DCC1"></div><b>Bone</b><span>#E8DCC1 · chữ</span></div>
+    <div class="sw"><div class="chip" style="background:#D4A261"></div><b>Gold-soft</b><span>#D4A261 · nhấn</span></div>
+    <div class="sw"><div class="chip" style="background:#3A3122"></div><b>Rule</b><span>#3A3122 · viền</span></div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Ngũ hành — nhấn chức năng</h2>
+  <p class="sub">Chip &amp; biểu đồ dữ liệu · giữ nguyên cả 2 chế độ</p>
+  <div class="hanh">
+    <span class="hchip"><i class="dot" style="background:#7D8A98"></i>Kim · #7D8A98</span>
+    <span class="hchip"><i class="dot" style="background:#6B8154"></i>Mộc · #6B8154</span>
+    <span class="hchip"><i class="dot" style="background:#3F5D6F"></i>Thuỷ · #3F5D6F</span>
+    <span class="hchip"><i class="dot" style="background:#A44A36"></i>Hoả · #A44A36</span>
+    <span class="hchip"><i class="dot" style="background:#A07842"></i>Thổ · #A07842</span>
+  </div>
+  <div class="rule"><b>Luật dùng màu:</b> một tông nhấn duy nhất mỗi chế độ, rất kiềm chế. Ngũ hành chỉ dùng cho chip &amp; biểu đồ — <b>không bao giờ làm nền</b>. Tránh gradient, glow, particle. “Như giấy cũ, không như app bói.”</div>
+</div>
+
+</body></html>
