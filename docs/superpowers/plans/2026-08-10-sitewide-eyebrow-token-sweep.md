@@ -135,3 +135,66 @@ console.log('safe:', safe.length, 'review:', review.length);
 ## Cross-link
 
 [[94 - Master Infrastructure Reference]] · originating gap: `2026-08-01-wave-65-homepage-upgrade.md` Task 14 · sibling precedent for "big sweep needs its own plan": SEO đợt 2 (120-page batch, split for safety per founder decision)
+
+---
+
+## Đợt 2 — các biến thể regex đợt 1 không thấy (2026-08-10)
+
+Regex khám phá ban đầu chỉ khớp đúng công thức `font-mono … text-[12|13px] …
+uppercase … tracking-[0.12em]` → 419 chỗ. Rà lại bằng cách **gom nhóm theo chữ
+ký** (font-family × cỡ chữ × tracking × hoa/thường) thay vì khớp một công thức
+cứng, phát hiện thêm **275 nhãn eyebrow viết tay lệch chuẩn** — tổng nợ thật
+gấp ~1.6 lần con số ban đầu. Nợ có sẵn, không phải do đợt 1 sinh ra.
+
+### Đã xử lý (252/275 + 8 chỗ dọn thêm)
+
+| Nhóm | Số chỗ | Cách xử lý |
+|---|---|---|
+| Đã khai `font-mono`, lệch tracking (`widest`/`wider`/`wide`/`0.08`–`0.16em`), cỡ 11/12/13px hoặc `text-xs` | 164 / 99 file | → `text-eyebrow`, xoá `tracking-*` |
+| Không khai `font-mono`, còn lại giống trên | 88 / 51 file | → `text-eyebrow`, xoá `tracking-*` |
+| `text-eyebrow` còn dính `sm:text-xs` (sót từ đợt 1) | 8 | → xoá variant chết |
+
+### ⚠️ `font-mono` KHÔNG phải monospace trong repo này
+
+Từ 2026-06-29, `mono` trong `packages/config/tailwind-preset.ts` được trỏ về
+`var(--font-be-vietnam)` — JetBrains Mono đã gỡ, tên class giữ lại **chỉ để
+khỏi phải sửa 812 call-site**. Hệ quả:
+
+- **Không được** thêm `font-mono` vào nhãn mới với niềm tin là "đổi sang mặt
+  chữ mono" — nó là no-op về font-family.
+- Bản nháp đầu của đợt 2 đã thêm `font-mono` vào 88 chỗ rồi **bỏ đi**, vì như
+  vậy chỉ nhân thêm call-site cho một alias đang muốn khai tử.
+- Cần fixed-width thật (mã, khoá, token) → dùng `font-code`.
+
+### ⚠️ `sm:text-xs` đứng cạnh `text-eyebrow` là rác
+
+`text-xs` khai lại `line-height: 1rem`, đè `1.4` của token ⇒ nhãn cao dòng
+khác nhau giữa mobile và desktop. Cỡ chữ và tracking thì không đổi. Regex
+khám phá của đợt 1 không chặn variant dạng `sm:text-xs` (chỉ chặn
+`sm:text-[13px]`) nên để lọt 8 chỗ — đợt 2 đã dọn.
+
+### Miễn trừ có chủ đích — KHÔNG migrate (23 chỗ)
+
+| Nhóm | Lý do giữ |
+|---|---|
+| `tracking-[0.18em]` trở lên (0.18 / 0.2 / 0.25 / 0.3 / 0.32em) | Giãn chữ rộng **cố ý** ở trang thương hiệu (`app/brand/page.tsx`, `components/brand/TypographyShowcase.tsx`) và vài nhãn display. Ép về 0.12em là phá chủ ý thiết kế. |
+| Cỡ ≤ 10px (7/8/9/10px) | Micro-label, không phải eyebrow — kéo lên 12px sẽ vỡ layout. |
+| Không `uppercase` (6 chỗ) | Chữ thường ⇒ không thuộc định nghĩa eyebrow. |
+| 4 chỗ `app/learn/disc/page.tsx` | Có `sm:text-xs` **và** base 11px — variant đang làm việc thật (11→12px), cần mắt người. |
+
+### Cần nhìn mắt thường sau khi lên production
+
+- `app/learn/xong-dat/page.tsx` — hằng `TAG` là chip bo tròn có padding, đổi
+  11px→12px và 0.1em→0.12em nên mỗi chip rộng thêm ~10%. Kiểm tra hàng chip
+  không bị xuống dòng xấu.
+- `app/en/page.tsx` — một câu 87 ký tự đang bị style như eyebrow (chữ hoa nhỏ,
+  giãn chữ). Không phải lỗi do sweep (nó đã viết hoa từ trước) nhưng là **mùi
+  thiết kế có sẵn**: câu dài không nên mặc áo eyebrow. Ghi lại để xử lý ở pha
+  copy, không sửa trong sweep token.
+
+### Bài học đưa vào quy trình
+
+Khi sweep token, **đừng khám phá bằng một regex khớp công thức cứng** — nó chỉ
+tìm thấy đúng cái mình đã tưởng tượng ra. Cách đúng: liệt kê mọi tổ hợp class
+theo trục (family × size × tracking × case), xếp theo tần suất, rồi mới quyết
+nhóm nào migrate / nhóm nào miễn trừ. Chênh lệch giữa hai cách làm: 419 → 694.
