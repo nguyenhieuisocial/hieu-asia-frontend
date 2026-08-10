@@ -170,11 +170,17 @@ const config: Config = {
       //   - block    = 48px  (block heading → body)
       //   - section  = 88px  (section vertical baseline)
       //   - hero     = 128px (hero ↔ next section)
+      // Design refresh 2026-08 — thêm 2 bậc: `breath` lấp khoảng trống giữa
+      // block(48) và section(88) — chỗ trước đây mỗi nơi tự chế 56/64/72px;
+      // `chapter` cho ngắt "chương" trên trang đọc dài (báo cáo, cẩm nang).
+      // Thẻ chuẩn: design-system/foundations/spacing.html.
       spacing: {
         card: '2rem',     // 32
         block: '3rem',    // 48
+        breath: '4rem',   // 64
         section: '5.5rem', // 88
         hero: '8rem',     // 128
+        chapter: '11rem', // 176
       },
       maxWidth: {
         // Wave 60.95.am — tighten marketing-tight to 1024px so body copy
@@ -183,6 +189,9 @@ const config: Config = {
         marketing: '1200px',
         'marketing-tight': '1024px',
         'marketing-text': '640px',
+        // Design refresh 2026-08 — luật một-cột-đọc: mọi khối chữ dài
+        // (báo cáo, cẩm nang, bài học) giới hạn ~68 ký tự/dòng.
+        reading: '680px',
       },
       borderRadius: {
         pill: '9999px',
@@ -190,10 +199,23 @@ const config: Config = {
       },
       transitionTimingFunction: {
         // Option D signature ease — soft entry, firm settle.
+        // ⚠️ GIỮ NGUYÊN GIÁ TRỊ NÀY. Đang dùng ở nhiều component; đổi số là
+        // đổi cảm giác chuyển động toàn site trong im lặng. Đường cong nảy
+        // (0.34,1.56,0.64,1) KHÔNG phải cái này — nó là `spring` bên dưới.
         editorial: 'cubic-bezier(0.165, 0.85, 0.45, 1)',
+        // Design refresh 2026-08 — mặc định MỚI cho hover/press/reveal.
+        // Thẻ chuẩn: design-system/foundations/motion.html.
+        soft: 'cubic-bezier(0.25, 0.8, 0.4, 1)',
+        // Nảy nhẹ — dùng TIẾT CHẾ (chevron accordion, tick xác nhận).
+        // Chính thức hoá giá trị vốn viết tay trong FaqAccordion.
+        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
       },
       transitionDuration: {
         '300': '300ms',
+        // Design refresh 2026-08 — 3 bậc ngữ nghĩa thay cho số rời rạc.
+        fast: '150ms',  // hover, press
+        base: '300ms',  // reveal, mở/đóng
+        slow: '500ms',  // vào trang, chuyển chương
       },
     },
   },
