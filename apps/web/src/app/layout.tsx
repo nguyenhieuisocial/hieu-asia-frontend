@@ -26,6 +26,7 @@ import { BackToTop } from '@/components/BackToTop';
 import { WebMcpTools } from '@/components/marketing/WebMcpTools';
 import { Toaster } from '@hieu-asia/ui';
 import { AppShell } from '@/components/product/AppShell';
+import { ServiceWorkerRegistrar } from '@/components/pwa/ServiceWorkerRegistrar';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { siteGraph } from '@/lib/seo/jsonld';
 // Wave 21 — Vercel telemetry (customer-facing web only).
@@ -257,9 +258,7 @@ export const viewport: Viewport = {
   interactiveWidget: 'resizes-content',
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
   const messages = await getMessages();
 
@@ -305,10 +304,34 @@ export default async function RootLayout({
             next/font — khi đó preload cũ thành 404 vô hại (console warning),
             cập nhật lại 4 URL theo build mới. Gỡ được khối này khi tìm ra vì sao
             next/font mất preload. */}
-        <link rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href="/_next/static/media/cd79e1ff94fa521b-s.p.woff2" />
-        <link rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href="/_next/static/media/e11f95d95ac59fa4-s.p.woff2" />
-        <link rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href="/_next/static/media/9ddf1512dbee9c99-s.p.woff2" />
-        <link rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href="/_next/static/media/e270c9fc4fe96f5a-s.p.woff2" />
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+          href="/_next/static/media/cd79e1ff94fa521b-s.p.woff2"
+        />
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+          href="/_next/static/media/e11f95d95ac59fa4-s.p.woff2"
+        />
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+          href="/_next/static/media/9ddf1512dbee9c99-s.p.woff2"
+        />
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+          href="/_next/static/media/e270c9fc4fe96f5a-s.p.woff2"
+        />
       </head>
       <body>
         {/* Site-wide structured data (Organization + WebSite) — centralized via
@@ -361,6 +384,11 @@ export default async function RootLayout({
                     Khách vãng lai → component này no-op hoàn toàn (không fetch),
                     giữ đúng cam kết "tính ngay trong trình duyệt" ở trang tra cứu. */}
                 <BirthProfileSync />
+                {/* 10/08/2026 — đăng ký service worker cho MỌI người dùng.
+                    Trước đây chỉ đăng ký bên trong luồng bật thông báo, nên ai
+                    không bật push thì không có SW ⇒ không có offline fallback.
+                    Chỉ chạy ở production, render null, nuốt lỗi. */}
+                <ServiceWorkerRegistrar />
                 {/* Wave 60.68 — PWA bottom-nav. Renders ONLY in standalone
                     display-mode AND on in-app routes (/account, /reading,
                     /dashboard, /journal, /decisions). No-op otherwise. */}
