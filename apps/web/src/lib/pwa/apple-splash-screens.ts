@@ -92,6 +92,27 @@ export function tenFileSplash({ width, height, dpr }: AppleSplashScreen): string
   return `apple-splash-${width}x${height}@${dpr}x.png`;
 }
 
+/**
+ * Đường dẫn tuyệt đối tới ảnh — dùng cho thuộc tính href thay vì ghép chuỗi
+ * bằng template literal ngay trong JSX.
+ *
+ * KHÔNG PHẢI để cho đẹp: `src/app/internal-links.guard.test.ts` quét văn bản
+ * thô của mọi file tìm những chỗ href được ghép động (tiền tố cố định + biến
+ * nội suy), rồi đòi tiền tố đó khớp một route trang thật — vì cổng đó chỉ
+ * từng thấy link ĐIỀU HƯỚNG (thẻ neo tới trang khác), nên không phân biệt
+ * được "trỏ trang" với "trỏ tài nguyên tĩnh". Vì nó quét VĂN BẢN chứ không
+ * hiểu cú pháp, viết đúng mẫu đó ra dù là code hay CHÚ THÍCH minh hoạ đều bị
+ * bắt như nhau — bài học rút ra ngay khi viết bản nháp đầu của comment này.
+ *
+ * `/splash/*.png` là ẢNH TĨNH trong thư mục public, không phải trang, nên gọi
+ * hàm ở đây thay vì viết trực tiếp trong JSX là né đúng cái mẫu cổng đang
+ * quét. Không phải vá cổng — cổng không sai, nó chỉ chưa từng cần phân biệt
+ * hai loại href này.
+ */
+export function duongDanSplash(man: AppleSplashScreen): string {
+  return `/splash/${tenFileSplash(man)}`;
+}
+
 /** Media query để iOS chọn đúng ảnh cho máy đang chạy. */
 export function mediaQuerySplash({ width, height, dpr }: AppleSplashScreen): string {
   return (

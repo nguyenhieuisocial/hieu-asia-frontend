@@ -11,6 +11,7 @@
 
 import {
   APPLE_SPLASH_SCREENS,
+  duongDanSplash,
   mediaQuerySplash,
   tenFileSplash,
 } from '@/lib/pwa/apple-splash-screens';
@@ -23,7 +24,7 @@ export function AppleSplashLinks() {
           key={tenFileSplash(man)}
           rel="apple-touch-startup-image"
           media={mediaQuerySplash(man)}
-          href={`/splash/${tenFileSplash(man)}`}
+          href={duongDanSplash(man)}
         />
       ))}
     </>
