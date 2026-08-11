@@ -1,10 +1,13 @@
 <!-- @dsCard group="Components" -->
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Điều hướng — nav &amp; footer</title><style>
-:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
-.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#89612A;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1);--btn-hover:brightness(.92)}
+.night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62);--btn-hover:brightness(1.1)}
 *{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
 .serif{font-family:'Newsreader',Georgia,serif}
-.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+/* `color` PHẢI khai ở .panel chứ không chỉ ở body: custom property được tính tại
+   nơi khai, nên `body{color:var(--fg)}` chốt cứng màu NGÀY rồi truyền xuống —
+   panel .night đổi --fg nhưng chữ con đã kế thừa màu cũ, ra 1,02:1 (tàng hình). */
+.panel{background:var(--bg);color:var(--fg);padding:40px 44px;border-bottom:1px solid var(--border)}
 h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
 .sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
 .cap{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
@@ -17,7 +20,8 @@ h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:
 .uline::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--accent);transition:width .3s var(--ease-soft)}
 .uline:hover::after{width:100%}
 .cta{border:0;border-radius:2px;background:var(--accent);color:var(--bg);font-family:'Newsreader',Georgia,serif;font-size:14px;padding:8px 16px;cursor:pointer;transition:filter .15s var(--ease-soft),transform .15s var(--ease-soft)}
-.cta:hover{filter:brightness(1.1)}
+/* Ngày TỐI đi, đêm SÁNG lên — cả hai chiều đều làm tăng tương phản với chữ trên nút. Sáng lên ở chế độ ngày làm tụt xuống 4,00:1, trượt AA. */
+.cta:hover{filter:var(--btn-hover)}
 .cta:active{transform:scale(.98)}
 .cta:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .burger{font-size:18px;line-height:1;cursor:pointer;background:none;border:0;color:var(--fg);padding:4px 8px}

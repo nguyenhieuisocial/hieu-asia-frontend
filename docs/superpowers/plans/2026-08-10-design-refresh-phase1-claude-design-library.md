@@ -17,14 +17,31 @@
 ## Token values (nguồn sự thật — trích vault 138, verified 2026-08-10)
 
 ```
-Day:   bg #F3ECDD (Paper) · text #171411 (Ink) · accent #A47532 (Ochre) · border #CCC0A6
+Day:   bg #F3ECDD (Paper) · text #171411 (Ink) · accent #89612A (Ochre-deep) · border #CCC0A6
+       ⚠️ ĐÍNH CHÍNH 10/08: bảng này trước ghi accent Ngày là #A47532 (Ochre). SAI —
+       đo WCAG: #A47532 trên giấy #F3ECDD chỉ 3.45:1, TRƯỢT AA (cần 4.5:1), cả khi
+       làm chữ lẫn khi làm nền nút có chữ giấy. Code sản phẩm đã bỏ giá trị đó
+       (`globals.css` --primary, chú thích ngay tại dòng khai) và dùng #89612A —
+       đo lại: 4.69:1, ĐẠT AA cả hai chiều, cùng hue/sat chỉ đậm hơn.
+       #A47532 chỉ còn là màu thương hiệu để TRƯNG BÀY (nhãn swatch, gradient
+       trang trí), KHÔNG dùng cho chữ hay nền nút. Đêm #D4A261 đạt 8.18:1, giữ nguyên.
 Night: bg #15110C (Charcoal) · text #E8DCC1 (Bone) · accent #D4A261 (Gold-soft) · border #3A3122
 Ngũ hành (chip/dataviz only, theme-stable): Kim #7D8A98 · Mộc #6B8154 · Thuỷ #3F5D6F · Hoả #A44A36 · Thổ #A07842
 Type scale (px/line/tracking): 88/0.95/-0.02em · 64/1.0/-0.02em · 48/1.05/-0.02em · 32/1.15/-0.01em · 24/1.2/0 · 19/1.45/0 · 16/1.55/0 · 13/1.5/0.02em · 11/1.4/0.12em
 Fonts: Newsreader (display serif, 300-800 var + italic) · Be Vietnam Pro (body sans 400-700 + italic). CHỈ 2 font.
 Spacing: card 32 · block 48 · section 88 · hero 128
 Corners: 2px (editorial). Buttons: serif label, KHÔNG pill.
-Motion (ĐỀ XUẤT MỚI — chưa có trong hệ): duration-fast 150ms · duration-base 300ms · duration-slow 500ms · ease-editorial cubic-bezier(0.34,1.56,0.64,1) (đã dùng lẻ tẻ trong code, nay chính thức hoá) · ease-out-soft cubic-bezier(0.25,0.8,0.4,1) · reveal: fade+8px-rise · press: scale(0.98) · LUÔN gate prefers-reduced-motion
+Motion: duration-fast 150ms · duration-base 300ms · duration-slow 500ms ·
+  ease-out-soft cubic-bezier(0.25,0.8,0.4,1) · reveal: fade+8px-rise ·
+  press: scale(0.98) · LUÔN gate prefers-reduced-motion
+  ⚠️ ĐÍNH CHÍNH 10/08 — HAI curve khác nhau, bảng cũ gộp làm một nên gọi sai tên:
+    · ease-editorial = cubic-bezier(0.165, 0.85, 0.45, 1)  ← ĐÃ CÓ trong hệ từ
+      Wave 60.56, đang dùng thật (`tailwind-preset.ts`, `globals.css`). KHÔNG mới.
+    · ease-spring    = cubic-bezier(0.34, 1.56, 0.64, 1)   ← curve nảy nhẹ. Bảng cũ
+      gán nhầm cái này cái tên "ease-editorial" rồi ghi "nay chính thức hoá".
+  `apps/web/tailwind.config.ts` có sẵn chú thích cảnh báo đúng chỗ nhầm này.
+  Thẻ `foundations/motion.html` đã khai ĐÚNG; 3 thẻ patterns còn khai `--ease-ed`
+  trỏ vào curve spring — sai tên, phải sửa.
 ```
 
 ## Card template skeleton (dùng cho MỌI thẻ)
