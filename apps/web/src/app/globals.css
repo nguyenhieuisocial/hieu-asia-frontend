@@ -1480,13 +1480,31 @@ body { overflow-wrap: break-word; }
     --ds-dur-base: 300ms;
   }
 
-  /* 1) PRESS — nút bấm: lún nhẹ + sáng lên. */
+  /* 1) PRESS — nút bấm: lún nhẹ khi nhấn.
+   *
+   * ⚠️ BỎ `:hover { filter: brightness(1.1) }` (2026-08-11) vì hai lý do ĐO ĐƯỢC:
+   *
+   * a) TRƯỢT WCAG AA ở chế độ Ngày. Nền CTA `--primary-cta` #8A6128 với chữ
+   *    Paper đạt 4,69:1; làm nền SÁNG thêm 10% kéo xuống 4,00:1 — dưới ngưỡng
+   *    4,5:1 cho chữ thường. Sáng-khi-hover chỉ đúng trên nền TỐI (chế độ Đêm),
+   *    nơi nó làm TĂNG tương phản. Một quy tắc chung cho cả hai chế độ nhất
+   *    định sai một bên ⇒ hover màu là việc của từng biến thể, không phải của
+   *    primitive này.
+   *
+   * b) ĐÈ NHAU. Mọi biến thể nút đã tự khai màu hover riêng (`hover:bg-gold-400`,
+   *    `hover:bg-gold/10`…); phủ thêm bộ lọc sáng lên trên là hai hiệu ứng
+   *    chồng nhau, không ai chủ ý.
+   *
+   * Class này vì thế nhận TRỌN phần transition của nút (kể cả màu) để nút không
+   * phải khai `transition-colors` riêng nữa — hai bên cùng ghi thuộc tính
+   * `transition` trong cùng @layer thì sẽ đè nhau, bên thua mất hiệu ứng. */
   .ds-press {
     transition:
-      filter var(--ds-dur-fast) var(--ds-ease-soft),
+      color var(--ds-dur-fast) var(--ds-ease-soft),
+      background-color var(--ds-dur-fast) var(--ds-ease-soft),
+      border-color var(--ds-dur-fast) var(--ds-ease-soft),
       transform var(--ds-dur-fast) var(--ds-ease-soft);
   }
-  .ds-press:hover { filter: brightness(1.1); }
   .ds-press:active { transform: scale(0.98); }
 
   /* 2) HOVER-LIFT — thẻ/ô bấm được: nổi 3px + bóng mềm. */
@@ -1500,16 +1518,24 @@ body { overflow-wrap: break-word; }
     box-shadow: 0 8px 22px rgb(0 0 0 / 0.10);
   }
 
-  /* 3) REVEAL — hiện dần khi vào màn: mờ→rõ + nhích lên 8px.
-   * Dùng kèm RevealOnScroll (component đã có, tự gắn .is-revealed). */
-  .ds-reveal {
-    opacity: 0;
-    transform: translateY(8px);
-    transition:
-      opacity var(--ds-dur-base) var(--ds-ease-soft),
-      transform var(--ds-dur-base) var(--ds-ease-soft);
-  }
-  .ds-reveal.is-revealed { opacity: 1; transform: none; }
+  /* 3) REVEAL — KHÔNG định nghĩa lại ở đây. Dùng `.rv-up` / `.rv-fade` có sẵn.
+   *
+   * ⚠️ Gỡ `.ds-reveal` ngày 2026-08-11 vì nó là MÌN chứ không phải tính năng:
+   * nó ẩn nội dung (`opacity: 0`) rồi chờ class `.is-revealed` để hiện lại,
+   * nhưng KHÔNG có gì trong toàn bộ mã nguồn gắn class đó — đã grep cả `apps/`
+   * lẫn `packages/`, chỉ thấy đúng dòng CSS tự định nghĩa nó. Ai áp `.ds-reveal`
+   * lên một khối là khối đó ẨN VĨNH VIỄN — đúng lớp lỗi "blank section" mà chú
+   * thích cũ của nó tự nhận là đã phòng.
+   *
+   * Chú thích cũ ghi "RevealOnScroll tự gắn .is-revealed" — SAI. Component đó
+   * gắn thuộc tính `data-in`, và hệ hiệu ứng thật là `[data-in] .rv-*` khai ở
+   * §Reveal phía trên file này, đang chạy ở 19 trang.
+   *
+   * Muốn hiện-dần: bọc `<RevealOnScroll>` rồi đặt `rv-up` (mờ→rõ + nhích lên)
+   * hoặc `rv-fade` lên phần tử con. Trạng thái ẩn của `rv-*` nằm TRONG
+   * `@media (prefers-reduced-motion: no-preference)` nên người tắt chuyển động
+   * không bao giờ gặp nội dung ẩn — đây chính là chi tiết `.ds-reveal` làm
+   * thiếu. Một hệ hiện-dần, không hai. */
 
   /* 4) INK-UNDERLINE — link chữ: gạch chân chạy từ trái. */
   .ds-underline {
@@ -1529,17 +1555,21 @@ body { overflow-wrap: break-word; }
   .ds-underline:hover::after { width: 100%; }
 }
 
-/* Tôn trọng người dùng tắt chuyển động — tắt CẢ 4 primitive. `.ds-reveal`
- * phải hiện ngay (không để nội dung mắc kẹt ở opacity:0 — đúng lớp lỗi
- * blank-section đã ghi trong plan Wave 65 Task 16). */
+/* Tôn trọng người dùng tắt chuyển động.
+ *
+ * Phải tắt cả TRANSFORM chứ không chỉ `transition` — bỏ mỗi transition thì nút
+ * vẫn co và thẻ vẫn nhảy 3px, chỉ là nhảy tức thì thay vì mượt. Vẫn là chuyển
+ * động, vẫn gây khó chịu cho đúng nhóm người đã tắt nó.
+ *
+ * `.ds-reveal` không còn ở đây — xem §3 phía trên: hiện-dần dùng `rv-*`, và
+ * trạng thái ẩn của nó nằm trong `@media (…: no-preference)` nên tự an toàn,
+ * không cần cứu ở nhánh `reduce`. */
 @media (prefers-reduced-motion: reduce) {
   .ds-press,
   .ds-lift,
-  .ds-reveal,
   .ds-underline::after {
     transition: none;
   }
   .ds-press:active { transform: none; }
   .ds-lift:hover { transform: none; box-shadow: none; }
-  .ds-reveal { opacity: 1; transform: none; }
 }
