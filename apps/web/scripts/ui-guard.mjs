@@ -11,6 +11,7 @@
  *   2. new `group-hover:` in a file with no `group-focus-within:` (hover→focus a11y)
  *   3. `text-sm`/`text-xs` on an input/select/textarea (iOS zoom / legibility)
  *   4. new `fixed bottom-` with no `safe-area-inset-bottom` in the file
+ *   4b. new `fixed top-0` with real height (h-8+) and no `safe-area-inset-top` in the file
  *   5. raw `bg-white`/`text-black` (no `dark:`) — breaks dark mode (QR/print exempt)
  *   6. §D route-registry: a NEW static public page.tsx that is registered in
  *      neither app/sitemap.ts nor lib/site-registry.ts → orphan page
@@ -104,6 +105,20 @@ export function scanFileLevel(f, addedIn, content) {
   if (/\bfixed\b[^"'`]*\bbottom-/.test(addedIn) &&
       !/(safe-area-inset-bottom|env\(safe-area|pb-safe|safe-bottom|safe-area-pb)/.test(content)) {
     violations.push(violation(f, 'fixed bottom- mới không kèm safe-area-inset-bottom (che nội dung trên iPhone notch)', 'fixed bottom-'));
+  }
+  // 4b. new `fixed top-0` WITH a real height (not a 1-3px decorative progress
+  // strip — no text/buttons there to protect) but no safe-area-inset-top
+  // handling in the file. Mirror of #4 for the opposite edge: a status bar /
+  // Dynamic Island covers a fixed-top bar the same way the home indicator
+  // covers a fixed-bottom one. Only matches the standard h-8..h-24 scale (all
+  // ≥32px — a real bar with room for content) so ReadingProgress-style thin
+  // arbitrary bars (h-[3px]) don't get flagged — nothing readable to protect
+  // there. Trade-off: a custom `h-[5rem]` bar also won't be caught — accepted
+  // as a narrower, false-positive-free guard over a broader, noisier one.
+  if (/\bfixed\b[^"'`]*\btop-0\b/.test(addedIn) &&
+      /\bh-(8|9|10|11|12|14|16|20|24)\b/.test(addedIn) &&
+      !/(safe-area-inset-top|env\(safe-area)/.test(content)) {
+    violations.push(violation(f, 'fixed top-0 mới (có chiều cao thật, không phải dải mỏng trang trí) không kèm safe-area-inset-top (che nội dung dưới đồng hồ/pin trên iPhone notch)', 'fixed top-0'));
   }
   return violations;
 }

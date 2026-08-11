@@ -168,7 +168,15 @@ export function SiteNav() {
   const needsCheckin = useCheckinNudge(isAuthed);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-card/70 backdrop-blur-md">
+    // 11/08/2026 — pt-[env(safe-area-inset-top)]: thanh nav fixed từng dán sát
+    // mép trên (top-0), nên trên iPhone có notch/Dynamic Island (viewport-fit=
+    // cover đã bật ở layout.tsx) logo + link nằm ĐÈ dưới đồng hồ/pin — vault
+    // 00-AGENT-COORDINATION-LOCKS đo được 14 chỗ dùng safe-area-inset-bottom,
+    // 0 chỗ dùng -top. env() trả 0px trên máy không có notch nên không đổi gì
+    // ở đó. CỐ Ý CHƯA đụng 86 trang đang dùng pt-16 để né nav — thanh nav nền
+    // mờ (bg-card/70 backdrop-blur-md) nên phần nội dung bị che thêm trên máy
+    // notch chỉ là dải mờ ~1 dòng, không phải nút/chữ bị cắt cụt như nav.
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-card/70 pt-[env(safe-area-inset-top)] backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link
           href="/"
