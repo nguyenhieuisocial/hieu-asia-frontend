@@ -1206,7 +1206,6 @@ body { overflow-wrap: break-word; }
   100% { left: 50%; top: 50%; opacity: 0; }
 }
 .ob-hub:focus-visible { outline: 2px solid rgba(224, 174, 98, 0.6); outline-offset: 2px; border-radius: 10px; }
-.ob-tool { color: rgba(224, 174, 98, 0.72); }
 .ob-link { color: #e0ae62; }
 .ob-hint { color: rgba(224, 174, 98, 0.55); }
 

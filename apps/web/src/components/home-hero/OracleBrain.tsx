@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { ShimmerText } from '@/components/fx/ShimmerText';
-import { Marquee } from '@/components/fx/Marquee';
 import { Time24 } from '@/components/Time24';
 // Wave 65.02 — form "Soi thử" đọc hồ sơ ngày sinh dùng chung (khách vừa nhập ở
 // InstantChartHero đầu trang) thay vì bắt gõ lại từ đầu (finding P1, 5/8 vòng).
@@ -12,7 +11,7 @@ import {
   BIRTH_PROFILE_EVENT,
 } from '@/lib/birth-profile';
 import type { Reveal } from './oracle-brain/types';
-import { ALL_TOOLS, HUBS } from './oracle-brain/graph-layout';
+import { HUBS } from './oracle-brain/graph-layout';
 import { computeReveal } from './oracle-brain/compute-reveal';
 import { OracleGraph } from './oracle-brain/OracleGraph';
 import { BaziRevealPanel } from './oracle-brain/BaziRevealPanel';
@@ -263,15 +262,19 @@ export function OracleBrain(): React.JSX.Element {
           )}
         </div>
 
-        <div className="mt-8">
-          <Marquee speed={34}>
-            {ALL_TOOLS.map((t) => (
-              <span key={t} className="ob-tool font-mono text-editorial-mono uppercase tracking-[0.12em]">
-                {t}
-              </span>
-            ))}
-          </Marquee>
-        </div>
+        {/* 11/08/2026 — gỡ marquee liệt kê tên TỪNG công cụ (ALL_TOOLS, chạy
+            ngang liên tục): founder phản hồi khối này "chiếm quá nhiều diện
+            tích và thời gian lướt". Marquee không mang thông tin RIÊNG — độ
+            phủ công cụ đã nói qua H2 ("Hàng chục công cụ"), số đếm trên từng
+            nhóm sao (`h.count` + "công cụ"), và link "Xem tất cả công cụ →"
+            ngay dưới đây; đây là 3 lần lặp lại cùng một thông điệp trong 1
+            section, cùng tinh thần "mỗi section phải tự trả tiền thuê chỗ"
+            đã áp cho NotOraclesStrip/ToolkitSection trước đó (page.tsx). Gỡ
+            marquee bớt ~70-90px caption trên mọi kích thước màn hình, không
+            mất thông tin riêng biệt nào. GIỮ NGUYÊN phần còn lại (chòm sao,
+            form Soi thử, link) — xem tài liệu nghiên cứu riêng cho các đề
+            xuất khác (thu nhỏ chòm sao…) cần founder tự quyết vì đổi hình
+            ảnh signature, không phải dọn trùng lặp thuần tuý. */}
         <div className="mt-6 text-center">
           <a
             href="/cong-cu"
