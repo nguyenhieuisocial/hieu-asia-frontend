@@ -106,10 +106,23 @@
    * with localStorage `theme=dark` stay on dark — no surprise flip.
    */
   :root {
-    --background: 45 27% 97%;        /* C-Hybrid — soft off-white #FAF9F6 (less glare than pure white) */
-    --foreground: 40 9% 9%;          /* Ink #1A1713 — strong text */
-    --card: 0 0% 100%;               /* pure white card → gentle lift above the off-white bg */
-    --card-foreground: 40 9% 9%;
+    /* 11/08/2026 — Giai đoạn 2 design refresh, mảnh MÀU SẮC (nền tảng).
+     * Header comment phía trên (dòng ~98-99) đã ghi "Paper #F3ECDD / Ink
+     * #171411 / Ochre #A47532" làm Ý ĐỊNH từ trước, nhưng giá trị THỰC THI
+     * bên dưới lệch khỏi đó (đo được: nền #FAF9F6 "C-Hybrid", không phải
+     * #F3ECDD) — tài liệu và code đã trôi khỏi nhau. Đợt này đưa giá trị
+     * KHỚP ĐÚNG với bộ 22 thẻ đã duyệt trên claude.ai/design (PR #1075),
+     * không phải bịa màu mới: đo lại tương phản trước khi áp — Paper/Ink
+     * 15,6:1, thừa xa mức 4,5:1 cần cho chữ thường.
+     * --primary GIỮ NGUYÊN: #89612A đã đúng từ đợt sửa AA trước (4,69:1),
+     * đây chính là accent Ngày mà thẻ Foundations/colors.html cũng dùng.
+     * --card đổi từ "trắng tinh nổi trên nền" sang BẰNG NỀN + viền — đúng
+     * recipe `.card{background:var(--bg)}` trong mọi thẻ design-system:
+     * phẳng như giấy lúc nghỉ, chỉ nổi khi rê chuột (box-shadow riêng). */
+    --background: 41 48% 91%;        /* Paper #F3ECDD */
+    --foreground: 30 15% 8%;         /* Ink #171411 */
+    --card: 41 48% 91%;              /* = --background, elevation qua border/shadow chứ không qua đổi nền */
+    --card-foreground: 30 15% 8%;
     --primary: 35 53% 35%;           /* Ochre-deep #89612A — day accent. WCAG AA fix: was 42% (#A47532, 3.45:1 on paper, fails as small text). Same hue/sat, deepened to 35% → 4.7:1 AA. */
     --primary-foreground: 0 0% 100%; /* white text on ochre CTA */
     /* V4 a11y fix (design handoff): the *brand* ochre #A47532 above stays the
@@ -118,22 +131,32 @@
      * the CTA *button surface* only — same hue, lifts paper text to ≈5:1 AA.
      * Use `bg-[hsl(var(--primary-cta))]` on filled CTAs, keep paper text. */
     --primary-cta: 35 55% 35%;       /* Ochre-deep #8A6128 — filled CTA surface */
-    --muted: 42 24% 95%;             /* C-Hybrid surface #F5F2EC — warm-neutral lift */
+    --muted: 42 24% 95%;             /* C-Hybrid surface #F5F2EC — warm-neutral lift. CHƯA đổi: 22 thẻ design không định nghĩa riêng token này, giữ nguyên tránh suy đoán màu ngoài bộ đã duyệt. */
     --muted-foreground: 40 8% 33%;   /* Ink-meta #5C5950 — stronger for readability (≈6.3:1) */
-    --border: 39 19% 85%;            /* Rule #E0DACF — clearer separation */
+    --border: 41 27% 73%;            /* Rule #CCC0A6 — đậm hơn hẳn #E0DACF cũ (85%→73% lightness), khớp gạch chia rõ nét của mọi thẻ design-system thay vì đường viền gần như vô hình trước đây */
     --ring: 35 53% 35%;              /* ochre — synced to deepened --primary (focus ring) */
+    /* --radius CỐ Ý CHƯA đổi. 22 thẻ design chốt 2px "editorial, không pill",
+     * nhưng --radius điều khiển rounded-lg/md/sm ở MỌI nơi trên site (badge,
+     * input, dialog, avatar…) — đổi hình khối là một trục rủi ro RIÊNG với
+     * đổi màu, cần soi từng nhóm UI độc lập chứ không đi kèm đợt này. Việc
+     * còn treo, không phải bỏ sót. */
     --radius: 0.625rem;
 
     /* RGB anchors for alpha tokens. Wave 62.02 — added --ochre-rgb (day
      * accent) and --paper-rgb (day bg). Existing --gold-rgb + --ink-rgb
      * kept as-is for back-compat with rgb()-based utilities sprinkled
-     * across 100+ files. */
+     * across 100+ files.
+     * 11/08/2026: đã đếm lại — 0 file NGOÀI globals.css đọc bất kỳ biến nào
+     * trong khối này (kể cả --gold-5..80 phái sinh). Chú thích "100+ files"
+     * ở trên có thể đã lỗi thời (chuyển sang literal rgb() ở đâu đó, hoặc
+     * đã bị thay hết). Vẫn cập nhật số cho đúng, KHÔNG xoá — nghi ngờ chưa
+     * phải bằng chứng, và dọn mã chết không phải việc của đợt này. */
     --gold-rgb: 184 146 61;          /* #B8923D — legacy */
-    --ink-rgb: 27 26 23;             /* Ink #1B1A17 */
-    --ochre-rgb: 164 117 50;         /* Ochre #A47532 — accent (kept) */
-    --paper-rgb: 255 255 255;        /* C-Hybrid white base */
-    --bone-rgb: 230 228 223;         /* #E6E4DF — night text */
-    --charcoal-rgb: 23 24 26;        /* #17181A — night bg (cool) */
+    --ink-rgb: 23 20 17;             /* Ink #171411 — khớp --foreground mới */
+    --ochre-rgb: 137 97 42;          /* Ochre-deep #89612A — khớp --primary hiện dùng, KHÔNG phải #A47532 trưng bày */
+    --paper-rgb: 243 236 221;        /* Paper #F3ECDD — khớp --background mới */
+    --bone-rgb: 232 220 193;         /* Bone #E8DCC1 — khớp --foreground .dark mới */
+    --charcoal-rgb: 21 17 12;        /* Charcoal #15110C — khớp --background .dark mới */
     --gold-5: rgb(var(--gold-rgb) / 0.05);
     --gold-10: rgb(var(--gold-rgb) / 0.10);
     --gold-20: rgb(var(--gold-rgb) / 0.20);
@@ -152,22 +175,28 @@
   }
 
   .dark {
-    --background: 220 6% 10%;        /* C-Hybrid — cool dark #17181A */
-    --foreground: 42 11% 89%;        /* #E6E4DF — text on dark */
-    --card: 222 6% 14%;              /* #212327 — elevated surface (lighter = higher, Meta rule) */
-    --card-foreground: 42 11% 89%;
-    --primary: 36 67% 63%;           /* Warm gold #E0AE62 — night accent on cool dark */
-    --primary-foreground: 220 6% 10%; /* dark text on gold */
-    --primary-cta: 36 67% 63%;       /* night CTA surface = gold (dark text ≈ 8:1 AA) */
-    --muted: 225 5% 13%;             /* #1E1F22 — surface */
+    /* 11/08/2026 — cùng đợt reconciliation với :root ở trên. Charcoal/Bone
+     * cũng đã đo tương phản trước khi áp: 13,8:1, và Gold-soft trên Charcoal
+     * mới lẫn chiều ngược lại đều 8,18:1 — không tệ hơn cặp C-Hybrid cũ. */
+    --background: 33 27% 6%;         /* Charcoal #15110C */
+    --foreground: 42 46% 83%;        /* Bone #E8DCC1 */
+    --card: 33 27% 6%;               /* = --background, cùng lý do phẳng-như-giấy ở :root */
+    --card-foreground: 42 46% 83%;
+    --primary: 34 57% 61%;           /* Gold-soft #D4A261 — night accent, khớp thẻ design-system (trước là Warm gold #E0AE62 thời C-Hybrid) */
+    --primary-foreground: 33 27% 6%; /* = --background mới, dark text on gold — đồng bộ với Charcoal thay vì hex nền cũ */
+    --primary-cta: 34 57% 61%;       /* night CTA surface = Gold-soft (dark text ≈ 8,18:1 AA) */
+    --muted: 225 5% 13%;             /* #1E1F22 — surface. CHƯA đổi, cùng lý do với --muted ở :root */
     --muted-foreground: 40 6% 69%;   /* #B4B1AA — lifted for readability on dark (≈7.5:1) */
-    --border: 222 6% 22%;            /* #34363A */
-    --ring: 36 67% 63%;              /* gold */
+    --border: 38 26% 18%;            /* Rule night #3A3122 — ấm và rõ nét hơn #34363A xám lạnh cũ */
+    --ring: 34 57% 61%;              /* Gold-soft — synced to --primary mới */
 
     /* RGB anchors flip for dark mode where ink/paper semantic flips.
      * --ochre-rgb in dark mode resolves to gold-night for consistent
-     * alpha math. */
-    --ochre-rgb: 224 174 98;         /* Gold #E0AE62 in night mode */
+     * alpha math. 11/08/2026: đo lại — 0 file NGOÀI globals.css đọc biến này
+     * (và --gold-5..80 phái sinh từ nó cũng 0 nơi dùng). Vẫn cập nhật cho
+     * đúng số liệu, không xoá — dọn dẹp mã chết là việc khác, không phải
+     * việc của đợt này. */
+    --ochre-rgb: 212 162 97;         /* Gold-soft #D4A261 in night mode */
 
     /* /learn infographic surfaces — raised dark fills so near-black
      * silhouettes stay visible on the ~#18 dark bg. NOT defined in :root,
