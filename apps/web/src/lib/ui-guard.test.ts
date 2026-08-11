@@ -121,6 +121,24 @@ describe('ui-guard — mẫu 2 & 4: kiểm ở mức cả file', () => {
       scanFileLevel(F, 'className="fixed bottom-4"', 'bottom-[max(1rem,env(safe-area-inset-bottom))]'),
     ).toEqual([]);
   });
+
+  it('bắt fixed top-0 mới có chiều cao thật khi file không xử lý safe-area', () => {
+    expect(
+      scanFileLevel(F, 'className="fixed inset-x-0 top-0 h-16"', 'nội dung file'),
+    ).toHaveLength(1);
+  });
+
+  it('không bắt fixed top-0 dải mỏng trang trí (h-[3px], không có chữ/nút)', () => {
+    expect(
+      scanFileLevel(F, 'className="fixed inset-x-0 top-0 h-[3px]"', 'nội dung file'),
+    ).toEqual([]);
+  });
+
+  it('không bắt khi file đã dùng env(safe-area-inset-top)', () => {
+    expect(
+      scanFileLevel(F, 'className="fixed inset-x-0 top-0 h-16"', 'pt-[env(safe-area-inset-top)]'),
+    ).toEqual([]);
+  });
 });
 
 describe('ui-guard — mẫu 6: trang mồ côi', () => {
