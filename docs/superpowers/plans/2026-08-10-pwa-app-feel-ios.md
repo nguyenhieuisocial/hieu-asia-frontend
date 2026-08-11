@@ -67,23 +67,35 @@ chứ không ra trang lỗi Chrome; `/api/*` khi online vẫn đi thẳng mạng
 navigation luôn network-first, `skipWaiting` + `clients.claim` (đã có sẵn), và đặt tên cache có
 version để lần activate sau xoá cache cũ.
 
-### P2 — Nháy trắng lúc mở app trên iPhone 🟠
+### ~~P2 — Nháy trắng lúc mở app trên iPhone~~ ✅ XONG 10/08/2026
 
-iOS không tự sinh splash từ `background_color`; thiếu `apple-touch-startup-image` thì mở app thấy
-màn trắng ~1s. Cần ảnh theo từng kích thước màn hình, sinh bằng script từ icon + `background_color`
-`#0F0F12`.
+18 ảnh splash (chân dung, iPhone + iPad) sinh bằng `pnpm --filter web gen:splash`, khai qua
+`components/pwa/AppleSplashLinks.tsx`. Kiểm lại nguồn trước khi làm: iOS 17/18 **vẫn** không đọc
+`background_color` của manifest để dựng splash, nên `apple-touch-startup-image` vẫn là đường duy nhất.
 
-**Verify:** mở app đã cài trên iPhone thật, quay màn hình lúc khởi động.
+**Bắt được một lỗi thật của bộ ảnh thương hiệu khi làm** — xem §4.
 
-### P3 — Thanh trạng thái chưa liền mạch 🟠
+### P3 — Thanh trạng thái chưa liền mạch 🔴 KHÔNG làm mù được (đã đo)
 
 `apple-mobile-web-app-status-bar-style: black-translucent` cho nội dung tràn lên dưới thanh trạng
 thái — đúng cái nhìn "full-bleed" của app iOS. Đây là thẻ Apple **không** bị manifest thay thế, nên
-vẫn phải khai tay.
+vẫn phải khai tay. Next gộp nó trong `appleWebApp` (kèm thẻ `capable` di sản ở §1) ⇒ phải khai
+**bằng tay** trong `<head>`.
 
-⚠️ Nhưng Next gộp nó chung trong `appleWebApp`, mà `appleWebApp` cũng phát ra thẻ `capable` di sản
-đã nói ở §1. → Phải khai thẻ này **bằng tay** trong `<head>`, không dùng `appleWebApp`.
-Cần đo lại một lượt safe-area sau khi đổi, vì `black-translucent` làm layout dịch lên.
+⚠️ **Nhưng ĐỪNG bật trước khi làm việc dưới đây.** Đếm ngày 10/08 trên toàn `apps/web`:
+
+| `env(safe-area-inset-*)` | Số chỗ |
+|---|---|
+| `-bottom` | 14 |
+| `-left` / `-right` | 2 |
+| **`-top`** | **0** |
+
+Bật `black-translucent` là nội dung dịch LÊN dưới thanh trạng thái, mà **không có một chỗ nào**
+trong site đang chừa lề trên. Kết quả: chữ nằm đè lên đồng hồ / pin trên mọi trang. Đây không phải
+"đổi một dòng" như plan bản đầu ước lượng — nó là **một đợt quét toàn site** thêm lề trên, rồi mới
+đo trên iPhone thật.
+
+→ Nâng P3 từ 🟠 "nhỏ" lên 🔴 "cần một đợt riêng". Ước lượng cũ sai vì đoán, giờ có số đếm.
 
 ### P4 — Chi tiết cảm giác chạm 🟡 (đợt sau, cần đo trên máy thật)
 
@@ -98,6 +110,30 @@ P1 trước (một PR, có test), rồi P3 (nhỏ, nhưng phải đo lại safe-
 P4 mở phiên đo riêng trên iPhone thật.
 
 **Không gộp P1 và P3 vào một PR:** P3 đổi layout toàn site, cần nhìn riêng.
+
+---
+
+---
+
+## 4. ⚠️ Lỗi bộ ảnh thương hiệu phát hiện khi làm P2 — CHƯA SỬA
+
+`public/icon-maskable-512.png` **không phải một maskable icon đúng nghĩa**. Đo được:
+
+- Viền ngoài 20% (safe-zone): nền tối `#0a0a0c` ✅ đúng.
+- Nhưng ô logo bên trong `(51,51)→(459,459)` **mang theo nền TRẮNG** của `icon-512.png` ở 4 góc —
+  tức bản maskable được tạo bằng cách dán ảnh nền trắng vào giữa một khung tối, chứ không phải
+  render lại từ nguồn.
+
+**Hệ quả ngoài splash:** manifest khai file này với `purpose: "maskable"`, tức **Android dùng nó
+làm icon màn hình chính**. Android cắt theo mặt nạ tròn/squircle quanh vùng 80% — đúng vùng có 4
+góc trắng. Nhiều khả năng icon trên máy Android đang có vệt trắng ở góc. **Chưa kiểm trên máy
+Android thật nên không khẳng định**, nhưng đủ căn cứ để phải xem.
+
+Script splash đã tự né được (cắt ô + bo góc), nhưng đó là **vá ở hạ nguồn**. Sửa tận gốc là render
+lại `icon-maskable-512.png` từ file thiết kế nguồn với nền tối tràn viền — cần file gốc, không làm
+được từ PNG đã bẹt.
+
+→ **Việc riêng, không được quên:** kiểm icon trên một máy Android thật, rồi làm lại ảnh nguồn.
 
 ---
 

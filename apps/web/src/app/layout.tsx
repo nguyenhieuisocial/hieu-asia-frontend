@@ -27,6 +27,7 @@ import { WebMcpTools } from '@/components/marketing/WebMcpTools';
 import { Toaster } from '@hieu-asia/ui';
 import { AppShell } from '@/components/product/AppShell';
 import { ServiceWorkerRegistrar } from '@/components/pwa/ServiceWorkerRegistrar';
+import { AppleSplashLinks } from '@/components/pwa/AppleSplashLinks';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { siteGraph } from '@/lib/seo/jsonld';
 // Wave 21 — Vercel telemetry (customer-facing web only).
@@ -293,6 +294,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             — that host is never hit from the browser in production. */}
         <link rel="preconnect" href="https://us.i.posthog.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://browser.sentry-cdn.com" crossOrigin="anonymous" />
+        {/* 10/08/2026 — splash iOS. Android tự dựng splash từ manifest, iOS thì
+            KHÔNG, nên thiếu mấy thẻ này là mở app đã cài thấy màn trắng ~1s.
+            Khai qua component chứ không qua Metadata API vì API đó không có
+            trường cho startup image. Máy không khớp cỡ nào ⇒ không có splash,
+            tức đúng hành vi cũ chứ không vỡ gì. */}
+        <AppleSplashLinks />
         {/* Wave 65.01 — preload woff2 cho LCP element. next/font/google khai
             preload:true nhưng HTML build ra 0 preload font (nguyên nhân chưa rõ,
             KHÔNG phải inlineCss — xem next.config.ts:31-39); hệ quả đo được:

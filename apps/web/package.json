@@ -7,6 +7,7 @@
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build",
     "start": "next start --port 3000",
     "lint": "next lint",
+    "gen:splash": "node scripts/gen-apple-splash.ts",
     "ui-guard": "node scripts/ui-guard.mjs",
     "seo-guard": "node scripts/seo-guard.mjs",
     "seo-live": "node scripts/seo-live.mjs",
