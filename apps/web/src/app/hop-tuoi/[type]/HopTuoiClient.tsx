@@ -27,7 +27,7 @@ import { CompatibilityScore } from '@/components/hop-tuoi/CompatibilityScore';
 import { DownloadToolPdfButton, type ToolPdfPayload } from '@/components/tools/DownloadToolPdfButton';
 import { safeJson } from '@/lib/safe-json';
 import { describeApiError } from '@/lib/api-error';
-import type { HopTuoiType } from './page';
+import type { HopTuoiType } from './types';
 
 // ----- shared API -----
 function getApiBase(): string {

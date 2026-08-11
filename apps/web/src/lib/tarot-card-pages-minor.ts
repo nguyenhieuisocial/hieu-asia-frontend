@@ -3,7 +3,7 @@
 // Khác engine lib/tools/tarot.ts (nghĩa 1 dòng cho lượt rút): đây là dữ liệu BIÊN TẬP cho trang tĩnh.
 // name_vi khớp đúng tên hiển thị của engine ("Át Gậy" … "Vua Tiền") để người rút tra được lá vừa gặp.
 
-import type { TarotCardPage } from './tarot-card-pages';
+import type { TarotCardPage } from './tarot-card-pages-types';
 
 export const MINOR_PAGES: TarotCardPage[] = [
   // ============ GẬY (Wands) — lửa: hành động, đam mê, năng lượng ============

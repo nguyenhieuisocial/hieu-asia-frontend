@@ -4,26 +4,11 @@
 // Tách khỏi lib/tools/tarot.ts (engine rút bài) vì đây là dữ liệu BIÊN TẬP cho trang tĩnh.
 
 import { MINOR_PAGES } from './tarot-card-pages-minor';
+import type { TarotCardPage } from './tarot-card-pages-types';
 
-export interface TarotCardPage {
-  slug: string;
-  name: string; // tên tiếng Anh (người Việt tìm kiếm chủ yếu bằng tên này)
-  name_vi: string;
-  number: number; // Ẩn chính: 0–21 theo RWS · Ẩn phụ: 1–14 (Át → Vua) trong chất
-  arcana?: 'major' | 'minor'; // mặc định (không khai) = major
-  suit_vi?: string; // Ẩn phụ: Gậy · Cốc · Kiếm · Tiền
-  keyUp: string[]; // từ khóa nghĩa xuôi
-  keyRev: string[]; // từ khóa nghĩa ngược
-  image: string; // hình ảnh biểu tượng trên lá (hệ RWS)
-  symbols: string; // biểu tượng chính trên tranh RWS + nghĩa từng biểu tượng (mô tả bằng lời, không dùng hình có ©)
-  storyArc: string; // vị trí lá trong mạch bài: Ẩn chính theo 3 chặng Hành trình Gã Khờ · Ẩn phụ theo cốt truyện số/vai court trong chất
-  up: string; // nghĩa xuôi — đoạn văn
-  rev: string; // nghĩa ngược — đoạn văn (khung "mặt trầm", không phải điềm xấu)
-  love: string; // góc tình cảm – quan hệ
-  work: string; // góc công việc – tiền bạc
-  reflect: string[]; // câu hỏi tự soi
-  ease?: string; // lời trấn an cho các lá hay bị hù dọa
-}
+// Re-exported for backward compatibility — this file used to be the source of
+// the type; consumers importing `TarotCardPage` from here keep working.
+export type { TarotCardPage } from './tarot-card-pages-types';
 
 export const MAJOR_PAGES: TarotCardPage[] = [
   {

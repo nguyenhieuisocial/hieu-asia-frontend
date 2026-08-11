@@ -3,11 +3,9 @@ import { HopTuoiClient } from './HopTuoiClient';
 import { ToolPageShell, GoldAccent } from '@/components/tools/ToolPageShell';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { breadcrumb, webPage } from '@/lib/seo/jsonld';
+import { TYPES, type HopTuoiType } from './types';
 
 export const dynamic = 'force-dynamic';
-
-const TYPES = ['wedding', 'business', 'birth-child', 'xong-dat'] as const;
-export type HopTuoiType = (typeof TYPES)[number];
 
 const META: Record<HopTuoiType, {
   title: string;
