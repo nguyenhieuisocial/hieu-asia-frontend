@@ -321,14 +321,22 @@ export default withBotId(
       },
     },
     // Wave 60.50.a — Sentry payload reduction.
-    //   hideSourceMaps: don't ship maps to the browser (keep for upload).
+    //   sourcemaps.deleteSourcemapsAfterUpload: don't ship maps to the
+    //     browser (keep for upload, delete local copy after). Bản
+    //     @sentry/nextjs ≥ 10 (đang dùng 10.67.0) bỏ shorthand top-level
+    //     `hideSourceMaps` (lỗi kiểu: "does not exist in type
+    //     'SentryBuildOptions'") — thay bằng field lồng bên dưới. Đây VỐN ĐÃ
+    //     là default của SDK (`true`) nên hành vi không đổi; ghi tay để lỡ
+    //     default sau này đổi thì maps vẫn không lộ ra ngoài.
     //   bundleSizeOptimizations: tree-shakes debug logging + drops dev-only
     //     Sentry features for ~5–10kB savings (replaces deprecated
     //     `disableLogger` option in @sentry/nextjs ≥ 10).
     //   tunnelRoute: routes Sentry envelopes through /monitoring on our
     //     own origin, dodging ad-blockers that nuke *.ingest.sentry.io —
     //     gives us full error visibility without an extra dropped-error tax.
-    hideSourceMaps: true,
+    sourcemaps: {
+      deleteSourcemapsAfterUpload: true,
+    },
     bundleSizeOptimizations: {
       excludeDebugStatements: true,
     },
