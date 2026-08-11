@@ -15,17 +15,22 @@ import { LENSES } from '@/lib/catalog/lenses';
  */
 
 // 2026-06-22: chuyển 3 màu CẤU TRÚC sang biến theme để hero render đúng cả
-// light lẫn dark. Light KHÔNG đổi: token light = đúng các hex cũ
-// (--foreground=Ink #171411, --background=Paper #F3ECDD, --muted-foreground≈#6A6258).
-// Dark: tự đổi sang Charcoal/Bone.
-// Wave 65.01 — OCHRE/OCHRE_DEEP hết hard-code hex: trước đây dark mode giữ
-// nguyên ochre ban ngày trên nền charcoal (~2.7:1, fail AA rõ ở .mh-gift và
-// .mh-soi-n). Giờ trỏ biến --mh-* khai trong CSS bên dưới: light = đúng hex cũ
-// (không đổi một pixel), dark = night gold #E0AE62 / gold-soft #D4B373 (đồng bộ
-// .dark --primary + quy ước small-gold của globals.css).
+// light lẫn dark. Dark: tự đổi sang Charcoal/Bone.
+// Wave 65.01 — OCHRE/OCHRE_DEEP hết hard-code hex: trỏ biến --mh-* khai
+// trong CSS bên dưới thay vì hex trực tiếp.
+//
+// 11/08/2026 — Giai đoạn 2 design refresh: --mh-* ở dưới đang giữ hex CŨ,
+// lệch khỏi token thật hiện dùng toàn site (globals.css tự ghi chú dòng
+// --ochre-rgb: "khớp --primary hiện dùng, KHÔNG phải #A47532 trưng bày" —
+// đúng #A47532 là giá trị CŨ mà file này còn giữ). Cập nhật theo đúng
+// --ochre-rgb đã đo: light #89612A (137,97,42 · 4,69:1 trên Paper — bản cũ
+// #A47532 chỉ 3,45:1, DƯỚI ngưỡng AA chữ nhỏ 4,5:1, là lỗi tương phản thật);
+// dark #D4A261 (212,162,97 · 8,18:1 trên Charcoal). Một giá trị đạt AA cả hai
+// cỡ chữ nên OCHRE/OCHRE_DEEP giờ trỏ CÙNG một hex mỗi theme (không còn cần
+// bậc "deep" riêng để bù chữ nhỏ như trước).
 const INK = 'hsl(var(--foreground))';
 const OCHRE = 'var(--mh-ochre)';
-const OCHRE_DEEP = 'var(--mh-ochre-deep)'; // AA-dark ochre for SMALL labels on PAPER (≥5:1); OCHRE stays for the large h1 line (passes large-text 3:1)
+const OCHRE_DEEP = 'var(--mh-ochre-deep)'; // 11/08/2026 — cùng giá trị với OCHRE (xem chú thích trên): token hiện dùng đã đạt AA cho cả chữ lớn lẫn chữ nhỏ, giữ tên/biến riêng để không phải sửa 12+ chỗ dùng, phòng khi cần tách lại sau này
 const PAPER = 'hsl(var(--background))';
 const SOFT = 'hsl(var(--muted-foreground))';
 
@@ -154,11 +159,12 @@ const NOISE =
 
 const CSS = `
 .mh { font-family: var(--font-newsreader), Georgia, serif; overflow-x: hidden; }
-/* Wave 65.01 — cặp giá trị theme cho gold brand của hero (light giữ NGUYÊN hex
- * cũ; dark = night gold, xem chú thích cạnh const OCHRE phía trên).
+/* Wave 65.01 — cặp giá trị theme cho gold brand của hero (xem chú thích đầy
+ * đủ cạnh const OCHRE phía trên: 11/08/2026 đã đổi CẢ light lẫn dark theo
+ * đúng --ochre-rgb dùng chung, không giữ hex cũ ở bên nào).
  * --mh-gold-rgb nuôi các border/glow rgba; --mh-cta-rgb nuôi nền CTA primary. */
-.mh { --mh-ochre: #A47532; --mh-ochre-deep: #7A5420; --mh-gold-rgb: 164,117,50; --mh-cta-rgb: 138,97,40; }
-.dark .mh { --mh-ochre: #E0AE62; --mh-ochre-deep: #D4B373; --mh-gold-rgb: 224,174,98; --mh-cta-rgb: 224,174,98; }
+.mh { --mh-ochre: #89612A; --mh-ochre-deep: #89612A; --mh-gold-rgb: 137,97,42; --mh-cta-rgb: 137,97,42; }
+.dark .mh { --mh-ochre: #D4A261; --mh-ochre-deep: #D4A261; --mh-gold-rgb: 212,162,97; --mh-cta-rgb: 212,162,97; }
 .mh-grain { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .05; mix-blend-mode: multiply; background-image: ${NOISE}; }
 
 /* ===== BASE = MOBILE ===== */
