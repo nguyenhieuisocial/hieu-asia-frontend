@@ -84,5 +84,27 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
       },
     ],
+    // 12/08/2026 — cho hộp thoại cài đặt "đầy đủ" (desktop Chrome + một số
+    // luồng Android) hiện ảnh thật thay vì chỉ icon trần. Chụp thật trên
+    // trang chủ (Cent Browser), không dùng ảnh dựng/placeholder. Bắt buộc
+    // đúng 2 form_factor để khớp UI cài đặt của Chrome (đủ 1 narrow + 1 wide
+    // là tối thiểu hợp lệ theo spec — không thêm ảnh phụ vì chưa có lý do
+    // trang nào khác đáng làm ảnh đại diện hơn trang chủ).
+    screenshots: [
+      {
+        src: '/screenshots/home-narrow.png',
+        sizes: '390x844',
+        type: 'image/png',
+        form_factor: 'narrow',
+        label: 'Nhập ngày sinh, xem lá số Bát Tự ngay trên trang chủ',
+      },
+      {
+        src: '/screenshots/home-wide.png',
+        sizes: '1280x800',
+        type: 'image/png',
+        form_factor: 'wide',
+        label: 'Trang chủ hieu.asia trên màn hình lớn',
+      },
+    ],
   };
 }
