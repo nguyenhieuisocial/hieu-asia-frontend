@@ -113,6 +113,29 @@ không phải làm nhanh nhất.
 - **11/08/2026, đợt 1:** #1076 (màu) + #1077 (hình khối) — merge, verify
   production. Phát hiện phụ: khối `.ob-*` (Oracle Brain, trang chủ) lệch tông
   sau đổi màu — ghi mục 2c, chưa sửa.
+- **11/08/2026, đợt 2:** #1078 (kế hoạch này) → #1079 (khuôn tool-page, gỡ hào
+  quang) → #1080 (reading-report, serif đọc dài) — cả 3 merge, verify.
+- **11/08/2026, đợt 3 — mục 3.3 `hero.html` → trang chủ, bước AN TOÀN đầu:**
+  [#1081](https://github.com/nguyenhieuisocial/hieu-asia-frontend/pull/1081) —
+  CHỈ sửa token màu ochre lệch (MultiHero + FourLens + ScrollProgress đều
+  còn giữ hex #A47532/#E0AE62 cũ, trước bản vá AA của `--primary`/
+  `--ochre-rgb`), KHÔNG rebuild cấu trúc/thang chữ hero theo đúng khuôn thẻ —
+  lý do: `InstantChartHero`/`MultiHero` hiện tại mang nhiều quyết định đã tối
+  ưu qua Wave 60–65 (Lighthouse/TBT, A/B test, mobile fold), đổi cấu trúc
+  không có dữ liệu mới là rủi ro cao hơn lợi ích cho khối chuyển đổi chính.
+  Quy trình: GitNexus impact/detect_changes (LOW cả 2 lần) → Cent Browser
+  thật đo computed style + hover/toggle thật → `pr-review-toolkit:code-reviewer`
+  soát code (phát hiện đúng 2 chỗ sót + 1 comment sai, đã sửa ở commit 2) →
+  tsc/eslint/build/vitest (78 file/919 test) sạch → merge. **Còn treo:** production
+  deploy (`Vercel – hieu-asia-web`) mất bất thường lâu sau merge (>30 phút,
+  so với ~3,5 phút các lần trước) — CI/GH Actions (`ci`, `seo-guard`,
+  CodeQL…) đều pass, nhưng bản ghi deploy production cho web app chưa xuất
+  hiện trong GitHub Deployments API tại thời điểm ghi log này; chưa xác
+  định được nguyên nhân (không có quyền truy cập Vercel dashboard/API
+  trong phiên này để xem log build). Cần founder kiểm tra Vercel dashboard
+  trực tiếp nếu vẫn treo, hoặc tôi sẽ cập nhật khi resolve.
+- Việc còn lại của mục 3 (khuôn cấu trúc/thang chữ đầy đủ theo `hero.html`
+  cho trang chủ) CHƯA làm — mới chỉ xong lớp token màu an toàn nhất.
 - *(cập nhật tiếp khi có tiến độ mới)*
 
 **Cross-link:** `docs/superpowers/plans/2026-08-10-design-refresh-phase1-claude-design-library.md`
