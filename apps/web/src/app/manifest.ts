@@ -7,7 +7,13 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Tử Vi, MBTI, palm reading bằng AI - người bạn đồng hành để hiểu chính mình.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#0F0F12',
+    // 10/08/2026 — chỉnh #0F0F12 → #0a0a0c cho khớp ĐÚNG màu nền của
+    // `icon-maskable-512.png`. Không ảnh icon nào có kênh alpha, nên splash
+    // (cả Android lẫn iOS) là "dán ô vuông icon lên background_color" — lệch
+    // màu là hiện một ô vuông mờ giữa màn hình. Hai màu này đều gần như đen,
+    // đổi qua lại mắt không phân biệt được; cái được là hết ô vuông.
+    // Xem `src/lib/pwa/apple-splash-screens.ts` (SPLASH_BACKGROUND).
+    background_color: '#0a0a0c',
     theme_color: '#B8923D',
     orientation: 'portrait',
     lang: 'vi',
