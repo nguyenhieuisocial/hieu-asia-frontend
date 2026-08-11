@@ -192,10 +192,23 @@ const preset = {
         micro: ['10px', { lineHeight: '14px', letterSpacing: '0.06em' }],
         mini: ['11px', { lineHeight: '16px' }],
       },
+      // 11/08/2026 — Giai đoạn 2 design refresh, mảng HÌNH KHỐI. Đếm thật trên
+      // 22 thẻ đã duyệt (design-system/*/*.html, PR #1075): 42 lần dùng
+      // `border-radius:2px`, 6 lần `50%` (chấm/avatar) — KHÔNG một lần nào
+      // dùng bo góc lớn/mềm. Bộ thang trước (lg 10px → md 8px → sm 6px, và
+      // `xl`/`2xl`/`3xl` giữ nguyên mặc định Tailwind 12–24px) là ngôn ngữ
+      // "mềm mại" khác hẳn — phải làm PHẲNG CẢ THANG, không chỉ 3 bậc nhỏ,
+      // nếu không thì nút/input sắc cạnh còn thẻ marketing lớn vẫn bo tròn
+      // mềm, tạo giao diện nửa vời không khớp bộ đã duyệt. `rounded-full`
+      // KHÔNG đụng tới — đó là 340 chỗ hình tròn thật (chấm, avatar), đúng
+      // với 6 lần `50%` trong bộ thẻ, giữ nguyên `9999px` mặc định của Tailwind.
       borderRadius: {
+        sm: 'var(--radius)',
+        md: 'var(--radius)',
         lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        xl: 'var(--radius)',
+        '2xl': 'var(--radius)',
+        '3xl': 'var(--radius)',
       },
       backgroundImage: {
         'gold-gradient':

@@ -135,12 +135,14 @@
     --muted-foreground: 40 8% 33%;   /* Ink-meta #5C5950 — stronger for readability (≈6.3:1) */
     --border: 41 27% 73%;            /* Rule #CCC0A6 — đậm hơn hẳn #E0DACF cũ (85%→73% lightness), khớp gạch chia rõ nét của mọi thẻ design-system thay vì đường viền gần như vô hình trước đây */
     --ring: 35 53% 35%;              /* ochre — synced to deepened --primary (focus ring) */
-    /* --radius CỐ Ý CHƯA đổi. 22 thẻ design chốt 2px "editorial, không pill",
-     * nhưng --radius điều khiển rounded-lg/md/sm ở MỌI nơi trên site (badge,
-     * input, dialog, avatar…) — đổi hình khối là một trục rủi ro RIÊNG với
-     * đổi màu, cần soi từng nhóm UI độc lập chứ không đi kèm đợt này. Việc
-     * còn treo, không phải bỏ sót. */
-    --radius: 0.625rem;
+    /* 11/08/2026 — mảng HÌNH KHỐI, tiếp nối commit màu ở trên. Đếm thật trên
+     * 22 thẻ đã duyệt: 42/42 lần bo góc là ĐÚNG 2px, 0 lần dùng bo lớn/mềm.
+     * `packages/config/tailwind-preset.ts` đã đổi để `rounded-sm` tới
+     * `rounded-3xl` CÙNG trỏ về biến này — một token, phẳng cả thang, khớp
+     * số đếm trên (không chỉ 3 bậc nhỏ, kẻo nút sắc cạnh mà thẻ marketing lớn
+     * vẫn bo tròn mềm, thành giao diện nửa vời). `rounded-full` KHÔNG đụng —
+     * giữ nguyên 50% mặc định cho chấm/avatar, đúng 6/6 lần `50%` trong bộ thẻ. */
+    --radius: 0.125rem;              /* 2px — editorial, không pill */
 
     /* RGB anchors for alpha tokens. Wave 62.02 — added --ochre-rgb (day
      * accent) and --paper-rgb (day bg). Existing --gold-rgb + --ink-rgb
