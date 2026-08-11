@@ -50,6 +50,12 @@ export const metadata: Metadata = {
     title: 'hieu.asia',
     statusBarStyle: 'black-translucent',
   },
+  // `appleWebApp.capable` KHÔNG đủ — xem comment đầy đủ ở
+  // apps/web/src/app/layout.tsx (cùng vấn đề: Next.js 15 bỏ tiền tố `apple-`,
+  // Safari thật vẫn cần nó, thiếu là màn hình đen — vercel/next.js#74524).
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+  },
 };
 
 export const viewport: Viewport = {

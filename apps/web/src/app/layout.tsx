@@ -261,6 +261,16 @@ export const metadata: Metadata = {
     title: 'hieu.asia',
     statusBarStyle: 'black-translucent',
   },
+  // `appleWebApp.capable` ở trên KHÔNG đủ — Next.js 15 (PR vercel/next.js#70363)
+  // đổi sang chỉ phát `mobile-web-app-capable` (bỏ hẳn tiền tố `apple-`), nhưng
+  // Safari THẬT vẫn cần đúng thẻ có tiền tố `apple-` để chạy standalone/hiện
+  // splash — thiếu nó là màn hình ĐEN lúc mở app từ icon đã cài, không phải lý
+  // thuyết: vercel/next.js#74524, #74248, #70272 (đã kiểm chứng qua web search,
+  // không phải suy đoán). Bù tay bằng `other` — cùng lớp giải pháp với
+  // `AppleSplashLinks.tsx` (raw tag cho thứ Metadata API kiểu chưa có/chưa đủ).
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+  },
 };
 
 export const viewport: Viewport = {
