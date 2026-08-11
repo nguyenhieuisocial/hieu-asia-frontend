@@ -159,8 +159,9 @@ const NOISE =
 
 const CSS = `
 .mh { font-family: var(--font-newsreader), Georgia, serif; overflow-x: hidden; }
-/* Wave 65.01 — cặp giá trị theme cho gold brand của hero (light giữ NGUYÊN hex
- * cũ; dark = night gold, xem chú thích cạnh const OCHRE phía trên).
+/* Wave 65.01 — cặp giá trị theme cho gold brand của hero (xem chú thích đầy
+ * đủ cạnh const OCHRE phía trên: 11/08/2026 đã đổi CẢ light lẫn dark theo
+ * đúng --ochre-rgb dùng chung, không giữ hex cũ ở bên nào).
  * --mh-gold-rgb nuôi các border/glow rgba; --mh-cta-rgb nuôi nền CTA primary. */
 .mh { --mh-ochre: #89612A; --mh-ochre-deep: #89612A; --mh-gold-rgb: 137,97,42; --mh-cta-rgb: 137,97,42; }
 .dark .mh { --mh-ochre: #D4A261; --mh-ochre-deep: #D4A261; --mh-gold-rgb: 212,162,97; --mh-cta-rgb: 212,162,97; }

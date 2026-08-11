@@ -19,8 +19,18 @@ import { LENSES } from '@/lib/catalog/lenses';
 // 2026-06-22: INK/SOFT → currentColor để nét vẽ SVG theo chữ (foreground) của
 // theme — Ink trên light, Bone trên dark. (Dùng currentColor thay var() vì
 // thuộc-tính SVG không resolve var() ổn định mọi trình duyệt.) OCHRE/FLAGRED giữ.
+//
+// 11/08/2026 — OCHRE ĐÃ đổi sang var(): hex tĩnh #A47532 cũ (a) là giá trị
+// TRƯỚC bản vá AA của --primary (3,45:1 trên Paper, dưới ngưỡng chữ nhỏ
+// 4,5:1 — .fl-ibtn.fl-on tô màu này lên NHÃN nút, không chỉ nét SVG), và
+// (b) không đổi theo dark mode (SVG luôn hiện màu light dù đang ở theme tối).
+// LensConstellation CHỈ được gọi từ MultiHero (component cha duy nhất, xem
+// FourLens.tsx không có import nào khác) nên `<svg><style>` này luôn nằm
+// trong DOM con của `.mh` — dùng thẳng `--mh-ochre`/`--mh-gold-rgb` mà
+// MultiHero.tsx đã khai (đúng --ochre-rgb dùng chung, tự đổi theo
+// light/dark) thay vì một hex trùng lặp riêng dễ lệch tông lần nữa.
 const INK = 'currentColor';
-const OCHRE = '#A47532';
+const OCHRE = 'var(--mh-ochre)';
 const SOFT = 'currentColor';
 const FLAGRED = '#9E2E1C'; // đỏ sơn mài trầm (trước là đỏ cờ neon #DA251D) — dịu lại, hợp nền kem + vàng
 const C = 200, R_LENS = 126, LENS_R = 40, CORE_R = 26, OUT_R = 170, STAR_IN = 52;
@@ -175,12 +185,12 @@ const FL_CSS = `
 .fl-converge .fl-astro { opacity: 0; pointer-events: none; }
 
 .fl-lens { color: ${INK}; opacity: .4; transform-box: fill-box; transform-origin: center; transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.3,1), filter .7s ease; }
-.fl-lens.fl-on { opacity: 1; transform: scale(1.13); filter: drop-shadow(0 0 6px rgba(164,117,50,.5)); }
+.fl-lens.fl-on { opacity: 1; transform: scale(1.13); filter: drop-shadow(0 0 6px rgba(var(--mh-gold-rgb),.5)); }
 .fl-lensbg { transition: fill-opacity .6s ease; }
 .fl-lens.fl-on .fl-lensbg { fill-opacity: .07; }
 
 .fl-bar { opacity: .2; transition: opacity .6s ease, stroke-width .4s ease; }
-.fl-bar.fl-on { opacity: .92; stroke-width: 1.9; filter: drop-shadow(0 0 3px rgba(164,117,50,.5)); }
+.fl-bar.fl-on { opacity: .92; stroke-width: 1.9; filter: drop-shadow(0 0 3px rgba(var(--mh-gold-rgb),.5)); }
 .fl-converge .fl-bar { opacity: 0; }
 
 .fl-coredot, .fl-halo { transform-box: fill-box; transform-origin: center; }

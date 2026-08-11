@@ -128,8 +128,13 @@ export function ScrollProgress({
           transformOrigin: 'left center',
           transform: 'scaleX(0)',
           // Brand gold → ochre, left-to-right, for a touch of depth.
+          // 11/08/2026 — cả 2 màu là hex CŨ (night gold #E0AE62 thời
+          // C-Hybrid + day ochre #A47532 trước bản vá AA), cùng đợt lệch
+          // token với MultiHero/FourLens cạnh đây (xem chú thích tại đó).
+          // Đổi theo đúng --ochre-rgb hiện dùng, GIỮ NGUYÊN thứ tự/khái
+          // niệm gradient (gold sáng → ochre đậm) — không đụng logic thanh.
           background:
-            'linear-gradient(90deg, #E0AE62 0%, #A47532 100%)',
+            'linear-gradient(90deg, #D4A261 0%, #89612A 100%)',
           // Slow, soft easing when motion is allowed; snap when reduced.
           transition: reduceMotion ? 'none' : 'transform 120ms ease-out',
           willChange: 'transform',
