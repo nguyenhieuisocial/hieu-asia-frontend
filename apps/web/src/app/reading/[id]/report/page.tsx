@@ -521,8 +521,25 @@ function ReportSections({ sections }: { sections: MarkdownSection[] }) {
 }
 
 function SectionBody({ content }: { content: string }) {
+  // 11/08/2026 — Giai đoạn 2 design refresh, khuôn màn đọc báo cáo (đối chiếu
+  // `design-system/patterns/reading-report.html` đã duyệt: "đọc dài là nghi
+  // thức — một cột, serif, không sidebar").
+  //
+  // Áp ĐÚNG token 9 bậc đã có sẵn trong `tailwind.config.ts` (bậc 6 "Lede" —
+  // 19px/1.45, comment tại đó ghi thẳng là dành cho việc này) — không tự chế
+  // giá trị mới. `max-w-reading` (680px) cũng đã có sẵn, chú thích ngay tại
+  // định nghĩa: "luật một-cột-đọc: mọi khối chữ dài (báo cáo, cẩm nang, bài
+  // học) giới hạn ~68 ký tự/dòng" — cả hai token này trước đợt này có 0 chỗ
+  // dùng trên toàn site, dù đã được viết ra làm luật từ trước.
+  //
+  // CHỈ đổi PARAGRAPH thân bài — đây là nội dung AI SINH RA cho lá số ĐÃ TRẢ
+  // PHÍ, không phải trang tĩnh, nên cố ý hẹp phạm vi: không đụng heading (h1-
+  // h3 markdown), không đụng khối trích dẫn "Đối chiếu:"/"Theo:" bên dưới —
+  // hai chỗ đó không có tham chiếu trực tiếp trong thẻ đã duyệt (thẻ chỉ vẽ
+  // kicker + đoạn văn + pull-quote CHUYÊN, khác cấu trúc markdown động ở đây),
+  // đổi mà không có mẫu đối chiếu là đoán, không phải áp dụng.
   return (
-    <article className="markdown-report space-y-3 text-sm leading-relaxed text-foreground/90">
+    <article className="markdown-report mx-auto max-w-reading space-y-3 text-foreground/90">
       <ReactMarkdown
         components={{
           h1: ({ ...props }) => (
@@ -543,7 +560,9 @@ function SectionBody({ content }: { content: string }) {
               {...props}
             />
           ),
-          p: ({ ...props }) => <p className="leading-relaxed" {...props} />,
+          p: ({ ...props }) => (
+            <p className="font-editorial-display text-editorial-lede leading-relaxed" {...props} />
+          ),
           ul: ({ ...props }) => (
             <ul className="ml-5 list-disc space-y-1" {...props} />
           ),
