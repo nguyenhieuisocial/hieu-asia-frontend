@@ -9,6 +9,10 @@ import type { MetadataRoute } from 'next';
  *
  * Icons shared with apps/web (same hieu.asia brand identity, just
  * different host). 6 icon entries: 4 'any' + 2 Android-maskable.
+ *
+ * 11/08/2026 — background_color #0F0F12 → #0a0a0c: cùng lỗi "ô vuông mờ"
+ * splash Android đã sửa ở apps/web (khớp ĐÚNG màu nền icon, xem
+ * apps/web/src/app/manifest.ts). Icon dùng chung nên lỗi cũng dùng chung.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -17,7 +21,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Bảng điều khiển vận hành cho hieu.asia — operations, cost tracking, RAG management.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#0F0F12',
+    background_color: '#0a0a0c',
     theme_color: '#B8923D',
     orientation: 'any', // admin used on both desktop + mobile
     lang: 'vi',

@@ -232,6 +232,45 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  // 11/08/2026 — bổ sung, đo được đang THIẾU HẲN trên production (curl HTML
+  // thật): không có `<link rel="apple-touch-icon">` nào cả, và tên file thật
+  // (`apple-icon.png`) không khớp quy ước ngầm của Safari (`apple-touch-icon.png`
+  // ở gốc site — 404 khi thử). Từ Wave 57.4 (dời icon route code-gen sang PNG
+  // tĩnh trong `public/`) đã mất luôn phần Next.js tự sinh các thẻ này — thứ
+  // vốn chỉ tự động khi file nằm trong `app/`, không phải `public/`. Khai tay
+  // ở đây để bù lại.
+  icons: {
+    icon: [{ url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' }],
+    shortcut: '/favicon.ico',
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
+  // Thiếu khối này thì "Thêm vào MH chính" trên iOS Safari KHÔNG chạy standalone
+  // — mở lại đúng tab Safari có thanh địa chỉ, biến hết công sức app-icon +
+  // 18 ảnh splash ở trên thành vô nghĩa (không có gì để hiện app "thật" ra).
+  // `statusBarStyle: 'black-translucent'` khớp với hướng đã chọn ở SiteNav
+  // (PR #1085 — `pt-[env(safe-area-inset-top)]`): thanh trạng thái trong suốt,
+  // nội dung tràn lên dưới nó, chữ đồng hồ/pin luôn màu TRẮNG bất kể theme.
+  // ⚠️ Đánh đổi đã biết: trang marketing/trang chủ ở light mode có `--card`
+  // rất sáng (~91% lightness) nên chữ trắng đó hơi khó đọc trên chính SiteNav
+  // — vẫn đọc được (icon hệ thống iOS tự có viền/đổ bóng riêng), không phải
+  // lỗi vỡ giao diện. Đổi 'default' thì hết đánh đổi này NHƯNG status bar hết
+  // trong suốt ⇒ pt-safe-area ở SiteNav trở thành no-op vĩnh viễn, mất luôn
+  // cảm giác app toàn màn hình ở các trang tối (đích ban đầu của cả hai thứ).
+  appleWebApp: {
+    capable: true,
+    title: 'hieu.asia',
+    statusBarStyle: 'black-translucent',
+  },
+  // `appleWebApp.capable` ở trên KHÔNG đủ — Next.js 15 (PR vercel/next.js#70363)
+  // đổi sang chỉ phát `mobile-web-app-capable` (bỏ hẳn tiền tố `apple-`), nhưng
+  // Safari THẬT vẫn cần đúng thẻ có tiền tố `apple-` để chạy standalone/hiện
+  // splash — thiếu nó là màn hình ĐEN lúc mở app từ icon đã cài, không phải lý
+  // thuyết: vercel/next.js#74524, #74248, #70272 (đã kiểm chứng qua web search,
+  // không phải suy đoán). Bù tay bằng `other` — cùng lớp giải pháp với
+  // `AppleSplashLinks.tsx` (raw tag cho thứ Metadata API kiểu chưa có/chưa đủ).
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+  },
 };
 
 export const viewport: Viewport = {

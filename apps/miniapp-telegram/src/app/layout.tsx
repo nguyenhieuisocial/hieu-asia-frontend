@@ -36,6 +36,26 @@ export const metadata: Metadata = {
   },
   robots: { index: false, follow: false },
   formatDetection: { telephone: false, email: false, address: false },
+  // 11/08/2026 — cùng lỗi/cùng lý do đã sửa ở apps/web/src/app/layout.tsx.
+  // Đường "Mở trong trình duyệt" từ Telegram rồi "Thêm vào MH chính" là
+  // fallback hiếm dùng (bên trong Telegram, chrome do SDK Telegram lo), nhưng
+  // vẫn nên đúng khi ai đó thật sự đi đường này.
+  icons: {
+    icon: [{ url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' }],
+    shortcut: '/favicon.ico',
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'hieu.asia',
+    statusBarStyle: 'black-translucent',
+  },
+  // `appleWebApp.capable` KHÔNG đủ — xem comment đầy đủ ở
+  // apps/web/src/app/layout.tsx (cùng vấn đề: Next.js 15 bỏ tiền tố `apple-`,
+  // Safari thật vẫn cần nó, thiếu là màn hình đen — vercel/next.js#74524).
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+  },
 };
 
 export const viewport: Viewport = {

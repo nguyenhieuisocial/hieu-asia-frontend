@@ -29,6 +29,28 @@ export const metadata: Metadata = {
   title: { default: 'admin.hieu.asia', template: '%s · admin.hieu.asia' },
   description: 'Bảng điều khiển vận hành — operations + cost tracking + RAG management.',
   robots: { index: false, follow: false },
+  // 11/08/2026 — cùng lỗi/cùng lý do đã sửa ở apps/web/src/app/layout.tsx:
+  // Wave 57.4 dời icon sang PNG tĩnh trong `public/` làm mất luôn phần Next.js
+  // tự sinh `<link rel="apple-touch-icon">` + meta appleWebApp (chỉ tự động
+  // khi file nằm trong `app/`). admin luôn dark (`defaultTheme="dark"`,
+  // ThemeProvider trong RootLayout dưới) nên KHÔNG có đánh đổi light-mode như
+  // ở apps/web — black-translucent an toàn tuyệt đối ở đây.
+  icons: {
+    icon: [{ url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' }],
+    shortcut: '/favicon.ico',
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'admin.hieu.asia',
+    statusBarStyle: 'black-translucent',
+  },
+  // `appleWebApp.capable` KHÔNG đủ — xem comment đầy đủ ở
+  // apps/web/src/app/layout.tsx (cùng vấn đề: Next.js 15 bỏ tiền tố `apple-`,
+  // Safari thật vẫn cần nó, thiếu là màn hình đen — vercel/next.js#74524).
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
