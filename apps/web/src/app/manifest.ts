@@ -26,6 +26,19 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: 'portrait',
     lang: 'vi',
     categories: ['lifestyle', 'productivity', 'education'],
+    // 11/08/2026 — long-press icon trên Android / bấm-giữ trên desktop đã cài
+    // giờ nhảy thẳng vào Tử Vi hôm nay, KHÔNG qua trang chủ trước. Trỏ đúng
+    // route mà push notification hằng ngày đã dùng làm đích (xem `data.url`
+    // mặc định trong `public/sw.js`, sự kiện 'push') — cùng một hành vi lõi,
+    // chỉ khác lối vào. Không thêm mục nào khác: chưa có bằng chứng route thứ
+    // hai đủ giá trị để chiếm chỗ trong menu rất hẹp này.
+    shortcuts: [
+      {
+        name: 'Tử vi hôm nay',
+        short_name: 'Hôm nay',
+        url: '/tu-vi-hom-nay',
+      },
+    ],
     icons: [
       // Wave 57.4: static files. Previously '/icon' + '/apple-icon' were
       // Next.js ImageResponse code-gen routes (icon.tsx/apple-icon.tsx),
