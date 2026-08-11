@@ -9,14 +9,17 @@
 :root{
   --bg:#F3ECDD;
   --fg:#171411;
-  --accent:#A47532;
+  --accent:#89612A;
   --border:#CCC0A6;
   --muted:rgba(23,20,17,.62);
   --t-fast:150ms;
   --t-base:300ms;
   --t-slow:500ms;
   --ease-soft:cubic-bezier(.25,.8,.4,1);
-  --ease-ed:cubic-bezier(.34,1.56,.64,1);
+  /* Bỏ `--ease-ed:cubic-bezier(.34,1.56,.64,1)` khai ở đây: (a) không dòng nào
+     trong thẻ dùng tới nó, (b) tên gọi SAI — `ease-editorial` thật là
+     (.165,.85,.45,1) và đã có trong mã sản phẩm từ Wave 60.56; đường cong nảy
+     này tên là `ease-spring`. Xem thẻ Foundations · Chuyển động. */
 }
 .night{
   --bg:#15110C;
@@ -27,7 +30,10 @@
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
-.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+/* `color` PHẢI khai ở .panel chứ không chỉ ở body: custom property được tính tại
+   nơi khai, nên `body{color:var(--fg)}` chốt cứng màu NGÀY rồi truyền xuống —
+   panel .night đổi --fg nhưng chữ con đã kế thừa màu cũ, ra 1,02:1 (tàng hình). */
+.panel{background:var(--bg);color:var(--fg);padding:40px 44px;border-bottom:1px solid var(--border)}
 h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;line-height:1.2;margin:0 0 4px}
 .sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 28px}
 .zl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}

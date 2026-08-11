@@ -1,10 +1,13 @@
 <!-- @dsCard group="Components" -->
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Danh sách biên tập — số mono, tít nghiêng</title><style>
-:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#89612A;--border:#CCC0A6;--muted:rgba(23,20,17,.62);--ease-soft:cubic-bezier(.25,.8,.4,1)}
 .night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
 *{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
 .serif{font-family:'Newsreader',Georgia,serif}
-.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+/* `color` PHẢI khai ở .panel chứ không chỉ ở body: custom property được tính tại
+   nơi khai, nên `body{color:var(--fg)}` chốt cứng màu NGÀY rồi truyền xuống —
+   panel .night đổi --fg nhưng chữ con đã kế thừa màu cũ, ra 1,02:1 (tàng hình). */
+.panel{background:var(--bg);color:var(--fg);padding:40px 44px;border-bottom:1px solid var(--border)}
 h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
 .sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
 .list{max-width:680px}

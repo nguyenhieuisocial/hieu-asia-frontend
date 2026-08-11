@@ -1,9 +1,12 @@
 <!-- @dsCard group="Foundations" -->
 <!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Màu — Như giấy cũ</title><style>
-:root{--bg:#F3ECDD;--fg:#171411;--accent:#A47532;--border:#CCC0A6;--muted:rgba(23,20,17,.62)}
+:root{--bg:#F3ECDD;--fg:#171411;--accent:#89612A;--border:#CCC0A6;--muted:rgba(23,20,17,.62)}
 .night{--bg:#15110C;--fg:#E8DCC1;--accent:#D4A261;--border:#3A3122;--muted:rgba(232,220,193,.62)}
 *{box-sizing:border-box}body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--fg)}
-.panel{background:var(--bg);padding:40px 44px;border-bottom:1px solid var(--border)}
+/* `color` PHẢI khai ở .panel chứ không chỉ ở body: custom property được tính tại
+   nơi khai, nên `body{color:var(--fg)}` chốt cứng màu NGÀY rồi truyền xuống —
+   panel .night đổi --fg nhưng chữ con đã kế thừa màu cũ, ra 1,02:1 (tàng hình). */
+.panel{background:var(--bg);color:var(--fg);padding:40px 44px;border-bottom:1px solid var(--border)}
 h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:0 0 4px}
 .sub{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 24px}
 .row{display:flex;gap:16px;flex-wrap:wrap}
@@ -24,8 +27,18 @@ h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;margin:
   <div class="row">
     <div class="sw"><div class="chip" style="background:#F3ECDD"></div><b>Paper</b><span>#F3ECDD · nền</span></div>
     <div class="sw"><div class="chip" style="background:#171411"></div><b>Ink</b><span>#171411 · chữ</span></div>
-    <div class="sw"><div class="chip" style="background:#A47532"></div><b>Ochre</b><span>#A47532 · nhấn</span></div>
+    <div class="sw"><div class="chip" style="background:#89612A"></div><b>Ochre-deep</b><span>#89612A · nhấn</span></div>
     <div class="sw"><div class="chip" style="background:#CCC0A6"></div><b>Rule</b><span>#CCC0A6 · viền</span></div>
+    <div class="sw" style="opacity:.75"><div class="chip" style="background:#A47532"></div><b>Ochre <i style="font-style:normal;font-size:9px;letter-spacing:.1em">CHỈ TRƯNG BÀY</i></b><span>#A47532 · không dùng cho chữ/nút</span></div>
+  </div>
+  <div class="note" style="margin-top:18px;padding:12px 14px;border-left:2px solid var(--accent);font-size:12px;line-height:1.6;color:var(--muted)">
+    <b style="color:var(--fg)">Vì sao nhấn Ngày là #89612A chứ không phải Ochre #A47532:</b>
+    đo tương phản WCAG, Ochre trên nền Paper chỉ đạt <b style="color:var(--fg)">3,45:1</b> — trượt chuẩn AA
+    (cần 4,5:1), cả khi làm chữ lẫn khi làm nền nút có chữ Paper. Bản đậm hơn cùng sắc
+    đạt <b style="color:var(--fg)">4,69:1</b>, đạt AA cả hai chiều. Mã sản phẩm đã dùng bản đậm từ trước;
+    thẻ này trước đây còn ghi màu cũ nên đã sửa cho khớp. Ochre gốc giữ lại làm màu
+    thương hiệu để trưng bày (nhãn, minh hoạ), <b style="color:var(--fg)">không dùng cho chữ hay nền nút</b>.
+    Nhấn Đêm #D4A261 đạt 8,18:1 — giữ nguyên.
   </div>
 </div>
 
