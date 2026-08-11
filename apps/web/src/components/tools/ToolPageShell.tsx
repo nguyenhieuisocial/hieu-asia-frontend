@@ -25,13 +25,15 @@ export interface ToolPageShellProps {
 }
 
 /**
- * Premium shell for tool pages.
+ * Shell dùng chung cho 76 trang công cụ (đối chiếu `patterns/tool-page.html`
+ * đã duyệt trên claude.ai/design).
  *
- * Layout: SiteNav (fixed) → decorative hero with gold-gradient accent on title →
- * children in a centered max-w container → SiteFooter.
+ * Layout: SiteNav (fixed) → breadcrumb + hero (eyebrow/H1/mô tả) → children
+ * trong khung căn giữa max-w → SiteFooter.
  *
- * Background uses `bg-ink-radial` plus a soft gold glow blob in the top-right
- * for visual depth without distracting from content.
+ * 11/08/2026 — nền PHẲNG tuyệt đối, không glow/gradient/blur (đã gỡ 3 lớp hào
+ * quang trước đó). Đổi màu/hình khối qua đợt trước không tự cuốn theo được vì
+ * đây là JSX của shell, không phải token CSS.
  */
 export function ToolPageShell({
   eyebrow,
@@ -51,7 +53,10 @@ export function ToolPageShell({
       {icon && (
         <div
           aria-hidden="true"
-          className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-gold/25 bg-gradient-to-br from-gold/15 via-background to-purple/20 text-3xl shadow-[0_0_40px_-12px_rgba(184,146,61,0.45)] sm:flex"
+          // 11/08/2026 — bỏ gradient gold→purple + shadow phát sáng, cùng lý do
+          // với 3 lớp glow ở nền `<main>` phía dưới: khớp `.input-card` phẳng
+          // (nền = --bg, chỉ viền) của tool-page.html đã duyệt, không glow.
+          className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-border bg-card text-3xl sm:flex"
         >
           {icon}
         </div>
@@ -77,20 +82,17 @@ export function ToolPageShell({
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
-      <main id="main-content" className="relative overflow-hidden pt-16">
-        {/* Decorative glows — purely visual, ignored by screen readers */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[480px] bg-ink-radial opacity-90"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-32 right-[-10%] h-[420px] w-[420px] rounded-full bg-gold/10 blur-3xl"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-10 left-[-15%] h-[360px] w-[360px] rounded-full bg-purple/20 blur-3xl"
-        />
+      <main id="main-content" className="relative pt-16">
+        {/* 11/08/2026 — Giai đoạn 2 design refresh, khuôn trang công cụ.
+         * Gỡ 3 lớp hào quang (ink-radial + 2 đốm blur gold/purple) từng phủ
+         * ~1.200 trang công cụ. Đối chiếu `design-system/patterns/tool-page.html`
+         * đã duyệt: nền PHẲNG tuyệt đối, không glow/gradient/blur ở bất kỳ
+         * đâu — chỉ hairline border phân vùng. Trang công cụ trước đây mang
+         * đúng ngôn ngữ "mềm, phát sáng" mà đợt màu/hình khối vừa gỡ khỏi
+         * nút/thẻ; còn sót lại ở đây vì đây là lớp NỀN của shell, không phải
+         * token màu/bo góc nên không tự cuốn theo hai đợt trước.
+         * `overflow-hidden` cũng gỡ theo — chỉ tồn tại để cắt viền 3 lớp
+         * glow tràn ra ngoài khung; không còn glow thì không còn lý do giữ. */}
 
         <section className="relative">
           <div className="mx-auto max-w-6xl px-6 pt-6 pb-8 sm:pt-8 sm:pb-12">
