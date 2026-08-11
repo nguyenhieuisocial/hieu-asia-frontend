@@ -5,7 +5,23 @@ import { cn } from '../lib/utils';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ' +
-    'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ' +
+    // 2026-08-11 — Giai đoạn 2 design refresh: `transition-colors` → `ds-press`.
+    // `ds-press` (globals.css §Primitive chuyển động) là primitive dùng chung:
+    // nó khai transition cho MÀU + TRANSFORM, và lún `scale(.98)` khi nhấn.
+    //
+    // VÌ SAO ĐỔI, không phải thêm: nút trước đây KHÔNG có phản hồi khi bấm ở
+    // bất kỳ biến thể nào — trên điện thoại (không có hover) người dùng bấm mà
+    // màn hình đứng im, cảm giác "web" chứ không phải "app". Đây là 587 chỗ
+    // dùng `<Button>` trên 236 file nên sửa ở đúng một nguồn này là phủ hết.
+    //
+    // Phải THAY chứ không ĐỂ CẢ HAI: `transition-colors` và `ds-press` cùng
+    // ghi thuộc tính `transition` (cùng @layer utilities) nên sẽ đè nhau —
+    // cái nào thắng tuỳ thứ tự CSS, và bên thua mất hiệu ứng. Giữ một nguồn.
+    //
+    // `ds-press` tự tôn trọng `prefers-reduced-motion` (tắt cả transform).
+    // apps/admin có globals.css riêng, không khai `ds-press` ⇒ class này vô
+    // hại ở đó (không style gì), nút admin giữ nguyên hành vi cũ.
+    'ds-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ' +
     // Wave 60.41 — `disabled:opacity-50` on `default` variant made the
     // primary gold button render as washed-out tan on cream light bg
     // (≈ #DCC99E text-ink at 50% opacity → invisible on cream). Bump
@@ -22,12 +38,14 @@ const buttonVariants = cva(
         // /signin, /onboarding, /tu-vi-hom-nay because email/form not
         // filled yet. Add explicit muted-bg fallback so users see "yes
         // this is a button, no it's not active yet".
-        default: 'bg-gold text-ink hover:bg-gold-400 disabled:bg-muted disabled:text-muted-foreground',
+        default:
+          'bg-gold text-ink hover:bg-gold-400 disabled:bg-muted disabled:text-muted-foreground',
         // Wave 60.22 — `text-gold` on `bg-transparent` over cream background
         // failed WCAG AA contrast (per Chrome MCP audit). Switched to
         // `text-foreground` so the button reads in both themes; hover keeps
         // gold tint via bg + border accent.
-        outline: 'border border-gold/40 bg-transparent text-foreground hover:bg-gold/10 hover:text-gold',
+        outline:
+          'border border-gold/40 bg-transparent text-foreground hover:bg-gold/10 hover:text-gold',
         ghost: 'hover:bg-gold/10 text-foreground',
         link: 'text-gold underline-offset-4 hover:underline',
       },
@@ -42,8 +60,7 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   /**
    * Render the child as the root element (Radix Slot pattern).
    * Use with `<Link>` to avoid nested interactive elements (WCAG SC 4.1.2):
