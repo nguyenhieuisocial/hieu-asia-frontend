@@ -9,6 +9,10 @@ import type { MetadataRoute } from 'next';
  * fallback only).
  *
  * Icons shared with apps/web — same hieu.asia brand identity.
+ *
+ * 11/08/2026 — background_color #0F0F12 → #0a0a0c: cùng lỗi "ô vuông mờ"
+ * splash Android đã sửa ở apps/web (khớp ĐÚNG màu nền icon, xem
+ * apps/web/src/app/manifest.ts). Icon dùng chung nên lỗi cũng dùng chung.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -17,7 +21,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Telegram Mini App cho hieu.asia — Tử Vi, Bát Tự, MBTI bằng AI ngay trong Telegram.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#0F0F12',
+    background_color: '#0a0a0c',
     theme_color: '#B8923D',
     orientation: 'portrait',
     lang: 'vi',
