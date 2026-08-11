@@ -42,17 +42,30 @@ export default function OfflinePage() {
           — những gì bạn đã lưu vẫn còn nguyên.
         </p>
 
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages --
-            CỐ Ý dùng <a> chứ không phải <Link>. Link điều hướng client-side,
-            mà lúc mất mạng router không lấy được payload RSC nên bấm xong
-            không có gì xảy ra — đúng thứ tệ nhất cho một nút tên "Thử lại".
-            <a> ép trình duyệt đi mạng thật, tức là thử lại thật. */}
-        <a
-          href="/"
-          className="mt-8 inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-        >
-          Thử lại
-        </a>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          {/* `href=""` giải về CHÍNH URL hiện tại ⇒ bấm là tải lại đúng trang
+              người dùng đang lỡ dở. Service worker phục vụ trang này TẠI địa
+              chỉ bị lỗi (không chuyển hướng sang /offline), nên URL còn nguyên
+              và đây mới là "thử lại" đúng nghĩa — trước đó nút này về trang
+              chủ, tức là bỏ mất chỗ người ta đang muốn xem.
+              KHÔNG dùng <Link>: lúc mất mạng router không lấy được payload RSC
+              nên bấm xong không có gì xảy ra. */}
+          <a
+            href=""
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            Thử lại
+          </a>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages --
+              cùng lý do: phải là điều hướng thật của trình duyệt, không phải
+              client-side routing. */}
+          <a
+            href="/"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-border px-6 py-3 text-sm font-medium transition-opacity hover:opacity-90"
+          >
+            Về trang chủ
+          </a>
+        </div>
       </div>
     </main>
   );
