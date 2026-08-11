@@ -53,7 +53,8 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
   const [message, setMessage] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    const ok = typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window;
+    const ok =
+      typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window;
     setSupported(ok);
     if (!ok) return;
     const savedZRaw = localStorage.getItem(LS_ZODIAC);
@@ -77,7 +78,19 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
     }
     setBusy(true);
     try {
-      // Register SW
+      // Register SW.
+      //
+      // CỐ Ý KHÔNG có chốt `NODE_ENV === 'production'` ở đây, dù
+      // `components/pwa/ServiceWorkerRegistrar.tsx` thì có. Hai chỗ khác mục
+      // đích: chốt bên kia để service worker không tự bò vào máy dev; còn ở đây
+      // người dùng vừa CHỦ ĐỘNG bấm bật thông báo, và cần đăng ký thật thì mới
+      // thử được luồng push ở local.
+      //
+      // Cái nguy hiểm (cache-first phục vụ chunk cũ ở dev) đã được chặn NGAY
+      // TRONG `public/sw.js` bằng `LA_MAY_DEV` — chặn ở đó tốt hơn chặn ở đây
+      // vì nó phủ mọi nơi đăng ký, kể cả máy dev đã lỡ đăng ký từ trước rồi tự
+      // nâng cấp lên bản mới. Đừng thêm chốt NODE_ENV vào đây: làm vậy chỉ tổ
+      // hỏng việc thử push ở local mà không thêm được an toàn nào.
       const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
       await navigator.serviceWorker.ready;
 
@@ -95,7 +108,9 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
         const opts: PushSubscriptionOptionsInit = { userVisibleOnly: true };
         if (vapidPublicKey) {
           // Cast to satisfy DOM types — Uint8Array is a valid BufferSource at runtime.
-          opts.applicationServerKey = urlBase64ToUint8Array(vapidPublicKey) as unknown as BufferSource;
+          opts.applicationServerKey = urlBase64ToUint8Array(
+            vapidPublicKey,
+          ) as unknown as BufferSource;
         }
         sub = await reg.pushManager.subscribe(opts);
       }
@@ -155,7 +170,8 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
   if (supported === false) {
     return (
       <div className="rounded-xl border border-border bg-card/40 p-4 text-sm text-muted-foreground">
-        Trình duyệt của bạn chưa hỗ trợ thông báo web push. Hãy dùng Chrome, Edge, hoặc Firefox để nhận tử vi mỗi sáng.
+        Trình duyệt của bạn chưa hỗ trợ thông báo web push. Hãy dùng Chrome, Edge, hoặc Firefox để
+        nhận tử vi mỗi sáng.
       </div>
     );
   }
@@ -208,9 +224,7 @@ export function SubscribePush({ defaultZodiac, vapidPublicKey }: SubscribePushPr
           )}
         </div>
       </div>
-      {message ? (
-        <div className="mt-3 text-sm text-foreground/80">{message}</div>
-      ) : null}
+      {message ? <div className="mt-3 text-sm text-foreground/80">{message}</div> : null}
     </div>
   );
 }
