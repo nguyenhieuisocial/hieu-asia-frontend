@@ -1,7 +1,5 @@
 import { TOOLKIT_GROUPS } from '@/lib/site-registry';
 
-export const ALL_TOOLS = TOOLKIT_GROUPS.flatMap((g) => g.tools.map((t) => t.n));
-
 export const RADIUS = 33; // hub distance from center (% of box)
 export const SAT_R = 6.5; // satellite cluster radius around a hub (% of box)
 
