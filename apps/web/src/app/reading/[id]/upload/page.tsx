@@ -59,7 +59,7 @@ export default function PalmUploadPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink-radial pb-24 pt-16">
+      <main id="main-content" className="min-h-screen bg-ink-radial pb-24 pt-nav-safe">
         <header className="container mx-auto max-w-2xl px-5 py-8">
           <nav aria-label="Breadcrumb" className="mb-3 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>

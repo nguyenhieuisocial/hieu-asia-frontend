@@ -75,7 +75,7 @@ export default function BrandPage() {
   return (
     <>
       <SiteNav />
-      <div className="min-h-screen bg-background pt-16 text-foreground">
+      <div className="min-h-screen bg-background pt-nav-safe text-foreground">
       {/* HERO */}
       <section className="relative isolate overflow-hidden border-b border-gold/10 bg-background">
         <div

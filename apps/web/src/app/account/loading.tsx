@@ -22,7 +22,7 @@ export default function AccountLoading() {
       role="status"
       aria-live="polite"
       aria-busy="true"
-      className="min-h-screen bg-background pt-16"
+      className="min-h-screen bg-background pt-nav-safe"
     >
       <div className="mx-auto max-w-3xl space-y-10 px-6 pb-20 pt-12 sm:pt-16">
         {/* FeedHero */}

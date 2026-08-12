@@ -110,7 +110,7 @@ export default function AffiliateLandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <main id="main-content" className="pt-16">
+      <main id="main-content" className="pt-nav-safe">
         {/* Hero — identity, not transaction */}
         <section className="relative overflow-hidden border-b border-border px-6 py-20 sm:py-28">
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-full bg-ink-radial opacity-80" />

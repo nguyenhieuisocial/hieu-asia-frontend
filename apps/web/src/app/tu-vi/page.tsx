@@ -124,7 +124,7 @@ export default function TuViHubPage() {
       <SiteNav />
       <JsonLd data={BREADCRUMB_JSONLD} />
       <JsonLd data={WEBPAGE_JSONLD} />
-      <main id="main-content" className="relative overflow-hidden pt-16">
+      <main id="main-content" className="relative overflow-hidden pt-nav-safe">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"

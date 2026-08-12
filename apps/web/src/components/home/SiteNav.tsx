@@ -173,9 +173,11 @@ export function SiteNav() {
     // cover đã bật ở layout.tsx) logo + link nằm ĐÈ dưới đồng hồ/pin — vault
     // 00-AGENT-COORDINATION-LOCKS đo được 14 chỗ dùng safe-area-inset-bottom,
     // 0 chỗ dùng -top. env() trả 0px trên máy không có notch nên không đổi gì
-    // ở đó. CỐ Ý CHƯA đụng 86 trang đang dùng pt-16 để né nav — thanh nav nền
-    // mờ (bg-card/70 backdrop-blur-md) nên phần nội dung bị che thêm trên máy
-    // notch chỉ là dải mờ ~1 dòng, không phải nút/chữ bị cắt cụt như nav.
+    // ở đó. [12/08 cập nhật] 82 trang từng dùng pt-16 cứng để né nav đã đổi
+    // sang utility `.pt-nav-safe` dùng chung (globals.css) — xem PR/commit
+    // liên quan. Comment cũ ở đây từng nói "cố ý chưa đụng 86 trang" — không
+    // còn đúng, giữ lại đoạn trên (lý do env() an toàn trên máy thường) vì
+    // vẫn đúng.
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-card/70 pt-[env(safe-area-inset-top)] backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link

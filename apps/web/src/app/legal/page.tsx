@@ -51,7 +51,7 @@ export default function LegalHubPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-nav-safe">
         <section className="relative isolate overflow-hidden bg-background">
           <div
             aria-hidden="true"

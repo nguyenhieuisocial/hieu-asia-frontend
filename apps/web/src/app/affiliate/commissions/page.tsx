@@ -198,7 +198,7 @@ export default function AffiliateCommissionsPage() {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
-        <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
+        <main className="mx-auto max-w-5xl px-6 pt-nav-safe pb-20">
           <div className="mx-auto max-w-md text-center">
             <h1 className="mb-2 font-heading text-2xl font-bold">Đăng nhập để xem hoa hồng</h1>
             <p className="mb-6 text-muted-foreground">
@@ -218,7 +218,7 @@ export default function AffiliateCommissionsPage() {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
-        <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
+        <main className="mx-auto max-w-5xl px-6 pt-nav-safe pb-20">
           <div className="mx-auto max-w-md text-center">
             <h1 className="mb-2 font-heading text-2xl font-bold">
               Bạn chưa đăng ký <span className="text-gold-700">affiliate</span>
@@ -248,7 +248,7 @@ export default function AffiliateCommissionsPage() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <JsonLd data={BREADCRUMB_JSONLD} />
-      <main className="mx-auto max-w-5xl px-6 pt-16 pb-20">
+      <main className="mx-auto max-w-5xl px-6 pt-nav-safe pb-20">
         <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">Trang chủ</Link>
           <span className="mx-1.5">/</span>

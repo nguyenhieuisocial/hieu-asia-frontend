@@ -127,7 +127,7 @@ export default function BanDoPage() {
     <div className="min-h-screen bg-background text-foreground">
       <JsonLd data={breadcrumbJsonLd} />
       <SiteNav />
-      <main id="main-content" className="pt-16">
+      <main id="main-content" className="pt-nav-safe">
         {/* Hero */}
         <section className="mx-auto max-w-5xl px-6 pt-12 pb-8">
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground">

@@ -63,7 +63,7 @@ export default function OperatingManualPage() {
   return (
     <div className="pom-print-wrapper min-h-screen bg-background text-foreground">
       <SiteNav />
-      <main id="main-content" className="relative pt-16">
+      <main id="main-content" className="relative pt-nav-safe">
         <section className="mx-auto max-w-3xl px-6 pb-16 pt-10 sm:pt-14">
           <nav
             aria-label="Breadcrumb"

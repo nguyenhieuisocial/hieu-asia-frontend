@@ -1667,7 +1667,7 @@ export default function MethodologyPage() {
            ───────────────────────────────────────────────────────────── */}
         <RevealOnScroll>
         <section className="relative bg-muted/40">
-          <div className="mx-auto max-w-marketing px-6 pb-20 pt-16 lg:px-12 rv-up">
+          <div className="mx-auto max-w-marketing px-6 pb-20 pt-nav-safe lg:px-12 rv-up">
             <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-primary">
               <span className="mr-2 inline-block h-px w-6 bg-primary align-middle" />
               ĐỌC TIẾP

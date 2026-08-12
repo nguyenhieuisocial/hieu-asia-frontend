@@ -81,6 +81,17 @@
     -webkit-mask-image: linear-gradient(to right, #000 90%, transparent);
     mask-image: linear-gradient(to right, #000 90%, transparent);
   }
+
+  /* 12/08/2026 — thay `pt-16` cứng cho nội dung ngay dưới SiteNav (fixed).
+   * SiteNav giờ có `pt-[env(safe-area-inset-top)]` (PR #1085) nên chiều cao
+   * thật của nó trên máy notch = 4rem + inset, không còn đúng 4rem nữa —
+   * `pt-16` cứng để lại một dải ~44-59px bị nav che khuất sau lớp mờ. `env()`
+   * = 0px trên mọi máy/trình duyệt thường nên `calc()` này y hệt `pt-16` ở
+   * đó — không đổi gì ngoài máy notch thật. Nguồn DUY NHẤT, không lặp giá trị
+   * 4rem ở 98 chỗ khác nhau. */
+  .pt-nav-safe {
+    padding-top: calc(4rem + env(safe-area-inset-top));
+  }
 }
 
 /*

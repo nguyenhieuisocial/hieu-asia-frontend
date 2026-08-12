@@ -137,7 +137,7 @@ export default async function PillarPage({
           ]),
         ]}
       />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-nav-safe">
         <article className="mx-auto max-w-2xl px-6 py-16">
           <Link
             href="/cam-nang"

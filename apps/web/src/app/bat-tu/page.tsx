@@ -138,7 +138,7 @@ export default function BatTuLandingPage() {
       <JsonLd data={WEBPAGE_JSONLD} />
       <JsonLd data={FAQ_JSONLD} />
 
-      <main id="main-content" className="relative pt-16">
+      <main id="main-content" className="relative pt-nav-safe">
         {/* Hero */}
         <section className="relative overflow-hidden bg-background pt-6 pb-16 md:pt-8 md:pb-20 lg:pb-24">
           <div className="relative mx-auto max-w-marketing px-6 lg:px-12">

@@ -167,7 +167,7 @@ export default async function Page({ params }: { params: Promise<{ zodiac: strin
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <main id="main-content" className="pt-16">
+      <main id="main-content" className="pt-nav-safe">
       <section className="relative isolate overflow-hidden border-b border-border bg-card/60">
         <div
           aria-hidden="true"

@@ -93,7 +93,7 @@ export default function JournalHubPage() {
 
       <JsonLd data={BREADCRUMB_JSONLD} />
 
-      <section className="mx-auto max-w-5xl px-6 pt-16 pb-20">
+      <section className="mx-auto max-w-5xl px-6 pt-nav-safe pb-20">
         <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
           <Link href="/" className="hover:text-gold">
             Trang chủ

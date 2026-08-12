@@ -117,7 +117,7 @@ export default async function TuVi2026ConGiapPage({
       <SiteNav />
       <JsonLd data={JSONLD} />
 
-      <main id="main-content" className="relative overflow-hidden pt-16">
+      <main id="main-content" className="relative overflow-hidden pt-nav-safe">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-80"

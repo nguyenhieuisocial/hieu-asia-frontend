@@ -98,7 +98,7 @@ export default async function CamNangIndexPage() {
           ]),
         ]}
       />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-nav-safe">
         <section className="mx-auto max-w-4xl px-6 py-16">
           <div className="flex items-start gap-3">
             <div className="mt-1 rounded-md border border-gold/20 bg-gradient-to-br from-gold/15 to-gold/0 p-2 text-gold">

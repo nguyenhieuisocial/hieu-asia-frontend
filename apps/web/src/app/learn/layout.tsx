@@ -11,7 +11,7 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <div id="main-content" className="relative overflow-hidden pt-16">
+      <div id="main-content" className="relative overflow-hidden pt-nav-safe">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-ink-radial opacity-90"

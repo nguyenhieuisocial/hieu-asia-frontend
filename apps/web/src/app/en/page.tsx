@@ -154,7 +154,7 @@ export default function EnglishLandingPage() {
       <SetHtmlLang lang="en" />
       <JsonLd data={FAQ_JSONLD} />
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-nav-safe">
         {/* Hero — static, no interactive calculator (v1 scope cut; the VN
             homepage's InstantChartHero widget is out of scope for now). */}
         <section className="mx-auto max-w-3xl px-6 py-16 text-center sm:py-24">

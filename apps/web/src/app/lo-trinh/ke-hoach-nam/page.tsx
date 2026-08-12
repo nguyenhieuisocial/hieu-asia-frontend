@@ -111,7 +111,7 @@ export default function KeHoachNamPage() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <JsonLd data={BREADCRUMB_JSONLD} />
-      <main id="main-content" className="relative overflow-hidden pt-16">
+      <main id="main-content" className="relative overflow-hidden pt-nav-safe">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.10)_0%,_transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(184,146,61,0.18)_0%,_transparent_55%)]"
