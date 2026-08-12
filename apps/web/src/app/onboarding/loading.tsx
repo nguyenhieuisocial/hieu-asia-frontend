@@ -19,7 +19,7 @@ export default function OnboardingLoading() {
       role="status"
       aria-live="polite"
       aria-busy="true"
-      className="min-h-screen bg-background pt-16"
+      className="min-h-screen bg-background pt-nav-safe"
     >
       <div className="mx-auto max-w-xl space-y-8 px-6 py-12">
         {/* Progress dots */}

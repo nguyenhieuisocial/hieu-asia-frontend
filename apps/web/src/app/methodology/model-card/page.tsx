@@ -216,7 +216,7 @@ export default function ModelCardPage() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
       <JsonLd data={BREADCRUMB_JSONLD} />
-      <main id="main-content" className="relative pt-16 methodology-a11y">
+      <main id="main-content" className="relative pt-nav-safe methodology-a11y">
         {/* Hero */}
         <section className="relative overflow-hidden">
           <div

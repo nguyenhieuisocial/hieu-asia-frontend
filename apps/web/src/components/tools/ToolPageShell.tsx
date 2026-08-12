@@ -82,7 +82,7 @@ export function ToolPageShell({
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
 
-      <main id="main-content" className="relative pt-16">
+      <main id="main-content" className="relative pt-nav-safe">
         {/* 11/08/2026 — Giai đoạn 2 design refresh, khuôn trang công cụ.
          * Gỡ 3 lớp hào quang (ink-radial + 2 đốm blur gold/purple) từng phủ
          * ~1.200 trang công cụ. Đối chiếu `design-system/patterns/tool-page.html`

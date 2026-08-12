@@ -40,7 +40,7 @@ export default function JourneyPage() {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
-        <main id="main-content" className="pt-16">
+        <main id="main-content" className="pt-nav-safe">
           <div className="mx-auto max-w-md px-6 py-24 text-center">
             <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">
               HÀNH TRÌNH CỦA BẠN
@@ -73,7 +73,7 @@ export default function JourneyPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <main id="main-content" className="relative overflow-hidden pt-16">
+      <main id="main-content" className="relative overflow-hidden pt-nav-safe">
         <div
           aria-hidden
           className="pointer-events-none absolute -top-24 right-[-10%] h-[420px] w-[420px] rounded-full bg-gold/10 blur-3xl"

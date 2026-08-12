@@ -134,7 +134,7 @@ export default async function ArchiveDayPage({
       <SiteNav />
       <JsonLd data={breadcrumbJsonLd} />
 
-      <main id="main-content" className="relative overflow-hidden pt-16">
+      <main id="main-content" className="relative overflow-hidden pt-nav-safe">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-[360px] bg-ink-radial opacity-80"

@@ -96,7 +96,7 @@ function AccountLoader() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <main id="main-content" className="pt-16">
+      <main id="main-content" className="pt-nav-safe">
         <AccountSkeleton />
       </main>
       <SiteFooter />
@@ -169,7 +169,7 @@ function AccountPageInner() {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <SiteNav />
-        <main id="main-content" className="pt-16">
+        <main id="main-content" className="pt-nav-safe">
           <AccountSkeleton
             message={
               auth.loading
@@ -186,7 +186,7 @@ function AccountPageInner() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <main id="main-content" className="relative overflow-hidden pt-16">
+      <main id="main-content" className="relative overflow-hidden pt-nav-safe">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-background opacity-80"

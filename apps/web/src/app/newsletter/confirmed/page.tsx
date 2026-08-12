@@ -29,7 +29,7 @@ export default async function NewsletterConfirmedPage({ searchParams }: PageProp
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-nav-safe">
         <section className="mx-auto max-w-2xl px-6 py-24 text-center">
           {ok ? (
             <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-300">

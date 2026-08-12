@@ -103,7 +103,7 @@ export default function InsightMapPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteNav />
-      <main id="main-content" className="pb-24 pt-16">
+      <main id="main-content" className="pb-24 pt-nav-safe">
       <div className="mx-auto max-w-3xl px-6">
         <header className="mb-10">
           <p className="font-mono text-eyebrow uppercase tracking-[0.12em] text-gold-700">

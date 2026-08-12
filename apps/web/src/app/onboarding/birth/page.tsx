@@ -25,7 +25,7 @@ export default function OnboardingBirthPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-ink-radial pt-16">
+      <main id="main-content" className="min-h-screen bg-ink-radial pt-nav-safe">
         <header className="container mx-auto flex items-center justify-between px-6 py-5">
           <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
             <Link href="/" className="hover:text-gold">Trang chủ</Link>

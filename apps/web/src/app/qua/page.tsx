@@ -49,7 +49,7 @@ export default function QuaPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-background pt-16 text-foreground">
+      <main id="main-content" className="min-h-screen bg-background pt-nav-safe text-foreground">
         {/* Hero — canh giữa + luồng 3 bước */}
         <section className="relative overflow-hidden">
           <div

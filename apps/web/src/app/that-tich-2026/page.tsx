@@ -100,7 +100,7 @@ export default function ThatTich2026Page() {
     <>
       <SiteNav />
       <JsonLd data={JSONLD} />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-nav-safe">
         {/* Hero */}
         <section className="relative mx-auto max-w-3xl px-6 pb-10 pt-6 sm:pt-8">
           <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">

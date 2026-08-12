@@ -115,7 +115,7 @@ export default function ChangelogPage() {
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="min-h-screen bg-background text-foreground pt-16">
+      <main id="main-content" className="min-h-screen bg-background text-foreground pt-nav-safe">
         {/* Hero */}
         <section className="relative isolate overflow-hidden bg-background">
           <div
